@@ -23,8 +23,8 @@ jobs:
 
       - name: Build Docker image
         run: |
-          docker build -t ${{ secrets.DOCKER_USERNAME }}/axia/beeproj-app:latest .
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/axia:latest .
 
       - name: Push Docker image to Docker Hub
         run: |
-          docker push ${{ secrets.DOCKER_USERNAME }}/axia/beeproj-app:latest
+          docker push ${{ secrets.DOCKER_USERNAME }}/axia:latest
