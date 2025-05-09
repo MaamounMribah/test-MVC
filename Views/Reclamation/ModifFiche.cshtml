@@ -1,0 +1,974 @@
+﻿@model BeeProj.Models.B_RECLAMATION
+@{
+    ViewBag.Title = "ModifFiche";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<style>
+    .dataTables_filter, .dataTables_info, .dataTables_length, .dataTables_paginate {
+        display: none;
+    }
+
+    .dataTableMargin .ui-datatable-tablewrapper {
+        overflow: hidden;
+    }
+
+    .table .table-bordered .table-striped {
+        overflow-x: hidden;
+        overflow-y: hidden;
+    }
+
+    .dataTables_scroll {
+        overflow: auto;
+    }
+
+
+    table {
+        table-layout: fixed;
+        width: 98% !important;
+    }
+</style>
+
+<div class="ibox float-e-margins">
+    <div class="row wrapper border-bottom white-bg page-heading">
+        <div class="col-sm-4">
+        
+            <ol class="breadcrumb">
+                <li>
+                    <a href=@Url.Action("Index","Home")>Acceuil</a>
+                </li>
+                <li>
+                    <a href=@Url.Action("ListReclamation","Reclamation")>Liste des réclamations</a>
+                </li>
+
+                <li class="active">
+                    <strong>Modification </strong>
+                </li>
+            </ol>
+        </div>
+    </div>
+
+
+    <div class="row">
+        <div class="col-lg-9" style="width: 76%; height: 70%;">
+            <div class="wrapper wrapper-content animated fadeInUp">
+                <div class="ibox">
+                    <div class="ibox-content">
+
+@using (Html.BeginForm("ModifierFiche", "Reclamation", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+{
+    @Html.HiddenFor(model => model.cbMarq)
+
+
+
+            <div class="m-b-md col-lg-12">
+
+
+@if ((ViewBag.ReclamRecep == true && Model.RC_ETAT == 0) || (ViewBag.ReclamRep == true && Model.RC_ETAT == 1))
+{             <button type="button" class="btn red-bg pull-right btn-rounded" data-toggle="modal" data-target="#EditRec">
+                    Sauvgarder <i class="fa fa-save"></i>
+                </button>
+                <h2>Description de la Réclamation @ViewBag.Reference</h2>
+}
+
+
+
+
+
+            </div>
+        
+
+                        <div class="row">
+
+                            <div class="col-lg-5">
+
+                                <dl class="dl-horizontal">
+
+                                    <dt>Ajouté par : </dt>
+                                    <dd>@Html.DisplayFor(model => model.cbCreateur)</dd>
+
+
+
+                                    <dt>Téléphone:</dt>
+                                    <dd>@ViewBag.tel</dd>
+                                    <dd></dd>
+
+
+                                    <dt>Email:</dt>
+                                    <dd>@ViewBag.mail </dd>
+
+
+                                    <dt>Agence </dt>
+                                    <dd> @ViewBag.Agence  </dd>
+
+
+
+                                </dl>
+
+                            </div>
+
+
+
+                            <div class="col-lg-5">
+                                <dl class="dl-horizontal">
+    @if (ViewBag.ReclamRecep == true && Model.RC_ETAT == 0)
+    {
+
+        <dt>Affecté à</dt>
+                        <dd>
+                            <span>
+
+                               
+                                @if (ViewBag.ListeAffecte == null)
+                                {
+                                    <select class="chosen-select form-control" id="RC_Affecte" name="RC_Affecte">
+                                        <option value=""> </option>
+
+                                    </select>
+                                }
+                                else
+                                {
+                                    <select class="chosen-select form-control" id="RC_Affecte" name="RC_Affecte">
+                                        @foreach (var item in ViewBag.ListeAffecte)
+                                        {
+                                            <option value="@item">@item</option>
+                                        }
+
+                                    </select>
+                                }
+
+                            </span>
+                        </dd>
+                                            <br />
+    }
+                                        @if (ViewBag.ReclamRep == true && Model.RC_ETAT == 1)
+                                        {
+                                            <dt>Affecté à</dt>
+                                    <dd>
+                                    @Model.RC_Affecte
+                                    </dd>
+                                    <br />
+                                        }
+  
+                                       <dt>Statut:</dt>
+
+                               
+
+                                       @if (ViewBag.ReclamRep == true && Model.RC_ETAT == 1) { 
+
+
+                                    <dd>
+                                        <span>
+
+                                            @Html.DropDownListFor(m => m.RC_ETAT, new List<SelectListItem>()
+                                                {
+                                                    new SelectListItem(){ Text= "En cours", Value = "1"},
+                                                    new SelectListItem(){ Text= "Validée", Value = "2"},
+                                                    new SelectListItem(){ Text= "Annulée", Value = "3"},
+
+
+                                                 }, new { @id = "RC_ETAT", @class = "form-control chosen-select", @required = "required" })
+
+
+
+
+                                        </span>
+                                    </dd>
+                                        }
+                                        else
+                                        {
+
+                                            if (Model.RC_ETAT == 0)
+                                            {
+                                                <dd><span><i class="label style1 blue-bg">En attente</i> </span></dd>
+                                            }
+                                            else if (Model.RC_ETAT == 1)
+                                            {
+                                                <dd><span><i class="label bg-warning ">En cours</i></span></dd>
+
+
+                                            }
+
+                                            else if (Model.RC_ETAT == 2)
+                                            {
+                                                <dd><span><i class="label bg-info "> Validée</i> </span></dd>
+
+                                            }
+                                            else if (Model.RC_ETAT == 3)
+                                            {
+                                                <dd><span><i class="label bg-danger"> Annuler</i></span></dd>
+                                            }
+                                        }
+                                        
+                                        <br />
+                                        <dt>Avancement</dt>
+                                       @if ((ViewBag.ReclamRep == true && Model.RC_ETAT == 1) || (ViewBag.ReclamRecep == true && Model.RC_ETAT == 0))
+                                       {
+                                        <dd>
+                                            
+                                            @Html.DropDownListFor(m => m.RC_Avan, new List<SelectListItem>()
+                                                {
+                                                    new SelectListItem(){ Text= "10%", Value = "10"},
+                                                    new SelectListItem(){ Text= "20%", Value = "20"},
+                                                    new SelectListItem(){ Text= "30%", Value = "30"},
+                                                    new SelectListItem(){ Text= "40%", Value = "40"},
+                                                    new SelectListItem(){ Text= "50%", Value = "50"},
+                                                    new SelectListItem(){ Text= "60%", Value = "60"},
+                                                    new SelectListItem(){ Text= "70%", Value = "70"},
+                                                    new SelectListItem(){ Text= "80%", Value = "80"},
+                                                    new SelectListItem(){ Text= "90%", Value = "90"},
+                                                    new SelectListItem(){ Text= "100%", Value = "100"},
+
+
+                                                 }, new { @id = "RC_Avan", @class = "form-control chosen-select", @required = "required" })
+
+
+
+
+
+                                        </dd>
+                                        <br />
+                                       }
+                                       else
+                                       {
+                                        <dd>
+                                            <div class="progress m-b-1">
+                                                <div id="ionrange_1"></div>
+                                                <div style="width: @Model.RC_Avan%;" class="progress-bar progress-bar-striped progress-bar-animated"></div>
+                                            </div>
+
+                                        </dd>
+                                        <br />
+
+                                       }
+                                         <dt>Service</dt>
+
+
+                                            @if(Model.RC_SERVICE == 0)
+                                            {
+                                            <dd><span><i class="label  bg-warning"> Service Commercial</i> </span></dd>
+                                            }
+                                            else if (Model.RC_SERVICE == 1)
+                                            {
+                                                <dd><span><i class="label bg-success"> Service Technique</i> </span></dd>
+
+                                            }
+
+
+
+
+
+                                    </dl>
+                            </div>
+
+
+
+
+
+                             
+
+
+                            <div class="panel-body">
+
+                                <div class="tab-content">
+                                    <!--FIN AVANCEMENT -->
+
+                                </div>
+                            </div>
+
+                            <div class="row m-t-sm">
+                                <div class="col-lg-12">
+                                    <div class="panel blank-panel">
+                                        <div class="panel-heading">
+                                            <div class="panel-options">
+                                                <ul class="nav nav-tabs">
+                                                    <li class="nav-link active"><a href="#tab-1" data-toggle="tab">Généralité</a></li>
+                                                    <li class="nav-link"><a href="#tab-6" data-toggle="tab">Remarques</a></li>
+                                                    <li class=""><a href="#tab-4" data-toggle="tab">Documents</a></li>
+                                                    <li class=""><a href="#tab-5" data-toggle="tab">Facturation</a></li>
+
+
+                                                </ul>
+                                            </div>
+                                        </div>
+
+
+                                        <div class="panel-body">
+
+                                            <div class="tab-content">
+                                                
+                                                <!-- Généralité-->
+
+                                                <div class="tab-pane active " id="tab-1">
+                                                    <form method="get" class="form-horizontal">
+
+                                                        <div class="ibox float-e-margins">
+
+                                                            <div class="form-group">
+                                                                <label class="col-sm-2 control-label">Intitulé Client</label>
+                                                                <div class="col-sm-10">
+                                                                    <span class="help-block m-b-none">
+                                                                        @Html.TextBoxFor(model => model.CT_Intitule, new { @class = "form-control", @Readonly = "Readonly" })
+                                                                    </span>
+
+                                                                </div>
+                                                            </div>
+
+
+                                                            <div class="form-group">
+                                                                <label class="col-sm-2 control-label">Telephone</label>
+
+                                                                <div class="col-sm-10">
+                                                                    <span class="help-block m-b-none">
+                                                                        @Html.TextBoxFor(model => model.CT_Telephone, new { @class = "form-control", @Readonly = "Readonly" })
+                                                                    </span>
+                                                                </div>
+                                                            </div>
+                                                            @*<div class="form-group">
+                                                                <label class="col-sm-2 control-label">Service Concerné </label>
+
+                                                                <div class="col-sm-10">
+                                                                    <span class="help-block m-b-none">
+
+                                                                        @if (Model.RC_SERVICE == 22)
+                                                                        {
+                                                                            <p class="form-control" Readonly="Readonly"> Service Facturation </p>
+
+                                                                        }
+                                                                        else if (Model.RC_SERVICE == 3)
+                                                                        {
+                                                                            <p class="form-control " Readonly="Readonly">Service Internet </p>
+                                                                        }
+
+                                                                        else
+                                                                        {
+                                                                            <p class="form-control " Readonly="Readonly">Service Technique </p>
+                                                                        }
+
+                                                                    </span>
+
+                                                                </div>
+                                                            </div>*@
+                                                          
+                                                            <div class="form-group">
+                                                                <label class="col-sm-2 control-label">Description Réclamation</label>
+                                                                <div class="col-sm-10">
+                                                                    <span class="help-block m-b-none">
+                                                                        @Html.TextAreaFor(model => model.RC_DESCRIPTION, new { @class = "form-control", @Readonly = "Readonly" })
+                                                                    </span>
+                                                                </div>
+                                                            </div>
+
+                                                        </div>
+
+
+                                                    </form>
+                                                </div>
+                                                <!-- FIN Généralité-->
+                                                <!-- Remarques -->
+
+
+
+                                                <div class="tab-pane" id="tab-6">
+                                                    <div class="row">
+                                                        @if (ViewBag.ListRemarque.Count == 0)
+                                                        {
+                                                            <p><center> Aucune Remarque </center></p>
+                                                        }
+                                                        else
+                                                        {
+                                                            <div class="wrapper wrapper-content animated fadeInUp">
+                                                                @foreach (var item in ViewBag.ListRemarque)
+                                                                {
+
+
+
+                                                                    <ul class="notes">
+                                                                        <li>
+                                                                            <div>
+                                                                                <small>@item.RQ_Date</small>
+                                                                                <h4>@item.RQ_Sujet</h4>
+                                                                                <p>@item.RQ_Description</p>
+                                                                                <a href="/Reclamation/DeleteNote/@item.cbMarq"><i class="fa fa-trash-o "></i></a>
+                                                                            </div>
+                                                                        </li>
+
+
+                                                                    </ul>
+
+                                                                }
+                                                            </div>
+                                                        }
+                                                    </div>
+                                                    <button type="button" class="btn btn-warning btn-rounded  pull-right" data-toggle="modal" data-target="#NouvRem">
+                                                        <i class="fa fa-pencil"></i>
+                                                    </button>
+                                                </div>
+
+                                                <!--Fin Remarque-->
+                                                <!-- Documents -->
+
+                                                <div id="tab-4" class="tab-pane">
+                                                    <div class="panel-body">
+                                                        <button type="button" class="btn btn-warning btn-rounded  pull-right" data-toggle="modal" data-target="#AddDoc">
+                                                            <i class="fa fa-pencil"></i>
+                                                        </button>
+
+                                                        <div id="tab-4" class="tab-pane">
+                                                            <div class="panel-body">
+
+                                                                <div class="table-responsive">
+                                                                    @if (ViewBag.ListFiles.Count == 0)
+                                                                    {
+                                                                        <p><center> Aucun fichier</center> </p>
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        <table class="table table-bordered table-stripped">
+                                                                            <thead>
+
+
+
+                                                                                <tr>
+                                                                                    <th></th>
+                                                                                    <th>
+                                                                                        Intitulé Document
+                                                                                    </th>
+
+
+                                                                                    <th> Description </th>
+                                                                                    <th>
+                                                                                        Ajouté par
+                                                                                    </th>
+                                                                                    <th>
+                                                                                        Date
+                                                                                    </th>
+                                                                                </tr>
+                                                                            </thead>
+                                                                            <tbody>
+
+
+                                                                                @foreach (var item in ViewBag.ListFiles)
+                                                                                {
+                                                                                    <tr>
+                                                                                        <td>
+
+                                                                                            <a href=@item.B_Lien target="_blank"> Voir </a>
+                                                                                        </td>
+                                                                                        <td>
+                                                                                            @item.B_Intitule
+                                                                                        </td>
+                                                                                        <td>
+                                                                                            @item.B_Description
+
+                                                                                        </td>
+                                                                                        <td> @item.cbCreateur</td>
+                                                                                        <td> @item.cbModification</td>
+
+                                                                                    </tr>
+                                                                                }
+
+
+
+                                                                            </tbody>
+                                                                        </table>
+                                                                    }
+                                                                </div>
+
+
+
+                                                            </div>
+                                                        </div>
+
+
+                                                    </div>
+
+                                                </div>
+
+                                                <!--Fin Document -->
+                                                <!-- Commercial-->
+
+                                                <div class="tab-pane" id="tab-5">
+                                                    <div>
+                                                        <table class="table table-striped table-hover" id="facture">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th></th>
+                                                                    <th>Statut</th>
+                                                                    <th>N° Pièce</th>
+                                                                    <th>Date </th>
+                                                                    @*<th>Référence</th>*@
+                                                                    <th>Montant TTC</th>
+                                                                </tr>
+                                                            </thead>
+
+
+                                                        </table>
+                                                    </div>
+
+                                                </div>
+                                                <!--Fin Commercial-->
+
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+}
+                    </div>
+
+
+
+                    </div>
+                </div>
+            </div>
+
+        <!-- Modal add new Demande  -->
+
+        <div class="modal inmodal" id="EditRec" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content animated flipInY">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                        <h4 class="modal-title">Enregistrer les modifications </h4>
+                    </div>
+                    <div class="modal-body">
+                        Voulez vous enregistrer les modifications ?
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-white" data-dismiss="modal">Annuler</button>
+                        @if(Model.RC_ETAT == 0 && ViewBag.ReclamRecep == true) {
+                        <button type="button" class="btn btn-warning" onclick="AffecterReclamation();">Enregistrer les modifications</button>
+                        }
+                        else if (Model.RC_ETAT == 1 && ViewBag.ReclamRep)
+                        {
+                            <button type="button" class="btn btn-warning" onclick="SaveReclamation();">Enregistrer les modifications</button>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+        <!-- Modal add new Document   -->
+
+        <div class="modal inmodal" id="AddDoc" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content animated flipInY">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                        <h4 class="modal-title">Attacher Document </h4>
+                    </div>
+                    <div class="modal-body">
+                        <fieldset class="form-horizontal">
+
+
+                            <div class="form-group">
+                                <label class="col-sm-4 control-label">Intitulé  </label>
+                                <div class="col-sm-8">
+                                    <input type="text" class="form-control" required id="titreDoc">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-sm-4 control-label">Description  </label>
+                                <div class="col-sm-8">
+                                    <textarea type="text" class="form-control" required id="DescDoc"></textarea>
+                                </div>
+                            </div>
+
+                            @*<input type="file" id="FileUpload1" />*@
+
+                            <div class="form-group">
+                                <label class="col-sm-4 control-label">Attacher Fichier  </label>
+                                <div class="col-sm-8">
+                                    <div class="fileinput fileinput-new" data-provides="fileinput">
+                                        <span class="btn btn-default btn-file">
+                                            <span class="fileinput-new">Selectionner un fichier </span>
+                                            <span class="fileinput-exists">Changer</span><input type="file" id="FileUpload1">
+                                        </span>
+                                        <span class="fileinput-filename"></span>
+                                        <a href="#" class="close fileinput-exists" data-dismiss="fileinput" style="float: none">&times;</a>
+                                    </div>
+                                </div>
+                            </div>
+
+
+
+
+
+                        </fieldset>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-white" data-dismiss="modal">Fermer</button>
+                        <button type="button" class="btn btn-warning" onclick="SaveDocuments(@Model.cbMarq)">Ajouter</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- Modal add new note -->
+
+        <div class="modal inmodal" id="NouvRem" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content animated flipInY">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Fermer</span></button>
+                        <h4 class="modal-title">Nouvelle Note</h4>
+                    </div>
+                    <div class="modal-body">
+                        <fieldset class="form-horizontal">
+
+                            <div class="form-group">
+                                <label class="col-sm-4 control-label">Titre de la Note</label>
+                                <div class="col-sm-8"><input type="text" class="form-control" required id="titreRemarque"></div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-4 control-label">Description </label>
+                                <div class="col-sm-8">
+
+                                    <textarea type="text" class="form-control" id="descRemarque"></textarea>
+                                </div>
+                            </div>
+
+                        </fieldset>
+                    </div>e
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-white" data-dismiss="modal">Fermer</button>
+                        <button type="button" class="btn btn-warning" onclick="SaveRemarque(@Model.cbMarq)">Ajouter</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+     
+        <!-- TimeLine-->
+
+        <div class="col-lg-3" id="target" style="overflow: scroll; width: 24%; height: 650px;">
+            <div id="vertical-timeline" class="vertical-containe">
+
+
+                @foreach (var item in ViewBag.ListAction)
+            {
+
+                    <div class="vertical-timeline-block bg-muted">
+
+
+                        <div class="vertical-timeline-icon lazur-bg">
+                            <i class="fa fa-dot-circle-o"></i>
+                        </div>
+
+
+                        <div class="vertical-timeline-content ">
+                            <div class="stream-panel">
+                                <div class="stream-info">
+                                    <a href="#">
+
+                                        <span>@item.cbCreateur</span>
+                                        <span class="date">@item.cbModification</span>
+                                    </a>
+                                </div>
+
+                                @item.AC_Commentaire .
+                            </div>
+                        </div>
+                    </div>
+
+
+                }
+
+
+
+
+
+            </div>
+
+        </div>
+
+
+
+        </div>
+
+
+
+    </div>
+<script src="~/js/jquery-3.1.1.min.js"></script>
+
+
+<script>
+
+
+    function SaveDocuments(cbm) {
+        /**************/
+       
+        var fileUpload = $("#FileUpload1").get(0);
+        var files = fileUpload.files;
+
+        // Create FormData object
+        var fileData = new FormData();
+
+        // Looping over all files and add it to FormData object
+        for (var i = 0; i < files.length; i++) {
+            fileData.append(files[i].name, files[i]);
+        }
+
+
+        $.ajax({
+            type: "Post",
+            url: "/Reclamation/SaveDocuments?OpId=" + cbm + "&&titreDoc=" + $("#titreDoc").val() + "&&DescDoc=" + $("#DescDoc").val(),
+            contentType: false, // Not to set any content header
+            processData: false, // Not to process data
+            data: fileData,
+            success: function (result) {
+                window.location = "/reclamation/Details/@Model.cbMarq";
+            }
+        });
+    }
+
+
+
+
+
+
+
+
+    
+</script>
+
+<script>
+    function AffecterReclamation() {
+        //alert($("#statutEtat").val());
+        //alert($("#NivRec").val());
+        //alert($("#NivAvan").val());
+        $.ajax({
+            type: "get",
+            url: "/Reclamation/AffecterReclamation?cbmarq=" + @Model.cbMarq + "&&RC_Affecte=" + $("#RC_Affecte").val() + "&&avancement=" + $("#RC_Avan").val(),
+            dataType: "json",
+            success: function (msg) {
+
+                window.location = "/reclamation/details/@Model.cbMarq";
+
+
+            }
+        });
+    }
+
+
+
+    function SaveReclamation() {
+        //alert($("#statutEtat").val());
+        //alert($("#NivRec").val());
+        //alert($("#NivAvan").val());
+        $.ajax({
+            type: "get",
+            url: "/Reclamation/SaveReclamation?cbmarq=" + @Model.cbMarq + "&&RC_ETAT=" + $("#RC_ETAT").val() + "&&avancement=" + $("#RC_Avan").val(),
+            dataType: "json",
+            success: function (msg) {
+
+                window.location = "/reclamation/details/@Model.cbMarq";
+
+
+            }
+        });
+    }
+</script>
+
+<script>
+
+    function SaveRemarque(cbm) {
+
+        //alert(cbm);
+        $.ajax({
+            type: "get",
+            url: "/Reclamation/SaveNote?OpId=" + cbm + "&&Sujet=" + $("#titreRemarque").val() + "&&Description=" + $("#descRemarque").val(),
+            dataType: "json",
+            success: function (msg) {
+
+                window.location = "/Reclamation/Details/@Model.cbMarq";
+
+            }
+        });
+    }
+</script>
+
+
+<!-- Mainly scripts -->
+<script src="~/js/jquery-3.1.1.min.js"></script>
+<script src="~/js/plugins/metisMenu/jquery.metisMenu.js"></script>
+<script src="~/js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+
+<script src="~/js/plugins/dataTables/datatables.min.js"></script>
+
+
+<script>
+
+
+    function format(table_id) {
+
+
+
+        return '<table id="table_id" cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;" class="table  table-hover">' +
+          '<thead>'+
+    '<th></th>'+
+    '<th></th>'+
+    '<th></th>'+
+    '<th></th>'+
+
+    '</thead>'+
+       '</table>';
+    }
+
+
+    function sub_DataTable(vtask_id,table_id) {
+
+        var subtable = $('#table_id').DataTable({
+            "ajax": {
+                "url": "/Reclamation/FactureLineJson?id="+vtask_id,
+                "type": "get",
+                "datatype": "json",
+                "scrollX": false,
+                "width": "98%"
+
+            },
+
+            "columns": [
+
+                 { "data": "AR_Ref" },
+                 { "data": "DL_Design" },
+                 { "data": "DL_Qte" },
+                { "data": "DL_totalTTC" }
+
+
+
+            ]
+        });
+    }
+
+
+
+    $(document).ready(function () {
+
+        var table = $("#facture").DataTable({
+            "ajax": {
+
+                "url": "/Reclamation/FactureJson?id=" + @Model.cbMarq,
+
+                "type": "get",
+                "datatype": "json",
+                "scrollX": true,
+                "scrollCollapse": false
+
+
+            },
+            "columns": [
+                 {
+                     "className": "details-control",
+                     "orderable":  false,
+                     "data":       "cbMarq",
+                     "defaultContent": ''
+                 },
+                 { "data": "DO_Statut" },
+                 { "data": "DO_Piece" },
+                 { "data": "DO_Date" },
+                { "data": "DL_totalTTC" }
+
+
+
+            ],
+            "columnDefs": [
+
+                  {
+                      targets: [0],
+                      render: function (data, type, row) {
+
+                          return '<i class="fa fa-plus-circle"></i>';
+
+
+
+
+                      }
+
+                  },
+
+                 {
+                     targets: [1],
+                     render: function (data, type, row) {
+                         if (data == 0) {
+                             return '<i class="label bg-info ">' + 'Payé' + '</i>';
+                         }
+                         else if (data == 1) {
+                             return '<i class="label bg-warning">' + 'Non Payé' + '</i>';
+                         }
+
+
+
+
+                     }
+                 }
+
+
+            ]
+
+
+
+        });
+
+
+        $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+            // var target = $(e.target).attr("href"); // activated tab
+            // alert (target);
+            $($.fn.dataTable.tables(true)).css('width', '100%');
+            $($.fn.dataTable.tables(true)).DataTable().columns.adjust().draw();
+        });
+
+
+
+
+      //   Add event listener for opening and closing details
+        $('#facture tbody').on('click', 'td.details-control', function () {
+            var tr = $(this).closest('tr');
+            var row = table.row(tr);
+
+            var data = table.row($(this)).data();
+
+            if (row.child.isShown()) {
+                // This row is already open - close it
+                row.child.hide();
+                tr.removeClass('shown');
+            }
+            else {
+                var virtual_task_id = data["cbMarq"];
+                var subtable_id = "subtable-"+virtual_task_id;
+                row.child(format(subtable_id)).show(); /* HERE I format the new table */
+                tr.addClass('shown');
+                sub_DataTable(virtual_task_id, subtable_id); /*HERE I was expecting to load data*/
+            }
+        });
+
+
+
+
+
+        //$('#facture').dataTable({
+        //    "fnDrawCallback": function(oSettings) {
+        //        if ($('#facture tr').length < 11) {
+        //            $('.dataTables_paginate').hide();
+        //        }
+        //    }
+        //});
+
+    });
+
+
+
+
+
+
+</script>

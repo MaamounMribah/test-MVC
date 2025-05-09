@@ -1,0 +1,383 @@
+﻿@{
+    ViewBag.Title = "Administration";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-lg-10">
+        <h2>Administration</h2>
+        <ol class="breadcrumb">
+            <li>
+                <a href="@Url.Action("index","Home")">Acceuil</a>
+            </li>
+            <li class="active">
+                <a><strong> Administration</strong></a>
+            </li>
+
+
+        </ol>
+    </div>
+    <div class="col-lg-2">
+
+    </div>
+</div>
+
+<div class="wrapper wrapper-content">
+    <div class="row animated fadeInRight">
+
+        <div class="row">
+            <div class="col-lg-6">
+                <div class="panel panel-primary">
+                    <div class="panel-heading">
+                        <i class="fa fa-info-circle"></i> Structure
+                    </div>
+                    <div class="panel-body">
+
+                        <button class="btn btn-primary btn-outline btn-large-dim btn-rounded" type="button"><i class="fa fa-list-ul"></i></button>
+                        <a href='@Url.Action("Souches","Administration")' class="btn vertical-button hover-azure m-t-md text-primary" title="Numérotation des documents">
+                            <span class="glyph-icon icon-separator-vertical pad0A ">
+                                <i class="glyph-icon icon-paint-brush opacity-80 font-size-35"></i>
+                            </span>
+
+                            <h3 class="text-greenbee">Souche et Numérotation </h3>
+                            <br />
+                            <div class="ripple-wrapper"></div>
+                        </a>
+
+                        <br />
+                        <br />
+                        <button class="btn btn-primary btn-outline btn-large-dim btn-rounded" type="button"><i class="fa fa-money"></i></button>
+                        <a href='@Url.Action("ListeAgenceAvancesurCommission","Administration")' class="btn vertical-button hover-azure m-t-md text-primary" title="Paramétrage avance sur commission">
+                            <span class="glyph-icon icon-separator-vertical pad0A ">
+                                <i class="glyph-icon icon-paint-brush opacity-80 font-size-35"></i>
+                            </span>
+
+                            <h3 class="text-greenbee">Avance sur commission</h3>
+                            <br />
+                            <div class="ripple-wrapper"></div>
+                        </a>
+
+                        <br />
+                        <br />
+
+
+                        <button class="btn btn-primary btn-outline btn-large-dim btn-rounded" type="button"><i class="fa fa-map-marker"></i></button>
+                        <a href='@Url.Action("ListeRegions","Administration")' class="btn vertical-button hover-azure  m-t-md" title="Régions">
+                            <span class="glyph-icon icon-separator-vertical pad0A ">
+                                <i class="glyph-icon icon-paint-brush opacity-80 font-size-35"></i>
+                            </span>
+                            <h3 class="text-greenbee">Régions</h3>
+                            <br />
+                            <div class="ripple-wrapper"></div>
+                        </a>
+
+                        <br />
+                        <br />
+                        <button class="btn btn-primary btn-outline btn-large-dim btn-rounded" type="button"><i class="fa fa-bank"></i></button>
+                        <a href='@Url.Action("ListeDepots","Administration")' class="btn vertical-button hover-azure  m-t-md" title="Dépôts">
+                            <span class="glyph-icon icon-separator-vertical pad0A ">
+                                <i class="glyph-icon icon-paint-brush opacity-80 font-size-35"></i>
+                            </span>
+                            <h3 class="text-greenbee">Dépôts </h3>
+                            <br />
+                            <div class="ripple-wrapper"></div>
+                        </a>
+
+                        <br />
+                        <br />
+
+                        <button class="btn btn-primary btn-outline btn-large-dim btn-rounded" type="button"><i class="fa fa-sort-numeric-desc"></i></button>
+                        <a href='@Url.Action("index","ClassementAgence")' class="btn vertical-button hover-azure  m-t-md" title="Numérotation des documents">
+                            <span class="glyph-icon icon-separator-vertical pad0A ">
+                                <i class="glyph-icon icon-paint-brush opacity-80 font-size-35"></i>
+                            </span>
+                            <h3 class="text-greenbee"> Classement Agences</h3>
+                            <br />
+                            <div class="ripple-wrapper"></div>
+                        </a>
+
+                        <br />
+                        <br />
+                        <button class="btn btn-primary btn-outline btn-large-dim btn-rounded" type="button"><i class="fa fa-remove"></i></button>
+                        <a href='@Url.Action("motif","Administration")' class="btn vertical-button hover-azure  m-t-md" title="paramétrage Liste Motifs Annulation Abonnement">
+                            <span class="glyph-icon icon-separator-vertical pad0A ">
+                                <i class="glyph-icon icon-paint-brush opacity-80 font-size-35"></i>
+                            </span>
+                            <h3 class="text-greenbee">Liste Motifs</h3>
+                            <br />
+                            <div class="ripple-wrapper"></div>
+                        </a>
+
+                        <br />
+                        <br />
+
+                        <button class="btn btn-primary btn-outline btn-large-dim btn-rounded" type="button"><i class="fa fa-folder-o"></i></button>
+                        <a href='@Url.Action("ListeCommission","Commission")' class="btn vertical-button hover-azure  m-t-md" title="Numérotation des documents">
+                            <span class="glyph-icon icon-separator-vertical pad0A ">
+                                <i class="glyph-icon icon-paint-brush opacity-80 font-size-35"></i>
+                            </span>
+                            <h3 class="text-greenbee">Modèles de commission</h3>
+                            <br />
+                            <div class="ripple-wrapper"></div>
+                        </a>
+
+                        <br />
+                        <br />
+
+                        <button class="btn btn-primary btn-outline btn-large-dim btn-rounded" type="button"><i class="fa fa-file-archive-o"></i></button>
+                        <a href='@Url.Action("Index","Bibliotheque")' class="btn vertical-button hover-azure  m-t-md" title="bibliotheque des documents ">
+                            <span class="glyph-icon icon-separator-vertical pad0A ">
+                                <i class="glyph-icon icon-gears opacity-80 font-size-35"></i>
+                            </span>
+                            <h3 class="text-greenbee">Bibliothèque</h3>
+                            <br />
+                            <div class="ripple-wrapper">
+                            </div>
+                        </a>
+                        <br />
+                        <br />
+
+                        <button class="btn btn-primary btn-outline btn-large-dim btn-rounded" type="button"><i class="fa fa-key"></i></button>
+                        <a href='@Url.Action("Licensing","Administration")' class="btn vertical-button hover-azure  m-t-md" title="Activer votre license ">
+                            <span class="glyph-icon icon-separator-vertical pad0A ">
+                                <i class="glyph-icon ui-icon-key opacity-80 font-size-35"></i>
+                            </span>
+                            <h3 class="text-greenbee">License </h3>
+                            <br />
+                            <div class="ripple-wrapper">
+                            </div>
+                        </a>
+                        <br />
+                        <br />
+                        @*<button class="btn btn-primary btn-outline btn-large-dim btn-rounded" type="button"><i class="fa fa-strikethrough"></i></button>
+        <a href='@Url.Action("ListeServices","Listes")' class="btn vertical-button hover-azure" title="Liste des services ">
+            <span class="glyph-icon icon-separator-vertical pad0A ">
+                <i class="glyph-icon icon-strikethrough opacity-80 font-size-35"></i>
+            </span>
+            Services
+            <br />
+            <div class="ripple-wrapper">
+            </div>
+        </a>*@
+
+
+
+                        @*<button class="btn btn-primary dim btn-large-dim" type="button"><i class="fa fa-list-ul"></i></button>
+        <a href='@Url.Action("ListeAbonnements","Listes")' class="btn vertical-button hover-azure" title="Types d'abonnement' ">
+            <span class="glyph-icon icon-separator-vertical pad0A ">
+                <i class="glyph-icon icon-strikethrough opacity-80 font-size-35"></i>
+            </span>
+            Type Abonnements
+            <br />
+            <div class="ripple-wrapper">
+            </div>
+        </a>
+        <br />*@
+                        @*<button class="btn btn-primary dim btn-large-dim" type="button"><i class="fa fa-list-ul"></i></button>
+        <a href='@Url.Action("ListePieces","Listes")' class="btn vertical-button hover-azure" title="Types des pièces ">
+            <span class="glyph-icon icon-separator-vertical pad0A ">
+                <i class="glyph-icon icon-strikethrough opacity-80 font-size-35"></i>
+            </span>
+            Type Pièces
+            <br />
+            <div class="ripple-wrapper">
+            </div>
+        </a>*@
+                        <button class="btn btn-primary btn-outline btn-large-dim btn-rounded" type="button"><i class="fa fa-clipboard"></i></button>
+                        <a href='@Url.Action("StatutNS","Administration")' class="btn vertical-button hover-azure  m-t-md" title="paramétrage liste des statuts des numéros de série">
+                            <span class="glyph-icon icon-separator-vertical pad0A ">
+                                <i class="glyph-icon icon-paint-brush opacity-80 font-size-35"></i>
+                            </span>
+                            <h3 class="text-greenbee">Liste des Statuts</h3>
+                            <br />
+                            <div class="ripple-wrapper"></div>
+                        </a>
+
+                        <br />
+                        <br />
+                        <button class="btn btn-primary btn-outline btn-large-dim btn-rounded" type="button"><i class="fa fa-clock-o"></i></button>
+                        <a href='@Url.Action("Index","Log")' class="btn vertical-button hover-azure  m-t-md" title="Historique">
+                            <span class="glyph-icon icon-separator-vertical pad0A ">
+                                <i class="glyph-icon icon-paint-brush opacity-80 font-size-35"></i>
+                            </span>
+                            <h3 class="text-greenbee">Historique</h3>
+                            <br />
+                            <div class="ripple-wrapper"></div>
+                        </a>
+                        <br />
+                        <br />
+                        <button class="btn btn-primary btn-outline btn-large-dim btn-rounded" type="button"><i class="fa fa-list"></i></button>
+                        <a href='@Url.Action("Index","AxiaSales")' class="btn vertical-button hover-azure  m-t-md" title="Facturation">
+                            <span class="glyph-icon icon-separator-vertical pad0A ">
+                                <i class="glyph-icon icon-paint-brush opacity-80 font-size-35"></i>
+                            </span>
+                            <h3 class="text-greenbee">Facturation</h3>
+                            <br />
+                            <div class="ripple-wrapper"></div>
+                        </a>
+                        <br />
+                        <br />
+                      
+                        <button class="btn btn-primary btn-outline btn-large-dim btn-rounded" type="button"><i class="fa fa-percent"></i></button>
+                        <a href='@Url.Action("ParametrageRistourne","Administration")' class="btn vertical-button hover-azure  m-t-md" title="Parametrage Ristourne">
+                            <span class="glyph-icon icon-separator-vertical pad0A ">
+                                <i class="glyph-icon icon-paint-brush opacity-80 font-size-35"></i>
+                            </span>
+                            <h3 class="text-greenbee">Parametrage Bonus</h3>
+                            <br />
+                            <div class="ripple-wrapper"></div>
+                        </a>
+                        <br />
+                    </div>
+
+                </div>
+            </div>
+
+
+            <div class="col-lg-6">
+                <div class="panel panel-primary">
+                    <div class="panel-heading">
+                        <i class="fa fa-gears"></i> Gestion utilisateurs
+                    </div>
+                    <div class="panel-body">
+
+                        <a href='@Url.Action("Index","GroupsAdmin")'>
+                            <button class="btn btn-primary btn-outline btn-large-dim btn-rounded" type="button"><i class="fa fa-users"></i></button>
+                        </a>
+                        <a href='@Url.Action("Index","GroupsAdmin")' class="btn vertical-button hover-azure  m-t-md" title="Administer les rôles utilisateurs ">
+                            <span class="glyph-icon icon-separator-vertical pad0A ">
+                                <i class="glyph-icon icon-strikethrough opacity-80 font-size-35"></i>
+                            </span>
+                            <h3 class="text-greenbee">Groupe utilisateurs</h3>
+                            <br />
+                            <div class="ripple-wrapper">
+                            </div>
+                        </a>
+
+                        <br />
+                        <br />
+
+
+                        <a href='@Url.Action("Index","UsersAdmin")'> <button class="btn btn-primary btn-outline btn-large-dim btn-rounded" type="button"><i class="fa fa-user-plus"></i></button></a>
+                        <a href='@Url.Action("Index","UsersAdmin")' class="btn vertical-button hover-azure  m-t-md" title="Administer les paramétres des utilisateurs ">
+                            <span class="glyph-icon icon-separator-vertical pad0A ">
+                                <i class="glyph-icon icon-gears opacity-80 font-size-35"></i>
+                            </span>
+                            <h3 class="text-greenbee">Utilisateurs</h3>
+                            <br />
+                            <div class="ripple-wrapper">
+                            </div>
+                        </a>
+                        <br />
+                        <br />
+
+                        <button class="btn btn-primary btn-outline btn-large-dim btn-rounded" type="button"><i class="fa fa-home"></i></button>
+                        <a href='@Url.Action("index","Agences")' class="btn vertical-button hover-azure  m-t-md" title="Gestion des agences ">
+                            <span class="glyph-icon icon-separator-vertical pad0A ">
+                                <i class="glyph-icon ui-icon-home opacity-80 font-size-35"></i>
+                            </span>
+                            <h3 class="text-greenbee">Agences</h3>  <br />
+                            <div class="ripple-wrapper"></div>
+                        </a>
+
+
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="col-lg-6">
+                <div class="panel panel-primary">
+                    <div class="panel-heading">
+                        <i class="fa fa-gears"></i> Paramétrage
+                    </div>
+                    <div class="panel-body">
+
+                        <a href='@Url.Action("ImportFromExcel", "Abonnement")'>
+                            <button class="btn btn-primary btn-outline btn-large-dim btn-rounded" type="button"><i class="fa fa-file-excel-o"></i></button>
+                        </a>
+                        <a href='@Url.Action("ImportFromExcel", "Abonnement")' class="btn vertical-button hover-azure  m-t-md"
+                           title="Importation Abonnement Excel ">
+                            <span class="glyph-icon icon-separator-vertical pad0A ">
+                                <i class="glyph-icon icon-strikethrough opacity-80 font-size-35"></i>
+                            </span>
+                            <h3 class="text-greenbee">Importation Abonnement </h3>
+                            <br />
+                            <div class="ripple-wrapper">
+                            </div>
+                        </a>
+                        <br />
+                        <br />
+
+
+
+                        <a href='@Url.Action("Parametrage", "Administration")'>
+                            <button class="btn btn-primary btn-outline btn-large-dim btn-rounded" type="button"><i class="fa fa-gears"></i></button>
+                        </a>
+                        <a href='@Url.Action("Parametrage", "Administration")' class="btn vertical-button hover-azure  m-t-md"
+                           title="Importation Abonnement Excel ">
+                            <span class="glyph-icon icon-separator-vertical pad0A ">
+                                <i class="glyph-icon icon-strikethrough opacity-80 font-size-35"></i>
+                            </span>
+                            <h3 class="text-greenbee">Paramétrage </h3>
+                            <br />
+                            <div class="ripple-wrapper">
+                            </div>
+                        </a>
+                        <br />
+                        <br />
+                        @*<a href='@Url.Action("FacturesAutomatiques", "GestionFactures")'>
+                                <button class="btn btn-primary btn-outline btn-large-dim btn-rounded" type="button"><i class="fa fa-files-o"></i></button>
+                            </a>
+                            <a href='@Url.Action("FacturesAutomatiques", "GestionFactures")' class="btn vertical-button hover-azure  m-t-md"
+                               title="Importation Abonnement Excel ">
+                                <span class="glyph-icon icon-separator-vertical pad0A ">
+                                    <i class="glyph-icon icon-strikethrough opacity-80 font-size-35"></i>
+                                </span>
+                                <h3 class="text-greenbee">Factures Automatiques </h3>
+                                <br />
+                                <div class="ripple-wrapper">
+                                </div>
+                            </a>
+                            <br />
+                            <br />*@
+
+                        <a href='@Url.Action("Index", "Correction")'>
+                            <button class="btn btn-primary btn-outline btn-large-dim btn-rounded" type="button"><i class="fa fa-gears"></i></button>
+                        </a>
+                        <a href='@Url.Action("Index", "Correction")' class="btn vertical-button hover-azure  m-t-md"
+                           title="Corrections">
+                            <span class="glyph-icon icon-separator-vertical pad0A ">
+                                <i class="glyph-icon icon-strikethrough opacity-80 font-size-35"></i>
+                            </span>
+                            <h3 class="text-greenbee">Corrections </h3>
+                            <br />
+                            <div class="ripple-wrapper">
+                            </div>
+                        </a>
+                        <br />
+                        <br />
+                       
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script src="~/js/jquery-3.1.1.min.js"></script>
+<!-- Sweet alert -->
+<script src="~/js/plugins/sweetalert/sweetalert.min.js"></script>
+<!-- Ladda -->
+<script src="~/js/plugins/ladda/spin.min.js"></script>
+<script src="~/js/plugins/ladda/ladda.min.js"></script>
+<script src="~/js/plugins/ladda/ladda.jquery.min.js"></script>
+<!-- Chosen -->
+<script src="~/js/plugins/chosen/chosen.jquery.js"></script>
+<!-- Data picker -->
+<script src="~/js/plugins/datapicker/bootstrap-datepicker.js"></script>
+<script src="~/js/plugins/fullcalendar/moment.min.js"></script>
+
+<!-- Date range picker -->
+<script src="~/js/plugins/daterangepicker/daterangepicker.js"></script>

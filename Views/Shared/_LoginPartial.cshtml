@@ -1,0 +1,40 @@
+﻿@using Microsoft.AspNet.Identity
+@if (Request.IsAuthenticated)
+{
+    using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm", @class = "navbar-right" }))
+    {
+        @Html.AntiForgeryToken()
+        <div class="ibox-content">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="profile-image center-block">
+                        <a href=@Url.Action("ShowProfile", "Manage")>
+                            <img src="@Url.Action("Photo", "Account" , new { UserId=User.Identity.GetUserId() })" class="img-rounded" />
+                        </a>
+                    </div>
+
+                </div>
+                
+                <div class="col-md-6"></div>
+            </div>
+
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group center-orientation">
+                        <h2 class="center-block">
+                            @Html.ActionLink(User.Identity.GetUserName(), "ShowProfile", "Manage", routeValues: null, htmlAttributes: new { title = "Voir Profil" })
+                        </h2>
+                    </div>
+                    <a href="javascript:document.getElementById('logoutForm').submit()" class="btn btn-xs font-normal btn-danger" style="padding: 0px 4px; min-height: 0px">
+                        <i class="fa fa-power-off"></i> Se déconnecter
+                    </a>
+
+                </div>
+            </div>
+        </div>
+
+
+    }
+
+}

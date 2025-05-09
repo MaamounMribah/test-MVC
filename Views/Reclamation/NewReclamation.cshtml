@@ -1,0 +1,408 @@
+﻿@model BeeProj.Models.B_RECLAMATION
+@{
+    ViewBag.Title = "NewReclamation";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<link href="~/css/plugins/chosen/bootstrap-chosen.css" rel="stylesheet">
+<link href="~/css/plugins/dataTables/datatables.min.css" rel="stylesheet">
+ <!-- Toastr style -->
+<link href="~/css/plugins/toastr/toastr.min.css" rel="stylesheet">
+
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-sm-4">
+        <h2>Nouvelle réclamation</h2>
+        <ol class="breadcrumb">
+            <li>
+                <a href=@Url.Action("Index","Home")>Acceuil</a>
+            </li>
+            <li class="active">
+                <strong><Font color="grey"> <a href=@Url.Action("NewReclamation","Reclamation")>Nouvelle réclamation</a></Font></strong>
+            </li>
+
+        </ol>
+    </div>
+</div>
+
+
+<div class="row m-t-md">
+    <div class="col-lg-12">
+        <div class="ibox float-e-margins">
+            <div class="ibox-title">
+                <h5>Demande Réf. #@ViewBag.demandereference</h5>
+
+            </div>
+
+
+            @*foreach (var error in result.Errors)
+                {
+                ModelState.AddModelError("", error);
+                }*@
+
+            @using (Html.BeginForm("EnvoyerReclamation", "Reclamation", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+            {
+                <div class="ibox-content">
+                    @if (ViewData.ModelState[""] != null && ViewData.ModelState[""].Errors.Count > 0)
+                    {
+                        <div class="alert alert-danger alert-dismissable">
+                            <button type="button" class="close " data-dismiss="alert">×</button>
+                            @Html.ValidationSummary("", new { @class = "text-danger" })
+                        </div>
+                    }
+                    <form method="get" class="form-horizontal">
+
+                        <div class="row">
+                            <div class="form-group col-lg-6">
+                               
+                                <div class="ibox-content">
+
+                                    <label>N°Téléphone</label>
+
+                                    <div class="bg-white input-prepend">
+
+                                        @Html.TextBoxFor(model => model.CT_Telephone, new { @id = "CT_Telephone", @class = "form-control", @placeholder = "Tel..." })
+
+                                        
+                                    </div>
+
+
+
+                                    <label>Identifiant</label>
+
+                                    <div class="bg-white input-prepend">
+
+                                        @Html.TextBoxFor(model => model.CT_Identifiant, new { @id = "CT_Identifiant", @class = "form-control", @placeholder = "ID ..." })
+
+
+                                    </div>
+
+                                    <label>Référence Abonnment</label>
+
+                                    <div class="bg-white input-prepend">
+                                        @if (ViewBag.ListeAbo == null)
+                                        {
+                                            <select class="chosen-select form-control" id="DO_RefTT" name="DO_RefTT">
+                                                <option value=""> </option>
+
+                                            </select>
+                                        }
+                                        else
+                                        {
+                                            <select class="chosen-select form-control" id="DO_RefTT" name="DO_RefTT">
+                                                <option value="">--Selectionner un abonnement-- </option>
+                                                @foreach (var item in ViewBag.ListeAbo)
+                                                {
+                                                    <option value="@item.DO_RefTT">@item.DO_RefTT</option>
+                                                }
+
+                                            </select>
+                                        }
+                                    </div>
+                                    <br />
+
+
+                                </div>
+                            </div>
+
+
+
+
+                            <div class="form-group col-lg-6">
+                                
+                                <div class="ibox-content">
+                                    <label>Intitulé Client</label>
+
+                                    <div class="bg-white input-prepend">
+
+                                        @Html.TextBoxFor(model => model.CT_Intitule, new { @id = "CT_Intitule", @class = "form-control", @placeholder = "Client..." })
+
+                                          </div>
+
+
+
+                                  
+
+                                    <label>Service Concerné</label>
+
+                                   @Html.DropDownListFor(m => m.RC_SERVICE, new List<SelectListItem>()
+                                            {
+                                                new SelectListItem(){ Text= "Service Commercial", Value = "0"},
+                                                new SelectListItem(){ Text= "Service Techinque", Value = "1"},
+
+
+                                                }, new { @id = "RC_SERVICE", @class = "form-control chosen-select", @required = "required" })
+
+
+
+
+                                    <label>Description</label>
+
+                                    <div class="bg-white input-prepend">
+                                        @Html.TextAreaFor(m => m.RC_DESCRIPTION, new { @id = "RC_DESCRIPTION", @placeholder = "Description...", @class = "form-control" })
+                                    </div>
+
+
+                                </div>
+                            </div>
+
+
+
+
+                        </div>
+
+
+
+                    </form>
+
+
+                    <div class="hr-line-dashed"></div>
+
+                    <div class="form-group">
+
+                        <button class="btn btn-primary  pull-right m-t-n-xs" style="margin-left:10px;" type="submit"><strong>Envoyer</strong></button>
+                        <button type="button" class="btn btn-white  pull-right m-t-n-xs" onclick="location.href='@Url.Action("NewReclamation","Reclamation")'"><strong>Annuler</strong></button>
+
+
+                    </div>
+
+                </div>
+
+
+            }
+        </div>
+    </div>
+
+</div>
+
+
+<div class="modal inmodal fade" id="ListeAbonnements" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title">Liste des abonnements </h4>
+                <small class="font-bold">Choisissez l'abonnement pour rajouter des services en SUS .</small>
+            </div>
+            <div class="modal-body">
+
+                <div class="row">
+                    <div class="col-md-10">
+                        <input class="form-control" type="text" id="idC" />
+                    </div>
+                    <div class="col-md-2">
+                        <button class="btn btn-sm btn-rounded" id="retrieveListeAbo">Ok</button>
+                    </div>
+                </div>
+
+                <br />
+                <div class="full-height-scroll">
+                    <div class="table-responsive">
+                        <table class="table table-striped table-hover" id="TablelisteAbonnements" style="cursor:pointer;">
+
+                            <thead>
+                                <tr>
+                                    <th>Référence Abonnement</th>
+                                    <th>Intitulé Client</th>
+                                    <th>Téléphone</th>
+
+                                    <th>Adresse</th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+
+
+            </div>
+
+
+        </div>
+    </div>
+</div>
+<script src="~/js/jquery-3.1.1.min.js"></script>
+<script src="~/js/plugins/metisMenu/jquery.metisMenu.js"></script>
+<script src="~/js/plugins/chosen/chosen.jquery.js"></script>
+<script src="~/js/plugins/dataTables/datatables.min.js"></script>
+<!-- Toastr script -->
+<script src="~/js/plugins/toastr/toastr.min.js"></script>
+
+
+
+
+<script>
+
+                        $(document).ready(function () {
+
+                            $('.chosen-select').chosen({ width: "100%" });
+
+
+                            $('#DO_RefTT').on("change", function (event) {
+
+                                $.ajax({
+                                    type: "get",
+                                    url: '@Url.Action("GetInfoClientInformation")',
+                                    dataType: 'json',
+                                    data: { tel: null, RefTT: $("#DO_RefTT").val() },
+                                    success: function (msg) {
+                                        if (msg.result == 0) {
+                                            $("#CT_Telephone").val((msg.abonnementClient.CT_Telephone));
+                                            $("#CT_Identifiant").val((msg.data.CT_Identifiant));
+                                            $("#CT_Intitule").val((msg.data.CT_Intitule));
+                                            $("#infoClient").attr("href", "/Structure/DetailsClient/" + msg.data.cbMarq);
+                                           
+
+
+
+
+
+                                        }
+                                        else {
+
+                                            toastr.error(msg.msg, 'le client n existe pas');
+                                            $('#DO_RefTT').val("");
+                                            $('#CT_Identifiant').val("");
+                                            $('#DO_RefTT').trigger("chosen:updated");
+                                            $("#CT_Intitule").val("");
+                                            
+                                            $("#infoClient").attr("href", "#");
+
+
+
+                                        }
+                                    }
+                                });
+
+                            });
+
+                            $('#CT_Telephone').on("change", function (event) {
+                                $.ajax({
+                                    type: "get",
+                                    url: '@Url.Action("GetInfoClientInformation")',
+                                    dataType: 'json',
+                                    data: { tel: $("#CT_Telephone").val(), RefTT: null },
+                                    success: function (msg) {
+                                        if (msg.result == 0) {
+                                            $('#DO_RefTT').val(msg.abonnementClient.DO_RefTT);
+                                            $('#DO_RefTT').trigger("chosen:updated");
+                                            $("#CT_Identifiant").val((msg.data.CT_Identifiant));
+                                            $("#CT_Intitule").val((msg.data.CT_Intitule));
+                                            $("#infoClient").attr("href", "/Structure/DetailsClient/" + msg.data.cbMarq);
+                                           
+                                        }
+                                        else {
+                                            toastr.error(msg.msg, 'le client n existe pas');
+                                            $('#DO_RefTT').val("");
+                                            $('#CT_Identifiant').val("");
+                                            $('#DO_RefTT').trigger("chosen:updated");
+                                            $("#CT_Intitule").val("");
+                                           
+                                            $("#infoClient").attr("href", "#");
+
+                                        }
+                                    }
+                                });
+                            });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                            $('#CT_Identifiant').focus(function () {
+                                //open bootsrap modal
+                                $('#ListeAbonnements').modal({
+                                    show: true
+                                });
+                            });
+
+
+                            $("#retrieveListeAbo").click(function () {
+                                if ($('#idC').val() != "") {
+                                    $("#TablelisteAbonnements").DataTable({
+                                        "ajax": {
+                                            "url": "/Abonnement/listeAbonnementIdentifiant?IdentifiantClient=" + $('#idC').val(),
+                                            "type": 'get',
+                                            "datatype": "json"
+                                        },
+                                        "columns": [
+                                            { "data": "DO_RefTT" },
+                                            { "data": "CT_Intitule" },
+                                            { "data": "CT_Telephone" },
+
+                                            { "data": "CT_Adresse" },
+
+                                        ]
+                                    });
+                                    $('#TablelisteAbonnements tbody').on('dblclick', 'tr', function () {
+                                        var tr = $(this).closest('tr');
+                                        var DO_RefTT = tr.find('td:eq(0)').html();
+                                        var CT_Telephone = tr.find('td:eq(2)').html();
+                                        var b = tr.find('td:eq(1)').html();
+                                        var intitule = tr.find('td:eq(1)').html();
+
+                                        $('#DO_RefTT').val(DO_RefTT);
+                                        $('#DO_RefTT').trigger("chosen:updated");
+                                        $("#CT_Identifiant").val($('#idC').val());
+                                        $("#CT_Telephone").val(CT_Telephone);
+                                        $("#CT_Intitule").val(intitule);
+                                        //$("#infoClient").attr("href", "/Structure/DetailsClient/" + msg.data.cbMarq);
+
+                                        $('.chosen-select').chosen({ width: "100%" });
+                                        $.ajax({
+                                            type: "get",
+                                            url: '@Url.Action("GetInfoClientInformation")',
+                                            dataType: 'json',
+                                            data: { tel: null, RefTT: $("#DO_RefTT").val() },
+                                            success: function (msg) {
+                                                if (msg.result == 0) {
+
+                                                    $("#infoClient").attr("href", "/Structure/DetailsClient/" + msg.data.cbMarq);
+                                                    $('.chosen-select').chosen({ width: "100%" });
+
+                                                }
+                                                else {
+                                                    toastr.error(msg.msg, 'le client n existe pas');
+                                                    $('#DO_RefTT').val("");
+                                                    $('#DO_RefTT').trigger("chosen:updated");
+                                                    $("#CT_Intitule").val("");
+                                                    $("#CT_Identifiant").val("");
+                                                   
+                                                    $("#infoClient").attr("href", "#");
+
+
+
+                                                }
+                                            }
+                                        });
+
+                                        $('#ListeAbonnements').modal('hide');
+                                        $("#TablelisteAbonnements").dataTable().destroy();
+
+
+
+                                    });
+
+
+                                }
+                            });
+
+
+
+                        });
+
+</script>

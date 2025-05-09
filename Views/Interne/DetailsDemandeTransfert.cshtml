@@ -1,0 +1,353 @@
+﻿
+@{
+    ViewBag.Title = "DetailsDemandeTransfert";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style>
+    .dataTables_filter, .dataTables_info, .dataTables_length {
+        display: none;
+    }
+</style>
+<link href="~/css/plugins/dataTables/datatables.min.css" rel="stylesheet">
+
+
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-lg-10">
+        <br />
+        <h3>Détails demande de transfert REF# @ViewBag.Ref</h3>
+        <ol class="breadcrumb">
+            <li>
+                <a href="@Url.Action("index","Home")">Acceuil </a>
+            </li>
+            <li>
+              <a href="@Url.Action("ListeDemandesTransfert","Interne")">Liste des demandes de transfert </a>
+
+            </li>
+            <li class="active">
+                <strong>Détails</strong>
+            </li>
+        </ol>
+    </div>
+    <div class="col-lg-2">
+
+    </div>
+</div>
+
+<div class="wrapper wrapper-content animated fadeInRight">
+
+    <div class="row">
+
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="wrapper wrapper-content animated fadeInUp">
+
+                    <div class="ibox">
+                        <div class="ibox-title">
+
+                            <div class="ibox-tools">
+                                <!-- if connected is BEE Agency -->
+
+                                @*@if (ViewBag.AgenceConnectee == Model.A_CodeRecept && Model.TR_Statut == 0)
+                                {
+
+                                    <button class="btn btn-primary btn-xs" id="validerBord" type="button">Valider </button>
+
+                                }
+                                @if (Model.TR_Statut == 0 && ViewBag.ResponsableRegionale == true)
+                                    {
+                                        <button class="btn btn-primary btn-xs" id="transferRespon" type="button">Transférer </button>
+                                    }*@
+                                @*@if (Model.TR_Statut == 0 && ViewBag.AgenceConnectee == Model.A_CodeEmet)
+                                    {
+                                    <button class="btn btn-github btn-xs" id="AnnulerTrans" type="button">Annuler </button>
+                                    }
+                                @if (Model.TR_Statut == 1 && ViewBag.AgenceConnectee == Model.A_CodeRecept)
+                                {
+                                    <button class="btn btn-github btn-xs" id="AnnulerTrans" type="button">Annuler </button>
+                                }*@
+
+                            </div>
+                        </div>
+                        <div class="ibox-content">
+                            <div class="project-list">
+
+                                <table class="table table-hover dataTables-example" id="ListeDMLTransfert">
+                                    <thead>
+
+                                        <tr>
+
+                                            <th class="project-status">
+                                                Statut
+                                            </th>
+
+                                            <th>
+
+                                                Référence
+                                            </th>
+
+                                            <th>
+
+                                                Désignation
+                                            </th>
+
+                                            
+
+                                            <th>
+                                                Quantité Demandée
+                                            </th>
+
+                                            <th>
+                                                Quantité Envoyée
+                                            </th>
+                                           
+
+                                            <th>
+                                                Depot de Sortie
+                                            </th>
+                                            <th>
+                                                Depot d'Entrée
+                                            </th>
+                                        </tr>
+                                    </thead>
+
+
+                                </table>
+
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
+</div>
+
+
+<div class="modal inmodal" id="validerBordereau" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content animated flipInX">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Ok</span></button>
+
+            </div>
+            <div class="modal-body">
+
+
+                <div class="modal-body">
+
+
+                    <div class="row">
+                        <h3 class="text-danger">Voulez-vous valider le transfert des articles ? </h3>
+                        <br />
+
+                        <div class="form-group float-e-margins">
+
+
+
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-white" data-dismiss="modal">Annuler</button>
+                                <button type="submit" class="btn btn-primary" id="ValiderTransfert">Valider </button>
+
+                            </div>
+                        </div>
+                    </div>
+
+
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+
+
+
+
+<div class="modal inmodal" id="AnnulerTransfert" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content animated flipInX">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Ok</span></button>
+
+            </div>
+            <div class="modal-body">
+
+
+                <div class="modal-body">
+
+
+                    <div class="row">
+                        <h3 class="text-danger">Voulez-vous annluer le transfert des articles ? </h3>
+                        <br />
+
+                        <div class="form-group float-e-margins">
+
+
+
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-white" data-dismiss="modal">Non</button>
+                                <button type="submit" class="btn btn-primary" id="NoTransfert">Oui </button>
+
+                            </div>
+                        </div>
+                    </div>
+
+
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</div>
+<script src="~/js/jquery-3.1.1.min.js"></script>
+
+<script src="~/js/plugins/metisMenu/jquery.metisMenu.js"></script>
+
+<script src="~/js/plugins/pace/pace.min.js"></script>
+<script src="~/js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+
+<script src="~/js/plugins/chosen/chosen.jquery.js"></script>
+
+<script src="~/js/plugins/dataTables/datatables.min.js"></script>
+
+<script>
+    $(document).ready(function () {
+
+    var table = $('#ListeDMLTransfert').DataTable({
+        "ajax": {
+            "url": '/Interne/getlisteDMTR?cbMarq=' + @Model.cbMarq,
+            "type": "get",
+            "datatype": "json",
+            "autoWidth": false
+        },
+        "columns": [
+                { "data": "statut" },
+                { "data": "AR_Ref" },
+                { "data": "Designation" },
+                { "data": "quantiteD" },
+                { "data": "quantiteE" },
+                { "data": "OUT" },
+                { "data": "IN" }
+        ],
+        "columnDefs": [
+
+
+                                   {
+                                       targets: [0],
+                                       render: function (data, type, row) {
+
+                                       
+                                           if (data == 0) {
+                                               return '<i class="label text-purplebee" style="background-color: #e5e5f5;">En cours</i>';
+                                           }
+                                           else if (data == 1) {
+                                               return '<i class="label style1 bg-greenbee">Validé</i>';
+
+                                           }
+
+                                           else if (data == 2 ){
+                                               return '<i class="label bg-purplebee">Confirmé</i>';
+                                           }
+                                           else if (data == 3) {
+                                               return '<i class="label  bg-graybee">Annulé</i>';
+                                           }
+                                            
+
+
+                                       }
+                                   },
+
+                                  
+        ]
+
+           });
+         });
+</script>
+
+<script>
+
+    $("#transferRespon").click(function(){
+
+
+        $.ajax({
+            type: "get",
+            url: "/Interne/TransfererResp?id=" + @Model.cbMarq,
+            dataType: "json",
+            success: function (msg) {
+
+
+                window.location = "/Interne/ListeDocTransfert";
+
+            }
+
+
+
+
+
+        });
+    });
+    $('#validerBord').click(function () {
+        $("#validerBordereau").modal();
+    });
+
+    $('#AnnulerTrans').click(function () {
+        $("#AnnulerTransfert").modal();
+    });
+
+
+
+
+    $('#NoTransfert').click(function () {
+        var url = "/Interne/AnnulerTransfert?cbmarq=" + @Model.cbMarq  ;
+
+
+        $.ajax({
+            type: "POST",
+            url: url,
+            dataType: "json",
+            success: function (data) {
+                window.location = "/Interne/ListeDocTransfert/";            }
+
+        })
+    });
+
+
+    $('#ValiderTransfert').click(function () {
+        var url = "/Interne/ValiderTransfert?cbmarq=" + @Model.cbMarq  ;
+
+
+        $.ajax({
+            type:"POST",
+            url: url,
+            //dataType: "json",
+            success: function (data) {
+                window.location = "/Interne/ListeDocTransfert/";            }
+
+        })
+    });
+
+
+    @*$('#ConfirmerVers').click(function () {
+        $.ajax({
+            type: "get",
+            url: '@Url.Action("ValiderVersement")', // we are calling json method
+            data: { cbMarq: @Model.cbMarq},
+            dataType: 'json',
+            success: function (msg) {
+                location.reload(true);
+
+
+                // ************************************
+            }});
+    });*@
+
+</script>

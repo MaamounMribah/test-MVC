@@ -1,0 +1,668 @@
+﻿
+@{
+    ViewBag.Title = "ConfirmationAbonnement";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<link href="~/css/plugins/dataTables/datatables.min.css" rel="stylesheet">
+<!-- Sweet Alert -->
+<link href="~/css/plugins/sweetalert/sweetalert.css" rel="stylesheet">
+<!-- Toastr style -->
+<link href="~/css/plugins/toastr/toastr.min.css" rel="stylesheet">
+<link href="~/css/plugins/jasny/jasny-bootstrap.min.css" rel="stylesheet">
+
+<link href="~/css/plugins/ladda/ladda-themeless.min.css" rel="stylesheet">
+
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-lg-10">
+        <h2>Liste des abonnements</h2>
+        <ol class="breadcrumb">
+            <li>
+                <a href="#">Acceuil</a>
+            </li>
+            <li>
+                <a href="@Url.Action("ListeAbonnement", "Abonnement")">Gestion des abonnements</a>
+            </li>
+            <li class="active">
+                <strong>Confirmation Ajout Abonnement </strong>
+            </li>
+        </ol>
+    </div>
+
+</div>
+
+
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="well center-block p-lg white-bg">
+            <h3>Votre demande a bien été enregistrée. Vous pouvez imprimer le reçu  de votre demande.</h3>
+
+            <div class="m-t-lg">
+                <a class="btn btn-primary btn-rounded btn-outline m-l-sm pull-right" href="@Url.Action("Details/"+ ViewBag.cbmarq, "Abonnement")">Détails abonnement </a>
+                <a class="btn btn-primary btn-rounded pull-right " href="@Url.Action("ImprimerRecuAbonnement/" + ViewBag.cbmarq, "Abonnement")" target="_blank">Imprimer reçu d'abonnement</a>
+            </div>
+            <br />
+            <br />
+        </div>
+
+        <div class="row">
+            <div class="col-md-9">
+                <div class="well center-block p-lg white-bg">
+
+                    <form class="form-horizontal">
+                        @if (ViewBag.MaterielAjoutee.Count != 0)
+                        {
+                            <label class="col-sm-2 control-label">Matériels Ajoutés </label>
+                            <div class="col-sm-10">
+                                <select data-placeholder="Choisir des articles..."
+                                        id="ReservationMaterielAjoutee" name="ReservationMaterielAjoutee" class="form-control " multiple disabled>
+                                    @if (ViewBag.MaterielAjoutee.Count != 0)
+                                    {
+                                        foreach (var i in ViewBag.MaterielAjoutee)
+                                        {
+
+                                            <option value="@i.AR_Ref">@i.DL_Design</option>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <option value="null">Aucun</option>
+                                    }
+                                </select>
+                                <div class="form-group col-sm-10">
+                                    <label class="control-label">   Total matériels vendus : </label>
+                                    @if (ViewBag.MaterielAjoutee.Count != 0 && ViewBag.SommeMatajouterInclus20 != 0)
+                                    {
+                                        <label class="control-label">
+                                            Reçu  @String.Format("{0:N3}", (decimal)@ViewBag.SommeMatajouterInclus20 + (decimal)20.000000) TND , inclus 20 TND
+                                        </label>
+                                    }
+                                </div>
+                                <br />
+                                <br />
+                                <br />
+                            </div>
+
+                            <br />  <br />
+
+
+                        }
+                        <div class="form-group">
+                            @*manel*@
+                            @if (ViewBag.Materiel != null)
+                            {
+
+                                int i = 0;
+                                foreach (var kk in ViewBag.Materiel)
+                                {
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label">Matériels sérialisee</label>
+                                        <div class="col-sm-10">
+                                            <select data-placeholder="Choisir des articles..." id="ReservationMateriel[@i]" name="ReservationMateriel[@i]" class="form-control">
+                                                @if (ViewBag.MaterielAjoutee.Count != 0)
+                                                {
+                                                    <option value="@kk.AR_Ref">@kk.AR_Design</option>
+                                                }
+                                                else
+                                                {
+                                                    <option value="null">Aucun</option>
+                                                }
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    if (ViewBag.LotSerie != null)
+                                    {
+                                        <div class="form-group">
+                                            <label class="col-sm-2 control-label">N° de série</label>
+                                            <div class="col-sm-10" id="selectedLSSERIE">
+                                                <select class="form-control chosen-select" id="LotSerie[@i]" name="LotSerie[@i]" data-placeholder="Choisir les références..." data-target="#LotSerie">
+
+                                                    @if (ViewBag.NumMaterielsReserves.Count != 0)
+                                                    {
+                                                        <option style="background-color:#4D57A6;" class="text-white form-control" selected="selected" value="@ViewBag.NumMaterielsReserves[i].LS_NoSerie">@ViewBag.NumMaterielsReserves[i].LS_NoSerie</option>
+
+
+
+                                                        foreach (var aa in ViewBag.LotSerie[i].LS_NoSerie)
+                                                        {
+                                                            <option class="font-bold text-purplebee form-control" value="@aa.LS_NoSerie">@aa.LS_NoSerie</option>
+
+                                                        }
+
+
+                                                    }
+                                                    else
+                                                    {
+                                                        if (ViewBag.LotSerieDepot != null)
+                                                        {
+                                                            <optgroup label="Dépôt Revendeur">
+                                                                @foreach (var item in ViewBag.LotSerieDepot)
+                                                                {
+                                                                    <option class="font-bold text-greenbee" value="@item.LS_NoSerie">@item.LS_NoSerie</option>
+                                                                }
+                                                            </optgroup>
+                                                        }
+                                                        <optgroup label="Dépôt Siège" class="bg-purplebee-light">
+                                                            @foreach (var aa in ViewBag.LotSerie[i].LS_NoSerie)
+                                                            {
+                                                                <option class="font-bold text-purplebee" value="@aa.LS_NoSerie">@aa.LS_NoSerie</option>
+                                                            }
+                                                        </optgroup>
+                                                    }
+                                                </select>
+                                            </div>
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        if (ViewBag.Materiel != null)
+                                        {
+                                            <div class="form-group">
+                                                <label class="col-md-4 control-label"><p class="text-danger">  Cet article est en rupture de stock.</p></label>
+                                                <div class="col-md-6">
+                                                    <button type="button" class="btn btn-xs btn-success " id="envoiedemandeAppro" onclick="DemandeApproAutomatique();">Envoyer une demande d'approvisonnement </button>
+                                                </div>
+                                            </div>
+                                        }
+                                    }
+                                    i = i + 1;
+                                }
+                                <br />
+
+                                @*<button type="button" class="btn btn-purplebee ladda-button ladda-button-demo pull-right" id="MatrielsStock" onclick="this.disabled=true" style="width:90px;" title="Valider votre choix"><i class="fa fa-check-circle"></i> Valider </button>*@
+                            if (ViewBag.payee == false)
+                            {
+                                <a href="#showClientInfos" class="btn btn-purplebee ladda-button ladda-button-demo pull-right" id="MatrielsStock" onclick="this.disabled=true" style="width:90px;" title="Valider votre choix">
+                                    <i class="fa fa-check-circle"></i> Valider
+                                </a>
+                                <br />
+                            }
+
+                            @*manel*@
+                            }
+
+                        </div>
+
+                        <br />
+                        @if (ViewBag.payee == true || ViewBag.NumMaterielsReserves.Count != 0)
+                        {
+                            <div class="row" id="showClientInfos">
+                                <div class="alert alert-danger alert-dismissable">
+                                    Si vous avez reçu une avance de la part du client, merci de cliquer sur le bouton payer.
+                                </div>
+                                <br />
+                                <label class="col-lg-4 control-label">Choix de paiement  <sup>*</sup></label>
+                                <div class="col-lg-8">
+                                    <select class="col-lg-8 form-control chosen-search " id="choiceReg" name="choiceReg">
+
+                                        @if (ViewBag.MaterielAjoutee.Count == 0)
+                                        {
+                                            <option class="font-bold" value=0> Reçu @String.Format("{0:N3}", (decimal)ViewBag.AvanceTTC)  TND </option>
+                                        }
+                                        @if (ViewBag.AllowedAgence == true)
+                                        {
+                                            <option class="font-bold" value=1> Reçu Total Abonnement </option>
+                                        }
+                                        @if (ViewBag.MaterielAjoutee.Count != 0 && ViewBag.SommeMatajouterInclus20 != 0)
+                                        {
+                                            <option class="font-bold" value=2>Reçu  @String.Format("{0:N3}", (decimal)@ViewBag.SommeMatajouterInclus20 + (decimal)ViewBag.AvanceTTC)) TND </option>
+                                        }
+                                    </select>
+                                </div>
+
+                                <br /> <br />
+                                @if (ViewBag.AllowedAgence == true)
+                                {
+
+                                    <div class="row" id="TypeRecu" style="display:none">
+                                        <label class="col-lg-4 control-label">Choisir votre mode de paiement  <sup> *   </sup></label>
+                                        <div class="col-lg-8" style="width:500px;height:34px;">
+                                            <select class="col-lg-8 form-control chosen-search " id="cbIndice" name="cbIndice">
+                                                <option class="font-bold" value="2"> Choisir </option>
+                                                @foreach (var item in ViewBag.ModeReglementAgence)
+                                                {
+                                                    <option class="font-bold" value="@item.Value">@item.Text</option>
+                                                }
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div id="ifospayement" style="display:none">
+                                        <div class="form-group">
+                                            <label class="col-lg-4 control-label">Identifiant <sup>*</sup></label>
+                                            <div class="col-lg-8">
+                                                <input type="text" class="form-control" name="identifiantpay" id="identifiantpay" placeholder="N° Chèque,Référence de paiement TPE , N° Compte du client," />
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-lg-4 control-label">Libellé</label>
+                                            <div class="col-lg-8">
+                                                <input type="text" class="form-control" name="libelle" id="libelle" placeholder="Nom de la banque,N° Ordre de virement" />
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-lg-4 control-label">Description</label>
+                                            <div class="col-lg-8">
+                                                <input type="text" class="form-control" name="description" id="description" placeholder="Titulaire du Chèque" />
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-lg-4 control-label">Date Echéance </label>
+                                            <div class="col-lg-8">
+                                                <input type="text" pattern="\d{1,2}/\d{1,2}/\d{4}" class="form-control" name="dateecheance" id="dateecheance" placeholder="Date d'échéance du chèque (format : jj/mm/aaaa)" />
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+                                    <br /><br />
+                                }
+
+                                @if (ViewBag.payee == true)
+                                {
+                                    <a class="btn btn-purplebee pull-right" href="/Abonnement/RecuReglementAbonnement/@ViewBag.ReglementcbMarq.cbMarq">
+                                        <i class="fa fa-money"></i>Voir le Reçu
+                                    </a>
+                                    <br /><br />
+                                }
+                                else
+                                {
+                                    <div class="form-group">
+
+                                        @*<button type="button" class="btn btn-purplebee ladda-button ladda-button-demo pull-right" id="PayerFacture" onclick="this.disabled=true" style="width:80px;"><i class="fa fa-money"></i>Payer</button>*@
+                                        <a class="btn btn-purplebee ladda-button ladda-button-demo pull-right" id="PayerFacture" onclick="this.disabled=true" style="width:90px;" title="Payer">
+                                            <i class="fa fa-money"></i> Payer
+                                        </a>
+                                        <br /><br />
+
+                                    </div>
+
+                                }
+                            </div>
+                        }
+                        else if (ViewBag.Materiel == null)
+                        {
+                            <div class="alert alert-danger alert-dismissable">
+                                Si vous avez reçu une avance de la part du client, merci de cliquer sur le bouton payer.
+                            </div>
+                            <br />
+                            <label class="col-lg-4 control-label">Choix de paiement  <sup>*</sup></label>
+                            <div class="col-lg-8">
+                                <select class="col-lg-8 form-control chosen-search " id="choiceReg" name="choiceReg">
+
+                                    @if (ViewBag.MaterielAjoutee.Count == 0)
+                                    {
+                                      
+                                             <option class="font-bold" value=0>Reçu @String.Format("{0:N3}", (decimal)ViewBag.AvanceTTC)  TND  </option>
+                                       
+                                       
+                                    }
+                                    @if (ViewBag.AllowedAgence == true)
+                                    {
+                                        <option class="font-bold" value=1> Reçu Total Abonnement </option>
+                                    }
+                                    @if (ViewBag.MaterielAjoutee.Count != 0 && ViewBag.SommeMatajouterInclus20 != null && ViewBag.Materiel != null)
+                                    {
+                                        <option class="font-bold" value=2>Reçu  @String.Format("{0:N3}", (decimal)@ViewBag.SommeMatajouterInclus20 + (decimal)ViewBag.AvanceTTC) TND </option>
+                                    }
+                                </select>
+                            </div>
+
+                            <br /> <br />
+                            if (ViewBag.AllowedAgence == true)
+                            {
+
+                                <div class="row" id="TypeRecu" style="display:none">
+                                    <label class="col-lg-4 control-label">Choisir votre mode de paiement  <sup> *   </sup></label>
+                                    <div class="col-lg-8" style="width:500px;height:34px;">
+                                        <select class="col-lg-8 form-control chosen-search " id="cbIndice" name="cbIndice">
+                                            <option class="font-bold" value="2"> Choisir </option>
+
+                                            @foreach (var item in ViewBag.ModeReglementAgence)
+                                            {
+                                                <option class="font-bold" value="@item.Value">@item.Text</option>
+                                            }
+                                        </select>
+                                    </div>
+                                </div>
+                                <div id="ifospayement" style="display:none">
+                                    <div class="form-group">
+                                        <label class="col-lg-4 control-label">Identifiant <sup>*</sup></label>
+                                        <div class="col-lg-8">
+                                            <input type="text" class="form-control" name="identifiantpay" id="identifiantpay" placeholder="N° Chèque,Référence de paiement TPE , N° Compte du client," />
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-lg-4 control-label">Libellé</label>
+                                        <div class="col-lg-8">
+                                            <input type="text" class="form-control" name="libelle" id="libelle" placeholder="Nom de la banque,N° Ordre de virement" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-lg-4 control-label">Description</label>
+                                        <div class="col-lg-8">
+                                            <input type="text" class="form-control" name="description" id="description" placeholder="Titulaire du Chèque" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-lg-4 control-label">Date Echéance </label>
+                                        <div class="col-lg-8">
+                                            <input type="text" pattern="\d{1,2}/\d{1,2}/\d{4}" class="form-control" name="dateecheance" id="dateecheance" placeholder="Date d'échéance du chèque (format : jj/mm/aaaa)" />
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                <br /><br />
+                            }
+
+                            if (ViewBag.payee == true)
+                            {
+                                <a class="btn btn-purplebee pull-right" href="/Abonnement/RecuReglementAbonnementMateriels/@ViewBag.ReglementcbMarq.cbMarq">
+                                    <i class="fa fa-money"></i>Voir le Reçu
+                                </a>
+                                <br /><br />
+                            }
+                            else
+                            {
+                                <div class="form-group">
+
+                                    <button type="button" class="btn btn-purplebee ladda-button ladda-button-demo pull-right" id="PayerFacture" onclick="this.disabled=true" style="width:90px;"><i class="fa fa-money"></i> Payer</button>
+                                    <br /><br />
+
+                                </div>
+
+                                @*<button class="btn btn-purplebee pull-right" type="button" id="PayerFacture" value="submit" onclick="this.disabled=true"><i class="fa fa-money"></i>Payer</button>
+                                    <button class="btn btn-purplebee hidden" type="button" id="MatrielsStock" value="submit">Payer</button>
+                                    <br /><br />*@
+                            }
+                        }
+                        else
+                        {
+                            <div class="row hidden" id="showClientInfos">
+                                <div class="alert alert-danger alert-dismissable">
+                                    Si vous avez reçu une avance de la part du client, merci de cliquer sur le bouton payer.
+                                </div>
+                                <br />
+                                <label class="col-lg-4 control-label">Choix de paiement  <sup>*</sup></label>
+                                <div class="col-lg-8">
+                                    <select class="col-lg-8 form-control chosen-search " id="choiceReg" name="choiceReg">
+
+                                        @if (ViewBag.MaterielAjoutee.Count == 0)
+                                        {
+                                            <option class="font-bold" value=0> Reçu @String.Format("{0:N3}", (decimal)ViewBag.AvanceTTC)  TND  </option>
+                                        }
+                                        @if (ViewBag.AllowedAgence == true)
+                                        {
+                                            <option class="font-bold" value=1> Reçu Total Abonnement </option>
+                                        }
+                                        @if (ViewBag.MaterielAjoutee.Count != 0 && ViewBag.SommeMatajouterInclus20 != null)
+                                        {
+                                            <option class="font-bold" value=2>Reçu  @String.Format("{0:N3}", (decimal)@ViewBag.SommeMatajouterInclus20 + (decimal)ViewBag.AvanceTTC) TND </option>
+                                        }
+                                    </select>
+                                </div>
+
+                                <br /> <br />
+                                @if (ViewBag.AllowedAgence == true)
+                                {
+
+                                    <div class="row" id="TypeRecu" style="display:none">
+                                        <label class="col-lg-4 control-label">Choisir votre mode de paiement  <sup> *   </sup></label>
+                                        <div class="col-lg-8" style="width:500px;height:34px;">
+                                            <select class="col-lg-8 form-control chosen-search " id="cbIndice" name="cbIndice">
+                                                <option class="font-bold" value="2"> Choisir </option>
+
+                                                @foreach (var item in ViewBag.ModeReglementAgence)
+                                                {
+                                                    <option class="font-bold" value="@item.Value">@item.Text</option>
+                                                }
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div id="ifospayement" style="display:none">
+                                        <div class="form-group">
+                                            <label class="col-lg-4 control-label">Identifiant <sup>*</sup></label>
+                                            <div class="col-lg-8">
+                                                <input type="text" class="form-control" name="identifiantpay" id="identifiantpay" placeholder="N° Chèque,Référence de paiement TPE , N° Compte du client," />
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-lg-4 control-label">Libellé</label>
+                                            <div class="col-lg-8">
+                                                <input type="text" class="form-control" name="libelle" id="libelle" placeholder="Nom de la banque,N° Ordre de virement" />
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-lg-4 control-label">Description</label>
+                                            <div class="col-lg-8">
+                                                <input type="text" class="form-control" name="description" id="description" placeholder="Titulaire du Chèque" />
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-lg-4 control-label">Date Echéance </label>
+                                            <div class="col-lg-8">
+                                                <input type="text" pattern="\d{1,2}/\d{1,2}/\d{4}" class="form-control" name="dateecheance" id="dateecheance" placeholder="Date d'échéance du chèque (format : jj/mm/aaaa)" />
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+                                    <br /><br />
+                                }
+
+                                @if (ViewBag.payee == true)
+                                {
+                                    <a class="btn btn-purplebee pull-right" href="/Abonnement/RecuReglementAbonnementMateriels/@ViewBag.ReglementcbMarq.cbMarq">
+                                        <i class="fa fa-money"></i>Voir le Reçu
+                                    </a>
+                                    <br /><br />
+                                }
+                                else
+                                {
+                                    <div class="form-group">
+
+                                        <button type="button" class="btn btn-purplebee ladda-button ladda-button-demo pull-right" id="PayerFacture" onclick="this.disabled=true" @*style="width:90px;"*@><i class="fa fa-money"></i>  Payer    </button>
+                                        <br /><br />
+
+                                    </div>
+
+                                    @*<button class="btn btn-purplebee pull-right" type="button" id="PayerFacture" value="submit" onclick="this.disabled=true"><i class="fa fa-money"></i>Payer</button>
+                                        <button class="btn btn-purplebee hidden" type="button" id="MatrielsStock" value="submit">Payer</button>
+                                        <br /><br />*@
+                                }
+                            </div>
+                        }
+
+
+                        <br />
+                    </form>
+
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="payment-card">
+                    <i class="fa fa-user payment-icon-big text-purplebee"></i>
+                    <h2>
+                        Total T.T.C:  @String.Format("{0:N3}", (decimal)(ViewBag.TTC)) TND
+                    </h2>
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <small>
+                                <strong>@ViewBag.Abonnement.CT_Intitule  </strong>
+                            </small>
+                        </div>
+                        <div class="col-sm-6 text-right">
+                            <small>
+                                <strong>Date: </strong> @System.DateTime.Now.ToString("dd/MM/yyyy")
+                            </small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+</div>
+
+
+<script src="~/js/jquery-3.1.1.min.js"></script>
+<script src="~/js/plugins/metisMenu/jquery.metisMenu.js"></script>
+<script src="~/js/plugins/pace/pace.min.js"></script>
+<script src="~/js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+<script src="~/js/plugins/chosen/chosen.jquery.js"></script>
+<script src="~/js/plugins/dataTables/datatables.min.js"></script>
+<!-- Sweet alert -->
+<script src="~/js/plugins/sweetalert/sweetalert.min.js"></script>
+<!-- Toastr script -->
+<script src="~/js/plugins/toastr/toastr.min.js"></script>
+<!-- Ladda -->
+<script src="~/js/plugins/ladda/spin.min.js"></script>
+<script src="~/js/plugins/ladda/ladda.min.js"></script>
+<script src="~/js/plugins/ladda/ladda.jquery.min.js"></script>
+
+<script>
+
+        $(function () {
+            $('#cbIndice').change(function () {
+                if ($('#cbIndice').val() != 2) {
+                    document.getElementById("ifospayement").style.display = "block";
+                }
+                else {
+                    document.getElementById("ifospayement").style.display = "none";
+                }
+            });
+
+            $('#choiceReg').change(function () {
+                if ($('#choiceReg').val() != 0) {
+                    document.getElementById("TypeRecu").style.display = "block";
+                }
+                else {
+                    document.getElementById("TypeRecu").style.display = "none";
+                }
+            });
+
+
+
+            $("#PayerFacture").click(function () {
+
+                $.ajax({
+                    type: "get",
+                    url: '/Abonnement/ReglementAbonnement?id=' + @ViewBag.Abonnement.cbMarq + '&&cbIndice=' + $('#cbIndice').val() + '&&identifiantpay=' + $('#identifiantpay').val() + '&&dateecheance=' + $('#dateecheance').val() + '&&libelle=' + $('#libelle').val() + '&&description=' + $('#description').val() + '&&choiceReg=' + $('select#choiceReg').find("option:selected").val(), // we are calling json method
+                    dataType: 'json',
+                    success: function (msg) {
+                        if (msg.msg == 0) {
+                            toastr.success('Règlement ajouté avec succès ! ', 'Succes');
+                            swal({
+                                title: "Imprimer ",
+                                text: "impression du reçu ",
+                                type: "success",
+                                showCancelButton: true,
+                                confirmButtonColor: "#DD6B55",
+                                confirmButtonText: "Oui",
+                                closeOnConfirm: false,
+                                showCancelButton: false,
+                            }, function () {
+                                if($('select#choiceReg').find("option:selected").val()==2)
+                                {
+                                    window.open('/Abonnement/RecuReglementAbonnementMateriels/' + msg.reg, '_blank');
+                                    swal("Reglement ajouté", "reçu téléchargé", "success");
+                                }else{
+                                    window.open('/Abonnement/RecuReglementAbonnement/' + msg.reg, '_blank');
+                                    swal("Reglement ajouté", "reçu téléchargé", "success");
+                                }
+
+                            });
+                        }
+                        else {
+                            toastr.error('Une erreur s est produite. Contactez votre superviseur.', 'Erreur');
+                        }
+                    }
+                });
+            });
+
+        });
+
+    $(function () {
+        if( ViewBag.payee == true || ViewBag.NumMaterielsReserves.Count != 0)
+        {
+            $("#showClientInfos").removeClass("hidden");
+        }
+
+        // Bind normal buttons
+        Ladda.bind('.ladda-button', { timeout: 2000 });
+
+        // Bind progress buttons and simulate loading progress
+        Ladda.bind('.progress-demo .ladda-button', {
+            callback: function (instance) {
+                var progress = 0;
+                var interval = setInterval(function () {
+                    progress = Math.min(progress + Math.random() * 0.1, 1);
+                    instance.setProgress(progress);
+
+                    if (progress === 1) {
+                        instance.stop();
+                        clearInterval(interval);
+                    }
+                }, 20000);
+            }
+        });
+
+
+        var l = Ladda.bind('.ladda-button-demo');
+
+        l.click(function () {
+            // Start loading
+            l.ladda('start');
+
+            // Timeout example
+            // Do something in backend and then stop ladda
+            setTimeout(function () {
+                l.ladda('stop');
+            }, 12000)
+
+
+        });
+    });
+
+</script>
+@if (ViewBag.Materiel != null)
+{
+    <script>
+    $('#MatrielsStock').click(function () {
+
+        $("#showClientInfos").removeClass("hidden");
+        var arrefNS = [];
+        var refarticle=[];
+
+        for(var j=0;j<@ViewBag.Materiel.Count;j++)
+        {
+            var valueNS=document.getElementById("LotSerie["+j+"]").value;
+            arrefNS.push(valueNS);
+            var valueAreff=document.getElementById("ReservationMateriel["+j+"]").value;
+            refarticle.push(valueAreff);
+        }
+
+        var url = "/Abonnement/MatrielsStock?arrefNS=" + arrefNS + "&&cbmarqabo=" + @ViewBag.Abonnement.cbMarq + "&&rearticle=" + refarticle;
+
+        $.ajax({
+            type: "Post",
+            url: url,
+            success: function (data) {
+                if (data.result == 0) {
+                    toastr.success('Choix de votre matériels ce fait avec succès !', 'Success');
+                    //window.location = "/Interne/ListeDemandesTransfert";
+                } else {
+                    toastr.error(data.msg, 'Error');
+                }
+
+
+            }
+
+        })
+
+    });
+    </script>
+}

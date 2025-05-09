@@ -1,0 +1,251 @@
+﻿
+@{
+    ViewBag.Title = "ListeResiliation";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-lg-10">
+        <h2>Liste des demandes de résiliation</h2>
+        <ol class="breadcrumb">
+            <li>
+                <a href="@Url.Action("index","Home")">Acceuil </a>
+            </li>
+            <li class="active">
+                <strong> <a href="@Url.Action("ListeResiliation","Resiliation")">Liste des demandes de résiliation </a></strong>
+            </li>
+        </ol>
+    </div>
+    <div class="col-lg-2">
+
+    </div>
+</div>
+
+<div class="row m-t-md">
+
+    <div class="col-lg-3">
+        <div class="widget style1 text-purplebee" style="background-color: #e5e5f5;">
+            <div class="row">
+                <div class="col-xs-4">
+                    <i class="fa fa-bandcamp fa-5x"></i>
+                </div>
+                <div class="col-xs-8 text-right">
+                    <span> Demandes Crées </span>
+                    <h2 class="font-bold"> @ViewBag.cree</h2>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="col-lg-3">
+        <div class="widget style1 text-purplebee" style="background-color: #d0f2e7;">
+            <div class="row">
+                <div class="col-xs-4">
+                    <i class="fa fa-shopping-cart fa-5x"></i>
+                </div>
+                <div class="col-xs-8 text-right">
+                    <span> Demandes En cours </span>
+                    <h2 class="font-bold">@ViewBag.encours</h2>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-3">
+        <div class="widget style1 bg-greenbee ">
+            <div class="row">
+                <div class="col-xs-4">
+                    <i class="fa fa-check-circle-o fa-5x"></i>
+                </div>
+                <div class="col-xs-8 text-right">
+                    <span> Demandes Réalisées </span>
+                    <h2 class="font-bold">@ViewBag.valide</h2>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-3">
+        <div class="widget style1 bg-graybee">
+            <div class="row">
+                <div class="col-xs-4">
+                    <i class="fa fa-warning fa-5x"></i>
+                </div>
+                <div class="col-xs-8 text-right">
+                    <span> Demandes Annulées </span>
+                    <h2 class="font-bold">@ViewBag.annule</h2>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<link href="~/css/plugins/dataTables/datatables.min.css" rel="stylesheet">
+
+
+
+
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <div class="project-actions">
+                        <a href=@Url.Action("NouvelleResiliation", "Resiliation") class="btn btn-sm btn-rounded bg-info ">
+                            <i class="fa fa-binoculars "></i> Nouvelle demande
+                        </a>
+                    </div>
+
+                </div>
+                <div class="ibox-content">
+
+
+                    <div class="table">
+                        <table class="table table-striped table-bordered table-hover dataTables-example" id="ReafJson">
+                            <thead>
+                                <tr>
+                                    <th>Etat</th>
+                                    <th>Date d'envoi</th>
+                                    <th>Intitulé Client</th>
+                                    <th>Abonnement</th>
+                                    <th>Service</th>
+                                    <th>Détails</th>
+
+                                    @*<th>Reference</th>
+                                        <th>Client</th>
+                                        <th>Ville</th>
+                                        <th>Pourcentage</th>
+                                        <th>Détails</th>*@
+
+
+
+
+
+                                </tr>
+                            </thead>
+
+
+                        </table>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<script src="~/js/jquery-3.1.1.min.js"></script>
+
+
+<script src="~/js/plugins/metisMenu/jquery.metisMenu.js"></script>
+<script src="~/js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+
+<script src="~/js/plugins/dataTables/datatables.min.js"></script>
+
+
+
+
+
+<script>
+    $(document).ready(function () {
+
+        var table = $("#ReafJson").DataTable({
+            "ajax": {
+
+                "url": "/Resiliation/ResiJson",
+                "type": 'get',
+                "datatype": "json"
+            },
+            "columns": [
+                 { "data": "R_Etat" },
+                  { "data": "R_Envoi" },
+                { "data": "CT_Intitule" },
+                { "data": "DO_RefTT" },
+                { "data": "R_Service" },
+                { "data": "cbMarq" }
+
+            ],
+            "columnDefs": [
+
+                { targets: [0],
+                    render: function(data, type,row){
+                        if (data == 0) {
+                            return '<i class="label text-purplebee" style="background-color: #e5e5f5;">Crée</i>';
+                        }
+                        else if (data == 1) {
+                            return '<i class="label style1 text-purplebee" style="background-color: #d0f2e7;">En cours</i>';
+                        }
+                        else if (data == 2) {
+                            return '<i class="label bg-greenbee">Réalisée</i>';
+                        }
+
+                        else if (data == 3) {
+                            return '<i class="label bg-graybee ">Annulée</i>';
+                        }
+                        
+                    }
+                },
+
+                 {
+                     targets: [4],
+                     render: function(data, type,row){
+                         if (data == 0) {
+                             return '<i >Service Commercial</i>';
+                         }
+                 }
+                 },
+
+                  {
+                      targets: [5],
+                      "width": "6%",
+                      render: function (data, type, row) {
+
+                          return ' <a href="/Resiliation/DetailsResiliation/' + row.cbMarq + '" class=" btn btn-white btn-sm "><i class="fa fa-binoculars"> Détails </i>';
+
+                      }
+                  }
+            ]
+
+
+
+        });
+
+
+
+
+
+        $("#ReafJson").dataTable().destroy();
+
+            $('.dataTables-example').DataTable({
+                pageLength: 25,
+                responsive: true,
+                dom: '<"html5buttons"B>lTfgitp',
+                buttons: [
+                    { extend: 'copy'},
+                    {extend: 'csv'},
+                    {extend: 'excel', title: 'ExampleFile'},
+                    {extend: 'pdf', title: 'ExampleFile'},
+
+                    {extend: 'print',
+                     customize: function (win){
+                            $(win.document.body).addClass('white-bg');
+                            $(win.document.body).css('font-size', '10px');
+
+                            $(win.document.body).find('table')
+                                    .addClass('compact')
+                                    .css('font-size', 'inherit');
+                    }
+                    }
+                ]
+
+            });
+
+        });
+
+</script>

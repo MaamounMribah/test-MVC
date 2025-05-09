@@ -1,0 +1,200 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style>
+    .dataTables_filter, .dataTables_info, .dataTables_length, .dataTables_paginate {
+        display: none;
+    }
+
+
+
+    .ull {
+        margin-top: 3px;
+        padding-left: 0px;
+        /*list-style-type: none;*/
+    }
+
+    .lii {
+        padding-bottom: 5px;
+        margin-left: 0px;
+    }
+</style>
+<link href="~/css/plugins/dataTables/datatables.min.css" rel="stylesheet">
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-sm-4">
+        <br />
+        <ol class="breadcrumb">
+
+            <li>
+                <a href="@Url.Action("index","Home")">Acceuil </a>
+            </li>
+            <li>
+                <a href="@Url.Action("index","Administration")">Administration </a>
+            </li>
+            <li class="active">
+                <strong><a href="@Url.Action("Index","ClassementAgence")">Liste des Classements des Agences </a></strong>
+            </li>
+
+
+        </ol>
+    </div>
+</div>
+<div class="row">
+    <div class="col-lg-12">
+        <div class="wrapper wrapper-content animated fadeInUp">
+
+            <div class="ibox">
+                <div class="ibox-title">
+                    <div class="ibox-tools">
+                        <a href='@Url.Action("NouveauClassement", "ClassementAgence")' class="btn btn-primary btn-xs">Nouveau classement </a>
+                    </div>
+                </div>
+                <div class="ibox-content">
+
+
+                    <div class="project-list">
+
+                        <table class="table table-hover dataTables-example" id="classement">
+
+                            <thead>
+                                <tr>
+                                    <th>Intitulé Classement</th>
+
+                                    <th>Modele de commission</th>
+                                    <th>Agences</th>
+                              
+                                    <th>Etat</th>
+                                    <th>Modifier</th>
+                                
+                                </tr>
+
+                            </thead>
+
+
+
+                        </table>
+
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="~/js/jquery-3.1.1.min.js"></script>
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+<!-- Chosen -->
+<script src="~/js/plugins/chosen/chosen.jquery.js"></script>
+<script src="~/js/plugins/dataTables/datatables.min.js"></script>
+
+<script>
+ $(document).ready(function () {
+
+     var table = $("#classement").DataTable({
+         "ajax": {
+
+             "url": "/ClassementAgence/listClassement/",
+             "type": 'get',
+             "datatype": "json",
+             "ordering": true
+
+         },
+         "columns": [
+
+             { "data": "Intitule" },
+              { "data": "modele" },
+              { "data": "cbMarq" },
+              { "data": "C_Etat" },
+              { "data": "cbMarq" },
+
+         ],
+         "columnDefs": [
+
+              {
+                  targets: [3],
+                  render: function (data, type, row) {
+                      if (data == 0) {
+                          return '<span class="label label-success">Active</span> ';
+                      } else {
+                          return '<span class="label label-gray">Inactive</span> ';  
+                      }
+                  }
+              },
+             {
+                 targets: [4],
+                 render: function (data, type, row) {
+                     var myUrl = '@Url.Action("ModifierClassement", "ClassementAgence")/' + data;
+                     return '<a href=\"' + myUrl + '\" class=\"btn btn-purplebee btn-outline btn-sm\">Modifier </a>';
+
+                     //return ' <a href="/Interne/DetailDemandeAppro/' + row.cbMarq + '" class=" btn btn-white btn-sm "><i class="fa fa-binoculars"> Détails </i>';
+
+                 }
+             },
+
+             {
+                 targets:[1],
+                 render: function (data, type, row) {
+                     var myUrl = '@Url.Action("Details", "Commission")/' + data;
+                     return '<a href=\"' + myUrl + '\">Modèle Commision</a>';
+
+                                          //return ' <a href="/Interne/DetailDemandeAppro/' + row.cbMarq + '" class=" btn btn-white btn-sm "><i class="fa fa-binoculars"> Détails </i>';
+
+                 }
+             },
+
+
+             {
+                 targets: [2],
+                 render: function (data, type, row) {
+                     var url = "/ClassementAgence/listeAgence?id=" + data,
+                              getservice= function(url){
+                                  var res= $.ajax({
+                                      type: "get",
+                                      url: url,
+                                      dataType: "json",
+                                      async: false,
+                                      success: function(data){
+
+                                      }
+                                  }).responseText;
+
+                                  return res;
+
+                              }
+
+
+                     var ListeSeries = getservice(url);
+
+                     var d = JSON.parse(ListeSeries)
+                     var list = '<ul class="ull">';
+                     for (var i = 0; i < d.data.length; i++) {
+                         var counter = d.data[i];
+
+                         list+='<li class="lii">'+ counter.A_Intitule +'</li>';
+
+
+                     }
+                     list += "</ul>";
+                     return list;
+                     //.each(JSON.parse($el.text()), function (i, obj) {
+                     //    html += '<li class="list-group-item">' + obj.date + '</li>';
+                     //})
+                     //$el.append('<ul>' + html + '</ul>');
+
+                 }
+             },
+         ]
+
+     });
+
+
+
+
+
+
+ });
+</script>

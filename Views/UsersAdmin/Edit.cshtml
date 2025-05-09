@@ -1,0 +1,279 @@
+﻿@model IdentitySample.Models.EditUserViewModel
+@{
+    ViewBag.Title = "Modifier Utilisateur";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<script src="~/js/jquery-3.1.1.min.js"></script>
+<link href="~/css/plugins/iCheck/custom.css" rel="stylesheet">
+
+<link href="~/css/plugins/chosen/bootstrap-chosen.css" rel="stylesheet">
+<link href="~/css/plugins/iCheck/custom.css" rel="stylesheet">
+<link href="~/css/plugins/awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css" rel="stylesheet">
+
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-lg-10">
+        <h2>Profile</h2>
+        <ol class="breadcrumb">
+            <li>
+                <a href="@Url.Action("index","Administration")">Administration</a>
+            </li>
+            <li>
+                <a href="@Url.Action("index","UsersAdmin")">Liste des utilisateurs</a>
+            </li>
+           
+            <li class="active">
+                <strong>Modification utilisateur </strong>
+            </li>
+        </ol>
+    </div>
+    <div class="col-lg-2">
+
+    </div>
+</div>
+
+<div class="wrapper wrapper-content">
+    <div class="row animated fadeInRight">
+
+        <div class="ibox">
+            <div class="ibox-content">
+
+                @using (Html.BeginForm())
+                {
+                    @Html.AntiForgeryToken()
+                    <div class="form-horizontal">
+                        @Html.ValidationSummary(true)
+                        @Html.HiddenFor(model => model.Id)
+                        <br />
+                        @*<div class="form-group">
+                            @Html.Label("Nom utilisateur", new { @class = "control-label col-md-2" })
+                            <div class="col-md-4">
+                                @Html.TextBoxFor(m => m.UserName, new { @class = "form-control disabled" })
+                                @Html.ValidationMessageFor(model => model.UserName)
+                            </div>
+                            @Html.Label("Email", new { @class = "control-label col-md-2" })
+                            <div class="col-md-4">
+                                @Html.TextBoxFor(m => m.Email, new { @class = "form-control disabled" })
+                                @Html.ValidationMessageFor(model => model.Email)
+                            </div>
+                        </div>*@
+                        <div class="col-md-4 hidden">
+                            @Html.TextBoxFor(m => m.UserName, new { @class = "form-control disabled" })
+                            @Html.ValidationMessageFor(model => model.UserName)
+                        </div>
+                        <div class="form-group">
+                            @Html.Label("Prénom", new { @class = "control-label col-md-2" })
+                            <div class="col-md-4">
+                                @Html.TextBoxFor(m => m.FirstName, new { @class = "form-control disabled" })
+                                @Html.ValidationMessageFor(model => model.FirstName)
+                            </div>
+                            @Html.Label("Nom", new { @class = "control-label col-md-2" })
+                            <div class="col-md-4">
+                                @Html.TextBoxFor(m => m.LastName, new { @class = "form-control disabled" })
+                                @Html.ValidationMessageFor(model => model.LastName)
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.Label("Email", new { @class = "control-label col-md-2" })
+                            <div class="col-md-4">
+                                @Html.TextBoxFor(m => m.Email, new { @class = "form-control disabled" })
+                                @Html.ValidationMessageFor(model => model.Email)
+                            </div>
+                            @Html.Label("Téléphone", new { @class = "control-label col-md-2" })
+                            <div class="col-md-4">
+                                @Html.TextBoxFor(m => m.Phone, new { @class = "form-control disabled" })
+                                @Html.ValidationMessageFor(model => model.Phone)
+                            </div>
+                           
+                        </div>
+                        <div class="hr-line-dashed"></div>
+                         <div class="form-group">
+                             @Html.Label("Adresse", new { @class = "control-label col-md-2" })
+                             <div class="col-md-10">
+                                 @Html.TextBoxFor(m => m.Address, new { @class = "form-control disabled" })
+                                 @Html.ValidationMessageFor(model => model.Address)
+                             </div>
+                         </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">Agence de l'utilisateur  </label>
+                            <div class="col-sm-10">
+                                <select name="A_Agence" id="A_Agence" class="chosen-select form-control">
+                                    @foreach (var item in ViewBag.ListeAgences)
+                                    {
+                                        if (Model.A_Agence == item.A_Code)
+                                        {
+                                            <option value="@item.A_Code" selected="selected">@item.A_Intitule</option>
+
+                                        }
+                                        else
+                                        {
+                                            <option value="@item.A_Code">@item.A_Intitule</option>
+
+                                        }
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.Label("Appartient aux groupes", new { @class = "control-label col-md-2" })
+                            <span class="col-md-10">
+                                <select data-placeholder="Choisir groupe ..." class="chosen-select" multiple style="width:350px;" tabindex="4" name="selectedGroups">
+
+                                    @foreach (var item in Model.GroupsList)
+                                    {
+                                        <option name="selectedGroups" selected="@item.Selected" value="@item.Value">@item.Text</option>
+                                    }
+                                </select>
+                            </span>
+                        </div>
+                        @*<div class="form-group">
+                                @Html.Label("Accès aux dépôts", new { @class = "control-label col-md-2" })
+                                <span class="col-md-10">
+                                    @foreach (var item in Model.DepotsList)
+                                    {
+                                        <br />
+                                        <input type="checkbox" name="selectedDepots" value="@item.Value" checked="@item.Selected" class="checkbox-inline" />
+                                        @Html.Label(item.Text, new { @class = "control-label" })
+
+                                    }
+                                </span>
+                            </div>*@
+
+
+                        <div class="form-group">
+                            @Html.Label("Dépôt Principal", new { @class = "control-label col-md-2" })
+                            <span class="col-md-10">
+                                <select data-placeholder="Choisir dépôt..." class="chosen-select" style="width:350px;" tabindex="4" name="DepotPrincipal">
+                                    @foreach (var item in ViewBag.Depots)
+                                    {
+                                        if (ViewBag.Principale == item.cbMarq)
+                                        {
+                                            <option value="@item.cbMarq" selected="selected">@item.DE_Intitule</option>
+
+                                        }
+                                        else
+                                        {
+                                            <option value="@item.cbMarq">@item.DE_Intitule</option>
+
+                                        }
+
+                                        @*<option name="DepotPrincipal" selected="@Model." value="@item.Value">@item.Text</option>*@
+                                    }
+                                </select>
+                            </span>
+                        </div>
+
+
+                        <div class="form-group">
+                            @Html.Label("Accès aux dépôts", new { @class = "control-label col-md-2" })
+                            <span class="col-md-10">
+                                <select data-placeholder="Choisir dépôt..." class="chosen-select" multiple style="width:350px;" tabindex="4" name="selectedDepots">
+
+                                    @foreach (var item in Model.DepotsList)
+                                    {
+                                        <option name="selectedDepots" selected="@item.Selected" value="@item.Value">@item.Text</option>
+                                    }
+                                </select>
+                            </span>
+                        </div>
+
+
+
+
+                        @*<div class="form-group">
+                                @Html.Label("Souches", new { @class = "control-label col-md-2" })
+                                <span class="col-md-10">
+                                    @foreach (var item in Model.SouchesList)
+                                    {
+                                        <br />
+                                        <input type="checkbox" name="selectedSouches" value="@item.Value" checked="@item.Selected" class="checkbox-inline" />
+                                        @Html.Label(item.Text, new { @class = "control-label" })
+
+                                    }
+                                </span>
+                            </div>*@
+
+
+
+                        <div class="form-group">
+                            @Html.Label("Régions", new { @class = "control-label col-md-2" })
+                            <span class="col-md-10">
+                                <select data-placeholder="Choisir régions..." class="chosen-select" multiple style="width:350px;" tabindex="4" name="selectedRegions">
+                                    @foreach (var item in Model.RegionsList)
+                                    {
+                                        <option name="selectedSouches" selected="@item.Selected" value="@item.Value">@item.Text</option>
+                                    }
+                                </select>
+                            </span>
+                        </div>
+                        @*<div class="col-md-10">
+                                <select data-placeholder="Choose a Country..." class="chosen-select" multiple style="width:350px;" tabindex="4" name="selectedSouches">
+
+                                    @foreach (var item in Model.SouchesList)
+                                    {
+                                        <option name="selectedSouches" selected="@item.Selected" value="@item.Value">@item.Text</option>
+
+                                                @*<div>
+                                    <input type="checkbox" name="selectedSouchesList" value="@item.Value" class="checkbox-inline" />
+                                    @Html.Label(item.Text, new { @class = "control-label" })
+                                </div>
+                                    }
+                                </select>
+
+                            </div>*@
+
+                        <div class="form-group">
+                            @Html.Label("Désactiver ce compte", new { @class = "control-label col-md-2" })
+                            <div class="col-md-10">
+                                @Html.CheckBoxFor(model => model.isLockedOut, new { @class = "control-control i-check checkbox checkbox-success " })
+                            </div>
+                        </div>
+
+
+                        <div class="form-group">
+                            <div class="col-md-8">
+                                <input type="submit" value="Enregistrer" class="btn btn-primary pull-right" />
+                                @Html.ActionLink("Retourner", "Index", null, new { @class = "btn btn-default pull-right" })
+
+
+                            </div>
+                        </div>
+                    </div>
+                }
+
+            </div>
+
+        </div>
+    </div>
+</div>
+<script src="~/js/jquery-3.1.1.min.js"></script>
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+<!-- Chosen -->
+<script src="~/js/plugins/chosen/chosen.jquery.js"></script>
+<!-- JSKnob -->
+<script src="~/js/plugins/jsKnob/jquery.knob.js"></script>
+
+<!-- Input Mask-->
+<script src="~/js/plugins/jasny/jasny-bootstrap.min.js"></script>
+<!-- iCheck -->
+<script src="~/js/plugins/iCheck/icheck.min.js"></script>
+
+<script>
+
+    $(document).ready(function () {
+
+        $('.chosen-select').chosen({ width: "100%" });
+
+        $('.i-checks').iCheck({
+            checkboxClass: 'icheckbox_square-green',
+            radioClass: 'iradio_square-green'
+        });
+
+
+
+        @*alert(@Model.A_Agence);
+
+
+        $('#A_Agence').val(@Model.A_Agence);
+        $('#A_Agence').trigger("chosen:updated");*@
+    });
+</script>

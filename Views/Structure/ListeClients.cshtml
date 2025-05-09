@@ -1,0 +1,131 @@
+﻿@{
+    ViewBag.Title = "ListeClients";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<link href="~/css/plugins/dataTables/datatables.min.css" rel="stylesheet">
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-lg-11">
+        <h2>Liste des Client</h2>
+        <ol class="breadcrumb">
+            <li>
+                <a href="@Url.Action("index","Home")">Acceuil </a>
+            </li>
+            <li class="active">
+                <strong> <a href="@Url.Action("ListeClients","Structure")">Liste des Clients </a></strong>
+            </li>
+        </ol>
+    </div>
+    <div class="col-lg-1 ">
+        <div class="ibox-title row float-end">
+            <a class="btn btn-greenbee btn-xs" href=@Url.Action("ResfreshDataClient", "Structure") title="actualiser"><i class="fa fa-refresh"></i> Actuliser </a>
+
+        </div>
+    </div>
+
+</div>
+
+<div class="wrapper wrapper-content  animated fadeInRight">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="ibox">
+                <div class="ibox-content">
+
+                    <table class="table table-striped table-bordered table-hover dataTables-example">
+
+                        <thead>
+                            <tr>
+                                <th>Type</th>
+                                <th>Code Client</th>
+                                <th>Intitulé Client</th>
+                                <th>Téléphone</th>
+                                <th>Identifiant</th>
+                                <th>Agence</th>
+                                <th>Adresse</th>
+                                <th>Action</th>
+
+                            </tr>
+                        </thead>
+                        @*<tbody>
+                            @foreach (var item in ViewBag.ListeClient)
+                            {
+                                <tr>
+                                    <td>@item.Type</td>
+                                    <td>@item.CodeSageCustomereer</td>
+                                    <td>@item.CusTomerName</td>
+                                    <td>@item.CustomerPhoneNumber</td>
+                                    <td>@item.CustomerCin</td>
+                                    <td>@item.CodeAgenceCustomer</td>
+                                    <td>@item.CustomerAdresse</td>
+                                    <td>
+                                        <a class="btn btn-purplebee btn-circle   btn-outline" title="voir détails"
+                                           href="@Url.Action("DetailsClient","Structure", new { id = item.CbMarq })" target="_blank">
+                                            <i title="details Client " class="fa fa-edit"></i>
+                                        </a>
+
+                                        <a class="btn btn-greenbee btn-circle   btn-outline" title="voir détails"
+                                           href="@Url.Action("ModifierClient","Structure", new { id = item.CbMarq })" target="_blank">
+                                            <i title="Modifier Client " class="fa fa-edit"></i>
+                                        </a>
+                                    </td>
+
+                                </tr>
+                            }
+
+                        </tbody>*@
+                    </table>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="~/js/jquery-3.1.1.min.js"></script>
+<script src="~/js/plugins/metisMenu/jquery.metisMenu.js"></script>
+<script src="~/js/plugins/pace/pace.min.js"></script>
+<script src="~/js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+<script src="~/js/plugins/chosen/chosen.jquery.js"></script>
+<script src="~/js/plugins/dataTables/datatables.min.js"></script>
+
+<script>
+
+
+    $(document).ready(function () {
+
+           $(document).ready(function () {
+               $('.dataTables-example').dataTable({
+            "processing": true,
+            "serverSide": true,
+            "info": true,
+            "stateSave": true,
+			"order":false,
+            "lengthMenu": [[10, 20, 50, 100,200], [10, 20, 50, 100,200]],
+            "ajax":{
+                "url": "@string.Format("{0}://{1}{2}", Request.Url.Scheme, Request.Url.Authority, Url.Content("~"))/Structure/AjaxGetJsonDataClient",
+                "type": "GET"
+            },
+            "columns": [
+                { "data": "Type", "orderable": true },
+                { "data": "CodeSageCustomereer", "orderable": true },
+                { "data": "CusTomerName", "orderable": true },
+                { "data": "CustomerPhoneNumber", "orderable": true },
+                { "data": "CustomerCin", "orderable": true },
+                { "data": "CodeAgenceCustomer", "orderable": true },
+                { "data": "CustomerAdresse", "orderable": true },
+				{
+                    data: "CbMarq", "orderable": true, render: function (data) {
+
+                        return '<a href="/Structure/DetailsClient/' + data + '") class="btn btn-purplebee btn-circle   btn-outline" target="_blank"><i class="fa fa-eye "></i> </a> ' +
+                            '<a href="/Structure/ModifierClient/' + data + '") class="btn btn-greenbee btn-circle   btn-outline" target="_blank"><i class="fa fa-edit "></i></a> ';
+
+				    }
+				}
+
+            ]
+        });
+    });
+
+
+    });
+</script>

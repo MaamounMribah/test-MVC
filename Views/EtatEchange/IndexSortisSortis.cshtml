@@ -1,0 +1,374 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@*<h2>Index</h2>*@
+
+<link href="~/css/plugins/chosen/bootstrap-chosen.css" rel="stylesheet">
+<!-- Sweet Alert -->
+<link href="~/css/plugins/sweetalert/sweetalert.css" rel="stylesheet">
+<!-- Toastr style -->
+<link href="~/css/plugins/toastr/toastr.min.css" rel="stylesheet">
+<link href="~/css/plugins/jasny/jasny-bootstrap.min.css" rel="stylesheet">
+
+<link href="~/css/plugins/ladda/ladda-themeless.min.css" rel="stylesheet">
+<link href="~/css/plugins/datatables/datatables.min.css" rel="stylesheet" />
+
+
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-lg-10">
+        <h2>Etat d'echange</h2>
+        <ol class="breadcrumb">
+            <li>
+                <a href="@Url.Action("index","Home")">Acceuil</a>
+            </li>
+            <li>
+                <a href="@Url.Action("EtatEchange","IndexSortisSortis")">Etat d'echange Sortie Sortie</a>
+            </li>
+            <li class="active">
+                <strong>échange</strong>
+            </li>
+        </ol>
+    </div>
+    <div class="col-lg-2">
+
+    </div>
+</div>
+
+
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+
+        <div class="col-lg-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+
+                    @using (Html.BeginForm("IndexSortisSortis", "EtatEchange", FormMethod.Post))
+                    {
+                        <label class="control-label">Recherche par numéro de téléphone,référence abonnement,ou bien code abonnement </label>
+                        <div class="input-group">
+                            <input type="text" class="form-control" id="rech" name="rech" value="@ViewBag.Rech"> <span class="input-group-btn">
+
+                                <button type="submit" class="btn btn-purplebee ladda-button ladda-button-demo" onClick="Vide()">Rechercher</button>
+                            </span>
+                        </div>
+
+                    }
+                </div>
+            </div>
+        </div>
+        @if (ViewBag.msg != null || ViewBag.abligne != null)
+        {
+            <div class="col-lg-12">
+                <div class="ibox-content">
+                    <div class="row">
+                        @if (ViewBag.msg != null)
+                        {
+                            <div class="alert alert-danger alert-dismissable">
+                                <button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>
+                                @ViewBag.msg
+                            </div>
+                        }
+
+                        @if (ViewBag.abligne != null)
+                        {
+
+                            <table class="table table-striped table-bordered table-hover dataTables-example full-width" id="EtatEchangeTable">
+                                <thead>
+                                    <tr>
+                                        <th>Piéce</th>
+                                        <th>Référence Abonnement</th>
+                                        <th>Num série</th>
+                                        <th>Matériel</th>
+                                        <th>Transférer</th>
+                                        <th>Type matériel disponible</th>
+                                        <th>Matriél disponible</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in ViewBag.abligne)
+                                    {
+                                    <tr class="gradeX">
+                                        <input type="text" id="cbMarq" name="cbMarq" value="@item.cbMarq" hidden />
+                                        <td>@item.DO_Piece</td>
+                                        <td>@item.DO_Ref</td>
+                                        <td>@item.LS_NoSerie</td>
+                                        <td>@item.DL_Design</td>
+
+                                        <td><center><button type="button" class="btn btn-purplebee ladda-button ladda-button-demo" onclick="Changer(this)"><span class="glyphicon glyphicon-transfer"></span> Changer </button></center></td>
+                                        <td>
+                                            <center>
+
+                                                <select class="form-control chosen-select" id="TypeMat" name="TypeMat">
+                                                    @foreach (var mat in ViewBag.TypeMatDispo)
+                                                    {
+
+                                                        <option class="font-bold text-greenbee" value="@mat.AR_Ref"> @mat.AR_Design </option>
+                                                    }
+                                                </select>
+
+                                            </center>
+                                        </td>
+
+                                        <td>
+                                            <center>
+
+                                                @*<select class="form-control chosen-select" id="matriel" name="matriel">
+                @foreach (var i in ViewBag.matdispo)
+                {
+                    if (item.AR_Ref == i.AR_Ref)
+                    {
+
+                        if (i.isReserved == 0)
+                        {
+                            <optgroup class="font-bold text-black-50" label="En stock">
+                                <option class="font-bold text-greenbee"> @i.ls_noserie </option>
+                            </optgroup>
+                        }
+                        if (i.isReserved == 1)
+                        {
+                            <optgroup class="font-bold text-black-50" label="Reservee">
+                                <option class="font-bold text-purplebee"> @i.ls_noserie </option>
+                            </optgroup>
+                        }
+                    }
+                }
+                           </select>*@
+                                                <div class="form-group" id="NumSerieDep">
+
+
+                                                </div>
+                                            </center>
+                                        </td>
+                                        @*<td>
+            <center>
+
+                <select class="form-control chosen-select" id="matriel" name="matriel">
+                    @foreach (var i in ViewBag.matdispo)
+                    {
+                        if (item.AR_Ref == i.AR_Ref)
+                        {
+
+                            <option class="font-bold text-greenbee"> @i.ls_noserie </option>
+
+
+                        }
+                    }
+                </select>
+
+            </center>
+        </td>*@
+
+                                    </tr>
+
+                                    }
+
+                                </tbody>
+                            </table>
+
+                        }
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+
+</div>
+
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+
+<!-- Toastr script -->
+<script src="~/js/plugins/toastr/toastr.min.js"></script>
+
+
+<script src="~/js/plugins/dataTables/datatables.min.js"></script>
+<script src="~/js/jquery-3.1.1.min.js"></script>
+<script src="~/js/plugins/metisMenu/jquery.metisMenu.js"></script>
+<script src="~/js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+
+<script src="~/js/plugins/dataTables/datatables.min.js"></script>
+
+<script src="~/js/accounting.js"></script>
+<script src="~/js/accounting.min.js"></script>
+
+<!-- Chosen -->
+<script src="~/js/plugins/chosen/chosen.jquery.js"></script>
+<!-- Sweet alert -->
+<script src="~/js/plugins/sweetalert/sweetalert.min.js"></script>
+<!-- Ladda -->
+<script src="~/js/plugins/ladda/spin.min.js"></script>
+<script src="~/js/plugins/ladda/ladda.min.js"></script>
+<script src="~/js/plugins/ladda/ladda.jquery.min.js"></script>
+
+<script>
+
+        $('.chosen-select').chosen({ width: "100%" });
+            $(document).ready(function () {
+
+                $('.dataTables-example').DataTable({
+                    pageLength: 25,
+                    responsive: true,
+                    dom: '<"html5buttons"B>lTfgitp',
+
+                });
+
+                Ladda.bind('.ladda-button', { timeout: 2000 });
+
+                // Bind progress buttons and simulate loading progress
+                Ladda.bind('.progress-demo .ladda-button', {
+                    callback: function (instance) {
+                        var progress = 0;
+                        var interval = setInterval(function () {
+                            progress = Math.min(progress + Math.random() * 0.1, 1);
+                            instance.setProgress(progress);
+
+                            if (progress === 1) {
+                                instance.stop();
+                                clearInterval(interval);
+                            }
+                        }, 20000);
+                    }
+                });
+
+
+                var l = Ladda.bind('.ladda-button-demo');
+
+                l.click(function () {
+                    // Start loading
+                    l.ladda('start');
+
+                    // Timeout example
+                    // Do something in backend and then stop ladda
+                    setTimeout(function () {
+                        l.ladda('stop');
+                    }, 12000)
+
+
+                });
+
+            });
+
+
+            function Changer(button) {
+                swal({
+                    title: "Vous étés sur, vous voulez changer les numéros de série sélectionner !?",
+                    text: "Attention !!!! Vous voulez confirmez cet échange ?",
+                    type: "warning",
+                    showCancelButton: true,
+                    confirmButtonClass: "btn-danger",
+                    confirmButtonText: "Oui, Changer!",
+                    cancelButtonText: "Non, Annuler",
+                    closeOnConfirm: false,
+                    closeOnCancel: false
+                },
+
+           function (isConfirm) {
+             if (isConfirm) {
+              //Determine the reference of the Row using the Button.
+              var row = $(button).closest("tr");
+              var idPiece = $("td", row).eq(0).html();
+              var idNoSerie = $("td", row).eq(2).html();
+              var idDesign = $("td", row).eq(3).html();
+
+                 var slect = $('select[name^="nouvNumSerie"]', row).val();
+
+              $.ajax({
+                  type: "get",
+                  url: '/EtatEchange/ChangerSortisSortis?numPiece=' + idPiece + '&&ancienNumSerie=' + idNoSerie +'&&nouvNumSerie=' + slect, // we are calling json method
+                  dataType: 'json',
+                  success: function (msg) {
+                      if (msg.result == "Error") {
+                          toastr.error('ce NS:° Nouv num serie; en stock mais reservée !', 'Error');
+
+                      }
+                      else {
+                          toastr.success('Vous ne peut pas réaffecter aux méme abonnement! ', 'success');
+                          location.reload();
+                      }
+
+                  }
+              });
+
+              swal("Changer!", "vous étes d'accord .", "success");
+
+          } else {
+
+              swal("Annuler", "Cet échanger est annuler :)", "error");
+          }
+      });
+
+            };
+
+
+            function Vide() {
+
+                $('form input[type= text]').each(function () {
+                    //If the field's empty
+                    if ($(this).val() == '') {
+                        //alert("viiiide");
+                        toastr.error('Veuillez tapez un numéro de télephone  !', 'Erreur');
+                    }
+                });
+
+            }
+
+            function Alerte(){
+
+                swal("Attention!!", "NS:° Nouv modem en stock mais reservée!", "error");
+
+            };
+     $('#TypeMat').change(function () {
+                getMat();
+
+     });
+            function getMat() {
+
+                $.ajax({
+                    type: "get",
+                    url: '@Url.Action("ReservMatSortSort")', // we are calling json method
+                    dataType: 'json',
+                    data: { Ar_ref: $('#TypeMat').val(), cbMarq: $('#cbMarq').val()},
+                    success: function (msg) {
+                        if (msg.result == 0) {
+
+                            //var Siege = msg.LLSeries[0].LS_NoSerie;
+                            var data = [];
+                            // var Rev = msg.LotSerieDepotLies[0].LS_NoSerie;
+                            if (msg.ListeNumSerie != null) {
+                                data = msg.ListeNumSerie
+                            }
+                            $("#NumSerieDep").empty();
+                            $("#NumSerieDep").append(
+                                '<div style ="width:250px">'+
+                                ' <select class="form-control chosen-select" id="nouvNumSerie" name="nouvNumSerie">' +
+                                '</select>' +
+                                '</div>'
+                            );
+
+                            $("#nouvNumSerie").append(
+                                '<optgroup  id="group1" >' +
+                                '</optgroup>'
+                            );
+                            if (data != null && data != 0) {
+                                var len = msg.ListeNumSerie.length;
+                                for (var i = 0; i < len; i++) {
+
+                                    $("#group1").append("<option class='form-control  font-bold text-greenbee'  value='" + data[i].ls_noserie + "'>" + data[i].ls_noserie + "</option>");
+
+                                }
+                            }
+
+                            $(document).ready(function () {
+                                $('.chosen-select').chosen({ width: "100%" });
+                                $('#nouvNumSerie').addClass('chosen-select');
+                                $("#nouvNumSerie").trigger("chosen:updated");
+                                $('.chosen-select').chosen({ width: "100%" });
+                            });
+                        }
+                    }
+                });
+         }
+</script>
+

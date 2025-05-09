@@ -1,0 +1,141 @@
+﻿
+@{
+    ViewBag.Title = "Liste des Reliquats d'engagement";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<link href="~/css/plugins/dataTables/datatables.min.css" rel="stylesheet">
+<!-- Sweet Alert -->
+<link href="~/css/plugins/sweetalert/sweetalert.css" rel="stylesheet">
+<link href="~/css/plugins/datapicker/datepicker3.css" rel="stylesheet">
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-lg-10">
+        <h2>Reliquat des cas de résiliations</h2>
+        <ol class="breadcrumb">
+            <li>
+                <a href="#">Acceuil</a>
+            </li>
+            <li>
+                <a href="@Url.Action("ReliquatResiliation", "Abonnement")">Recouvrement </a>
+            </li>
+            <li class="active">
+                <a href="@Url.Action("ReliquatResiliation", "Abonnement")"><strong>Liste des Reliquats d'engagement </strong></a>
+            </li>
+        </ol>
+    </div>
+
+</div>
+
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+
+        <div class="col-lg-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>Informations sur les abonnements</h5>
+
+                </div>
+                <div class="ibox-content">
+
+                    <br />
+
+                    <div class="table-responsive">
+                        <table class="table table-responsive table-hover " id="listeReliquat">
+                            <thead>
+                                <tr>
+                                    <th> Abonnement </th>
+                                    <th> Date résiliation </th>
+                                    <th> Date fin engagement </th>
+                                    <th> Code client </th>
+                                    <th> Intitulé </th>
+                                    <th> Fixe </th>
+                                    <th> Débit </th>
+                                    <th> Périodicité </th>
+                                    <th> GSM </th>
+                                    <th>Motif Résiliation </th>
+                                    <th> Solde </th>
+                                    <th> Facture Imp </th>
+                                    <th> Solde total</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (ViewBag.reliquat != null)
+                                {
+                                    foreach (var item in ViewBag.reliquat)
+                                    {
+                                <tr class="gradeX">
+                                    <td>@item.Abonnement</td>
+                                    <td><strong>@item.DateResiliation.ToString("dd/MM/yyyy")</strong></td>
+                                    <td><strong>@item.DateEngagement.ToString("dd/MM/yyyy")</strong></td>
+                                    <td>@item.CT_Num</td>
+                                    <td>@item.CT_Intitule</td>
+                                    <td>@item.Fixe</td>
+                                    <td>@item.Debit</td>
+                                    <td>@item.Periode</td>
+                                    <td>@item.GSM</td>
+                                    <td>@item.MotifResiliation</td>
+                                    <td>  <strong>@String.Format("{0:N3}", @item.SoldeAbo)  </strong> TND</td>
+                                    <td>@item.NbImp</td>
+                                    <td>  <strong>@String.Format("{0:N3}", @item.SoldeTotal)  </strong> TND</td>
+
+                                </tr>
+                                    }
+                                }
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="~/js/jquery-3.1.1.min.js"></script>
+<script src="~/js/plugins/metisMenu/jquery.metisMenu.js"></script>
+<script src="~/js/plugins/pace/pace.min.js"></script>
+<script src="js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+<script src="~/js/plugins/chosen/chosen.jquery.js"></script>
+<script src="~/js/plugins/dataTables/datatables.min.js"></script>
+<!-- Sweet alert -->
+<script src="~/js/plugins/sweetalert/sweetalert.min.js"></script>
+<!-- Date range use moment.js same as full calendar plugin -->
+<script src="~/js/plugins/fullcalendar/moment.min.js"></script>
+<script src="~/js/plugins/daterangepicker/daterangepicker.js"></script>
+
+<!-- Select2 -->
+<script src="~/js/plugins/select2/select2.full.min.js"></script>
+<script>
+    $(document).ready(function () {
+
+        $('#listeReliquat').DataTable({
+            pageLength: 30,
+            responsive: true,
+            dom: '<"html5buttons"B>lTfgitp',
+            buttons: [
+                { extend: 'copy' },
+                { extend: 'csv' },
+                { extend: 'excel', title: 'ExampleFile' },
+                { extend: 'pdf', title: 'ExampleFile' },
+                {
+                    extend: 'print',
+                    customize: function (win) {
+                        $(win.document.body).addClass('white-bg');
+                        $(win.document.body).css('font-size', '10px');
+
+                        $(win.document.body).find('table')
+                            .addClass('compact')
+                            .css('font-size', 'inherit');
+                    }
+                }
+            ]
+
+        });
+    });    
+
+</script>
+
+
+

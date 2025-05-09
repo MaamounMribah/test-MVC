@@ -1,0 +1,552 @@
+﻿@model BeeProj.Models.B_ENTETAPPRO
+@{
+    ViewBag.Title = "DemandeApproEdit";
+}
+
+
+<style>
+    .dataTables_filter, .dataTables_info, .dataTables_length {
+        display: none;
+    }
+</style>
+
+
+<link href="~/css/plugins/chosen/bootstrap-chosen.css" rel="stylesheet">
+
+<link href="~/css/plugins/dataTables/datatables.min.css" rel="stylesheet">
+
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-sm-4">
+        <h2>Demande d'approvisionnement</h2>
+        <ol class="breadcrumb">
+
+            <li>
+                <a>Acceuil </a>
+            </li>
+            <li>
+                <a>Gestion Interne</a>
+            </li>
+
+            <li class="active">
+                <strong>Demande d'approvisionnement </strong>
+            </li>
+        </ol>
+    </div>
+</div>
+
+
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row ">
+
+
+        <div class="panel">
+            <div class="panel-body">
+                <div>
+                    <h3>Reférérence demande REF @Html.DisplayFor(model => model.AP_Piece)</h3>
+                </div>
+                <div class="row">
+                    <div class="col-lg-3">
+                        <div class="widget style1 gray-bg" style="background-image: linear-gradient(0deg,#d7d7ea,#fff);">
+                            <div class="row">
+                                <div class="col-xs-4 text-center">
+                                </div>
+                                <div class="col-xs-8 text-right">
+                                    <span> Statut </span>
+                                    <h2 class="font-bold">Saisie</h2>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3">
+                        <div class="widget style1 gray-bg " style="background-image: linear-gradient(0deg,#d7d7ea,#fff);">
+                            <div class="row">
+                                <div class="col-xs-4">
+
+                                </div>
+                                <div class="col-xs-8 text-right">
+                                    <span> Date </span>
+                                    <h2 class="font-bold">@ViewBag.date</h2>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3">
+                        <div class="widget style1 gray-bg " style="background-image: linear-gradient(0deg,#d7d7ea,#fff);">
+                            <div class="row">
+                                <div class="col-xs-4">
+
+                                </div>
+                                <div class="col-xs-8 text-right">
+                                    <span> Récepteur </span>
+                                    <h2 class="font-bold">@ViewBag.AgenceEIntitule</h2>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3">
+                        <div class="widget style1 gray-bg" style="background-image: linear-gradient(0deg,#d7d7ea,#fff);">
+                            <div class="row">
+                                <div class="col-xs-4">
+
+                                </div>
+                                <div class="col-xs-8 text-right">
+                                    <span> Emetteur </span>
+                                    <h2 class="font-bold">@ViewBag.AgenceRIntitule</h2>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="panel" id="addLignes">
+    <div class="panel-body">
+        <div class="row">
+
+
+            <div class="content-box border-top border-gray">
+                @*<div class="loading-spinner hidden" id="waitLoadiing">
+                        <i class="bg-blue-alt"></i> <i class="bg-blue"></i>
+                        <i class="bg-blue"></i> <i class="bg-blue"></i>
+                        <i class="bg-blue-alt"></i> <i class="bg-blue"></i>
+
+                    </div>*@
+
+
+
+                @*<br />
+                        <div class="loading-stick hidden" id="waitLoadiing">
+                        <div class="stick bg-azure"></div>
+                        <div class="stick bg-azure"></div>
+                        <div class="stick bg-azure"></div>
+                        <div class="stick bg-azure"></div>
+                        <div class="stick bg-azure"></div>
+                        <div class="stick bg-azure"></div>
+
+                        <h1>Patientez...</h1>
+                    </div>*@
+
+
+                <h3 class="content-box-header clearfix">
+                    <small id="numcourant"> </small>
+
+                    <span class="btn-google pull-right" data-toggle="buttons">
+                        <button data-toggle="modal" data-target="#selectArticle" title="Ajouter Produit" class="btn btn-success btn-circle" type="button">
+                            <i class="fa fa-plus"></i>
+                        </button>
+
+
+                        <button class="btn btn-info btn-circle" type="button">
+                            <i class="fa fa-save"></i>
+                        </button>
+
+                        <button class="btn btn-danger btn-circle" data-toggle="modal" data-target="#supprimerTous" title="Supprimer Tout"type="button">
+                            <i class="fa fa-close"></i>
+                        </button>
+
+
+                    </span>
+
+
+                </h3>
+                <div class="content-box-wrapper bg-white">
+
+
+
+                    <table class="table order-list" id="TableInput">
+                      
+
+                    </table>
+
+
+                    <hr />
+                    <div class="ibox-content">
+
+                        @*<table id="TableListeLignesDevis" class="table datatable table-striped table-bordered table-hover" cellspacing="0" style="cursor:pointer" data-page-length='2000'>*@
+                        <table id="TableListeLignesProduit" class="table table-striped table-bordered" cellspacing="0" style="cursor:pointer" data-page-length='20000'>
+
+                            <thead>
+                                <tr>
+                                    <th>Code Produit</th>
+                                    <th>Désignation</th>
+
+                                    <th>Quantité</th>
+                                    <th>Affecté à</th>
+                                    <th>N° Serie</th>
+                                    <th></th>
+
+
+
+                                    
+                                </tr>
+                            </thead>
+                              <tbody>
+                           @foreach (var item in ViewBag.ListeProduits)
+                           {
+                            <tr>
+                                <td>@item.AR_Ref</td>
+                                <td>@item.AP_Design</td>
+                                <td>@item.AP_QteD</td>
+                                <td>@item.AP_Affectation</td>
+                                <td>@item.AR_Serie</td>
+                                <td width="40px"><button class="btn btn-xs center-orientation" type="button" onclick="SupprimerLigne(@item.cbMarq) ">
+                                    <i class="fa fa-close"></i>
+                                </button>
+                                </td>
+
+                            </tr>
+                           }
+                              </tbody>
+                        </table>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <br />
+
+        <div class="hr-line-dashed"></div>
+
+        @if(Model.A_CodeE == ViewBag.Connecte) {
+        <div class="form-group">
+
+            <button class="btn btn-primary  pull-right m-t-n-xs" style="margin-left:10px;" type="button" data-toggle="modal" data-target="#saveAppro"><strong>Saisir</strong></button>
+            <button type="reset" class="btn btn-white  pull-right m-t-n-xs"><a href="/Interne/DemandeAppro"><strong>Annuler</strong></a></button>
+
+
+        </div>
+        }
+    </div>
+</div>
+
+
+
+
+ <!-- Modal add new Demande  -->
+
+<div class="modal inmodal" id="saveAppro" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content animated flipInY">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title">Demande envoyée avec succès </h4>
+            </div>
+            @*<div class="modal-body">
+                Voulez vous enregistrer les modifications ?
+
+            </div>*@
+            <div class="modal-footer">
+                @*<button type="button" class="btn btn-white" data-dismiss="modal">Annuler</button>*@
+
+                <button type="button" class="btn btn-warning" onclick="SaveDemande(@Model.cbMarq) ">OK</button>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+<!-- Modal supprimer toutes les lignes  -->
+
+<div class="modal inmodal" id="supprimerTous" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content animated flipInY">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title">Voulez-vous supprimer toutes les lignes ? </h4>
+            </div>
+            @*<div class="modal-body">
+                    Voulez vous enregistrer les modifications ?
+
+                </div>*@
+            <div class="modal-footer">
+                <button type="button" class="btn btn-white" data-dismiss="modal">Annuler</button>
+
+                <button type="button" class="btn btn-warning" onclick="DeleteAll() ">OK</button>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+    <!--__________________________Modal__Liste____Articles_______________________________ -->
+<div class="modal inmodal fade" id="selectArticle" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title">Liste des articles</h4>
+                <small class="font-bold">Double click pour séléctionner l'article de votre demande et préciser la quantité désirée.</small>
+
+                <br />
+                <hr />
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">Quantité</label>
+
+                    <div class="col-sm-10">
+                        <div class="input-group m-b">
+                            <span class="input-group-addon">
+                                <i class="fa fa-star"></i>
+                            </span> <input type="number" class="form-control" placeholder="Quantité" id="qt" value="1">
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group" id="hideAffect">
+                    <label class="col-sm-2 control-label">Affecté à</label>
+
+                    <div class="col-sm-10">
+                        <div class="input-group m-b">
+                            <span class="input-group-addon">
+                                <i class="fa fa-star"></i>
+                            </span>
+                            <select class="chosen-select " id="affecteA">
+                                <option value=""></option>
+
+                                @foreach (var item in ViewBag.listeRefAbon)
+                                {
+                                    <option value="@item.DO_RefTT">@item.DO_RefTT</option>
+
+                                }
+                            </select>
+                            @*<input type="text" class="form-control" placeholder="Reference abonnement" id="affecteA">*@
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
+            <div class="modal-body">
+
+
+                <div class="table-responsive">
+
+                    <table id="listeArticles" class="table table-striped table-bordered table-hover dataTables-example full-width" style="cursor:pointer;">
+                        <thead>
+                            <tr>
+
+
+
+                                <th>
+                                    Référence Article
+                                </th>
+                                <th>
+                                    Désignation
+                                </th>
+
+                            </tr>
+                        </thead>
+
+
+
+                    </table>
+
+                </div>
+
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-white" data-dismiss="modal">Close</button>
+                @*<button type="button" class="btn btn-primary">Save changes</button>*@
+            </div>
+        </div>
+    </div>
+</div>
+    <!--_____________________________________________________________________________ -->
+
+
+    <script src="~/js/jquery-3.1.1.min.js"></script>
+<script src="~/js/plugins/chosen/chosen.jquery.js"></script>
+<script src="~/js/plugins/metisMenu/jquery.metisMenu.js"></script>
+    <script src="~/js/plugins/dataTables/datatables.min.js"></script>
+
+
+    <script>
+
+
+
+        $(document).ready(function () {
+
+            listedesArticlesTable();
+         
+
+        });
+
+
+        function listedesArticlesTable() {
+
+            var oTable = $('#listeArticles').DataTable({
+                "ajax": {
+                    "url": '/Interne/getlistedesArticles',
+                    "type": "get",
+                    "autoWidth": false,
+                    "datatype": "json"
+                },
+                "columns": [
+
+                        { "data": "AR_Ref" },
+                        { "data": "AR_Desigh" },
+
+
+
+
+                ]
+
+            });
+            $('.chosen-select').chosen({ width: "100%" });
+
+
+
+            $('#listeArticles tbody').on('dblclick', 'tr', function () {
+                var tr = $(this).closest('tr');
+                var value = tr.find('td:eq(0)').html();
+                var value2 = tr.find('td:eq(1)').html();
+
+
+                saveLine(value, value2);
+
+                $('#selectArticle').modal('hide');
+
+                //     location.reload();
+
+            });
+
+
+            $('#listeArticles tbody').on('click', 'tr', function () {
+                if ($(this).hasClass('tr-selected')) {
+                    $(this).removeClass('tr-selected');
+                    var value = $(this).find('td:first').html();
+                }
+                else {
+                    oTable.$('tr.tr-selected').removeClass('tr-selected');
+                    $(this).addClass('tr-selected');
+                    var value = $(this).find('td:first').html();
+
+                }
+            });
+
+
+            //$("table.order-list").on("click", ".ibtnDel", function (event) {
+            //    $(this).closest("tr").remove();
+            //    counter -= 1
+            //});
+
+
+        }
+
+
+
+        function saveLine(arref, design) {
+            var url = "/Interne/ModifLine?cbmarq=" + @Model.cbMarq + 
+                 "&&description=" + $("#description").val()
+                + "&&codeArticle="
+                + arref + "&&quantite=" + $("#qt").val() + "&&design=" + design + "&&affecteA=" + $("#affecteA").val();
+
+            $.ajax({
+                type: "POST",
+                url: url,
+                dataType: "json",
+                success: function (data) {
+                    location.reload();
+                }
+
+            })
+        }
+
+        $('#qt').bind('keyup mouseup', function () {
+
+            if ($('#qt').val() != 1) {
+                $('#hideAffect').addClass('hidden');
+            }
+            else {
+                $('#hideAffect').removeClass('hidden');
+
+            }
+
+        })
+    </script>
+
+
+<script>
+    function DeleteAll() {
+
+        $.ajax({
+            type: "get",
+
+            url: "/Interne/DeleteAllLignes?cbmarq=" + @Model.cbMarq,
+
+
+            dataType: "json",
+            success: function (msg) {
+
+
+                window.location = "/Interne/DemandeApproEdit/@Model.cbMarq";
+
+
+
+            }
+        });
+    }
+</script>
+
+
+
+<script>
+    function SaveDemande(cbm) {
+
+        $.ajax({
+            type: "get",
+
+            url: "/Interne/SaveDemande?cbmarq=" + cbm + "&&description=" + $("#description").val(),
+
+
+            dataType: "json",
+            success: function (msg) {0
+
+               window.location = "/Interne/ListeDemandeAppro";
+
+
+            }
+        });
+    }
+</script>
+
+
+
+
+
+<script>
+    function SupprimerLigne(id) {
+
+        $.ajax({
+            type: "get",
+
+            url: "/Interne/SupprimerLign?cbmarq=" + id,
+
+
+            dataType: "json",
+            success: function (msg) {
+
+                window.location = "/Interne/DemandeApproEdit/@Model.cbMarq";
+
+            }
+        });
+    }
+</script>

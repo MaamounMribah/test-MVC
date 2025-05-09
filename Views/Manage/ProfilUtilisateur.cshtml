@@ -1,0 +1,248 @@
+﻿@model BeeProj.Models.IndexViewModel
+@using Microsoft.AspNet.Identity
+@{
+    ViewBag.Title = "ProfilUtilisateur";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+
+
+
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-lg-10">
+        <h2>Profil</h2>
+        <ol class="breadcrumb">
+            <li>
+                <a href="index-2.html">Home</a>
+            </li>
+            <li>
+                <a>Extra Pages</a>
+            </li>
+            <li class="active">
+                <strong>Profile</strong>
+            </li>
+        </ol>
+    </div>
+    <div class="col-lg-2">
+
+    </div>
+</div>
+
+
+@if (Request.IsAuthenticated)
+{
+
+    <div class="wrapper wrapper-content">
+        <div class="row animated fadeInRight">
+            <div class="col-lg-4">
+                <div class="widget-head-color-box white-bg p-lg text-center">
+                    <div class="m-b-md">
+                        <h2 class="font-bold no-margins">
+                            @ViewBag.prenom  @ViewBag.nom
+                        </h2>
+                        <small>@ViewBag.AG</small>
+                    </div>
+                    <div class="ibox-content no-padding border-left-right">
+                        <img src="@Url.Action("Photo", "Account", new { UserId = User.Identity.GetUserId() })" class="img-container" />
+                    </div>
+                    <div>
+                        <br />
+                        @if (ViewBag.typeagence == 3)
+                        {
+                            <a href='@Url.Action("Index", "EspaceFreelancer")' class="btn btn-sm btn-purplebee circle" title="Espace revendeur">
+                                <i class="fa fa-user"></i> Votre espace
+                            </a>
+
+                        }
+                        else 
+                        {
+                            <a href='@Url.Action("Index", "EspaceRevendeur")' class="btn btn-sm btn-purplebee circle" title="Espace revendeur">
+                                <i class="fa fa-user"></i> Votre espace
+                            </a>
+                        }
+                        <a href='@Url.Action("ListeFraisCommission", "GestionFactures")' class="btn btn-sm btn-greenbee circle" title="Liste factures">
+                        <i class="fa fa-money"></i> Vos Factures
+                            </a>
+                        
+                    </div>
+                </div>
+                <div class="widget-text-box">
+                    <h4 class="media-heading">@ViewBag.prenom  @ViewBag.nom </h4>
+                    <hr />
+                    <p><i class="fa fa-phone"></i> @ViewBag.Telephone</p>
+                    <p><i class="fa fa-map-marker"></i> @ViewBag.Adresse</p>
+                    <p><i class="fa fa-envelope"></i> @ViewBag.email</p>
+
+                    <div class="text-right">
+                        <a class="btn btn-xs btn-purplebee" href="@Url.Action("EditProfile", "Manage")"><i class="fa fa-edit"></i> Editer </a>
+                    </div>
+
+
+                </div>
+            </div>
+
+
+            <div>
+               
+
+
+            </div>
+            <div class="col-md-8">
+
+
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <h5>Changer votre mot de passe </h5>
+                    </div>
+                    <div class="ibox-content">
+                        @using (Html.BeginForm("ChangePassword", "Manage", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+                        {
+                            @Html.AntiForgeryToken()
+                            @Html.ValidationSummary("", new { @class = "text-danger" })
+
+                            <div class="row" id="pwd-container4">
+                               
+                                        <div class="form-group">
+                                            @Html.LabelFor(m => m.OldPassword, new { @class = "col-md-4 control-label" })
+                                            <div class="col-md-8">
+                                                @Html.PasswordFor(m => m.OldPassword, new { @class = "form-control" })
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            @Html.LabelFor(m => m.NewPassword, new { @class = "col-md-4 control-label" })
+                                            <div class="col-md-8">
+                                                @Html.PasswordFor(m => m.NewPassword, new { @class = "form-control example4" })
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <div class="col-md-4">
+                                            </div>
+                                            <div class="col-md-8">
+                                                <span class="font-bold pwstrength_viewport_verdict4"></span>
+                                                <span class="pwstrength_viewport_progress4"></span>
+
+                                            </div>
+
+                                        </div>
+
+
+                                        <div class="form-group">
+                                            @Html.LabelFor(m => m.ConfirmPassword, new { @class = "col-md-4 control-label" })
+                                            <div class="col-md-8">
+                                                @Html.PasswordFor(m => m.ConfirmPassword, new { @class = "form-control" })
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-md-offset-2 col-md-10">
+                                                <input type="submit" value="Changer votre mot de passe" class="btn btn-purplebee btn-xs pull-right" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                
+                        }
+                    </div>
+                </div>
+
+
+
+
+                    @*<div class="ibox float-e-margins">
+                        <div class="ibox-title">
+                            <h5>Activités </h5>
+                        </div>
+                        <div class="ibox-content">
+
+                            <div>
+                                <div class="feed-activity-list">
+                                    <div class="row  border-bottom white-bg dashboard-header">
+                                        <div>
+                                            <canvas id="barChart" height="140"></canvas>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+
+                    </div>*@
+                </div>
+            </div>
+    </div>
+
+}
+
+
+<!-- Mainly scripts -->
+<script src="~/js/jquery-3.1.1.min.js"></script>
+<script src="~/js/bootstrap.min.js"></script>
+<script src="~/js/plugins/metisMenu/jquery.metisMenu.js"></script>
+<script src="~/js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+
+<!-- Custom and plugin javascript -->
+<script src="~/js/inspinia.js"></script>
+<script src="~/js/plugins/pace/pace.min.js"></script>
+
+<!-- ChartJS-->
+<script src="~/js/plugins/chartJs/Chart.min.js"></script>
+<!-- Password meter -->
+<script src="~/js/plugins/pwstrength/pwstrength-bootstrap.min.js"></script>
+<script src="~/js/plugins/pwstrength/zxcvbn.js"></script>
+
+ 
+
+<script>
+    $(function () {
+
+        var options4 = {};
+        options4.ui = {
+            container: "#pwd-container4",
+            viewports:
+                {
+                    progress: ".pwstrength_viewport_progress4",
+                    verdict: ".pwstrength_viewport_verdict4"
+                }
+        };
+        options4.common = {
+            zxcvbn: true,
+            zxcvbnTerms: ['samurai', 'shogun', 'bushido', 'daisho', 'seppuku'],
+            //userInputs: ['#year', '#familyname']
+        };
+        $('.example4').pwstrength(options4);
+
+
+
+        //var barData = {
+        //    labels: ["January", "February", "March", "April", "May", "June", "July"],
+        //    datasets: [
+        //        {
+        //            label: "Data 1",
+        //            backgroundColor: 'rgba(220, 220, 220, 0.5)',
+        //            pointBorderColor: "#fff",
+        //            data: [65, 59, 80, 81, 56, 55, 40]
+        //        },
+        //        {
+        //            label: "Data 2",
+        //            backgroundColor: 'rgba(26,179,148,0.5)',
+        //            borderColor: "rgba(26,179,148,0.7)",
+        //            pointBackgroundColor: "rgba(26,179,148,1)",
+        //            pointBorderColor: "#fff",
+        //            data: [28, 48, 40, 19, 86, 27, 90]
+        //        }
+        //    ]
+        //};
+
+        //var barOptions = {
+        //    responsive: true
+        //};
+
+
+        //var ctx2 = document.getElementById("barChart").getContext("2d");
+        //new Chart(ctx2, { type: 'bar', data: barData, options: barOptions });
+    });
+
+
+
+</script>

@@ -1,0 +1,996 @@
+﻿@model BeeProj.ViewModels.AbonnementLibreModel
+
+@{
+    ViewBag.Title = "VenteLibre";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<!-- Toastr style -->
+<link href="~/css/plugins/toastr/toastr.min.css" rel="stylesheet">
+<link href="~/css/plugins/datapicker/datepicker3.css" rel="stylesheet" />
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+<link href="~/css/plugins/chosen/bootstrap-chosen.css" rel="stylesheet">
+<link href="~/css/plugins/awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css" rel="stylesheet">
+<link href="~/css/plugins/iCheck/custom.css" rel="stylesheet">
+<!-- Sweet Alert -->
+<link href="~/css/plugins/sweetalert/sweetalert.css" rel="stylesheet">
+<!-- Ladda style -->
+<link href="~/css/plugins/ladda/ladda-themeless.min.css" rel="stylesheet">
+
+<link href="~/css/plugins/touchspin/jquery.bootstrap-touchspin.min.css" rel="stylesheet">
+<link href="~/css/plugins/jasny/jasny-bootstrap.min.css" rel="stylesheet">
+<meta name='viewport' content='width=device-width, initial-scale=1'>
+@*<script src='https://kit.fontawesome.com/a076d05399.js'></script>*@
+<style>
+    #ui-datepicker-div {
+        font-size: 12px;
+    }
+</style>
+
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-lg-8">
+        <h2 class="active">Nouvel Abonnement Libre</h2>
+        <ol class="breadcrumb">
+            <li>
+                <a>Acceuil</a>
+            </li>
+            <li>
+                <a>Vente Libre</a>
+            </li>
+
+        </ol>
+    </div>
+    <div class="col-lg-2">
+
+    </div>
+</div>
+<div class="row wrapper wrapper-content page-body">
+
+    <div class="col-lg-12">
+        <div class="ibox-content">
+            <div class="row">
+
+                @if ((ViewBag.AgenceUser != null) && (ViewBag.msg == null))
+                {
+                    if (ViewData.ModelState[""] != null && ViewData.ModelState[""].Errors.Count > 0)
+                    {
+                        <div class="alert alert-danger alert-dismissable">
+                            <button type="button" class="close " data-dismiss="alert"> × </button>
+                            @Html.ValidationSummary("", new { @class = "text-danger" })
+
+                        </div>
+
+                    }
+                    else
+                    {
+                        <div class="col-lg-12">
+                            <input type="text" id="DO_Type" name="DO_Type" value="@ViewBag.TypeAbonnement" class="hidden">
+
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <div class="ibox float-e-margins">
+                                        <div class="ibox-title">
+
+                                            <div class="pull-right">
+                                                <h5 class="text-greenbee">  Réf: #@ViewBag.ReferenceEngagement </h5>
+                                            </div>
+
+                                        </div>
+                                        <div class="ibox-content">
+                                            @using (Html.BeginForm("Nouveau", "VenteLibre", FormMethod.Post, new { @class = "form-horizontal", @name = "myForm", role = "form", enctype = "multipart/form-data" }))
+                                            {
+
+                                                <div class="row">
+                                                    <div class="row form-group col-md-6">
+                                                        <div class="col-md-12">
+
+                                                            <label>Type pièce identité<sup>*</sup></label>
+
+
+                                                            <div class="input-group">
+                                                                <span class="input-group-addon"><i class="fa fa-address-card-o"></i></span>
+                                                                <select class="form-control" name="CT_TypeIdentifiant" id="CT_TypeIdentifiant">
+                                                                    <option value=0>CIN</option>
+                                                                    <option value=1>Passeport</option>
+                                                                    <option value=2>RC</option>
+
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row form-group col-md-6">
+                                                        <div class="col-md-12">
+
+                                                            <label>N° pièce identité<sup>*</sup></label>
+
+                                                            <div class="input-group" style="width: 454px;height:34px" id="Identifiant">
+                                                                <div id="datepicker">
+                                                                    @Html.TextBoxFor(m => m.CT_Identifiant, new { @class = "form-control", id = "CT_Identifiant" })
+                                                                    @Html.ValidationMessageFor(model => model.CT_Identifiant, "", new { @class = "text-danger" })
+                                                                    <label class="text-danger hidden fs-8 pt-2" id="labelCin" style="font-size:10px">Le champ N° pièce identité ne peut contenir que 8 nombre</label>
+
+                                                                </div>
+                                                                <span class="input-group-btn" style="width:45px;height:39px">
+                                                                    <a href="#showClientInfos" class="btn btn-greenbee ladda-button ladda-button-demo" id="searchClient">
+                                                                        <i class="fa fa-chevron-right"></i><i class="fa fa-chevron-right"></i>
+                                                                    </a>
+                                                                </span>
+                                                            </div>
+
+                                                        </div>
+                                                        @Html.ValidationMessageFor(model => model.CT_Identifiant, "", new { @class = "text-danger" })
+                                                    </div>
+
+                                                    <br />
+                                                    <br />
+                                                    <br />
+                                                    <div class="row hidden" id="showClientInfos">
+                                                        <br />
+                                                        <div class="row form-group col-md-6">
+                                                            <div class="col-md-12">
+
+                                                                <label>Civilité<sup>*</sup></label>
+
+
+                                                                <div class="input-group">
+                                                                    <span class="input-group-addon"><i class="fa fa-users"></i></span>
+                                                                    <select class="form-control" name="CT_Civilite" id="CT_Civilite">
+                                                                        <option value=0>Mr.</option>
+                                                                        <option value=1>Mme</option>
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row form-group col-md-6">
+                                                            <div class="col-md-12">
+
+                                                                <label>Nom et prénom<sup>*</sup></label>
+
+                                                                <div class="input-group">
+                                                                    <span class="input-group-addon"><i class="fa fa-user"></i></span>
+                                                                    @Html.TextBoxFor(model => model.CT_Intitule, new { @class = "form-control", @id = "CT_Intitule", @name = "CT_Intitule", @maxlength = "34" })
+
+                                                                </div>
+                                                                @Html.ValidationMessageFor(model => model.CT_Intitule, "", new { @class = "text-danger" })
+                                                            </div>
+                                                        </div>
+                                                        <div class="row form-group col-md-6">
+                                                            <div class="col-md-12">
+
+                                                                <label>Personne physique</label>
+
+                                                                <div class="input-group">
+                                                                    <label class="checkbox-inline i-checks">
+                                                                        <input type="radio" checked="" value=0 id="CT_MORAL" name="CT_MORAL"> Oui
+                                                                    </label>
+                                                                    <label class="checkbox-inline i-checks">
+                                                                        <input type="radio" value=1 id="CT_MORAL" name="CT_MORAL"> Non
+                                                                    </label>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row form-group col-md-6">
+                                                            <div class="col-md-12">
+
+                                                                <label>Date de naissance<sup>*</sup></label>
+
+                                                                <div class="input-group">
+                                                                    <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                                                                    <input class="form-control" pattern="\d{1,2}/\d{1,2}/\d{4}" type="text" id="CT_DateNaiss" name="CT_DateNaiss" placeholder="jj/mm/aaaa" required /> <br />
+
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row form-group col-md-6">
+                                                            <div class="col-md-12">
+
+                                                                <label>Nationalité</label>
+
+
+                                                                <div class="input-group">
+                                                                    <span class="input-group-addon"><i class="fa fa-globe"></i></span>
+                                                                    @Html.TextBoxFor(model => model.CT_Nationnalité, new { @class = "form-control", @id = "CT_Nationnalité", @name = "CT_Nationnalité", @Value = "Tunisienne" })
+                                                                </div>
+                                                                @Html.ValidationMessageFor(model => model.CT_DateNaiss, "", new { @class = "text-danger" })
+                                                            </div>
+                                                        </div>
+                                                        <div class="row form-group col-md-6">
+                                                            <div class="col-md-12">
+
+                                                                <label>Tél de contact<sup>*</sup></label>
+
+                                                                <div class="input-group">
+                                                                    <span class="input-group-addon"><i class="fa fa-phone"></i></span>
+                                                                    @Html.TextBoxFor(model => model.CT_Telephone, new { @class = "form-control", data_mask = "99999999", @id = "CT_Telephone", @name = "CT_Telephone", @placeholder = "" })
+
+                                                                </div>
+                                                                @Html.ValidationMessageFor(model => model.CT_Telephone, "", new { @class = "text-danger" })
+                                                            </div>
+                                                        </div>
+                                                        <div class="row form-group col-md-6">
+                                                            <div class="col-md-12">
+
+                                                                <label>Adresse <sup>*</sup></label>
+
+
+                                                                <div class="input-group">
+                                                                    <span class="input-group-addon"><i class="fa fa-home"></i></span>
+                                                                    <textarea class="form-control" name="CT_Adresse" id="CT_Adresse" maxlength="34" required></textarea>
+                                                                </div>
+                                                            </div>
+
+                                                        </div>
+                                                        <div class="row form-group col-md-6">
+                                                            <div class="col-md-12">
+
+                                                                <label>Complement Adresse</label>
+
+                                                                <div class="input-group">
+                                                                    <span class="input-group-addon"><i class="fa fa-address-book"></i></span>
+                                                                    @Html.TextAreaFor(m => m.CT_Complement, new { @class = "form-control", id = "CT_Complement", name = "CT_Complement" })
+
+                                                                </div>
+                                                                @Html.ValidationMessageFor(model => model.CT_Complement, "", new { @class = "text-danger" })
+                                                            </div>
+
+                                                        </div>
+                                                        <div class="row form-group col-md-6">
+                                                            <div class="col-md-12">
+
+                                                                <label>Pays</label>
+
+
+                                                                <div class="input-group">
+                                                                    <span class="input-group-addon"><i class="fa fa-flag"></i></span>
+                                                                    <input type="text" class="form-control" name="CT_Pays" id="CT_Pays" value="Tunisie" required>
+                                                                </div>
+                                                            </div>
+
+                                                        </div>
+                                                        <div class="row form-group col-md-6">
+                                                            <div class="col-md-12">
+
+                                                                <label>Région<sup>*</sup></label>
+
+
+                                                                <div class="input-group">
+                                                                    <span class="input-group-addon"><i class="fa fa-flag-checkered"></i></span>
+                                                                    <select class="form-control" id="search" name="CT_Gouvernorat" required>
+                                                                        <option selected="selected">-- Choisir --</option>
+                                                                        @foreach (var item in ViewBag.Gouvernoratt)
+                                                                        {
+                                                                            <option value="@item.Gouvernorat">@item.Gouvernorat</option>
+                                                                        }
+                                                                    </select>
+
+                                                                </div>
+                                                            </div>
+
+                                                        </div>
+                                                        <div class="row form-group col-md-6">
+                                                            <div class="col-md-12">
+
+                                                                <label>Ville<sup>*</sup></label>
+
+
+                                                                <div class="input-group">
+                                                                    <span class="input-group-addon"><i class="fa fa-flag-o"></i></span>
+                                                                    <select class="form-control" name="CT_Ville" id="CT_Ville" required></select>
+
+                                                                </div>
+                                                            </div>
+
+                                                        </div>
+                                                        <div class="row form-group col-md-6">
+                                                            <div class="col-md-12">
+
+                                                                <label>Cité<sup>*</sup></label>
+
+
+                                                                <div class="input-group">
+                                                                    <span class="input-group-addon"><i class="fa fa-window-restore"></i></span>
+                                                                    <select class="form-control" name="CT_Localite" id="Localite" required></select>
+                                                                </div>
+                                                            </div>
+
+                                                        </div>
+                                                        <div class="row form-group col-md-6">
+                                                            <div class="col-md-12">
+
+                                                                <label>Code postal<sup>*</sup></label>
+
+
+                                                                <div class="input-group">
+                                                                    <span class="input-group-addon"><i class="fa fa-university"></i></span>
+                                                                    <input type="text" class="form-control" name="CT_CodePostal" id="CT_CodePostal" required>
+                                                                </div>
+                                                            </div>
+
+                                                        </div>
+                                                        <div class="row form-group col-md-6">
+                                                            <div class="col-md-12">
+
+                                                                <label>Date établissement<sup>*</sup></label>
+
+
+                                                                <div class="input-group">
+                                                                    <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                                                                    <input class="form-control" pattern="\d{1,2}/\d{1,2}/\d{4}" name="CT_IdDateEtab" id="CT_IdDateEtab" placeholder="jj/mm/aaaa" required /> <br />
+
+                                                                </div>
+
+                                                            </div>
+                                                            @Html.ValidationMessageFor(model => model.CT_IdDateEtab, "", new { @class = "text-danger" })
+                                                        </div>
+
+                                                        <br />
+                                                        <br />
+                                                        <div class="form-group col-md-12 ">
+                                                            <div class="pull-right">
+                                                                <span class="btn-google" data-toggle="buttons">
+                                                                    <button title="Ajouter Produit" class="btn btn-greenbee btn-circle" id="ADDArticle" type="button">
+                                                                        <i class="fa fa-plus"></i>
+                                                                    </button>
+                                                                    <button class="btn btn-danger btn-circle" id="DeleteAllLines" title="Supprimer tout" type="button">
+                                                                        <i class="fa fa-trash"></i>
+                                                                    </button>
+                                                                </span>
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group col-lg-12">
+
+                                                            <table id="TableListeLignesProduit" class="table table-striped table-bordered table-hover TableListeLignesProduit">
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th>Article</th>
+                                                                        <th>Désignation</th>
+                                                                        <th>Prix</th>
+                                                                        @*<th>depot</th>*@
+                                                                        <th>Quantité souhaité</th>
+                                                                        @if ((User.IsInRole("Admin")) || (User.IsInRole("RemiseVente")))
+                                                                        {
+                                                                            <th>Remise</th>
+                                                                        }
+
+                                                                        <th>Action</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody></tbody>
+
+                                                            </table>
+
+                                                        </div>
+
+                                                    </div>
+                                                    <br />
+                                                    <div class="modal-footer">
+
+                                                        <button type="submit" class="btn btn-greenbee ladda-button ladda-button-demo" name="cmd"><i class="fa fa-check"></i>&nbsp;Valider</button>
+                                                    </div>
+                                                </div>
+
+
+                                            }
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+
+
+                }
+                else if ((ViewBag.AgenceUser != null) || (ViewBag.msg != null))
+                {
+                    <div class="alert alert-danger alert-dismissable">
+                        <button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>
+                        @ViewBag.msg
+                    </div>
+                }
+                else
+                {
+                    <div class="alert alert-danger alert-dismissable">
+                        <button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>
+                        Erreur d cnx
+                    </div>
+                }
+
+            </div>
+        </div>
+
+    </div>
+
+
+</div>
+
+
+<!-- Modal liste article  -->
+<div class="modal inmodal" id="selectArticle" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title">Liste des articles en stock</h4>
+                <small class="font-bold">Click sur "valider" pour affecter l'article de votre demande et préciser la quantité désirée.</small>
+
+                <br />
+                <hr />
+
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">Quantité Demander</label>
+
+                    <div class="col-sm-10">
+                        <div class="input-group m-b">
+                            <span class="input-group-addon">
+                                <i class="fa fa-star"></i>
+                            </span> <input type="number" class="form-control" placeholder="Quantité" id="qtyEntree" value="1">
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">Article sélectionné</label>
+                    <div class="col-sm-9">
+                        <select class="form-control chosen-select" id="Article">
+                            <option value="">Selectionner</option>
+                            @foreach (var item in ViewBag.Articledispo)
+                            {
+                                <option value=@item.AR_Ref>@item.AR_Design</option>
+                            }
+                        </select>
+
+                    </div>
+
+
+                </div>
+            </div>
+
+
+
+            <div class="modal-body">
+                <div class="table-responsive">
+                    <table id="listeArticles" class="table table-striped table-bordered table-hover dataTables-example full-width" style="cursor:pointer;">
+                        <thead>
+                            <tr>
+                                <th>
+                                    Référence Article
+                                </th>
+                                <th>
+                                    Désignation
+                                </th>
+                                <th>Quantité Disponible </th>
+                                <th>
+                                    Quantité Réservée
+                                </th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-white" data-dismiss="modal">Fermer</button>
+                <button type="submit" class="btn btn-greenbee ladda-button ladda-button-demo" onclick="ValiderADDarticle()">Valider </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<script src="~/js/plugins/slick/slick.min.js"></script>
+<script src="~/js/jquery-3.1.1.min.js"></script>
+
+<script src="~/js/plugins/datapicker/bootstrap-datepicker.js"></script>
+<script src="~/js/plugins/chosen/chosen.jquery.js"></script>
+<!-- Jasny -->
+<script src="~/js/plugins/jasny/jasny-bootstrap.min.js"></script>
+<!-- DROPZONE -->
+<script src="~/js/plugins/dropzone/dropzone.js"></script>
+<!-- CodeMirror -->
+<script src="~/js/plugins/codemirror/codemirror.js"></script>
+<script src="~/js/plugins/codemirror/mode/xml/xml.js"></script>
+<script src="~/js/plugins/jasny/jasny-bootstrap.min.js"></script>
+<!-- iCheck -->
+<script src="~/js/plugins/iCheck/icheck.min.js"></script>
+
+
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
+
+<script src="~/js/plugins/dataTables/datatables.min.js"></script>
+<!-- Toastr script -->
+<script src="~/js/plugins/toastr/toastr.min.js"></script>
+
+
+<!-- Ladda -->
+<script src="~/js/plugins/ladda/spin.min.js"></script>
+<script src="~/js/plugins/ladda/ladda.min.js"></script>
+<script src="~/js/plugins/ladda/ladda.jquery.min.js"></script>
+
+
+
+
+
+<script>
+
+        $('.chosen-select').chosen({ width: "100%" });
+
+
+
+
+        $('#CT_DateNaiss').datepicker({
+            changeMonth: true,
+            changeYear: true,
+            showButtonPanel: true,
+            dateFormat: "m/d/yy"
+        });
+
+        $('#CT_IdDateEtab').datepicker({
+            changeMonth: true,
+            changeYear: true,
+            showButtonPanel: true,
+            dateFormat: "m/d/yy"
+        });
+
+
+        $('#CT_Identifiant').on('change', function () {
+            var optVal = $("#CT_TypeIdentifiant option:selected").val();
+            if (optVal == 0) {
+                if (isNaN(this.value) == true) {
+
+                    $('#labelCin').removeClass("hidden")
+                    $('#searchClient').addClass("disabled")
+                } else {
+                    if (this.value.includes('.') == true) {
+                        $('#labelCin').removeClass("hidden")
+                        $('#searchClient').addClass("disabled")
+                    } else {
+                        if (this.value.length != 8) {
+                            $('#labelCin').removeClass("hidden")
+                            $('#searchClient').addClass("disabled")
+                        } else {
+                            $('#labelCin').addClass("hidden")
+                            $('#searchClient').removeClass("disabled")
+
+                        }
+                    }
+
+                }
+            } else {
+                $('#labelCin').addClass("hidden")
+                $('#searchClient').removeClass("disabled")
+            }
+        })
+        $("#CT_Identifiant").change(function () {
+
+            if ($("#CT_Identifiant").val() == null) {
+                $("#searchClient").prop('disabled', true);
+            }
+            else {
+                $("#searchClient").prop('disabled', false);
+            }
+        });
+        $("#searchClient").click(function () {
+
+            $("#showClientInfos").removeClass("hidden");
+
+
+
+            var RegNumber = new RegExp('^\\d+$');
+            var RegChar = new RegExp('[0-9a-zA-Z]');
+            var RegString = new RegExp('[a-zA-Z]');
+            var TypeIdentite = document.getElementById("CT_TypeIdentifiant");
+
+            var inputValue = $('#CT_Identifiant').val();
+            var IdentiteValue = TypeIdentite.options[TypeIdentite.selectedIndex].value;
+
+            if (inputValue.length < 8) {
+                $('#Identifiant').after('<span class="error">Le champ N° pièce identité ne peut contenir que 7 Charactère</span>');
+
+            }
+
+            if (IdentiteValue == 0) {
+                if (inputValue.match(RegNumber) && inputValue.length == 8) {
+                    $(".error").remove();
+                    getInformationClient();
+
+                    $('#Clients').show();
+                } else {
+                    $(".error").remove();
+                    $('#Identifiant').after('<span class="error">Le champ N° pièce identité ne peut contenir que 8 chiffre</span>');
+                }
+            }
+            if (IdentiteValue == 1) {
+                if (inputValue.match(RegChar) && inputValue.length == 7) {
+                    $(".error").remove();
+                    getInformationClient();
+                    $('#Clients').show();
+                }
+                else {
+                    $(".error").remove();
+                    $('#Identifiant').after('<span class="error">Le champ N° pièce identité ne peut contenir que 7 Charactère</span>');
+                }
+            }
+            if (IdentiteValue == 2) {
+                if (inputValue.match(RegChar)) {
+                    $(".error").remove();
+                    getInformationClient();
+                    $('#Clients').show();
+                }
+                else {
+                    $(".error").remove();
+                    $('#Identifiant').after('<span class="error">Le champ N° pièce identité ne peut contenir que Charactère</span>');
+                }
+            }
+        });
+
+        function getInformationClient() {
+
+            $.ajax({
+                type: "get",
+                url: '@Url.Action("isClientExists")',
+                dataType: 'json',
+                data: { identifiant: $("#CT_Identifiant").val() },
+                success: function (msg) {
+                    if (msg.result == 0) {
+                        $("#CT_Intitule").val(msg.data.CT_Intitule);
+
+                        $("#CT_CodePostal").val(msg.data.CT_CodePostal);
+                        $("#CT_Telephone").val(msg.data.CT_Telephone);
+                        $("#CT_Contact").val(msg.data.CT_Intitule);
+                        $("textarea#CT_Adresse").val(msg.data.CT_Adresse);
+                        $("#CT_Complement").val(msg.data.CT_Complement);
+                        $("textarea#CT_AdresseAbo").val(msg.data.CT_Adresse);
+                        $("#CT_IdDateEtab").val(msg.DateEtab);
+                        $("#CT_DateNaiss").val(msg.dateNaissance);
+                        document.getElementById("CT_Civilite").selectedIndex = msg.data.CT_Civilite;
+                        var select = $('#CT_Ville');
+                        select.append('<option value="' + msg.data.CT_Ville + '" selected="selected">' + msg.data.CT_Ville + '</option>');
+                        var selectLocalite = $('#Localite');
+                        selectLocalite.append('<option value="' + msg.data.CT_Localite + '" selected="selected">' + msg.data.CT_Localite + '</option>');
+                        var selectCT_Gouvernorat = $('#search');
+                        selectCT_Gouvernorat.append('<option value="' + msg.data.CT_Gouvernorat + '" selected="selected">' + msg.data.CT_Gouvernorat + '</option>');
+                    }
+                }
+            });
+        }
+
+        function isValidDate(s) {
+            var bits = s.split('/');
+            var d = new Date(bits[2] + '/' + bits[1] + '/' + bits[0]);
+            return !!(d && (d.getMonth() + 1) == bits[1] && d.getDate() == Number(bits[0]));
+        }
+
+
+        $('#search').change(function () {
+            region = $('select#search').find("option:selected").val();
+            getRegion();
+        });
+        function getRegion() {
+
+            $.ajax({
+                type: "get",
+                url: '@Url.Action("isRegionExists")', // we are calling json method
+                dataType: 'json',
+                data: { identifiant: $('select#search').find("option:selected").val() },
+                success: function (msg) {
+                    if (msg.result == 0) {
+
+                        var len = msg.data.length;
+
+                        $("#CT_Ville").empty();
+                        $("#CT_Ville").append("<option>-- Choisir --</option>");
+
+                        for (var i = 0; i < len; i++) {
+
+                            $("#CT_Ville").append("<option value='" + msg.data[i].trim() + "'>" + msg.data[i].trim() + "</option>");
+                        }
+
+                    }
+                }
+            });
+        }
+        $('#CT_Ville').change(function () {
+            ville = $('select#CT_Ville').val();
+            getCitee();
+
+        });
+        function getCitee() {
+
+            $.ajax({
+                type: "get",
+                url: '@Url.Action("isCiteeExists")',
+                dataType: 'json',
+                data: { identifiant: $('select#CT_Ville').find("option:selected").val() },
+                success: function (msg) {
+                    if (msg.result == 0) {
+
+                        var len = msg.data.length;
+                        $("#Localite").empty();
+                        $("#Localite").append("<option>-- Choisir --</option>");
+
+                        for (var i = 0; i < len; i++) {
+
+                            $("#Localite").append("<option value='" + msg.data[i].trim() + "'>" + msg.data[i].trim() + "</option>");
+
+                        }
+
+                    }
+                }
+            });
+        }
+
+        $('#Localite').change(function () {
+            citee = $('select#Localite').val();
+            getCodepostal();
+
+        });
+        function getCodepostal() {
+
+            $.ajax({
+                type: "get",
+                url: '@Url.Action("isCodePostalExists")',
+                dataType: 'json',
+                data: { identifiant: $('select#Localite').find("option:selected").val() },
+                success: function (msg) {
+                    if (msg.result == 0) {
+                        $("#CT_CodePostal").val(msg.data);
+                    }
+                }
+            });
+        }
+
+        $('#ADDArticle').click(function () {
+            $("#selectArticle").modal();
+        });
+
+       // $(document).ready(function () {
+
+            //$('.chosen-select').chosen({ width: "100%" });
+
+
+            $("select#Article").on("change", function () {
+
+                listedesArticlesTable($('select#Article').val());
+
+
+
+
+            });
+
+            function listedesArticlesTable(arref) {
+
+                $("#listeArticles").dataTable().fnDestroy();
+
+
+                var oTable = $('#listeArticles').DataTable({
+                    "ajax": {
+                        "url": "/VenteLibre/GetStockDepotUser?Article=" + arref,
+                        "type": "get",
+                        "datatype": "json",
+                        "autoWidth": false
+
+                    },
+                    "columns": [
+
+                            { "data": "AR_Ref" },
+                            { "data": "AR_Design" },
+                            { "data": "AS_QteSto" },
+                            { "data": "AS_QteStoRes" }
+
+                    ]
+
+                });
+
+                $(document).ready(function () {
+
+                    // Bind normal buttons
+                    Ladda.bind('.ladda-button', { timeout: 8000 });
+
+                    // Bind progress buttons and simulate loading progress
+                    Ladda.bind('.progress-demo .ladda-button', {
+                        callback: function (instance) {
+                            var progress = 0;
+                            var interval = setInterval(function () {
+                                progress = Math.min(progress + Math.random() * 0.1, 1);
+                                instance.setProgress(progress);
+
+                                if (progress === 1) {
+                                    instance.stop();
+                                    clearInterval(interval);
+                                }
+                            }, 8000);
+                        }
+                    });
+
+
+                    var l = Ladda.bind('.ladda-button-demo');
+
+                    l.click(function () {
+                        // Start loading
+                        l.ladda('start');
+
+                        // Timeout example
+                        // Do something in backend and then stop ladda
+                        setTimeout(function () {
+                            l.ladda('stop');
+                        }, 15000)
+
+
+                    });
+
+                });
+
+            };
+
+
+            function ValiderADDarticle() {
+
+
+
+                var rows = $("#listeArticles").dataTable().fnGetNodes();
+                for (var i = 0; i < rows.length; i++) {
+                    var tr = $(rows[i]);
+                    var value = tr.find('td:eq(0)').text();
+                    var qtyDispo = tr.find('td:eq(2)').text();
+
+
+                }
+
+                var qtt = $('#qtyEntree').val();
+
+
+                if (parseInt(qtt) > parseInt(qtyDispo)) {
+                    toastr.error('Quantité demandée indisponible !', 'Erreur');
+                }
+                else {
+                    var totalRowCount = $("#TableListeLignesProduit tr").length;
+                    $('#selectArticle').modal('hide');
+
+                    addLine(value, qtt, totalRowCount);
+
+                }
+
+
+
+};
+
+
+
+            function addLine(arref, qtt, totalRow) {
+
+                $.ajax({
+                    type: "GET",
+                    url: "/VenteLibre/getInfoArticle2?Arref=" + arref,
+                    success: function (res) {
+                        var i = totalRow + 1;
+                        if (res.result!=1)
+                        {
+                            var AR_SuiviStock = res.infoArticle.AR_SuiviStock;
+
+                            if (AR_SuiviStock == 3) {
+                                for (var rep = 0; rep < qtt ; rep++) {
+                                    var newRow = $("<tr>");
+
+                                    var cols = '<td><input type="text" name="ArticleList" id="ArticleList' + i + '" value="' + res.infoArticle.AR_Ref + '"class="form-control ref-ids" readonly required/></td>';
+                                    cols += '<td><input type="text"  name="ArticleDesign"  id="ArticleDesign' + i + '"value="' + res.infoArticle.AR_Design + '" class="form-control articles-ids" disabled/></td>';
+                                    cols += '<td><input type="text" name="PrixUnitaire"  id="PrixUnitaire' + i + '"  value="' + res.infoArticle.AR_PrixVente + '"class="form-control prix-ids" disabled /></td>'
+                                    //cols += '<td><input type="text" name="DepotList" id="DepotList' + counter + '" value="' + depot + '" class="form-control depot-ids" readonly required/></td>';
+                                    cols += '<td><input type="number" name="QuantiteList"  id="QuantiteList' + i + '" value="1" class="form-control qt-ids" readonly required/></td>';
+                                    cols += '@if ((User.IsInRole("Admin")) || (User.IsInRole("Remise"))) {<td>  <input type="number" class="form-control remise-ids" name="RemiseList" id="RemiseList' + i + '"></td>}';
+                                    cols += '<td><a class="deleteRowGamme btn btn-xs btn-round btn-azure"> <div class="form-control"><i class="fa fa-trash"></i></div> </a></td>';
+
+                                    newRow.append(cols);
+
+                                    $(".TableListeLignesProduit").append(newRow);
+                                    i = i + 1;
+                                    //console.log(arref, qtt, i);
+
+                                }
+
+                            }
+                            else {
+                                var newRow = $("<tr>");
+
+                                var cols = '<td><input type="text" name="ArticleList" id="ArticleList' + i + '" value="' + res.infoArticle.AR_Ref + '"class="form-control ref-ids" readonly required/></td>';
+                                cols += '<td><input type="text"  name="ArticleDesign"  id="ArticleDesign' + i + '"value="' + res.infoArticle.AR_Design + '" class="form-control articles-ids" disabled/></td>';
+                                cols += '<td><input type="text" name="PrixUnitaire"  id="PrixUnitaire' + i + '"  value="' + res.infoArticle.AR_PrixVente + '"class="form-control prix-ids" disabled /></td>'
+                                //cols += '<td><input type="text" name="DepotList" id="DepotList' + counter + '" value="' + depot + '" class="form-control depot-ids" readonly required/></td>';
+                                cols += '<td><input type="number" name="QuantiteList"  id="QuantiteList' + i + '" value="' + qtt + '" class="form-control qt-ids" readonly required/></td>';
+                                cols += '@if ((User.IsInRole("Admin")) || (User.IsInRole("Remise"))) {<td>  <input type="number" class="form-control remise-ids" name="RemiseList" id="RemiseList' + i + '"></td>}';
+                                cols += '<td><a class="deleteRowGamme btn btn-xs btn-round btn-azure"> <div class="form-control"><i class="fa fa-trash"></i></div> </a></td>';
+
+                                newRow.append(cols);
+
+                                $(".TableListeLignesProduit").append(newRow);
+                                //i = i + 1;
+                                //console.log(arref, qtt, i);
+                            }
+
+                        }else
+                        {
+                            toastr.error('Veuillez selectionner au moins un article!', 'Erreur');
+                        }
+
+                    }
+                });
+
+            };
+
+
+
+
+
+
+            $("table.TableListeLignesProduit").on("click", "a.deleteRowGamme", function (event) {
+                $(this).closest("tr").remove();
+                var value1;
+                var value2;
+                $(this).closest('tr').find('input[name="ArticleID1"]').each(function () {
+                    value1 = this.value;
+                });
+
+                $(this).closest('tr').find('input[name="depot1"]').each(function () {
+                    value2 = this.value;
+                });
+
+
+                var removeItem = value2 + value1;
+                Serie2 = Serie2.filter(function (item) {
+                    return item !== removeItem;
+                });
+
+            });
+
+            $("#DeleteAllLines").click(function () {
+
+                if (confirm("Supprimer tout ? ")) {
+                    $('#TableListeLignesProduit tr').find('td .ref-ids').each(function () {
+                        $(this).closest("tr").remove();
+
+                    })
+                }
+            });
+
+
+
+
+       // });
+            // Bind normal buttons
+            Ladda.bind('.ladda-button', { timeout: 8000 });
+
+            // Bind progress buttons and simulate loading progress
+            Ladda.bind('.progress-demo .ladda-button', {
+                callback: function (instance) {
+                    var progress = 0;
+                    var interval = setInterval(function () {
+                        progress = Math.min(progress + Math.random() * 0.1, 1);
+                        instance.setProgress(progress);
+
+                        if (progress === 1) {
+                            instance.stop();
+                            clearInterval(interval);
+                        }
+                    }, 8000);
+                }
+            });
+
+
+            var l = Ladda.bind('.ladda-button-demo');
+
+            l.click(function () {
+                // Start loading
+                l.ladda('start');
+
+                // Timeout example
+                // Do something in backend and then stop ladda
+                setTimeout(function () {
+                    l.ladda('stop');
+                }, 15000)
+
+
+            });
+
+</script>
+

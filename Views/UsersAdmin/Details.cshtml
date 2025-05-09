@@ -1,0 +1,200 @@
+﻿@model IdentitySample.Models.ApplicationUser
+@{
+    ViewBag.Title = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<script src="~/js/jquery-3.1.1.min.js"></script>
+<link href="~/css/plugins/iCheck/custom.css" rel="stylesheet">
+
+<link href="~/css/plugins/chosen/bootstrap-chosen.css" rel="stylesheet">
+<link href="~/css/plugins/iCheck/custom.css" rel="stylesheet">
+<link href="~/css/plugins/awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css" rel="stylesheet">
+
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-lg-10">
+        <h2>Profile</h2>
+        <ol class="breadcrumb">
+            
+            <li>
+                <a href="@Url.Action("index","Administration")">Administration</a>
+            </li>
+            <li>
+                <a href="@Url.Action("index","UsersAdmin")">Liste des utilisateurs</a>
+            </li>
+            <li class="active">
+                <strong>Détails utilisateur</strong>
+            </li>
+        </ol>
+    </div>
+    <div class="col-lg-2">
+
+    </div>
+</div>
+
+
+
+<div class="wrapper wrapper-content">
+    <div class="row animated fadeInRight">
+
+        <div class="ibox">
+            <div class="ibox-content">
+                <div class="form-horizontal">
+                    <div class="form-group " style="margin-left:100px">
+                        <ul class="list-unstyled ">
+                            <li>
+                                <div class="form-group col-sm-12">
+                                    <label class="col-sm-2 ">Prénom :</label>
+                                    <div class="col-md-4">
+                                        @Model.FirstName
+                                    </div>
+                                    <label class="col-sm-2 ">Nom :</label>
+                                    <div class="col-md-4">
+                                        @Model.LastName
+                                    </div>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="form-group col-sm-12">
+                                    <label class="col-sm-2 ">Email :</label>
+                                    <div class="col-md-4">
+                                        @Model.Email
+                                    </div>
+                                    <label class="col-sm-2 ">Téléphone :</label>
+                                    <div class="col-md-4">
+                                        @Model.Phone
+                                    </div>
+
+                                </div>
+                            </li>
+                            <li>
+                                <div class="form-group col-sm-12">
+                                    <label class="col-sm-2 ">Agence :</label>
+                                    <div class="col-md-4">
+                                        @ViewBag.Agence
+                                    </div>
+                                    <label class="col-sm-2 ">Adresse :</label>
+                                    <div class="col-md-4">
+                                        @Model.Address
+                                    </div>
+
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="hr-line-dashed"></div>
+
+                        <div class="form-group">
+                            @Html.Label("Appartient aux groupes", new { @class = "control-label col-md-2" })
+                            <span class="col-md-10">
+                                <select data-placeholder="Choisir groupe ..." class="chosen-select" multiple style="width:350px;" tabindex="4" name="selectedGroups" disabled>
+
+                                    @foreach (var item in ViewBag.GroupNames)
+                                    {
+                                        <option name="selectedGroups" selected="@item" value="@item">@item</option>
+                                    }
+                                </select>
+                            </span>
+                        </div>
+
+
+                        <div class="form-group">
+                            @Html.Label("Dépôt Principal", new { @class = "control-label col-md-2" })
+                            <span class="col-md-10">
+                                <select data-placeholder="Choisir dépôt..." class="chosen-select" style="width:350px;" tabindex="4" name="DepotPrincipal" disabled>
+                                    @foreach (var item in ViewBag.allDepots)
+                                {
+                                    if (ViewBag.Principale == item.cbMarq)
+                                    {
+                                <option value="@item.cbMarq" selected="selected">@item.DE_Intitule</option>
+
+                                    }
+                                    else
+                                    {
+                                <option value="@item.cbMarq">@item.DE_Intitule</option>
+
+                                    }
+
+                                @*<option name="DepotPrincipal" selected="@Model." value="@item.Value">@item.Text</option>*@
+                                }
+                                </select>
+                            </span>
+                        </div>
+
+
+                        <div class="form-group">
+                            @Html.Label("Accès aux dépôts", new { @class = "control-label col-md-2" })
+                            <span class="col-md-10">
+                                <select data-placeholder="Choisir groupe ..." class="chosen-select" multiple style="width:350px;" tabindex="4" name="selectedGroups" disabled>
+
+                                    @foreach (var item in ViewBag.userDep)
+                                {
+                                <option name="selectedGroups" selected="@item" value="@item">@item</option>
+                                }
+                                </select>
+                            </span>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.Label("Régions", new { @class = "control-label col-md-2" })
+                            <span class="col-md-10">
+                                <select data-placeholder="Choisir groupe ..." class="chosen-select" multiple style="width:350px;" tabindex="4" name="selectedGroups" disabled>
+
+                                    @foreach (var item in ViewBag.UserRegions)
+                                {
+                                <option name="selectedGroups" selected="@item.R_CodeRegion" value="@item.R_CodeRegion">@item.R_CodeRegion</option>
+                                }
+                                </select>
+                            </span>
+                        </div>
+
+
+                        <div class="form-group">
+                            <div class="col-md-12">
+                                @*<input type="submit" value="Enregistrer" class="btn btn-primary pull-right" />*@
+                                @Html.ActionLink("Modifier", "Edit", new { id = Model.Id }, new { @class = "btn btn-primary pull-right" })
+
+
+                            </div>
+                        </div>
+                    </div>
+
+            </div>
+        </div>
+        </div>
+    </div>
+
+<script src="~/js/jquery-3.1.1.min.js"></script>
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+<!-- Chosen -->
+<script src="~/js/plugins/chosen/chosen.jquery.js"></script>
+<!-- JSKnob -->
+<script src="~/js/plugins/jsKnob/jquery.knob.js"></script>
+
+<!-- Input Mask-->
+<script src="~/js/plugins/jasny/jasny-bootstrap.min.js"></script>
+<!-- iCheck -->
+<script src="~/js/plugins/iCheck/icheck.min.js"></script>
+
+<script>
+
+    $(document).ready(function () {
+
+        $('.chosen-select').chosen({ width: "100%" });
+
+        $('.i-checks').iCheck({
+            checkboxClass: 'icheckbox_square-green',
+            radioClass: 'iradio_square-green'
+        });
+
+
+
+        @*alert(@Model.A_Agence);
+
+
+        $('#A_Agence').val(@Model.A_Agence);
+        $('#A_Agence').trigger("chosen:updated");*@
+    });
+</script>
+
+
+

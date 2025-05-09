@@ -1,0 +1,193 @@
+﻿@model BeeProj.Models.B_AGENCECLASSEMENT
+
+@{
+    ViewBag.Title = "NouvelleAgence";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-lg-8">
+        <h2>Nouveau classement </h2>
+        <ol class="breadcrumb">
+            <li>
+                <a>Administration</a>
+            </li>
+            <li>
+                <a>Nouveau classement</a>
+            </li>
+            <li class="active">
+                <strong>Nouveau modèle de classement de commission</strong>
+            </li>
+        </ol>
+    </div>
+    <div class="col-lg-2">
+
+    </div>
+</div>
+@*@using (Html.BeginForm("SaveNouveauClassement", "Administration", FormMethod.Post, new { @class = "form-horizontal", role = "form", enctype = "multipart/form-data" }))
+{*@
+
+    @if (ViewData.ModelState[""] != null && ViewData.ModelState[""].Errors.Count > 0)
+    {
+        <div class="alert alert-danger alert-dismissable">
+            <button type="button" class="close " data-dismiss="alert"> × </button>
+            @Html.ValidationSummary("", new { @class = "text-danger" })
+
+        </div>
+    }
+
+    @Html.AntiForgeryToken()
+    <div class="wrapper wrapper-content animated fadeInRight">
+
+        <div class="row">
+            <div class="col-md-12">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-content">
+                        <div class="form-horizontal">
+                            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                            <div class="wrapper wrapper-content animated fadeInRight">
+                                <div class="row">
+
+                                    <div class="ibox float-e-margins">
+                                        <div class="ibox-title">
+                                            <h5>BEE <small>Ajouter un nouveau modèle de classement</small></h5>
+                                        </div>
+
+                                        <div class="ibox-content">
+                                            <div class="row">
+                                                    <fieldset id="myForm">
+
+                                                        <div class="col-sm-10 b-r">
+
+                                                            <form role="form">
+                                                                <div class="form-group">
+                                                                    <label class="col-md-4 control-label">Intitulé</label>
+
+                                                                    <div class="col-md-8">
+                                                                        <input class="form-control" id="C_Intitule" name="C_Intitule" />
+                                                                    </div>
+                                                                </div>
+
+
+
+                                                                <div class="form-group">
+                                                                    <label class="col-md-4 control-label">Commission de base %</label>
+                                                                    <div class="col-md-8">
+                                                                        <input id="C_Standard" name="C_Standard" class="form-control" />
+                                                                    </div>
+                                                                </div>
+
+                                                                <div class="form-group">
+                                                                    <div class="row">
+                                                                        <label class="col-md-4 control-label">Commissions d'acquissions % </label>
+                                                                        <div class="col-md-8">
+                                                                            @*<input id="C_PremFact" name="C_PremFact" class="form-control" />*@
+                                                                            @foreach (var item in ViewBag.listeDebit)
+                                                                            {
+                                                                                <br />
+                                                                                <div class="col-md-6  has-warning">
+                                                                                    <select name="D_Debit" class="chosen-select form-control" id="D_Debit">
+                                                                                        <option value="@item.cbMarq">@item.D_Intitule</option>
+                                                                                    </select>
+
+                                                                                </div>
+                                                                                <div class="col-md-6  has-warning">
+                                                                                    <input id="tauxPremFact" name="tauxPremFact" class="form-control"  value=0 />
+                                                                                </div>
+
+                                                                            }
+                                                                        </div>
+
+                                                                    </div>
+
+
+
+                                                                </div>
+
+
+                                                                <div class="form-group">
+                                                                    <label class="col-md-4 control-label">Description</label>
+                                                                    <div class="col-md-8">
+                                                                        <textarea name="C_Description" id="C_Description" class="form-control"></textarea>
+                                                                    </div>
+                                                                </div>
+                                                            </form>
+                                                        </div>
+
+
+                                                    </fieldset>
+</div>
+                                        </div>
+                                    </div>
+
+
+
+                                </div>
+
+
+                                <button class="btn btn-primary pull-right" type="submit" id="EnregistrerClassement">Enregistrer</button>
+
+
+
+                            </div>
+
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+}
+
+
+
+<script src="~/js/jquery-3.1.1.min.js"></script>
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+
+<script>
+
+    $("#EnregistrerClassement").click(function () {
+        var tauxDebClass = [];
+        var DebClass = [];
+
+        $('#myForm').find('input[name^="tauxPremFact"]').each(function () {
+
+            tauxDebClass.push(($(this).val()));
+          
+
+
+
+        });
+        alert(resultat);
+        $('#myForm').find('select[name^="D_Debit"]').each(function () {
+
+            DebClass.push(($(this).val()));
+
+        });
+         
+
+        enregistrerCls(tauxDebClass, DebClass);
+    });
+
+    function enregistrerCls(t,d){
+        alert(t);
+        alert(d);
+        $.ajax({
+            type: "POST",
+            url: '/Administration/SaveNouveauClassement?C_Intitule=' + $('#C_Intitule').val() +'&&C_Description='+ $('#C_Description').val()+ '&&C_Standard='+
+                $('#C_Standard').val() + '&&tauxAcq=' + t + '&&DebClass=' + d,
+            dataType: 'json',
+            success: function (msg) {
+             
+
+            }
+        });
+    }
+       
+  
+</script>

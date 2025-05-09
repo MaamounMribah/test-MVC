@@ -1,0 +1,413 @@
+﻿
+@{
+    ViewBag.Title = "ListeArticleReserves";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@*<h2>ListeArticleReserves</h2>*@
+
+
+<link href="~/css/plugins/dataTables/datatables.min.css" rel="stylesheet" />
+
+
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-lg-10">
+        <h2>Liste des articles reservés</h2>
+        <ol class="breadcrumb">
+            <li>
+                <a href="#">Acceuil</a>
+            </li>
+            <li>
+                <a href="@Url.Action("Index", "ListeArticlesReserves")">Interne</a>
+            </li>
+            <li class="active">
+                <a href="@Url.Action("Index", "ListeArticlesReserves")"><strong>Liste des articles reservés</strong></a>
+            </li>
+        </ol>
+    </div>
+
+</div>
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    @if (ViewBag.defaultGroupExample1 != null)
+                    {
+                        <input type="radio" class="custom-control-input" id="defaultGroupExample1" name="groupOfDefaultRadios" checked>
+                        <label class="custom-control-label" for="defaultGroupExample1">
+                            Recherche par numéro de série ou bien désigniation article
+                        </label>
+                        <br />
+                        <input type="radio" class="custom-control-input" id="defaultGroupExample2" name="groupOfDefaultRadios">
+                        <label class="custom-control-label" for="defaultGroupExample2">
+                            Recherche par Etape abonnement
+                        </label>
+                        <br />
+                    }
+                    else
+                    {
+                        <input type="radio" class="custom-control-input" id="defaultGroupExample1" name="groupOfDefaultRadios">
+                        <label class="custom-control-label" for="defaultGroupExample1">
+                            Recherche par numéro de série ou bien désigniation article
+                        </label>
+                        <br />
+                        <input type="radio" class="custom-control-input" id="defaultGroupExample2" name="groupOfDefaultRadios" checked>
+                        <label class="custom-control-label" for="defaultGroupExample2">
+                            Recherche par Etape abonnement
+                        </label>
+                        <br />
+
+                    }
+
+
+                    <div id="to-show" class="hide">
+                        @using (Html.BeginForm("ListeArticleReserves", "ListeArticlesReserves", FormMethod.Post))
+                        {
+                            <div class="input-group">
+                                <input type="text" class="form-control" id="rech" name="rech" value="@ViewBag.Rech" required>
+                                <span class="input-group-btn">
+
+                                    <button type="submit" class="btn btn-purplebee ladda-button ladda-button-demo" onclick="Clickedme()">Rechercher</button>
+                                </span>
+                            </div>
+
+                        }
+                    </div>
+                    <div id="toshoww" class="hide">
+                        @using (Html.BeginForm("ListeArticleReservesSelect", "ListeArticlesReserves", FormMethod.Post))
+                        {
+
+                            <div class="input-group">
+                                <select name="rechOption" id="rechOption" class="form-control">
+                                    <option value="Etudeeligibite" selected>Etude eligibité</option>
+                                    <option value="ReservationTT">Reservation TT</option>
+                                    <option value="Tiragejarretiere">Tirage jarretière</option>
+                                    <option value="Migrationoffrefixe">Migration offre fixe</option>
+                                    <option value="ReservationMateriel">Réservation Matériel</option>
+                                    <option value="Paiementetlivraison">Paiement et livraison</option>
+                                    <option value="Facturation">Facturation</option>
+                                    <option value="Valide">Valide</option>
+                                    <option value="Annule">Annulé</option>
+                                </select>
+                                <span class="input-group-btn">
+                                    <button type="submit" class="btn btn-purplebee ladda-button ladda-button-demo">Rechercher  </button>
+                                </span>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+        @if (ViewBag.msg != null || ViewBag.ListeArticleReserves != null)
+        {
+
+            <div class="col-lg-12">
+                <div class="ibox-content">
+                    <div class="row">
+                        @if (ViewBag.msg != null)
+                        {
+                            <div class="alert alert-danger alert-dismissable">
+                                <button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>
+                                @ViewBag.msg
+                            </div>
+                        }
+                        @if (ViewBag.ListeArticleReserves != null)
+                        {
+                            <div class="table-responsive">
+                                <table class="table table-striped table-bordered table-hover table-responsive-sm" id="ListeArticleReserves">
+
+                                    <thead>
+                                        <tr>
+                                            <th>Numero serie</th>
+                                            <th>Statut NS</th>
+                                            <th>Designiation Article</th>
+                                            <th>Depot</th>
+                                            <th>Etat Article</th>
+                                            <th>Date Resrevation</th>
+                                            <th>Code Abonnement</th>
+                                            <th>RefTT</th>
+                                            <th>Intitule Client</th>
+                                            <th>Identifiant Client</th>
+                                            <th>Etape</th>
+                                            <th>Statut</th>
+                                            <th>Pourcentage</th>
+                                            <th>Agence Création</th>
+                                            <th>Agence Livraison</th>
+                                            <th>Createur</th>
+                                        </tr>
+                                    </thead>
+
+                                    <tbody>
+                                        @foreach (var item in ViewBag.ListeArticleReserves)
+                                        {
+
+
+                                            <tr class="gradeX">
+                                                <td>@item.LS_NoSerie</td>
+                                                @if (item.StatutArticle != null)
+                                                {
+                                                    <td><div class="text-purplebee">@item.StatutArticle</div></td>
+                                                }
+                                                else
+                                                {
+
+                                                    <td><div class="text-danger">Aucun Statut</div></td>
+                                                }
+
+                                                <td>@item.DL_Design</td>
+                                                <td>@item.Depot</td>
+                                                @if (item.EtatArticle == "Attaché")
+                                                {
+                                                    <td><div class="text-purplebee">@item.EtatArticle</div></td>
+                                                }
+                                                else
+                                                {
+                                                    <td><div class="text-danger">@item.EtatArticle</div></td>
+                                                }
+
+                                                <td>@item.DateReservation</td>
+                                                <td>
+                                                    <a href=@Url.Action("Details/" + item.cbMarqAbo, "Abonnement") target="_blank">
+                                                        @item.DO_PieceAbo
+                                                    </a>
+                                                </td>
+                                                <td>@item.DO_ReftTT</td>
+                                                <td>@item.CT_Intitule</td>
+                                                <td>@item.CT_Identifiant</td>
+                                                @if (item.DO_Etape == 0)
+                                                {
+                                                    <td><p class="text-default">Etude eligibité</p></td>
+                                                }
+                                                else if (item.DO_Etape == 1)
+                                                {
+                                                    <td><p class="text-primary">Reservation TT</p></td>
+                                                }
+                                                else if (item.DO_Etape == 2)
+                                                {
+                                                    <td><p class="text-secondary">Tirage jarretière</p></td>
+                                                }
+                                                else if (item.DO_Etape == 3)
+                                                {
+                                                    <td><p class="text-success">Migration offre fixe</p></td>
+                                                }
+                                                else if (item.DO_Etape == 4)
+                                                {
+                                                    <td><p class="text-warning">Réservation Matériel</p></td>
+                                                }
+                                                else if (item.DO_Etape == 5)
+                                                {
+                                                    <td><p class="text-info">Paiement et livraison</p></td>
+                                                }
+                                                else if (item.DO_Etape == 6)
+                                                {
+                                                    <td><p class="text-dark">Facturation</p></td>
+                                                }
+                                                else if (item.DO_Etape == 7)
+                                                {
+                                                    <td><p class="text-greenbee">Valide</p></td>
+                                                }
+                                                else if (item.DO_Etape == 8)
+                                                {
+                                                    <td><p class="text-danger">Annulé</p></td>
+                                                }
+                                                else
+                                                {
+                                                    <td><p class="text-danger">Annulé</p></td>
+                                                }
+
+                                                @if (item.Resilie == 1)
+                                                {
+                                                    <td><div class="text-purplebee">Resilié</div></td>
+                                                }
+                                                else if (item.DO_Etape == 7)
+                                                {
+                                                    <td><div class="text-greenbee">Validé</div></td>
+                                                }
+                                                else if (item.DO_Etape == 8)
+                                                {
+                                                    <td><div class="text-danger">Annulé</div></td>
+                                                }
+                                                else
+                                                {
+                                                    <td><div class="text-graybee">en cours</div></td>
+                                                }
+                                                <td>
+                                                    <small>Pourcentage: @item.Pourcentage %</small>
+                                                    <div class="progress progress-mini"><div style="width:@item.Pourcentage%;" class="progress-bar"></div></div>
+                                                </td>
+                                                <td>@item.agencemetteur</td>
+                                                <td>@item.agenceLivraison</td>
+                                                <td>@item.Createur</td>
+
+                                            </tr>
+
+
+                                        }
+
+                                    </tbody>
+
+                                </table>
+                            </div>
+                        }
+
+                    </div>
+
+
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+
+
+<script src="~/js/jquery-3.1.1.min.js"></script>
+<script src="~/js/plugins/metisMenu/jquery.metisMenu.js"></script>
+<script src="~/js/plugins/pace/pace.min.js"></script>
+<script src="~/js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+<script src="~/js/plugins/chosen/chosen.jquery.js"></script>
+<script src="~/js/plugins/dataTables/datatables.min.js"></script>
+<!-- Sweet alert -->
+<script src="~/js/plugins/sweetalert/sweetalert.min.js"></script>
+<!-- Chosen -->
+<script src="~/js/plugins/chosen/chosen.jquery.js"></script>
+<link href="~/css/plugins/ladda/ladda-themeless.min.css" rel="stylesheet">
+<!-- Ladda -->
+<script src="~/js/plugins/ladda/spin.min.js"></script>
+<script src="~/js/plugins/ladda/ladda.min.js"></script>
+<script src="~/js/plugins/ladda/ladda.jquery.min.js"></script>
+
+<script>
+    $('.go-btn').click(function () {
+       // alert(" If you just want value ==>" + $('#my-dropdown').val());
+            $.ajax({
+                type: "get",
+                url: '/ListeArticlesReserves/ListeReserves?rech=' + $('#my-dropdown').val(), // we are calling json method
+                dataType: 'json',
+                success: function (msg) {
+                    if (msg.result == "Error") {
+                        toastr.error('ce NS:° Nouv num serie; en stock mais reservée !', 'Error');
+
+                    }
+                    else {
+                        toastr.success('Vous ne peut pas réaffecter aux méme abonnement! ', 'success');
+                        location.reload();
+                    }
+
+                }
+            });
+    });
+
+    $('.chosen-select').chosen({ width: "100%" });
+
+
+
+    $(document).ready(function () {
+        if (($('#rechOption').val() != "") && ($('#rech').val() == "")) {
+            var optionToSelect = 'Paiementetlivraison';
+            $('#rechOption option:contains(' + optionToSelect + ')').prop({ selected: true });
+            $('#toshoww').removeClass('hide');
+        }
+        if (($('#rechOption').val() != "")&&($('#rech').val() != "")) {
+                $('#to-show').removeClass('hide');
+            }
+
+      
+
+        var ckbox = $('#defaultGroupExample1');
+
+        $('input:radio').on('click', function () {
+          if (ckbox.is(':checked')) {
+                //alert('You have Checked it');
+                //$('.a').slideToggle("slow");
+                var elementtoShow = document.getElementById('to-show');
+                var elementtoShoww = document.getElementById('toshoww');
+                if (elementtoShow.className === 'hide') {
+                    elementtoShow.className = 'show';
+                    document.getElementsByTagName('body')[0].className = 'on';
+                    elementtoShoww.className = 'hide';
+
+
+                }
+                else {
+                    elementtoShow.className = 'hide';
+
+                    document.getElementsByTagName('body')[0].className = 'off';
+
+
+                }
+
+            }
+
+        });
+
+        var ckboxx = $('#defaultGroupExample2');
+
+        $('input:radio').on('click', function () {
+            if (ckboxx.is(':checked')) {
+                //alert('You have Checked it');
+                //$('.aa').slideToggle("slow");
+                var elementtoShoww = document.getElementById('toshoww');
+                var elementtoS = document.getElementById('to-show');
+                if (elementtoShoww.className === 'hide') {
+                    elementtoShoww.className = 'show';
+                    document.getElementsByTagName('body')[0].className = 'on';
+                    //document.getElementById('show-element').className = 'active';
+                    elementtoS.className = 'hide';
+
+                } else {
+                    elementtoShoww.className = 'hide';
+                    document.getElementsByTagName('body')[0].className = 'off';
+                    //document.getElementById('show-element').className = '';
+
+                }
+
+            }
+
+        });
+
+
+        Ladda.bind('.ladda-button', { timeout: 2000 });
+
+        // Bind progress buttons and simulate loading progress
+        Ladda.bind('.progress-demo .ladda-button', {
+            callback: function (instance) {
+                var progress = 0;
+                var interval = setInterval(function () {
+                    progress = Math.min(progress + Math.random() * 0.1, 1);
+                    instance.setProgress(progress);
+
+                    if (progress === 1) {
+                        instance.stop();
+                        clearInterval(interval);
+                    }
+                }, 20000);
+            }
+        });
+
+
+        var l = Ladda.bind('.ladda-button-demo');
+
+        l.click(function () {
+            // Start loading
+            l.ladda('start');
+
+            // Timeout example
+            // Do something in backend and then stop ladda
+            setTimeout(function () {
+                l.ladda('stop');
+            }, 12000)
+        });
+    });
+    function Vide() {
+        $('form input[type= text]').each(function () {
+            //If the field's empty
+            if ($(this).val() == '') {
+                //alert("viiiide");
+                toastr.error('Veuillez tapez le numéro de série,etat abonnement ou bien désigniation article !', 'Erreur');
+            }
+        });
+    }
+</script>
+

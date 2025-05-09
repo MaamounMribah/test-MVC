@@ -1,0 +1,530 @@
+﻿@model BeeProj.ViewModels.KPIdashbordViewModel
+@{
+    ViewBag.Title = "Etat11";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@*<h2>Etat11</h2>*@
+
+<link href="~/css/plugins/iCheck/custom.css" rel="stylesheet">
+<link href="~/css/plugins/jasny/jasny-bootstrap.min.css" rel="stylesheet">
+<link href="~/css/plugins/footable/footable.core.css" rel="stylesheet">
+<link href="~/css/plugins/chosen/bootstrap-chosen.css" rel="stylesheet">
+<link href="~/css/plugins/sweetalert/sweetalert.css" rel="stylesheet">
+<link href="~/css/plugins/dataTables/datatables.min.css" rel="stylesheet">
+
+<!-- Ladda style -->
+<link href="~/css/plugins/ladda/ladda-themeless.min.css" rel="stylesheet">
+<!-- Toastr style -->
+<link href="~/css/plugins/toastr/toastr.min.css" rel="stylesheet">
+<script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+<link href="~/css/plugins/c3/c3.min.css" rel="stylesheet">
+<link href="~/css/plugins/morris/morris-0.4.3.min.css" rel="stylesheet">
+
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-lg-12">
+        <br />
+        <h3 class="text-black-50"><a href="@Url.Action("Index", "Dashboard")">Généralité KPI</a></h3>
+        <ol class="breadcrumb">
+            <li>
+                <a href="@Url.Action("ChiffreAffaire", "Dashboard")"><label class="text-success">Chiffre d’affaire,paiement et versement mensuel</label></a>
+            </li>
+            <li>
+                <a href="@Url.Action("Etat2", "Dashboard")"><label class="text-success"> Etat mensuel des ventes</label></a>
+            </li>
+            <li>
+                <a href="@Url.Action("Etat3", "Dashboard")"><label class="text-success"> Etat mensuel des ventes par la Poste</label></a>
+            </li>
+            <li>
+                <a href="@Url.Action("Etat4", "Dashboard")"> <label class="text-success"> Etat mensuel des paiements par la Poste</label> </a>
+            </li>
+
+        </ol>
+        <ol class="breadcrumb">
+            <li>
+                <a href="@Url.Action("Index", "Dashboard")"><label class="text-success"> Etat des ventes et paiement par point de vente</label> </a>
+            </li>
+            @*<li>
+                    <a href="@Url.Action("Index", "Dashboard")"><label class="text-success"> Etat des impayés</label> </a>
+                </li>*@
+            <li>
+                <a href="@Url.Action("Etat8", "Dashboard")"><label class="text-success"> Etat récapitulatif des demandes en cours</label> </a>
+            </li>
+            <li>
+                <a href="@Url.Action("Etat9", "Dashboard")"><label class="text-success"> Etat récapitulatif de facturation</label> </a>
+            </li>
+            @*<li>
+                    <a href="@Url.Action("Index", "Dashboard")"><label class="text-success"> Etat des paiements</label> </a>
+                </li>*@
+            <li>
+                <a href="@Url.Action("Etat11", "Dashboard")"><label class="text-success"> Bilan de l’activité</label> </a>
+            </li>
+        </ol>
+    </div>
+    <div class="col-lg-2">
+
+    </div>
+</div>
+
+
+
+<div class="wrapper wrapper-content  animated fadeInRight">
+    <div class="row">
+        <div class="col-lg-12">
+
+            <div class="ibox">
+                <div class="ibox-content">
+                    @using (Html.BeginForm("KPIs", "Dashboard", FormMethod.Post))
+                    {
+                        <div class="input-group">
+                            <span class="text-purplebee">
+                                Du <strong>@Model.StartDate.GetValueOrDefault().ToString("dd/MM/yyyy")</strong>
+                                au <strong>@Model.EndDate.GetValueOrDefault().ToString("dd/MM/yyyy")</strong>
+                            </span>
+                            <div class="input-daterange input-group" id="datepicker">
+                                @Html.TextBoxFor(model => model.StartDate, new { type = "date", @class = "form-control" })
+                                <span class="input-group-addon">au </span>
+                                @Html.TextBoxFor(model => model.EndDate, new { type = "date", @class = "form-control" })
+                                <span class="input-group-btn">
+                                    <button type="submit" class="btn btn-purplebee ladda-button ladda-button-demo">Filtrer</button>
+                                </span>
+                            </div>
+
+                        </div>
+
+
+
+                    }
+
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+    <div class="row">
+
+        <div class="col-lg-12">
+            <div class="ibox float-e-margins">
+
+                <div class="ibox-content">
+                    <div class="row">
+
+                        <div class="tab-content">
+                            @*/***************************************************** Etat 11.	Bilan de l’activité *****************************************/*@
+
+
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <div class="ibox float-e-margins">
+
+                                        <div class="ibox-content">
+                                            <div class="ibox">
+
+                                                <br />
+                                                <div class="ibox-content">
+
+
+                                                    <div class="ibox-content">
+                                                        <div class="clients-list">
+                                                            <ul class="nav nav-tabs">
+
+                                                                @foreach (var item in ViewBag.demandeEtat11)
+                                                                {
+
+                                                                    <li class="bg-primary">
+                                                                        <a data-toggle="tab" href="#@item.GetType().GetProperty("Key").GetValue(item)">
+                                                                            <i class="fa fa-calendar"></i>@item.GetType().GetProperty("Key").GetValue(item)
+                                                                        </a>
+                                                                    </li>
+
+                                                                }
+
+                                                            </ul>
+                                                            <div class="tab-content">
+
+                                                                @foreach (var grouped in ViewBag.demandeEtat11)
+                                                                {
+                                                                    if ((grouped.GetType().GetProperty("Key").GetValue(grouped) == 2020))
+                                                                    {
+                                                                        <div id="@grouped.GetType().GetProperty("Key").GetValue(grouped)"
+                                                                             class="tab-pane text-black-50">
+                                                                            <div class="full-height-scroll">
+                                                                                <div class="table-responsive">
+
+                                                                                    <table class="table table-striped table-hover data datatable-style">
+
+                                                                                        <thead>
+                                                                                            <tr>
+                                                                                                <th>Mois</th>
+                                                                                                <th colspan="4">Demandes en cours</th>
+                                                                                                <th colspan="4">Livraisons en attentes</th>
+                                                                                                <th colspan="4">Livraisons effectuées</th>
+                                                                                            </tr>
+                                                                                            <tr>
+                                                                                                <th> </th>
+                                                                                                <TH>Nombre </TH>
+                                                                                                <TH>Montant payé</TH>
+                                                                                                <TH>Nombre</TH>
+                                                                                                <TH>Montant versé</TH>
+                                                                                                <TH>Nombre </TH>
+                                                                                                <TH>Montant payé</TH>
+                                                                                                <TH>Nombre</TH>
+                                                                                                <TH>Montant versé</TH>
+                                                                                                <TH>Nombre </TH>
+                                                                                                <TH>Montant payé</TH>
+                                                                                                <TH>Nombre</TH>
+                                                                                                <TH>Montant versé</TH>
+                                                                                            </tr>
+                                                                                        </thead>
+                                                                                        <tbody>
+                                                                                            @foreach (var item in grouped)
+                                                                                            {
+                                                                                                <tr>
+                                                                                                    <td>@System.Globalization.CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(item.Mois)</td>
+                                                                                                    <td>@item.Nombre1</td>
+                                                                                                    <td>@item.Montant1</td>
+                                                                                                    <td>@item.Nombre2</td>
+                                                                                                    <td>@item.Montant2</td>
+                                                                                                    <td>@item.Nombre3</td>
+                                                                                                    <td>@item.Montant3</td>
+                                                                                                    <td>@item.Nombre4</td>
+                                                                                                    <td>@item.Montant4</td>
+                                                                                                    <td>@item.Nombre5</td>
+                                                                                                    <td>@item.Montant5</td>
+                                                                                                    <td>@item.Nombre6</td>
+                                                                                                    <td>@item.Montant6</td>
+
+                                                                                                </tr>
+
+
+                                                                                            }
+                                                                                            <tr>
+                                                                                                @foreach (var gd in ViewBag.TotaldemandeEtat11)
+                                                                                                {
+
+                                                                                                    if (grouped.GetType().GetProperty("Key").GetValue(grouped) == gd.Annee)
+                                                                                                    {
+                                                                                                        <td>Total : </td>
+                                                                                                        <td> <span class="fa fa-calculator"></span> @gd.NombreTotal1 </td>
+                                                                                                        <td> <span class="fa fa-calculator"></span> @gd.MontantTotal1 </td>
+                                                                                                        <td> <span class="fa fa-calculator"></span> @gd.NombreTotal2 </td>
+                                                                                                        <td> <span class="fa fa-calculator"></span> @gd.MontantTotal2 </td>
+                                                                                                        <td> <span class="fa fa-calculator"></span> @gd.NombreTotal3 </td>
+                                                                                                        <td> <span class="fa fa-calculator"></span> @gd.MontantTotal3 </td>
+                                                                                                        <td> <span class="fa fa-calculator"></span> @gd.NombreTotal4 </td>
+                                                                                                        <td> <span class="fa fa-calculator"></span> @gd.MontantTotal4 </td>
+                                                                                                        <td> <span class="fa fa-calculator"></span> @gd.NombreTotal5 </td>
+                                                                                                        <td> <span class="fa fa-calculator"></span> @gd.MontantTotal5 </td>
+                                                                                                        <td> <span class="fa fa-calculator"></span> @gd.NombreTotal6 </td>
+                                                                                                        <td> <span class="fa fa-calculator"></span> @gd.MontantTotal6 </td>
+
+
+                                                                                                    }
+
+
+
+                                                                                                }
+                                                                                            </tr>
+                                                                                        </tbody>
+                                                                                    </table>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        <div id="@grouped.GetType().GetProperty("Key").GetValue(grouped)"
+                                                                             class="tab-pane active text-black-50">
+                                                                            <div class="full-height-scroll">
+                                                                                <div class="table-responsive">
+                                                                                    <table class="table table-striped table-hover data datatable-style">
+
+                                                                                        <thead>
+                                                                                            <tr>
+                                                                                                <th>Mois</th>
+                                                                                                <th colspan="4">Demandes en cours</th>
+                                                                                                <th colspan="4">Livraisons en attentes</th>
+                                                                                                <th colspan="4">Livraisons effectuées</th>
+                                                                                            </tr>
+                                                                                            <tr>
+                                                                                                <th> </th>
+                                                                                                <TH>Nombre </TH>
+                                                                                                <TH>Montant payé</TH>
+                                                                                                <TH>Nombre</TH>
+                                                                                                <TH>Montant versé</TH>
+                                                                                                <TH>Nombre </TH>
+                                                                                                <TH>Montant payé</TH>
+                                                                                                <TH>Nombre</TH>
+                                                                                                <TH>Montant versé</TH>
+                                                                                                <TH>Nombre </TH>
+                                                                                                <TH>Montant payé</TH>
+                                                                                                <TH>Nombre</TH>
+                                                                                                <TH>Montant versé</TH>
+                                                                                            </tr>
+                                                                                        </thead>
+                                                                                        <tbody>
+                                                                                            @foreach (var item in grouped)
+                                                                                            {
+                                                                                                <tr>
+                                                                                                    <td>@System.Globalization.CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(item.Mois)</td>
+                                                                                                    <td>@item.Nombre1</td>
+                                                                                                    <td>@item.Montant1</td>
+                                                                                                    <td>@item.Nombre2</td>
+                                                                                                    <td>@item.Montant2</td>
+                                                                                                    <td>@item.Nombre3</td>
+                                                                                                    <td>@item.Montant3</td>
+                                                                                                    <td>@item.Nombre4</td>
+                                                                                                    <td>@item.Montant4</td>
+                                                                                                    <td>@item.Nombre5</td>
+                                                                                                    <td>@item.Montant5</td>
+                                                                                                    <td>@item.Nombre6</td>
+                                                                                                    <td>@item.Montant6</td>
+
+                                                                                                </tr>
+
+
+                                                                                            }
+                                                                                            <tr>
+                                                                                                @foreach (var gd in ViewBag.TotaldemandeEtat11)
+                                                                                                {
+
+                                                                                                    if (grouped.GetType().GetProperty("Key").GetValue(grouped) == gd.Annee)
+                                                                                                    {
+                                                                                                       
+                                                                                                        <td>Total : </td>
+                                                                                                        <td> <span class="fa fa-calculator"></span> @gd.NombreTotal1 </td>
+                                                                                                        <td> <span class="fa fa-calculator"></span> @gd.MontantTotal1 </td>
+                                                                                                        <td> <span class="fa fa-calculator"></span> @gd.NombreTotal2 </td>
+                                                                                                        <td> <span class="fa fa-calculator"></span> @gd.MontantTotal2 </td>
+                                                                                                        <td> <span class="fa fa-calculator"></span> @gd.NombreTotal3 </td>
+                                                                                                        <td> <span class="fa fa-calculator"></span> @gd.MontantTotal3 </td>
+                                                                                                        <td> <span class="fa fa-calculator"></span> @gd.NombreTotal4 </td>
+                                                                                                        <td> <span class="fa fa-calculator"></span> @gd.MontantTotal4 </td>
+                                                                                                        <td> <span class="fa fa-calculator"></span> @gd.NombreTotal5 </td>
+                                                                                                        <td> <span class="fa fa-calculator"></span> @gd.MontantTotal5 </td>
+                                                                                                        <td> <span class="fa fa-calculator"></span> @gd.NombreTotal6 </td>
+                                                                                                        <td> <span class="fa fa-calculator"></span> @gd.MontantTotal6 </td>
+
+
+                                                                                                    }
+
+
+
+                                                                                                }
+                                                                                            </tr>
+                                                                                        </tbody>
+                                                                                    </table>
+
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+
+                                                                    }
+
+                                                                }
+                                                            </div>
+                                                        </div>
+
+                                                    </div>
+                                                    <div class="col-lg-12">
+                                                        <canvas id="barChart" style="height:20px"></canvas>
+
+                                                    </div>
+
+                                                </div>
+
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+
+
+
+                        </div>
+
+
+
+                    </div>
+
+
+                </div>
+
+
+
+
+
+
+
+            </div>
+
+
+
+
+
+
+        </div>
+    </div>
+</div>
+
+
+<!-- Mainly scripts -->
+<script src="~/js/jquery-3.1.1.min.js"></script>
+<script src="~/js/bootstrap.min.js"></script>
+<script src="~/js/plugins/metisMenu/jquery.metisMenu.js"></script>
+<script src="~/js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+<!-- Custom and plugin javascript -->
+<script src="~/js/inspinia.js"></script>
+<script src="~/js/plugins/pace/pace.min.js"></script>
+<!-- ChartJS-->
+<script src="~/js/plugins/chartJs/Chart.min.js"></script>
+<script src="~/js/plugins/dataTables/datatables.min.js"></script>
+
+<script src="~/js/plugins/c3/c3.min.js"></script>
+<script src="~/js/plugins/d3/d3.min.js"></script>
+<!-- Morris -->
+<script src="~/js/plugins/morris/raphael-2.1.0.min.js"></script>
+<script src="~/js/plugins/morris/morris.js"></script>
+
+<script>
+
+    $(function () {
+
+
+            var lineDatabarChart11 = {
+            labels: @Html.Raw(ViewBag.MoisdemandeEtat11),
+            datasets: [
+
+                {
+                    label: "Nombre Demande en cours Payes par mois",
+                    backgroundColor: 'rgba(26,179,148,0.3)',
+                    borderColor: "rgba(26,179,148,0.3)",
+                    pointBackgroundColor: "rgba(26,179,148,0.3)",
+                    pointBorderColor: "#fff",
+                    data: @Html.Raw(ViewBag.NombreDemandeencoursPayes)
+                }, {
+                    label: "Montant Demande en cours Payes par mois",
+                    backgroundColor: 'rgb(26,179,148, 1)',
+                    borderColor: "rgba(26,179,148,1)",
+                    pointBorderColor: "#fff",
+                    data: @Html.Raw(ViewBag.MontantDemandeencoursPayes)
+                },{
+                    label: "Nombre Demande en cours Verse par mois",
+                    backgroundColor: 'rgb(0,191,255)',
+                    borderColor: "rgb(0,191,255)",
+                    pointBackgroundColor: "rgb(0,222,0)",
+                    pointBorderColor: "#fff",
+                    data: @Html.Raw(ViewBag.NombreDemandeencoursVerse)
+                }, {
+                    label: "Montant Demande en cours Verse par mois",
+                    backgroundColor: 'rgb(0,0,139)',
+                    borderColor: "rgb(0,0,139)",
+                    pointBackgroundColor: "rgb(0,222,0)",
+                    pointBorderColor: "#fff",
+                    data: @Html.Raw(ViewBag.MontantDemandeencoursVerse)
+                }, {
+                    label: "Nombre Livraisons En attentes Payes par mois",
+                    backgroundColor: 'rgba(8,112,147,1)',
+                    borderColor: "rgba(8,112,147,1)",
+                    pointBackgroundColor: "rgb(0,222,0)",
+                    pointBorderColor: "#fff",
+                    data: @Html.Raw(ViewBag.NombreLivraisonsEnattentesPayes)
+                    }, {
+                        label: "Montant Livraisons En attentes Payes par mois",
+                        backgroundColor: 'rgba(219,112,80,1)',
+                        borderColor: "rgba(219,112,80,1)",
+                        pointBackgroundColor: "rgb(0,222,0)",
+                        pointBorderColor: "#fff",
+                        data: @Html.Raw(ViewBag.MontantLivraisonsEnattentesPayes)
+                        }, {
+                            label: "Nombre Livraisons En attentes Verse par mois",
+                            backgroundColor: 'rgba(20,8,8,0.3)',
+                            borderColor: "rgba(20,8,8,0.3)",
+                            pointBackgroundColor: "rgb(0,222,0)",
+                            pointBorderColor: "#fff",
+                            data: @Html.Raw(ViewBag.NombreLivraisonsEnattentesVerse)
+                            }, {
+                                label: "Montant  Livraisons En attentes Verse par mois",
+                                backgroundColor: 'rgba(12,112,147,0.3)',
+                                borderColor: "rgba(12,112,147,0.3)",
+                                pointBackgroundColor: "rgb(0,222,0)",
+                                pointBorderColor: "#fff",
+                                data: @Html.Raw(ViewBag.MontantLivraisonsEnattentesVerse)
+                            }, {
+                                label: "Nombre Livraisons Effectuees Payes par mois",
+                                backgroundColor: 'rgba(90,112,20,1)',
+                                borderColor: "rgba(90,112,20,1)",
+                                pointBackgroundColor: "rgb(0,222,0)",
+                                pointBorderColor: "#fff",
+                                data: @Html.Raw(ViewBag.NombreLivraisonsEffectueesPayes)
+                                }, {
+                                    label: "Montant Livraisons Effectuees Payes par mois",
+                                    backgroundColor: 'rgba(120,112,14,1)',
+                                    borderColor: "rgba(120,112,14,1)",
+                                    pointBackgroundColor: "rgb(0,222,0)",
+                                    pointBorderColor: "#fff",
+                                    data: @Html.Raw(ViewBag.MontantLivraisonsEffectueesPayes)
+                                    }, {
+                                        label: "Nombre Livraisons Effectuees Verse par mois",
+                                        backgroundColor: 'rgba(120,20,90,1)',
+                                        borderColor: "rgba(120,20,90,1)",
+                                        pointBackgroundColor: "rgb(0,222,0)",
+                                        pointBorderColor: "#fff",
+                                        data: @Html.Raw(ViewBag.NombreLivraisonsEffectueesVerse)
+                                        }, {
+                                            label: "Montant Livraisons Effectuees Verse par mois",
+                                            backgroundColor: 'rgba(120,11,147,1)',
+                                            borderColor: "rgba(120,11,147,1)",
+                                            pointBackgroundColor: "rgb(0,222,0)",
+                                            pointBorderColor: "#fff",
+                                            data: @Html.Raw(ViewBag.MontantLivraisonsEffectueesVerse)
+                                        }
+
+
+
+            ]
+        };
+
+        var lineOptions = {
+            responsive: true
+        };
+        var ctx11 = document.getElementById("barChart").getContext("2d");
+        new Chart(ctx11, { type: 'bar', data: lineDatabarChart11, options: lineOptions });
+
+        $('.datatable-style').DataTable({
+            order: false,
+            responsive: true,
+            "paging": false,
+            dom: '<"html5buttons"B>lTfgitp',
+            buttons: [
+                { extend: 'copy' },
+                { extend: 'csv' },
+                { extend: 'excel', title: 'Export' },
+                { extend: 'pdf', title: 'Export' },
+                {
+                    extend: 'print',
+                    customize: function (win) {
+                        $(win.document.body).addClass('white-bg');
+                        $(win.document.body).css('font-size', '10px');
+
+                        $(win.document.body).find('table')
+                                .addClass('compact')
+                                .css('font-size', 'inherit');
+                    }
+                }
+            ]
+
+        });
+
+
+
+
+
+    });
+</script>
+

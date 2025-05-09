@@ -1,0 +1,391 @@
+﻿@model BeeProj.ViewModels.KPIdashbordViewModel
+@{
+    ViewBag.Title = "Etat8";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@*<h2>Etat8</h2>*@
+
+
+
+
+<link href="~/css/plugins/iCheck/custom.css" rel="stylesheet">
+<link href="~/css/plugins/jasny/jasny-bootstrap.min.css" rel="stylesheet">
+<link href="~/css/plugins/footable/footable.core.css" rel="stylesheet">
+<link href="~/css/plugins/chosen/bootstrap-chosen.css" rel="stylesheet">
+<link href="~/css/plugins/sweetalert/sweetalert.css" rel="stylesheet">
+<link href="~/css/plugins/dataTables/datatables.min.css" rel="stylesheet">
+
+<!-- Ladda style -->
+<link href="~/css/plugins/ladda/ladda-themeless.min.css" rel="stylesheet">
+<!-- Toastr style -->
+<link href="~/css/plugins/toastr/toastr.min.css" rel="stylesheet">
+<script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+<link href="~/css/plugins/c3/c3.min.css" rel="stylesheet">
+<link href="~/css/plugins/morris/morris-0.4.3.min.css" rel="stylesheet">
+
+
+
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-lg-12">
+        <br />
+        <h3 class="text-black-50"><a href="@Url.Action("Index", "Dashboard")">Généralité KPI</a></h3>
+        <ol class="breadcrumb">
+            <li>
+                <a href="@Url.Action("ChiffreAffaire", "Dashboard")"><label class="text-success">Chiffre d’affaire,paiement et versement mensuel</label></a>
+            </li>
+            <li>
+                <a href="@Url.Action("Etat2", "Dashboard")"><label class="text-success"> Etat mensuel des ventes</label></a>
+            </li>
+            <li>
+                <a href="@Url.Action("Etat3", "Dashboard")"><label class="text-success"> Etat mensuel des ventes par la Poste</label></a>
+            </li>
+            <li>
+                <a href="@Url.Action("Etat4", "Dashboard")"> <label class="text-success"> Etat mensuel des paiements par la Poste</label> </a>
+            </li>
+
+        </ol>
+        <ol class="breadcrumb">
+            <li>
+                <a href="@Url.Action("Index", "Dashboard")"><label class="text-success"> Etat des ventes et paiement par point de vente</label> </a>
+            </li>
+            @*<li>
+                    <a href="@Url.Action("Index", "Dashboard")"><label class="text-success"> Etat des impayés</label> </a>
+                </li>*@
+            <li>
+                <a href="@Url.Action("Etat8", "Dashboard")"><label class="text-success"> Etat récapitulatif des demandes en cours</label> </a>
+            </li>
+            <li>
+                <a href="@Url.Action("Etat9", "Dashboard")"><label class="text-success"> Etat récapitulatif de facturation</label> </a>
+            </li>
+            @*<li>
+                    <a href="@Url.Action("Index", "Dashboard")"><label class="text-success"> Etat des paiements</label> </a>
+                </li>*@
+            <li>
+                <a href="@Url.Action("Etat11", "Dashboard")"><label class="text-success"> Bilan de l’activité</label> </a>
+            </li>
+        </ol>
+    </div>
+    <div class="col-lg-2">
+
+    </div>
+</div>
+
+
+<div class="wrapper wrapper-content  animated fadeInRight">
+    <div class="row">
+        <div class="col-lg-12">
+
+            <div class="ibox">
+                <div class="ibox-content">
+                    @using (Html.BeginForm("KPIs", "KPISFinish", FormMethod.Post))
+                    {
+                        <div class="input-group">
+                            <span class="text-purplebee">
+                                Du <strong>@Model.StartDate.GetValueOrDefault().ToString("dd/MM/yyyy")</strong>
+                                au <strong>@Model.EndDate.GetValueOrDefault().ToString("dd/MM/yyyy")</strong>
+                            </span>
+                            <div class="input-daterange input-group" id="datepicker">
+                                @Html.TextBoxFor(model => model.StartDate, new { type = "date", @class = "form-control" })
+                                <span class="input-group-addon">au </span>
+                                @Html.TextBoxFor(model => model.EndDate, new { type = "date", @class = "form-control" })
+                                <span class="input-group-btn">
+                                    <button type="submit" class="btn btn-purplebee ladda-button ladda-button-demo">Filtrer</button>
+                                </span>
+                            </div>
+
+                        </div>
+
+
+
+                    }
+
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+    <div class="row">
+
+        <div class="col-lg-12">
+            <div class="ibox float-e-margins">
+
+                <div class="ibox-content">
+                    <div class="row">
+
+                        <div class="tab-content">
+                            <!------------------------------------- Etat 8.	Etat récapitulatif des demandes en cours  ----------------------------------->
+
+
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <div class="ibox float-e-margins">
+
+                                        <div class="ibox-content">
+                                            <div class="ibox">
+
+                                                <br />
+                                                <div class="ibox-content">
+
+
+                                                    <div class="ibox-content">
+                                                        <div class="clients-list">
+                                                            <ul class="nav nav-tabs">
+
+                                                                @foreach (var item in ViewBag.demandeEtatHuit)
+                                                                {
+
+                                                                    <li class="bg-primary">
+                                                                        <a data-toggle="tab" href="#@item.GetType().GetProperty("Key").GetValue(item)">
+                                                                            <i class="fa fa-calendar"></i>@item.GetType().GetProperty("Key").GetValue(item)
+                                                                        </a>
+                                                                    </li>
+
+                                                                }
+
+                                                            </ul>
+                                                            <div class="tab-content">
+
+                                                                @foreach (var grouped in ViewBag.demandeEtatHuit)
+                                                                {
+                                                                    if ((grouped.GetType().GetProperty("Key").GetValue(grouped) == 2020))
+                                                                    {
+                                                                        <div id="@grouped.GetType().GetProperty("Key").GetValue(grouped)"
+                                                                             class="tab-pane active text-black-50">
+                                                                            <div class="full-height-scroll">
+                                                                                <div class="table-responsive">
+
+                                                                                    <table class="table table-striped table-hover data datatable-style">
+
+                                                                                        <thead>
+                                                                                            <tr>
+                                                                                                <th>Mois</th>
+                                                                                                <th>PV</th>
+                                                                                                <th>Etat</th>
+                                                                                                <th>Pack</th>
+                                                                                                <th>Nombre</th>
+                                                                                            </tr>
+
+                                                                                        </thead>
+                                                                                        <tbody>
+                                                                                            @foreach (var item in grouped)
+                                                                                            {
+                                                                                                <tr>
+                                                                                                    <td>@System.Globalization.CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(item.Mois)</td>
+                                                                                                    <td>@item.PV</td>
+                                                                                                    <td>@item.Etat</td>
+                                                                                                    <td>@item.pack</td>
+                                                                                                    <td>@item.Nombre</td>
+                                                                                                 
+                                                                                                </tr>
+
+
+                                                                                            }
+                                                                                            <tr>
+                                                                                                @foreach (var gd in ViewBag.TotalMontantNombre)
+                                                                                                {
+
+                                                                                                    if (grouped.GetType().GetProperty("Key").GetValue(grouped) == gd.Annee)
+                                                                                                    {
+                                                                                                        <td></td>
+                                                                                                        <td></td>
+                                                                                                        <td>Total : </td>
+                                                                                                        <td> <span class="fa fa-calculator"></span> @gd.NombreTotal1 </td>
+                                                                                                    }
+
+
+
+                                                                                                }
+                       
+                                                                                            </tr>
+                                                                                        </tbody>
+                                                                                    </table>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        <div id="@grouped.GetType().GetProperty("Key").GetValue(grouped)"
+                                                                             class="tab-pane text-black-50">
+                                                                            <div class="full-height-scroll">
+                                                                                <table class="table table-striped table-hover data datatable-style">
+
+                                                                                    <thead>
+                                                                                        <tr>
+                                                                                            <th>Mois</th>
+                                                                                            <th>PV</th>
+                                                                                            <th>Etat</th>
+                                                                                            <th>Pack</th>
+                                                                                            <th>Nombre</th>
+                                                                                        </tr>
+
+                                                                                    </thead>
+                                                                                    <tbody>
+                                                                                        @foreach (var item in grouped)
+                                                                                        {
+                                                                                            <tr>
+                                                                                                <td>@System.Globalization.CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(item.Mois)</td>
+                                                                                                <td>@item.PV</td>
+                                                                                                <td>@item.Etat</td>
+                                                                                                <td>@item.pack</td>
+                                                                                                <td>@item.Nombre</td>
+
+                                                                                            </tr>
+
+
+                                                                                        }
+                                                                                        <tr>
+                                                                                            @foreach (var gd in ViewBag.TotalMontantNombre)
+                                                                                            {
+
+                                                                                                if (grouped.GetType().GetProperty("Key").GetValue(grouped) == gd.Annee)
+                                                                                                {
+                                                                                                    <td></td>
+                                                                                                    <td></td>
+                                                                                                    <td>Total : </td>
+                                                                                                        <td> <span class="fa fa-calculator"></span> @gd.NombreTotal1 </td>
+                                                                                                }
+
+
+
+                                                                                            }
+                                                                                        </tr>
+                                                                                    </tbody>
+                                                                                </table>
+
+
+
+
+
+                                                                            </div>
+                                                                        </div>
+
+                                                                    }
+
+                                                                }
+                                                            </div>
+                                                        </div>
+
+                                                    </div>
+
+                                                    <div class="col-lg-12">
+                                                        <canvas id="slineChart" style="height:20px"></canvas>
+
+                                                    </div>
+                                                </div>
+
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+
+
+
+                        </div>
+
+
+
+                    </div>
+
+
+                </div>
+
+
+
+
+
+
+
+            </div>
+
+
+
+
+
+
+        </div>
+    </div>
+</div>
+
+
+<!-- Mainly scripts -->
+<script src="~/js/jquery-3.1.1.min.js"></script>
+<script src="~/js/bootstrap.min.js"></script>
+<script src="~/js/plugins/metisMenu/jquery.metisMenu.js"></script>
+<script src="~/js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+<!-- Custom and plugin javascript -->
+<script src="~/js/inspinia.js"></script>
+<script src="~/js/plugins/pace/pace.min.js"></script>
+<!-- ChartJS-->
+<script src="~/js/plugins/chartJs/Chart.min.js"></script>
+<script src="~/js/plugins/dataTables/datatables.min.js"></script>
+
+<script src="~/js/plugins/c3/c3.min.js"></script>
+<script src="~/js/plugins/d3/d3.min.js"></script>
+<!-- Morris -->
+<script src="~/js/plugins/morris/raphael-2.1.0.min.js"></script>
+<script src="~/js/plugins/morris/morris.js"></script>
+
+<script>
+
+    $(function () {
+
+
+        var slineData = {
+            labels: @Html.Raw(ViewBag.MoisdemandeEtatHuit),
+            datasets: [
+                {
+                    label: "Nombre total des demandes en cours par PV pour l'année actuel",
+                    backgroundColor: "rgba(220,220,220,1)",
+                    borderColor: "rgba(117, 201, 178,1)",
+                    data: @Html.Raw(ViewBag.NombredemandeEtatHuit)
+                },
+
+
+            ]
+        };
+
+        var radarOptions = {
+            responsive: true
+        };
+        var ctx5 = document.getElementById("slineChart").getContext("2d");
+        new Chart(ctx5, { type: 'line', data: slineData, options: radarOptions });
+
+        $('.datatable-style').DataTable({
+            order: false,
+            responsive: true,
+            "paging": false,
+            dom: '<"html5buttons"B>lTfgitp',
+            buttons: [
+                { extend: 'copy' },
+                { extend: 'csv' },
+                { extend: 'excel', title: 'Export' },
+                { extend: 'pdf', title: 'Export' },
+                {
+                    extend: 'print',
+                    customize: function (win) {
+                        $(win.document.body).addClass('white-bg');
+                        $(win.document.body).css('font-size', '10px');
+
+                        $(win.document.body).find('table')
+                                .addClass('compact')
+                                .css('font-size', 'inherit');
+                    }
+                }
+            ]
+
+        });
+
+
+
+
+
+    });
+</script>

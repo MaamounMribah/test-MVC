@@ -1,0 +1,175 @@
+﻿<div class="widget bg-graybee-light p-lg text-center">
+    <div class="m-b-md">
+        <i class="fa fa-money fa-3x"></i>
+        <h1 class="m-xs"> @String.Format("{0:N3}", ViewBag.Abonnement.DO_MontantTTC) TND </h1>
+
+        <small>Total TTC de l'abonnement </small>
+    </div>
+</div>
+
+
+<div class="ibox">
+    <div class="ibox-content">
+        <!-- ETATAPE_OP ET_DESCRIPION cbmarq-->
+        <div class="ibox-content">
+            <!-- ETATAPE_OP ET_DESCRIPION cbmarq-->
+            <div id="vertical-timeline" class="vertical-container">
+                <div class="vertical-timeline-block ">
+                    @if (ViewBag.DO_Etape == 0)
+                    {
+                        <div class="vertical-timeline-icon bg-purplebee">
+                            <i class="fa fa-level-down" data-toggle="modal" data-target="#detailsEtape"></i>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="vertical-timeline-icon label-purplebee-light">
+                            <i class="fa fa-level-down"></i>
+                        </div>
+                    }
+                    <div class="vertical-timeline-content ">
+                        <h2>Etude éligibilité</h2>
+                    </div>
+                </div>
+                <div class="vertical-timeline-block  ">
+                    @if (ViewBag.DO_Etape == 1)
+                    {
+                        <div class="vertical-timeline-icon bg-purplebee">
+                            <i class="fa fa-level-down"></i>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="vertical-timeline-icon label-purplebee-light">
+                            <i class="fa fa-level-down"></i>
+                        </div>
+                    }
+                    <div class="vertical-timeline-content ">
+                        <h2>Réservation TT </h2>
+                    </div>
+                </div>
+                <div class="vertical-timeline-block  ">
+                    @if (ViewBag.DO_Etape == 2)
+                    {
+                        <div class="vertical-timeline-icon bg-purplebee">
+                            <i class="fa fa-level-down"></i>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="vertical-timeline-icon label-purplebee-light">
+                            <i class="fa fa-level-down"></i>
+                        </div>
+                    }
+                    <div class="vertical-timeline-content ">
+                        <h2>Tirage jarretière  </h2>
+                    </div>
+                </div>
+                <div class="vertical-timeline-block  ">
+                    @if (ViewBag.DO_Etape == 3)
+                    {
+                        <div class="vertical-timeline-icon bg-purplebee">
+                            <i class="fa fa-level-down"></i>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="vertical-timeline-icon label-purplebee-light">
+                            <i class="fa fa-level-down"></i>
+                        </div>
+                    }
+                    <div class="vertical-timeline-content ">
+                        <h2>Migration offre fixe</h2>
+                    </div>
+                </div>
+
+                <div class="vertical-timeline-block  ">
+                    @if (ViewBag.DO_Etape == 4)
+                    {
+                        <div class="vertical-timeline-icon bg-purplebee">
+                            <i class="fa fa-level-down text-white"></i>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="vertical-timeline-icon label-purplebee-light">
+                            <i class="fa fa-level-down text-white"></i>
+                        </div>
+                    }
+                    <div class="vertical-timeline-content ">
+                        <h2> Réservation Matériel </h2>
+                    </div>
+                </div>
+                <div class="vertical-timeline-block  ">
+                    @if (ViewBag.DO_Etape == 5 && ViewBag.TypeAbonnement != 9)
+                    {
+
+                        <div class="vertical-timeline-icon bg-purplebee">
+                            <i class="fa fa-level-down text-white"></i>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="vertical-timeline-icon label-purplebee-light">
+                            <i class="fa fa-level-down text-white"></i>
+                        </div>
+                    }
+                    <div class="vertical-timeline-content ">
+                        <h2>Paiement et livraison</h2>
+                    </div>
+                </div>
+
+                <div class="vertical-timeline-block  ">
+                    @if (ViewBag.DO_Etape == 6)
+                    {
+
+                        <div class="vertical-timeline-icon bg-purplebee">
+                            <i class="fa fa-level-down text-white"></i>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="vertical-timeline-icon label-purplebee-light">
+                            <i class="fa fa-level-down text-white"></i>
+                        </div>
+                    }
+                    <div class="vertical-timeline-content ">
+                        @*<h2>Facturation et Paiement</h2>*@
+                        <h2>Facturation</h2>
+                    </div>
+                </div>
+
+                <div class="vertical-timeline-block  ">
+                    @if (ViewBag.DO_Etape == 7)
+                    {
+                        <div class="vertical-timeline-icon bg-purplebee">
+                            <i class="fa fa-level-down text-white "></i>
+                        </div>
+                        <div class="vertical-timeline-content ">
+                            <h2>Abonnement validé</h2>
+                        </div>
+                    }
+                    else if (ViewBag.DO_Etape == 8)
+                    {
+                        <div class="vertical-timeline-icon bg-purplebee">
+                            <i class="fa fa-level-down"></i>
+                        </div>
+
+                        <div class="vertical-timeline-content ">
+                            <h2>Abonnement annulé</h2>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="vertical-timeline-icon label-purplebee-light">
+                            <i class="fa fa-level-down"></i>
+                        </div>
+                        <div class="vertical-timeline-content ">
+                            <h2>Clôture</h2>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

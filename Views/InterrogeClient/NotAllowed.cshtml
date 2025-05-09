@@ -1,0 +1,40 @@
+﻿
+@{
+    ViewBag.Title = "NotAllowed";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-lg-10">
+         
+        <ol class="breadcrumb">
+            <li>
+                <a href="#">Acceuil</a>
+            </li>
+            <li>
+                <a href="@Url.Action("Index", "Home")">EasyBEE</a>
+            </li>
+            <li class="active">
+                <strong> Accueil </strong>
+            </li>
+        </ol>
+    </div>
+</div>
+ <div class="wrapper wrapper-content">
+    <div class="middle-box text-center animated fadeInRightBig">
+      
+        <div class="error-desc">
+            <div class="alert alert-info">
+                <h4>Bonjour  </h4>
+                <strong>    @TempData["MSG1"]  </strong>
+            </div>
+            <h3 class="font-bold">Désolé! </h3>
+            <strong>@TempData["MSG"] </strong>
+
+
+
+            <br><a href="@Url.Action("NouveauVersement", "GestionFactures")" class="btn btn-primary m-t">Nouveau versement </a>
+        </div>
+    </div>
+</div>
+<script src="~/js/jquery-3.1.1.min.js"></script>

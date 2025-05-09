@@ -1,0 +1,896 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<!-- Ladda style -->
+<link href="~/css/plugins/daterangepicker/daterangepicker-bs3.css" rel="stylesheet">
+<link href="css/plugins/ladda/ladda-themeless.min.css" rel="stylesheet">
+<link href="~/css/plugins/sweetalert/sweetalert.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+
+
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-lg-9">
+        <h2>EASYBEEExport</h2>
+        <ol class="breadcrumb">
+            <li>
+                <a href="#">Acceuil</a>
+            </li>
+            <li class="active">
+                <strong>Export Excel</strong>
+            </li>
+        </ol>
+    </div>
+</div>
+<div class="wrapper wrapper-content  animated fadeInRight">
+    <div class="ibox-content">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="row">
+
+                    <div class="col-md-6" id="listingfacture">
+                        <div class="widget bg-purplebee text-center">
+                            <i class="fa fa-file-o fa-3x"></i>
+                            <input class="btn btn-purplebee m-xs" type="submit" value="Listing factures" id="btlistingfacture" data-toggle="modal" data-target="#Export2" @*onClick="ClickedMe()"*@ />
+                        </div>
+                    </div>
+
+                    <div class="col-md-6" id="reglement">
+                        <div class="widget bg-purplebee text-center">
+                            <i class="glyphicon glyphicon-list fa-3x"></i>
+                            <input class="btn btn-purplebee m-xs" type="submit" value="Liste des réglements clients" id="btreglement" data-toggle="modal" data-target="#Export1" @*onClick="ClickedMebtreglement()"*@ />
+                        </div>
+                    </div>
+
+                    <div class="col-md-6" id="listeabonnement">
+                        <div class="widget bg-purplebee  text-center">
+                            <i class="fa fa-address-card-o fa-3x"></i>
+                            <input class="btn btn-purplebee m-xs" type="submit" value="Liste des abonnements" id="btlisteabonnement" data-toggle="modal" data-target="#Export3" onClick="ClickedMebtlisteabonnement()" />
+                        </div>
+                    </div>
+
+                    <div class="col-md-6" id="listeabomigres">
+                        <div class="widget bg-purplebee  text-center">
+                            <i class="fa fa-file-archive-o fa-3x"></i>
+                            <input class="btn btn-purplebee m-xs" type="submit" value="Liste des abonnements migrés" id="btlisteabomigres" data-toggle="modal" data-target="#Export4" onClick="ClickedMebtlisteabomigres()" />
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+
+                    <div class="col-md-6" id="listeavance">
+                        <div class="widget bg-purplebee text-center">
+                            <i class="fa fa-clipboard fa-3x"></i>
+                            <input class="btn btn-purplebee m-xs" type="submit" value="Liste des reglements(Avances Ou Contre Recu)" id="btlistereg" data-toggle="modal" data-target="#Export9" onClick="ClickedMebtlisteavance()" />
+                        </div>
+                    </div>
+                    <div class="col-md-6" id="listeavancerecu">
+                        <div class="widget bg-purplebee text-center">
+                            <i class="fa fa-clipboard fa-3x"></i>
+                            <input class="btn btn-purplebee m-xs" type="submit" value="Liste avance ou contre recu" id="btlisteavance" data-toggle="modal" data-target="#Export12" onClick="ClickedMebtlisteavance()" />
+                        </div>
+                    </div>
+
+
+
+                    <div class="col-md-6" id="listenonpayes">
+                        <div class="widget bg-purplebee  text-center">
+                            <i class="fa fa-file fa-3x"></i>
+                            <input class="btn btn-purplebee m-xs" type="submit" value="Liste facture non payees" id="btlistenonpayes" data-toggle="modal" data-target="#Export7" onClick="ClickedMebtlistenonpayes()" />
+                        </div>
+                    </div>
+                    <div class="col-md-6" id="listepayees">
+                        <div class="widget bg-purplebee  text-center">
+                            <i class="fa fa-file-text fa-3x"></i>
+                            <input class="btn btn-purplebee m-xs" type="submit" value="Liste facture payees" id="btlistepayees" data-toggle="modal" data-target="#Export8" onClick="ClickedMebtlistepayees()" />
+                        </div>
+                    </div>
+
+
+                </div>
+                <div class="row">
+                    <div class="col-md-6" id="ListeRemarques">
+                        <div class="widget bg-purplebee  text-center">
+                            <i class="fa fa-paper-plane fa-3x"></i>
+                            <input class="btn btn-purplebee m-xs" type="submit" value="Liste Remarques" id="btListeRemarques" data-toggle="modal" data-target="#Export10" />
+                        </div>
+
+                    </div>
+                    <div class="col-md-6" id="listeabonnementxl">
+                        <div class="widget bg-purplebee  text-center">
+                            <i class="fa fa-address-card-o fa-3x"></i>
+                            <input class="btn btn-purplebee m-xs" type="submit" value="Liste des abonnements .xlsx" id="btlisteabonnement" data-toggle="modal" data-target="#Export13" onClick="ClickedMebtlisteabonnement()" />
+                        </div>
+                    </div>
+                    <div class="col-md-6" id="ExportFactureVente">
+                        <div class="widget bg-purplebee  text-center">
+                            <i class="fa fa-list-alt fa-3x"></i>
+                            <input class="btn btn-purplebee m-xs" type="submit" value="Export des factures de Ventes" id="btExportFactureVente" data-toggle="modal" data-target="#Export11" />
+                        </div>
+
+                    </div>
+                    <div class="col-md-6" id="listearticle">
+                        <div class="widget bg-purplebee  text-center">
+                            <i class="fa fa-book fa-3x"></i>
+                            <input class="btn btn-purplebee m-xs" type="submit" value="Liste des articles reservés" id="btlistearticle" data-toggle="modal" data-target="#Export5" onClick="ClickedMebtsoldeclient()" />
+                        </div>
+                    </div>
+                    <div class="col-md-6" id="ListeStock">
+                        <div class="widget bg-purplebee  text-center">
+                            <i class="fa fa-server fa-3x"></i>
+                            <input class="btn btn-purplebee m-xs" type="submit" value="Liste Stock par dépot" id="btListeStock" data-toggle="modal" data-target="#Export6" onClick="ClickedMebtListeStock()" />
+                        </div>
+
+                    </div>
+
+                    <div class="col-md-6" id="ListeStock">
+                        <div class="widget bg-purplebee  text-center">
+                            <i class="fa fa-server fa-3x"></i>
+                            <input class="btn btn-purplebee m-xs" type="submit" value="Liste Stock total" id="btListeStock" data-toggle="modal" data-target="#ExportSto" onClick="ClickedMebtListeStock()" />
+                        </div>
+
+                    </div>
+
+
+                </div>
+                <div class="row">
+
+                    <div class="col-md-6" id="listeavance">
+                        <div class="widget bg-purplebee text-center">
+                            <i class="fa fa-clipboard fa-3x"></i>
+                            <input class="btn btn-purplebee m-xs" type="submit" value="Listing factures DAF" id="btlistereg" data-toggle="modal" data-target="#ExportDaf" onClick="ClickedMebtlisteavance()" />
+                        </div>
+                    </div>
+                  
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+<div class="modal inmodal" id="Export" tabindex="-1" role="dialog" aria-hidden="true" data-keyboard="false" data-backdrop="static">
+    <div class="modal-dialog">
+        <div class="modal-content animated flipInY">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Ok</span></button>
+                <h4 class="modal-title text-purplebee">Export Excel</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <form role="form">
+                        <div class="form-group">
+                            @if (ViewBag.msg == null)
+                            {
+                                <center>
+                                    <div class="spinner-border text-purplebee" role="status">
+                                        <i class="fa fa-spinner fa-spin" style="font-size:50px"></i>
+                                        <br />
+                                        <h1>Veuillez patienterjusqu'à la fin d'export...</h1>
+                                    </div>
+                                    <br />
+                                    <h5 class="text-purplebee">  Une fois l'export faite avec succés , merci d'actualiser la page afin de continuer les autres exports</h5>
+                                    <br />
+                                </center>
+                            }
+                            else
+                            {
+                                <i class="fa fa-check-circle"></i>
+                                <br />
+                                <h3 class="bg-danger">Merci,vous pouvez continuer les autres exports maintenant </h3>
+                            }
+
+
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+@using (Html.BeginForm("ExportToExcelSoldeClientReglement", "Export", FormMethod.Post))
+{
+    <div class="modal inmodal" id="Export1" tabindex="-1" role="dialog" aria-hidden="true" data-keyboard="false" data-backdrop="static">
+        <div class="modal-dialog">
+            <div class="modal-content animated flipInY">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Ok</span></button>
+                    <h4 class="modal-title text-purplebee">Export Solde client par reglement</h4>
+                    <center><small>Selon Date Reglement </small></center>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <form role="form">
+                            <div class="input-group">
+                                <span class="text-purplebee">
+                                    Date Reglement* du:
+                                </span>
+                                <div class="input-daterange input-group" id="datepicker">
+                                    <input class="form-control col-lg-6" pattern="\d{1,2}/\d{1,2}/\d{4}" type="date" id="DateDebut" name="DateDebut" placeholder="jj/mm/aaaa" required style="width:235px;" /> <br />
+                                    <span class="input-group-addon">au </span>
+                                    <input class="form-control col-lg-6" pattern="\d{1,2}/\d{1,2}/\d{4}" type="date" id="DateFin" name="DateFin" placeholder="jj/mm/aaaa" required style="width:230px;" /> <br />
+                                    <span class="input-group-btn">
+                                        <button type="submit" class="btn btn-purplebee ladda-button ladda-button-demo">Filtrer</button>
+                                    </span>
+                                </div>
+                            </div>
+                            @*<div class="form-group">
+                                    <label class="col-sm-2 control-label">Date Reglement: du</label>
+                                    <div class="col-sm-4">
+                                        <input type="date" name="DateDebut" required value="DateDebut" />
+                                    </div>
+                                    <label class="col-sm-2 control-label">Au</label>
+                                    <div class="col-sm-4">
+                                        <input type="date" name="DateFin" required value="DateFin" />
+                                    </div>
+                                </div>*@
+                        </form>
+                    </div>
+                </div>
+                @*<div class="modal-footer">
+                        <button type="button" class="btn btn-white" data-dismiss="modal">Annuler</button>
+
+                        <button class="btn btn-purplebee ladda-button ladda-button-demo" data-style="expand-right"
+                                type="submit">
+                            Confirmer
+                        </button>
+
+                    </div>*@
+            </div>
+        </div>
+    </div>
+}
+@using (Html.BeginForm("ExportToExcelListingFacture", "Export", FormMethod.Post))
+{
+    <div class="modal inmodal" id="Export2" tabindex="-1" role="dialog" aria-hidden="true" data-keyboard="false" data-backdrop="static">
+        <div class="modal-dialog">
+            <div class="modal-content animated flipInY">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Ok</span></button>
+                    <h4 class="modal-title text-purplebee">Export listing facture</h4>
+                    <center><small>Selon date facture </small></center>
+
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <form role="form">
+                            <div class="input-group">
+                                <span class="text-purplebee">
+                                    Date facture* du:
+                                </span>
+                                <div class="input-daterange input-group" id="datepicker">
+                                    <input class="form-control col-lg-6" pattern="\d{1,2}/\d{1,2}/\d{4}" type="date" id="DateDebut" name="DateDebut" placeholder="jj/mm/aaaa" required style="width:235px;" /> <br />
+                                    <span class="input-group-addon">au </span>
+                                    <input class="form-control col-lg-6" pattern="\d{1,2}/\d{1,2}/\d{4}" type="date" id="DateFin" name="DateFin" placeholder="jj/mm/aaaa" required style="width:230px;" /> <br />
+                                    <span class="input-group-btn">
+                                        <button type="submit" class="btn btn-purplebee ladda-button ladda-button-demo">Filtrer</button>
+                                    </span>
+                                </div>
+                            </div>
+
+                        </form>
+                    </div>
+                </div>
+                @*<div class="modal-footer">
+                        <button type="button" class="btn btn-white" data-dismiss="modal">Annuler</button>
+
+                        <button class="btn btn-purplebee ladda-button ladda-button-demo" data-style="expand-right"
+                                type="submit">
+                            Confirmer
+                        </button>
+
+                    </div>*@
+            </div>
+        </div>
+    </div>
+}
+@using (Html.BeginForm("ExportToExcelListeAbonnementss", "Export", FormMethod.Post))
+{
+    <div class="modal inmodal" id="Export3" tabindex="-1" role="dialog" aria-hidden="true" data-keyboard="false" data-backdrop="static">
+        <div class="modal-dialog">
+            <div class="modal-content animated flipInY">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Ok</span></button>
+                    <h4 class="modal-title text-purplebee">Export Liste des abonnements</h4>
+                    <center><small>Selon Date creation/modification abos </small></center>
+
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <form role="form">
+                            <div class="input-group">
+                                <span class="text-purplebee">
+                                    Date creation/modification* du:
+                                </span>
+                                <div class="input-daterange input-group" id="datepicker">
+                                    <input class="form-control col-lg-6" pattern="\d{1,2}/\d{1,2}/\d{4}" type="date" id="DateDebut" name="DateDebut" placeholder="jj/mm/aaaa" required style="width:235px;" /> <br />
+                                    <span class="input-group-addon">au </span>
+                                    <input class="form-control col-lg-6" pattern="\d{1,2}/\d{1,2}/\d{4}" type="date" id="DateFin" name="DateFin" placeholder="jj/mm/aaaa" required style="width:230px;" /> <br />
+                                    <span class="input-group-btn">
+                                        <button type="submit" class="btn btn-purplebee ladda-button ladda-button-demo">Filtrer</button>
+                                    </span>
+                                </div>
+                            </div>
+                            @*<div class="input-group">
+                                    <input class="form-control" type="text" name="date" value="01/01/2019 - 10/12/2021">
+
+                                    <span class="input-group-btn">
+                                        <button class="btn btn-purplebee ladda-button ladda-button-demo" data-style="expand-right"
+                                                type="submit">
+                                            Confirmer
+                                        </button>
+                                    </span>
+                                </div>*@
+                            @*<div class="input-group">
+                                    <input class="form-control" type="text" name="date" value="01/01/2021 - 31/01/2021">
+
+                                    <span class="input-group-btn">
+                                        <button class="btn btn-purplebee ladda-button ladda-button-demo" data-style="expand-right"
+                                                type="submit">
+                                            Confirmer
+                                        </button>
+                                    </span>
+                                </div>*@
+                        </form>
+                    </div>
+                </div>
+                @*<div class="modal-footer">
+                        <button type="button" class="btn btn-white" data-dismiss="modal">Annuler</button>
+
+                        <button class="btn btn-purplebee ladda-button ladda-button-demo" data-style="expand-right"
+                                type="submit">
+                            Confirmer
+                        </button>
+
+                    </div>*@
+            </div>
+        </div>
+    </div>
+}
+@using (Html.BeginForm("ExportToExcelListeAbonnementssXL", "Export", FormMethod.Post))
+{
+    <div class="modal inmodal" id="Export13" tabindex="-1" role="dialog" aria-hidden="true" data-keyboard="false" data-backdrop="static">
+        <div class="modal-dialog">
+            <div class="modal-content animated flipInY">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Ok</span></button>
+                    <h4 class="modal-title text-purplebee">Export Liste des abonnements .xlsx</h4>
+                    <center><small>Selon Date creation/modification abos </small></center>
+
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <form role="form">
+
+                            <div class="input-group">
+                                <span class="text-purplebee">
+                                    Date creation/modification* du:
+                                </span>
+                                <div class="input-daterange input-group" id="datepicker">
+                                    <input class="form-control col-lg-6" pattern="\d{1,2}/\d{1,2}/\d{4}" type="date" id="DateDebut" name="DateDebut" placeholder="jj/mm/aaaa" required style="width:235px;" /> <br />
+                                    <span class="input-group-addon">au </span>
+                                    <input class="form-control col-lg-6" pattern="\d{1,2}/\d{1,2}/\d{4}" type="date" id="DateFin" name="DateFin" placeholder="jj/mm/aaaa" required style="width:230px;" /> <br />
+                                    <span class="input-group-btn">
+                                        <button type="submit" class="btn btn-purplebee ladda-button ladda-button-demo">Filtrer</button>
+                                    </span>
+                                </div>
+                            </div>
+                            @*<div class="input-group">
+                                    <input class="form-control" type="text" name="date" value="01/01/2021 - 31/01/2021">
+
+                                    <span class="input-group-btn">
+                                        <button class="btn btn-purplebee ladda-button ladda-button-demo" data-style="expand-right"
+                                                type="submit">
+                                            Confirmer
+                                        </button>
+                                    </span>
+                                </div>*@
+                        </form>
+                    </div>
+                </div>
+                @*<div class="modal-footer">
+                        <button type="button" class="btn btn-white" data-dismiss="modal">Annuler</button>
+
+                        <button class="btn btn-purplebee ladda-button ladda-button-demo" data-style="expand-right"
+                                type="submit">
+                            Confirmer
+                        </button>
+
+                    </div>*@
+            </div>
+        </div>
+    </div>
+}
+@using (Html.BeginForm("ExportToExcelListeAboMigrees", "Export", FormMethod.Post))
+{
+    <div class="modal inmodal" id="Export4" tabindex="-1" role="dialog" aria-hidden="true" data-keyboard="false" data-backdrop="static">
+        <div class="modal-dialog">
+            <div class="modal-content animated flipInY">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Ok</span></button>
+                    <h4 class="modal-title text-purplebee">Export liste abonnement migrés</h4>
+                    <center><small>Selon Date creation </small></center>
+
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <form role="form">
+                            <div class="input-group">
+                                <span class="text-purplebee">
+                                    Date creation* du:
+                                </span>
+                                <div class="input-daterange input-group" id="datepicker">
+                                    <input class="form-control col-lg-6" pattern="\d{1,2}/\d{1,2}/\d{4}" type="date" id="DateDebut" name="DateDebut" placeholder="jj/mm/aaaa" required style="width:235px;" /> <br />
+                                    <span class="input-group-addon">au </span>
+                                    <input class="form-control col-lg-6" pattern="\d{1,2}/\d{1,2}/\d{4}" type="date" id="DateFin" name="DateFin" placeholder="jj/mm/aaaa" required style="width:230px;" /> <br />
+                                    <span class="input-group-btn">
+                                        <button type="submit" class="btn btn-purplebee ladda-button ladda-button-demo">Filtrer</button>
+                                    </span>
+                                </div>
+                            </div>
+                            @*<div class="form-group">
+                                    <label class="col-sm-2 control-label">Date creation: du</label>
+                                    <div class="col-sm-4">
+                                        <input type="date" name="DateDebut" required value="DateDebut" />
+                                    </div>
+                                    <label class="col-sm-2 control-label">Au</label>
+                                    <div class="col-sm-4">
+                                        <input type="date" name="DateFin" required value="DateFin" />
+                                    </div>
+                                </div>*@
+                        </form>
+                    </div>
+                </div>
+                @*<div class="modal-footer">
+                        <button type="button" class="btn btn-white" data-dismiss="modal">Annuler</button>
+
+                        <button class="btn btn-purplebee ladda-button ladda-button-demo" data-style="expand-right"
+                                type="submit">
+                            Confirmer
+                        </button>
+
+                    </div>*@
+            </div>
+        </div>
+    </div>
+}
+@using (Html.BeginForm("ExportToExcelListeArticleReserves", "Export", FormMethod.Post))
+{
+    <div class="modal inmodal" id="Export5" tabindex="-1" role="dialog" aria-hidden="true" data-keyboard="false" data-backdrop="static">
+        <div class="modal-dialog">
+            <div class="modal-content animated flipInY">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Ok</span></button>
+                    <h4 class="modal-title text-purplebee">Export Liste article reservés</h4>
+                    @*<br />
+                        <center><small>Selon date facture </small></center>*@
+
+
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <form role="form">
+
+                            <div class="input-group">
+                                <span class="text-purplebee">
+                                    Date creation* du:
+                                </span>
+                                <div class="input-daterange input-group" id="datepicker">
+                                    <input class="form-control col-lg-6" pattern="\d{1,2}/\d{1,2}/\d{4}" type="date" id="DateDebut" name="DateDebut" placeholder="jj/mm/aaaa" required style="width:235px;" /> <br />
+                                    <span class="input-group-addon">au </span>
+                                    <input class="form-control col-lg-6" pattern="\d{1,2}/\d{1,2}/\d{4}" type="date" id="DateFin" name="DateFin" placeholder="jj/mm/aaaa" required style="width:230px;" /> <br />
+                                    <span class="input-group-btn">
+                                        <button type="submit" class="btn btn-purplebee ladda-button ladda-button-demo">Filtrer</button>
+                                    </span>
+                                </div>
+                            </div>
+                            @*<div class="form-group">
+                                    <label class="col-sm-2 control-label">du</label>
+                                    <div class="col-sm-4">
+                                        <input type="date" name="DateDebut" required value="DateDebut" />
+                                    </div>
+                                    <label class="col-sm-2 control-label">Au</label>
+                                    <div class="col-sm-4">
+                                        <input type="date" name="DateFin" required value="DateFin" />
+                                    </div>
+                                </div>*@
+                        </form>
+                    </div>
+                </div>
+                @*<div class="modal-footer">
+                        <button type="button" class="btn btn-white" data-dismiss="modal">Annuler</button>
+
+                        <button class="btn btn-purplebee ladda-button ladda-button-demo" data-style="expand-right"
+                                type="submit">
+                            Confirmer
+                        </button>
+
+                    </div>*@
+            </div>
+        </div>
+    </div>
+}
+@using (Html.BeginForm("ExportToExcelListeStock", "Export", FormMethod.Post))
+{
+    <div class="modal inmodal" id="Export6" tabindex="-1" role="dialog" aria-hidden="true" data-keyboard="false" data-backdrop="static">
+        <div class="modal-dialog">
+            <div class="modal-content animated flipInY">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Ok</span></button>
+                    <h4 class="modal-title text-purplebee">Export Liste stock</h4>
+                    <center><small>Selon Depot </small></center>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <form role="form">
+                            <div class="input-group">
+                                <select class="col-md-8 form-control chosen-search " id="Depot" name="Depot">
+
+                                    @if (ViewBag.Depot != null)
+                                    {
+                                        foreach (var item in ViewBag.Depot)
+                                        {
+                                            <option class="font-bold" name="Depot" value="@item.DE_Intitule"> @item.DE_Intitule </option>
+                                        }
+                                    }
+                                </select>
+
+                                <span class="input-group-btn">
+                                    <button class="btn btn-purplebee ladda-button ladda-button-demo" data-style="expand-right"
+                                            type="submit">
+                                        Confirmer
+                                    </button>
+                                </span>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+@using (Html.BeginForm("ExportToExcelListeFactureNonPayees", "Export", FormMethod.Post))
+{
+    <div class="modal inmodal" id="Export7" tabindex="-1" role="dialog" aria-hidden="true" data-keyboard="false" data-backdrop="static">
+        <div class="modal-dialog">
+            <div class="modal-content animated flipInY">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Ok</span></button>
+                    <h4 class="modal-title text-purplebee">Export Liste Facture Non Payees</h4>
+                    <center><small>Selon date facture </small></center>
+
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <form role="form">
+                            <div class="input-group">
+                                <span class="text-purplebee">
+                                    Date facture* du:
+                                </span>
+                                <div class="input-daterange input-group" id="datepicker">
+                                    <input class="form-control col-lg-6" pattern="\d{1,2}/\d{1,2}/\d{4}" type="date" id="DateDebut" name="DateDebut" placeholder="jj/mm/aaaa" required style="width:235px;" /> <br />
+                                    <span class="input-group-addon">au </span>
+                                    <input class="form-control col-lg-6" pattern="\d{1,2}/\d{1,2}/\d{4}" type="date" id="DateFin" name="DateFin" placeholder="jj/mm/aaaa" required style="width:230px;" /> <br />
+                                    <span class="input-group-btn">
+                                        <button type="submit" class="btn btn-purplebee ladda-button ladda-button-demo">Filtrer</button>
+                                    </span>
+                                </div>
+                            </div>
+
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+@using (Html.BeginForm("ExportToExcelListeFacturePayees", "Export", FormMethod.Post))
+{
+    <div class="modal inmodal" id="Export8" tabindex="-1" role="dialog" aria-hidden="true" data-keyboard="false" data-backdrop="static">
+        <div class="modal-dialog">
+            <div class="modal-content animated flipInY">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Ok</span></button>
+                    <h4 class="modal-title text-purplebee">Export Liste Facture Payees</h4>
+                    <center><small>Selon date facture </small></center>
+
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <form role="form">
+                            <div class="input-group">
+                                <span class="text-purplebee">
+                                    Date facture* du:
+                                </span>
+                                <div class="input-daterange input-group" id="datepicker">
+                                    <input class="form-control col-lg-6" pattern="\d{1,2}/\d{1,2}/\d{4}" type="date" id="DateDebut" name="DateDebut" placeholder="jj/mm/aaaa" required style="width:235px;" /> <br />
+                                    <span class="input-group-addon">au </span>
+                                    <input class="form-control col-lg-6" pattern="\d{1,2}/\d{1,2}/\d{4}" type="date" id="DateFin" name="DateFin" placeholder="jj/mm/aaaa" required style="width:230px;" /> <br />
+                                    <span class="input-group-btn">
+                                        <button type="submit" class="btn btn-purplebee ladda-button ladda-button-demo">Filtrer</button>
+                                    </span>
+                                </div>
+                            </div>
+
+                        </form>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+}
+@using (Html.BeginForm("ExportToExcelReglementAvance", "Export", FormMethod.Post))
+{
+    <div class="modal inmodal" id="Export9" tabindex="-1" role="dialog" aria-hidden="true" data-keyboard="false" data-backdrop="static">
+        <div class="modal-dialog">
+            <div class="modal-content animated flipInY">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Ok</span></button>
+                    <h4 class="modal-title text-purplebee">Export Details Factures Avances</h4>
+                    <center><small>Selon date facture </small></center>
+
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <form role="form">
+
+                            <div class="input-group">
+                                <span class="text-purplebee">
+                                    Date facture* du:
+                                </span>
+                                <div class="input-daterange input-group" id="datepicker">
+                                    <input class="form-control col-lg-6" pattern="\d{1,2}/\d{1,2}/\d{4}" type="date" id="DateDebut" name="DateDebut" placeholder="jj/mm/aaaa" required style="width:235px;" /> <br />
+                                    <span class="input-group-addon">au </span>
+                                    <input class="form-control col-lg-6" pattern="\d{1,2}/\d{1,2}/\d{4}" type="date" id="DateFin" name="DateFin" placeholder="jj/mm/aaaa" required style="width:230px;" /> <br />
+                                    <span class="input-group-btn">
+                                        <button type="submit" class="btn btn-purplebee ladda-button ladda-button-demo">Filtrer</button>
+                                    </span>
+                                </div>
+                            </div>
+
+                        </form>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+}
+@using (Html.BeginForm("ExportToExcelReglementAvance", "Export", FormMethod.Post))
+{
+    <div class="modal inmodal" id="Export12" tabindex="-1" role="dialog" aria-hidden="true" data-keyboard="false" data-backdrop="static">
+        <div class="modal-dialog">
+            <div class="modal-content animated flipInY">
+                <div class="modal-header">
+
+                    <h4 class="modal-title text-purplebee">Export Details Factures Avances</h4>
+                    <center><small>Selon Date reglement </small></center>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <form role="form">
+                            <div class="input-group">
+                                <span class="text-purplebee">
+                                    Date reglement* du:
+                                </span>
+                                <div class="input-daterange input-group" id="datepicker">
+                                    <input class="form-control col-lg-6" pattern="\d{1,2}/\d{1,2}/\d{4}" type="date" id="DateDebut" name="DateDebut" placeholder="jj/mm/aaaa" required style="width:235px;" /> <br />
+                                    <span class="input-group-addon">au </span>
+                                    <input class="form-control col-lg-6" pattern="\d{1,2}/\d{1,2}/\d{4}" type="date" id="DateFin" name="DateFin" placeholder="jj/mm/aaaa" required style="width:230px;" /> <br />
+                                    <span class="input-group-btn">
+                                        <button type="submit" class="btn btn-purplebee ladda-button ladda-button-demo">Filtrer</button>
+                                    </span>
+                                </div>
+                            </div>
+
+                        </form>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+}
+@using (Html.BeginForm("ExportListeDesRemarques", "Export", FormMethod.Post))
+{
+    <div class="modal inmodal" id="Export10" tabindex="-1" role="dialog" aria-hidden="true" data-keyboard="false" data-backdrop="static">
+        <div class="modal-dialog">
+            <div class="modal-content animated flipInY">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Ok</span></button>
+                    <h4 class="modal-title text-purplebee">Export Liste Des Remarques</h4>
+                    <center><small>Selon Date creation/modification abo </small></center>
+
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <form role="form">
+                            <div class="input-group">
+                                <span class="text-purplebee">
+                                    Date creation/modification* du:
+                                </span>
+                                <div class="input-daterange input-group" id="datepicker">
+                                    <input class="form-control col-lg-6" pattern="\d{1,2}/\d{1,2}/\d{4}" type="date" id="DateDebut" name="DateDebut" placeholder="jj/mm/aaaa" required style="width:235px;" /> <br />
+                                    <span class="input-group-addon">au </span>
+                                    <input class="form-control col-lg-6" pattern="\d{1,2}/\d{1,2}/\d{4}" type="date" id="DateFin" name="DateFin" placeholder="jj/mm/aaaa" required style="width:230px;" /> <br />
+                                    <span class="input-group-btn">
+                                        <button type="submit" class="btn btn-purplebee ladda-button ladda-button-demo">Filtrer</button>
+                                    </span>
+                                </div>
+                            </div>
+
+                        </form>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+}
+
+@using (Html.BeginForm("ExportFactureVente", "Export", FormMethod.Post))
+{
+    <div class="modal inmodal" id="Export11" tabindex="-1" role="dialog" aria-hidden="true" data-keyboard="false" data-backdrop="static">
+        <div class="modal-dialog">
+            <div class="modal-content animated flipInY">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Ok</span></button>
+                    <h4 class="modal-title text-purplebee">Export Facture Vente</h4>
+                    <center><small>Selon date facture </small></center>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <form role="form">
+                            <div class="input-group">
+                                <span class="text-purplebee">
+                                    Date Facture* du:
+                                </span>
+                                <div class="input-daterange input-group" id="datepicker">
+                                    <input class="form-control col-lg-6" pattern="\d{1,2}/\d{1,2}/\d{4}" type="date" id="DateDebut" name="DateDebut" placeholder="jj/mm/aaaa" required style="width:235px;" /> <br />
+                                    <span class="input-group-addon">au </span>
+                                    <input class="form-control col-lg-6" pattern="\d{1,2}/\d{1,2}/\d{4}" type="date" id="DateFin" name="DateFin" placeholder="jj/mm/aaaa" required style="width:230px;" /> <br />
+                                    <span class="input-group-btn">
+                                        <button type="submit" class="btn btn-purplebee ladda-button ladda-button-demo">Filtrer</button>
+                                    </span>
+                                </div>
+                            </div>
+
+
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@using (Html.BeginForm("ExportToExcelAllListeStock", "Export", FormMethod.Post))
+{
+    <div class="modal inmodal" id="ExportSto" tabindex="-1" role="dialog" aria-hidden="true" data-keyboard="false" data-backdrop="static">
+        <div class="modal-dialog">
+            <div class="modal-content animated flipInY">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Ok</span></button>
+                    <h4 class="modal-title text-purplebee">Export Liste stock</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <form role="form">
+                            <div class="input-group">
+                                <center>
+                                    <div class="spinner-border text-purplebee text-center" role="status">
+                                        <h1>Export Liste stock</h1>
+                                    </div>
+                                    <br />
+                                    <button class="btn btn-purplebee ladda-button ladda-button-demo" data-style="expand-right"
+                                            type="submit">
+                                        Confirmer
+                                    </button>
+                                    <br />
+                                </center>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+@using (Html.BeginForm("ExportToExcelListingFactureDAF", "Export", FormMethod.Post))
+{
+    <div class="modal inmodal" id="ExportDaf" tabindex="-1" role="dialog" aria-hidden="true" data-keyboard="false" data-backdrop="static">
+        <div class="modal-dialog">
+            <div class="modal-content animated flipInY">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Ok</span></button>
+                    <h4 class="modal-title text-purplebee">Export listing facture DAF</h4>
+                    <center><small>Selon date facture </small></center>
+
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <form role="form">
+                            <div class="input-group">
+                                <span class="text-purplebee">
+                                    Date facture* du:
+                                </span>
+                                <div class="input-daterange input-group" id="datepicker">
+                                    <input class="form-control col-lg-6" pattern="\d{1,2}/\d{1,2}/\d{4}" type="date" id="DateDebut" name="DateDebut" placeholder="jj/mm/aaaa" required style="width:235px;" /> <br />
+                                    <span class="input-group-addon">au </span>
+                                    <input class="form-control col-lg-6" pattern="\d{1,2}/\d{1,2}/\d{4}" type="date" id="DateFin" name="DateFin" placeholder="jj/mm/aaaa" required style="width:230px;" /> <br />
+                                    <span class="input-group-btn">
+                                        <button type="submit" class="btn btn-purplebee ladda-button ladda-button-demo">Filtrer</button>
+                                    </span>
+                                </div>
+                            </div>
+
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+<script src="~/js/jquery-3.1.1.min.js"></script>
+<!-- Sweet alert -->
+<script src="~/js/plugins/sweetalert/sweetalert.min.js"></script>
+<!-- Ladda -->
+<script src="~/js/plugins/ladda/spin.min.js"></script>
+<script src="~/js/plugins/ladda/ladda.min.js"></script>
+<script src="~/js/plugins/ladda/ladda.jquery.min.js"></script>
+<!-- Chosen -->
+<script src="~/js/plugins/chosen/chosen.jquery.js"></script>
+<!-- Data picker -->
+<script src="~/js/plugins/datapicker/bootstrap-datepicker.js"></script>
+<script src="~/js/plugins/fullcalendar/moment.min.js"></script>
+
+<!-- Date range picker -->
+<script src="~/js/plugins/daterangepicker/daterangepicker.js"></script>
+
+<script>
+
+    Ladda.bind('.ladda-button', { timeout: 200000 });
+    // Bind progress buttons and simulate loading progress
+    Ladda.bind('.progress-demo .ladda-button', {
+        callback: function (instance) {
+            var progress = 0;
+            var interval = setInterval(function () {
+                progress = Math.min(progress + Math.random() * 0.1, 1);
+                instance.setProgress(progress);
+
+                if (progress === 1) {
+                    instance.stop();
+                    clearInterval(interval);
+                }
+            }, 200000);
+        }
+    });
+
+    var l = Ladda.bind('.ladda-button-demo');
+
+    l.click(function () {
+        // Start loading
+        l.ladda('start');
+
+        // Timeout example
+        // Do something in backend and then stop ladda
+        setTimeout(function () {
+            l.ladda('stop');
+        }, 1200000)
+    });
+
+
+
+    $(document).ready(function () {
+        $('.chosen-select').chosen({ width: "100%" });
+    });
+</script>

@@ -1,0 +1,815 @@
+﻿<link href="~/css/bootstrap.min.css" rel="stylesheet">
+<link href="~/font-awesome/css/font-awesome.css" rel="stylesheet">
+
+<link href="~/css/animate.css" rel="stylesheet">
+<link href="~/css/style.css" rel="stylesheet">
+<link href="~/css/plugins/slick/slick.css" rel="stylesheet" />
+<link href="~/css/plugins/slick/slick-theme.css" rel="stylesheet" />
+<link href="~/css/plugins/dataTables/datatables.min.css" rel="stylesheet">
+<script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+
+<style>
+    .highcharts-figure, .highcharts-data-table table {
+        min-width: 320px;
+        max-width: 660px;
+        margin: 1em auto;
+    }
+
+    .highcharts-data-table table {
+        font-family: Verdana, sans-serif;
+        border-collapse: collapse;
+        border: 1px solid #EBEBEB;
+        margin: 10px auto;
+        text-align: center;
+        width: 100%;
+        max-width: 500px;
+    }
+
+    .highcharts-data-table caption {
+        padding: 1em 0;
+        font-size: 1.2em;
+        color: #555;
+    }
+
+    .highcharts-data-table th {
+        font-weight: 600;
+        padding: 0.5em;
+    }
+
+    .highcharts-data-table td, .highcharts-data-table th, .highcharts-data-table caption {
+        padding: 0.5em;
+    }
+
+    .highcharts-data-table thead tr, .highcharts-data-table tr:nth-child(even) {
+        background: #f8f8f8;
+    }
+
+    .highcharts-data-table tr:hover {
+        background: #f1f7ff;
+    }
+
+    .TestImg {
+        text-align: center; /* Aligns content (including images) to the center */
+    }
+</style>
+<div class="wrapper wrapper-content">
+    @*<div class="row">
+        <div class="col-lg-6">
+            <a href="@Url.Action("ListeAbonnement", "Abonnement")" target="_blank">
+                <div class="widget bg-greenbee  btn-success p-sm text-center h-150">
+                    <i class="fa  fa-list fa-5x m-b-sm  text-center"></i>
+                    <h3>Liste des abonnements</h3>
+                </div>
+            </a>
+        </div>
+        <div class="col-lg-3">
+            <div class="widget bg-greenbee btn-outline btn-white p-sm text-center h-150">
+                <i class="fa  fa-users fa-4x  pull-left " style="margin-top:15%"></i>
+                <h3 class="pull-right text-center" style="padding-bottom:50%">Nombre abonnées</h3>
+
+            </div>
+        </div>
+        <div class="col-lg-3">
+            <div class="widget bg-greenbee btn-outline btn-white p-sm text-center h-150">
+                <i class="fa  fa-users fa-4x  pull-left " style="margin-top:15%"></i>
+                <h3 class="pull-right text-center" style="padding-bottom:50%">Nombre abonnées</h3>
+
+            </div>
+        </div>
+    </div>*@
+
+    <div class="row">
+        @*@if (ViewBag.MsgRevendeurPay != null)
+        {
+            <div class="alert alert-info">
+                <h4>Bonjour  </h4>
+                <strong> @ViewBag.MsgRevendeurPay</strong>
+            </div>
+        }*@
+
+        @if (ViewBag.MsgRevendeur1 != null)
+        {
+            <div class="alert alert-success">
+                @*<div class="ibox float-e-margins">
+                <div class="ibox-title">*@
+                <h4><p style="font-size:1.1em;">Bonjour, </p> </h4>
+                <strong><p style="font-size:1.1em;">Désormais et jusqu’au 31 juillet, les débits 10M et 12M ne seront plus commercialisés. Nos offres commenceront à partir de 20M jusqu’à 100M avec une promotion,</p> </strong>
+                @*</div>
+                </div>*@
+            </div>
+            @*table*@
+            <div class="TestImg alert alert-success">
+                <img src="~/img/Capture d'écran 2024-07-01 141504.png" />
+            </div>
+            <br />
+            <div class="alert alert-success">
+                <strong><p style="font-size:1.1em;">Cependant, en cas de non-éligibilité de la ligne aux nouveaux débits, les offres 10M et 12M (avec prix de base) resteront disponibles et seront appliquées par notre back-office commercial.</p> </strong>
+            </div>
+        
+
+                }
+
+                <div class="col-lg-3">
+                    <a href="@Url.Action("ListeAbonnement", "Abonnement")" style="text-decoration: none;color: inherit;" target="_blank">
+                        <div class="widget white-bg btn-outline btn-success p-sm text-center h-150">
+                            <i class="fa  fa-list fa-5x m-b-sm  text-center"></i>
+                            <h3>Liste des abonnements</h3>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-lg-3">
+                    <a href="@Url.Action("index", "Abonnement")" style="text-decoration: none;color: inherit;" target="_blank">
+                        <div class="widget white-bg btn-outline btn-success p-sm text-center h-150">
+                            <i class="fa  fa-plus-circle fa-5x m-b-sm"></i>
+                            <h3>Nouvel Abonnement</h3>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-lg-3">
+                    <a href="@Url.Action("index", "InterrogeClient")" style="text-decoration: none;color: inherit;" target="_blank">
+                        <div class="widget white-bg btn-outline btn-success p-sm text-center h-150">
+                            <i class="fa  fa-money fa-5x m-b-sm"></i>
+                            <h3>Paiement client</h3>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-lg-3">
+                    <a href="@Url.Action("NouveauVersement", "GestionFactures")" style="text-decoration: none;color: inherit;" target="_blank">
+                        <div class="widget white-bg btn-outline btn-success p-sm text-center h-150">
+                            <i class="fa  fa-bank fa-5x m-b-sm"></i>
+                            <h3>Nouveau versement</h3>
+                        </div>
+                    </a>
+                </div>
+            </div>
+            </br>
+            <div class="row">
+                <div class="col-lg-3">
+                    <div class="ibox float-e-margins">
+                        <div class="ibox-title">
+                            <span class="label label-success pull-right">Total</span>
+                            <h5>Abonnements Valides</h5>
+                        </div>
+                        <div class="ibox-content">
+                            <h1 class="no-margins"><strong>@ViewBag.TotalAbonnement</strong> </h1>
+                            <small>Abonnements</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3">
+                    <div class="ibox float-e-margins">
+                        <div class="ibox-title">
+                            <span class="label label-info pull-right">Annuelle</span>
+                            <h5>Abonnements Valides</h5>
+                        </div>
+                        <div class="ibox-content">
+                            <h1 class="no-margins"><strong>@ViewBag.TotalAbonnementYear</strong> </h1>
+                            <div class="stat-percent font-bold text-info">@ViewBag.year</div>
+                            <small>Abonnements</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3">
+                    <div class="ibox float-e-margins">
+                        <div class="ibox-title">
+                            <span class="label label-primary pull-right">Mois</span>
+                            <h5>Abonnements Valides</h5>
+                        </div>
+                        <div class="ibox-content">
+                            <h1 class="no-margins"><strong>@ViewBag.TotalAbonnementMois</strong> </h1>
+                            <small>Abonnements</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3">
+                    <div class="ibox float-e-margins">
+                        <div class="ibox-title">
+                            <span class="label label-danger pull-right">Annulé</span>
+                            <h5>Abonnements</h5>
+                        </div>
+                        <div class="ibox-content">
+                            <h1 class="no-margins"><strong> @ViewBag.TotalAbonnementAnnule</strong> </h1>
+                            <small>Abonnements</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="ibox float-e-margins">
+                        @if (Request.IsAuthenticated && (User.IsInRole("Admin") || User.IsInRole("ToDoList")))
+                        {
+                            <div class="ibox">
+                                <div class="ibox-title">
+                                    <h5>Votre To-Do-List</h5>
+
+                                </div>
+                                <div class="ibox-content" style="overflow:scroll; width: 100%;height:390px;">
+                                    @{Html.RenderAction("SmalltodoList", "Reminder");}
+                                </div>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="ibox">
+                                <div class="ibox-title">
+                                    <h5>Votre To-Do-List</h5>
+
+                                </div>
+                                <div class="ibox-content" style="overflow:scroll; width: 100%;height:390px;">
+                                </div>
+                            </div>
+                        }
+
+                    </div>
+                </div>
+
+                <div class="col-lg-6">
+                    <div class="ibox float-e-margins">
+                        <div class="ibox-title">
+                            <h5>Télécharger documents</h5>
+                        </div>
+                        <div class="ibox-content">
+                            <div class="table-responsive">
+                                <table class="table table-bordered table-hover table-responsive">
+                                    <thead>
+                                        <tr>
+                                            <th></th>
+                                            <th>Document</th>
+                                            <th>Description</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var item in ViewBag.ListeBiblio)
+                                        {
+                                            <tr>
+                                                <td width="35px"><i class="fa  fa-star text-warning"></i></td>
+                                                <td>@item.Titre</td>
+                                                <td>@item.Description</td>
+                                                <td width="150px">
+                                                    @Html.ActionLink("Télécharger", "Download", "Bibliotheque", new { id = item.cbMarq }, new { style = "color: purple;" })
+                                                </td>
+                                            </tr>
+                                        }
+
+                                    </tbody>
+
+                                </table>
+                            </div>
+
+
+
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
+        </div>
+<!-- Mainly scripts -->
+<script src="~/js/jquery-3.1.1.min.js"></script>
+<script src="~/js/bootstrap.min.js"></script>
+<script src="~/js/plugins/metisMenu/jquery.metisMenu.js"></script>
+<script src="~/js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+<!-- Mainly scripts -->
+<script src="~/js/plugins/fullcalendar/moment.min.js"></script>
+<!-- iCheck -->
+<script src="~/js/plugins/iCheck/icheck.min.js"></script>
+
+<script src="~/js/jquery-2.1.1.js"></script>
+<script src="~/js/plugins/slick/slick.min.js"></script>
+<!-- Mainly scripts -->
+<script src="~/js/jquery-3.1.1.min.js"></script>
+<script src="~/js/bootstrap.min.js"></script>
+<script src="~/js/plugins/metisMenu/jquery.metisMenu.js"></script>
+<script src="~/js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+<!-- Custom and plugin javascript -->
+<script src="~/js/inspinia.js"></script>
+<script src="~/js/plugins/pace/pace.min.js"></script>
+<!-- ChartJS-->
+<script src="~/js/plugins/chartJs/Chart.min.js"></script>
+<script src="~/js/plugins/dataTables/datatables.min.js"></script>
+
+<script src="~/js/plugins/c3/c3.min.js"></script>
+<script src="~/js/plugins/d3/d3.min.js"></script>
+
+
+<!-- Custom and plugin javascript -->
+<script src="~/js/inspinia.js"></script>
+<script src="~/js/plugins/pace/pace.min.js"></script>
+
+
+<!-- Morris -->
+<script src="~/js/plugins/morris/raphael-2.1.0.min.js"></script>
+<script src="~/js/plugins/morris/morris.js"></script>
+
+<!--highcharts-->
+
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script src="https://code.highcharts.com/modules/data.js"></script>
+<script src="https://code.highcharts.com/modules/drilldown.js"></script>
+<script src="https://code.highcharts.com/modules/exporting.js"></script>
+<script src="https://code.highcharts.com/modules/export-data.js"></script>
+<script src="https://code.highcharts.com/modules/accessibility.js"></script>
+<script>
+    $(document).ready(function () {
+
+        $('.i-checks').iCheck({
+            checkboxClass: 'icheckbox_square-green',
+            radioClass: 'iradio_square-green'
+        });
+
+    });
+        $(document).ready(function() {
+            $('.chart').easyPieChart({
+                barColor: '#f8ac59',
+//                scaleColor: false,
+                scaleLength: 5,
+                lineWidth: 4,
+                size: 80
+            });
+
+            $('.chart2').easyPieChart({
+                barColor: '#1c84c6',
+//                scaleColor: false,
+                scaleLength: 5,
+                lineWidth: 4,
+                size: 80
+            });
+
+            var data2 = [
+                [gd(2012, 1, 1), 7], [gd(2012, 1, 2), 6], [gd(2012, 1, 3), 4], [gd(2012, 1, 4), 8],
+                [gd(2012, 1, 5), 9], [gd(2012, 1, 6), 7], [gd(2012, 1, 7), 5], [gd(2012, 1, 8), 4],
+                [gd(2012, 1, 9), 7], [gd(2012, 1, 10), 8], [gd(2012, 1, 11), 9], [gd(2012, 1, 12), 6],
+                [gd(2012, 1, 13), 4], [gd(2012, 1, 14), 5], [gd(2012, 1, 15), 11], [gd(2012, 1, 16), 8],
+                [gd(2012, 1, 17), 8], [gd(2012, 1, 18), 11], [gd(2012, 1, 19), 11], [gd(2012, 1, 20), 6],
+                [gd(2012, 1, 21), 6], [gd(2012, 1, 22), 8], [gd(2012, 1, 23), 11], [gd(2012, 1, 24), 13],
+                [gd(2012, 1, 25), 7], [gd(2012, 1, 26), 9], [gd(2012, 1, 27), 9], [gd(2012, 1, 28), 8],
+                [gd(2012, 1, 29), 5], [gd(2012, 1, 30), 8], [gd(2012, 1, 31), 25]
+            ];
+
+            var data3 = [
+                [gd(2012, 1, 1), 800], [gd(2012, 1, 2), 500], [gd(2012, 1, 3), 600], [gd(2012, 1, 4), 700],
+                [gd(2012, 1, 5), 500], [gd(2012, 1, 6), 456], [gd(2012, 1, 7), 800], [gd(2012, 1, 8), 589],
+                [gd(2012, 1, 9), 467], [gd(2012, 1, 10), 876], [gd(2012, 1, 11), 689], [gd(2012, 1, 12), 700],
+                [gd(2012, 1, 13), 500], [gd(2012, 1, 14), 600], [gd(2012, 1, 15), 700], [gd(2012, 1, 16), 786],
+                [gd(2012, 1, 17), 345], [gd(2012, 1, 18), 888], [gd(2012, 1, 19), 888], [gd(2012, 1, 20), 888],
+                [gd(2012, 1, 21), 987], [gd(2012, 1, 22), 444], [gd(2012, 1, 23), 999], [gd(2012, 1, 24), 567],
+                [gd(2012, 1, 25), 786], [gd(2012, 1, 26), 666], [gd(2012, 1, 27), 888], [gd(2012, 1, 28), 900],
+                [gd(2012, 1, 29), 178], [gd(2012, 1, 30), 555], [gd(2012, 1, 31), 993]
+            ];
+
+
+            var dataset = [
+                {
+                    label: "Number of orders",
+                    data: data3,
+                    color: "#1ab394",
+                    bars: {
+                        show: true,
+                        align: "center",
+                        barWidth: 24 * 60 * 60 * 600,
+                        lineWidth:0
+                    }
+
+                }, {
+                    label: "Payments",
+                    data: data2,
+                    yaxis: 2,
+                    color: "#1C84C6",
+                    lines: {
+                        lineWidth:1,
+                            show: true,
+                            fill: true,
+                        fillColor: {
+                            colors: [{
+                                opacity: 0.2
+                            }, {
+                                opacity: 0.4
+                            }]
+                        }
+                    },
+                    splines: {
+                        show: false,
+                        tension: 0.6,
+                        lineWidth: 1,
+                        fill: 0.1
+                    },
+                }
+            ];
+
+
+            var options = {
+                xaxis: {
+                    mode: "time",
+                    tickSize: [3, "day"],
+                    tickLength: 0,
+                    axisLabel: "Date",
+                    axisLabelUseCanvas: true,
+                    axisLabelFontSizePixels: 12,
+                    axisLabelFontFamily: 'Arial',
+                    axisLabelPadding: 10,
+                    color: "#d5d5d5"
+                },
+                yaxes: [{
+                    position: "left",
+                    max: 1070,
+                    color: "#d5d5d5",
+                    axisLabelUseCanvas: true,
+                    axisLabelFontSizePixels: 12,
+                    axisLabelFontFamily: 'Arial',
+                    axisLabelPadding: 3
+                }, {
+                    position: "right",
+                    clolor: "#d5d5d5",
+                    axisLabelUseCanvas: true,
+                    axisLabelFontSizePixels: 12,
+                    axisLabelFontFamily: ' Arial',
+                    axisLabelPadding: 67
+                }
+                ],
+                legend: {
+                    noColumns: 1,
+                    labelBoxBorderColor: "#000000",
+                    position: "nw"
+                },
+                grid: {
+                    hoverable: false,
+                    borderWidth: 0
+                }
+            };
+
+            function gd(year, month, day) {
+                return new Date(year, month - 1, day).getTime();
+            }
+
+            var previousPoint = null, previousLabel = null;
+
+            $.plot($("#flot-dashboard-chart"), dataset, options);
+
+            var mapData = {
+                "US": 298,
+                "SA": 200,
+                "DE": 220,
+                "FR": 540,
+                "CN": 120,
+                "AU": 760,
+                "BR": 550,
+                "IN": 200,
+                "GB": 120,
+            };
+
+            $('#world-map').vectorMap({
+                map: 'world_mill_en',
+                backgroundColor: "transparent",
+                regionStyle: {
+                    initial: {
+                        fill: '#e4e4e4',
+                        "fill-opacity": 0.9,
+                        stroke: 'none',
+                        "stroke-width": 0,
+                        "stroke-opacity": 0
+                    }
+                },
+
+                series: {
+                    regions: [{
+                        values: mapData,
+                        scale: ["#1ab394", "#22d6b1"],
+                        normalizeFunction: 'polynomial'
+                    }]
+                },
+            });
+        });
+
+     $(function () {
+        $('.datatable-style').DataTable({
+            responsive: true,
+            "paging": false,
+            order:false,
+            dom: '<"html5buttons"B>lTfgitp',
+            buttons: [
+                { extend: 'copy' },
+                { extend: 'csv' },
+                { extend: 'excel', title: 'Export' },
+                { extend: 'pdf', title: 'Export' },
+                {
+                    extend: 'print',
+                    customize: function (win) {
+                        $(win.document.body).addClass('white-bg');
+                        $(win.document.body).css('font-size', '10px');
+
+                        $(win.document.body).find('table')
+                                .addClass('compact')
+                                .css('font-size', 'inherit');
+                    }
+                }
+            ]
+
+        });
+
+
+
+       
+        //var ctx2 = document.getElementById("barChart").getContext("2d");
+        //new Chart(ctx2, { type: 'bar', data: barData, options: barOptions });
+
+
+        var doughnutDatat = {
+            labels: @Html.Raw(ViewBag.AboParFamilleLabel),
+            datasets: [{
+                data: @Html.Raw(ViewBag.AboParFamilleCount),
+                backgroundColor: ["#a3e1d4", "#dedede", "#b5b8cf","#a3e1d4", "#dedede", "#b5b8cf", "#dedede", "#b5b8cf"]
+            }]
+        };
+        var doughnutOptions = {
+            responsive: true
+        };
+        var ctx4 = document.getElementById("doughnutCharttt").getContext("2d");
+        new Chart(ctx4, { type: 'doughnut', data: doughnutDatat, options: doughnutOptions });
+
+
+        // Create the chart
+        Highcharts.chart('container', {
+            chart: {
+                type: 'pie'
+            },
+            title: {
+                text: 'Total Abonnemements,2020'
+            }
+            ,
+            //subtitle: {
+            //    text: 'Click the slices to view versions. Source: <a href="http://statcounter.com" target="_blank">statcounter.com</a>'
+            //}
+            //,
+
+            accessibility: {
+                announceNewData: {
+                    enabled: true
+                }
+            },
+
+            plotOptions: {
+                series: {
+                    dataLabels: {
+                        enabled: true,
+                        format: '{point.name}: {point.y:.1f}'
+                    }
+                }
+            },
+
+            tooltip: {
+                headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
+                pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y:.2f}</b> of total<br/>'
+            },
+
+            series: [
+              {
+                  name: "Total Abonnement",
+                  colorByPoint: true,
+                  data: @Html.Raw(ViewBag.abonnement_etape),
+              }
+            ],
+            drilldown: {
+                series: [
+                  {
+                      name: "Chrome",
+                      id: "Chrome",
+                      data: [
+                        [
+                          "v65.0",
+                          0.1
+                        ],
+                        [
+                          "v64.0",
+                          1.3
+                        ],
+                        [
+                          "v63.0",
+                          53.02
+                        ],
+                        [
+                          "v62.0",
+                          1.4
+                        ],
+                        [
+                          "v61.0",
+                          0.88
+                        ],
+                        [
+                          "v60.0",
+                          0.56
+                        ],
+                        [
+                          "v59.0",
+                          0.45
+                        ],
+                        [
+                          "v58.0",
+                          0.49
+                        ],
+                        [
+                          "v57.0",
+                          0.32
+                        ],
+                        [
+                          "v56.0",
+                          0.29
+                        ],
+                        [
+                          "v55.0",
+                          0.79
+                        ],
+                        [
+                          "v54.0",
+                          0.18
+                        ],
+                        [
+                          "v51.0",
+                          0.13
+                        ],
+                        [
+                          "v49.0",
+                          2.16
+                        ],
+                        [
+                          "v48.0",
+                          0.13
+                        ],
+                        [
+                          "v47.0",
+                          0.11
+                        ],
+                        [
+                          "v43.0",
+                          0.17
+                        ],
+                        [
+                          "v29.0",
+                          0.26
+                        ]
+                      ]
+                  },
+                  {
+                      name: "Firefox",
+                      id: "Firefox",
+                      data: [
+                        [
+                          "v58.0",
+                          1.02
+                        ],
+                        [
+                          "v57.0",
+                          7.36
+                        ],
+                        [
+                          "v56.0",
+                          0.35
+                        ],
+                        [
+                          "v55.0",
+                          0.11
+                        ],
+                        [
+                          "v54.0",
+                          0.1
+                        ],
+                        [
+                          "v52.0",
+                          0.95
+                        ],
+                        [
+                          "v51.0",
+                          0.15
+                        ],
+                        [
+                          "v50.0",
+                          0.1
+                        ],
+                        [
+                          "v48.0",
+                          0.31
+                        ],
+                        [
+                          "v47.0",
+                          0.12
+                        ]
+                      ]
+                  },
+                  {
+                      name: "Internet Explorer",
+                      id: "Internet Explorer",
+                      data: [
+                        [
+                          "v11.0",
+                          6.2
+                        ],
+                        [
+                          "v10.0",
+                          0.29
+                        ],
+                        [
+                          "v9.0",
+                          0.27
+                        ],
+                        [
+                          "v8.0",
+                          0.47
+                        ]
+                      ]
+                  },
+                  {
+                      name: "Safari",
+                      id: "Safari",
+                      data: [
+                        [
+                          "v11.0",
+                          3.39
+                        ],
+                        [
+                          "v10.1",
+                          0.96
+                        ],
+                        [
+                          "v10.0",
+                          0.36
+                        ],
+                        [
+                          "v9.1",
+                          0.54
+                        ],
+                        [
+                          "v9.0",
+                          0.13
+                        ],
+                        [
+                          "v5.1",
+                          0.2
+                        ]
+                      ]
+                  },
+                  {
+                      name: "Edge",
+                      id: "Edge",
+                      data: [
+                        [
+                          "v16",
+                          2.6
+                        ],
+                        [
+                          "v15",
+                          0.92
+                        ],
+                        [
+                          "v14",
+                          0.4
+                        ],
+                        [
+                          "v13",
+                          0.1
+                        ]
+                      ]
+                  },
+                  {
+                      name: "Opera",
+                      id: "Opera",
+                      data: [
+                        [
+                          "v50.0",
+                          0.96
+                        ],
+                        [
+                          "v49.0",
+                          0.82
+                        ],
+                        [
+                          "v12.1",
+                          0.14
+                        ]
+                      ]
+                  }
+                ]
+            }
+        });
+        var chart = new CanvasJS.Chart("chartContainer", {
+            animationEnabled: true,
+            theme: "light2", // "light1", "dark1", "dark2"
+            exportEnabled: true,
+            title: {
+                text: "Nombre de demandes par région"
+            },
+            data: [{
+                type: "column",
+                dataPoints:  @Html.Raw(ViewBag.DemandesParRegion),
+            }]
+        });
+        chart.render();
+
+    });
+</script>

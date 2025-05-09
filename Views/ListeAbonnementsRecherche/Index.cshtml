@@ -1,0 +1,1028 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@*<h2>Index</h2>*@
+
+<link href="~/css/plugins/chosen/bootstrap-chosen.css" rel="stylesheet">
+<!-- Sweet Alert -->
+<link href="~/css/plugins/sweetalert/sweetalert.css" rel="stylesheet">
+<!-- Toastr style -->
+<link href="~/css/plugins/toastr/toastr.min.css" rel="stylesheet">
+<link href="~/css/plugins/jasny/jasny-bootstrap.min.css" rel="stylesheet">
+
+<link href="~/css/plugins/ladda/ladda-themeless.min.css" rel="stylesheet">
+<link href="~/css/plugins/datatables/datatables.min.css" rel="stylesheet" />
+
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-lg-10">
+        <h2>Liste des abonnements</h2>
+        <ol class="breadcrumb">
+            <li>
+                <a href="#">Acceuil</a>
+            </li>
+            <li>
+                <a href="@Url.Action("Index", "ListeAbonnements")">Gestion des abonnements</a>
+            </li>
+            <li class="active">
+                <a href="@Url.Action("Index", "ListeAbonnements")"><strong>Liste des abonnements</strong></a>
+            </li>
+        </ol>
+    </div>
+
+</div>
+
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>Informations sur les abonnements</h5>
+                   
+                    <br /><br />
+
+                    @if (ViewBag.defaultGroupExample1 == "true")
+                    {
+                        <input type="radio" class="custom-control-input" id="defaultGroupExample1" name="groupOfDefaultRadios" checked>
+                        <label class="custom-control-label" for="defaultGroupExample1">
+                            Recherche par Téléphone,Identifiant ou bien Intitule client ou Reference TT ou Code Abonnement ou GSM
+                        </label>
+
+                        <br />
+
+                        <input type="radio" class="custom-control-input" id="defaultGroupExample2" name="groupOfDefaultRadios">
+                        <label class="custom-control-label" for="defaultGroupExample2">
+                            Recherche par Etape abonnement
+                        </label>
+                        <br />
+                        <input type="radio" class="custom-control-input" id="defaultGroupExample3" name="groupOfDefaultRadios">
+                        <label class="custom-control-label" for="defaultGroupExample3">
+                            Recherche par agence abonnement
+                        </label>
+                        <br />
+                        <input type="radio" class="custom-control-input" id="defaultGroupExample4" name="groupOfDefaultRadios">
+                        <label class="custom-control-label" for="defaultGroupExample4">
+                            Recherche par date création
+                        </label>
+                        <br />
+                        <input type="radio" class="custom-control-input" id="defaultGroupExample5" name="groupOfDefaultRadios">
+                        <label class="custom-control-label" for="defaultGroupExample5">
+                            Recherche par Offre
+                        </label>
+                        <br />
+                    }
+                    else if (ViewBag.defaultGroupExample2 == "true")
+                    {
+                        <input type="radio" class="custom-control-input" id="defaultGroupExample1" name="groupOfDefaultRadios">
+                        <label class="custom-control-label" for="defaultGroupExample1">
+                            Recherche par Téléphone,Identifiant ou bien Intitule client ou Reference TT ou Code Abonnement ou GSM
+                        </label>
+
+                                                <br />
+
+                                                <input type="radio" class="custom-control-input" id="defaultGroupExample2" name="groupOfDefaultRadios" checked>
+                                                <label class="custom-control-label" for="defaultGroupExample2">
+                                                    Recherche par Etape abonnement
+                                                </label>
+                                                <br />
+                                                <input type="radio" class="custom-control-input" id="defaultGroupExample3" name="groupOfDefaultRadios">
+                                                <label class="custom-control-label" for="defaultGroupExample3">
+                                                    Recherche par agence abonnement
+                                                </label>
+                                                <br />
+                                                <input type="radio" class="custom-control-input" id="defaultGroupExample4" name="groupOfDefaultRadios">
+                                                <label class="custom-control-label" for="defaultGroupExample4">
+                                                    Recherche par date création
+                                                </label>
+                                                <br />
+                                                <input type="radio" class="custom-control-input" id="defaultGroupExample5" name="groupOfDefaultRadios">
+                                                <label class="custom-control-label" for="defaultGroupExample5">
+                                                    Recherche par Offre
+                                                </label>
+                                                <br />
+                    }
+                    else if (ViewBag.defaultGroupExample3 == "true")
+                    {
+                        <input type="radio" class="custom-control-input" id="defaultGroupExample1" name="groupOfDefaultRadios">
+                        <label class="custom-control-label" for="defaultGroupExample1">
+                            Recherche par Téléphone,Identifiant ou bien Intitule client ou Reference TT ou Code Abonnement ou GSM
+                        </label>
+
+                                                <br />
+
+                                                <input type="radio" class="custom-control-input" id="defaultGroupExample2" name="groupOfDefaultRadios">
+                                                <label class="custom-control-label" for="defaultGroupExample2">
+                                                    Recherche par Etape abonnement
+                                                </label>
+                                                <br />
+                                                <input type="radio" class="custom-control-input" id="defaultGroupExample3" name="groupOfDefaultRadios" checked>
+                                                <label class="custom-control-label" for="defaultGroupExample3">
+                                                    Recherche par agence abonnement
+                                                </label>
+                                                <br />
+                                                <input type="radio" class="custom-control-input" id="defaultGroupExample4" name="groupOfDefaultRadios">
+                                                <label class="custom-control-label" for="defaultGroupExample4">
+                                                    Recherche par date création
+                                                </label>
+                                                <br />
+                                                <input type="radio" class="custom-control-input" id="defaultGroupExample5" name="groupOfDefaultRadios">
+                                                <label class="custom-control-label" for="defaultGroupExample5">
+                                                    Recherche par Offre
+                                                </label>
+                                                <br />
+                    }
+                    else if (ViewBag.defaultGroupExample4 == "true")
+                    {
+                        <input type="radio" class="custom-control-input" id="defaultGroupExample1" name="groupOfDefaultRadios">
+                        <label class="custom-control-label" for="defaultGroupExample1">
+                            Recherche par Téléphone,Identifiant ou bien Intitule client ou Reference TT ou Code Abonnement ou GSM
+                        </label>
+
+                        <br />
+
+                                                <input type="radio" class="custom-control-input" id="defaultGroupExample2" name="groupOfDefaultRadios">
+                                                <label class="custom-control-label" for="defaultGroupExample2">
+                                                    Recherche par Etape abonnement
+                                                </label>
+                                                <br />
+                                                <input type="radio" class="custom-control-input" id="defaultGroupExample3" name="groupOfDefaultRadios" checked>
+                                                <label class="custom-control-label" for="defaultGroupExample3">
+                                                    Recherche par agence abonnement
+                                                </label>
+                                                <br />
+                                                <input type="radio" class="custom-control-input" id="defaultGroupExample4" name="groupOfDefaultRadios">
+                                                <label class="custom-control-label" for="defaultGroupExample4">
+                                                    Recherche par date création
+                                                </label>
+                                                <br />
+                                                <input type="radio" class="custom-control-input" id="defaultGroupExample5" name="groupOfDefaultRadios">
+                                                <label class="custom-control-label" for="defaultGroupExample5">
+                                                    Recherche par Offre
+                                                </label>
+                                                <br />
+                    }
+                    else if (ViewBag.defaultGroupExample5 == "true")
+                    {
+                        <input type="radio" class="custom-control-input" id="defaultGroupExample1" name="groupOfDefaultRadios">
+                        <label class="custom-control-label" for="defaultGroupExample1">
+                            Recherche par Téléphone,Identifiant ou bien Intitule client ou Reference TT ou Code Abonnement ou GSM
+                        </label>
+
+                        <br />
+
+                                                <input type="radio" class="custom-control-input" id="defaultGroupExample2" name="groupOfDefaultRadios">
+                                                <label class="custom-control-label" for="defaultGroupExample2">
+                                                    Recherche par Etape abonnement
+                                                </label>
+                                                <br />
+                                                <input type="radio" class="custom-control-input" id="defaultGroupExample3" name="groupOfDefaultRadios" checked>
+                                                <label class="custom-control-label" for="defaultGroupExample3">
+                                                    Recherche par agence abonnement
+                                                </label>
+                                                <br />
+                                                <input type="radio" class="custom-control-input" id="defaultGroupExample4" name="groupOfDefaultRadios">
+                                                <label class="custom-control-label" for="defaultGroupExample4">
+                                                    Recherche par date création
+                                                </label>
+                                                <br />
+                                                <input type="radio" class="custom-control-input" id="defaultGroupExample5" name="groupOfDefaultRadios">
+                                                <label class="custom-control-label" for="defaultGroupExample5">
+                                                    Recherche par Offre
+                                                </label>
+                                                <br />
+                    }
+                    else
+                    {
+                        <input type="radio" class="custom-control-input" id="defaultGroupExample1" name="groupOfDefaultRadios">
+                        <label class="custom-control-label" for="defaultGroupExample1">
+                            Recherche par Téléphone,Identifiant ou bien Intitule client ou Reference TT ou Code Abonnement ou GSM
+                        </label>
+
+                        <br />
+
+                        <input type="radio" class="custom-control-input" id="defaultGroupExample2" name="groupOfDefaultRadios">
+                        <label class="custom-control-label" for="defaultGroupExample2">
+                            Recherche par Etape abonnement
+                        </label>
+                        <br />
+                        <input type="radio" class="custom-control-input" id="defaultGroupExample3" name="groupOfDefaultRadios">
+                        <label class="custom-control-label" for="defaultGroupExample3">
+                            Recherche par agence abonnement
+                        </label>
+                        <br />
+                        <input type="radio" class="custom-control-input" id="defaultGroupExample4" name="groupOfDefaultRadios">
+                        <label class="custom-control-label" for="defaultGroupExample4">
+                            Recherche par date création
+                        </label>
+                        <br />
+                        <input type="radio" class="custom-control-input" id="defaultGroupExample5" name="groupOfDefaultRadios">
+                        <label class="custom-control-label" for="defaultGroupExample5">
+                            Recherche par Offre
+                        </label>
+                        <br />
+                    }
+
+                    <div id="to-show" class="hide">
+                        @using (Html.BeginForm("ListeInput", "ListeAbonnementsRecherche", FormMethod.Post))
+                        {
+                            <div class="input-group">
+                                <input type="text" class="form-control" id="rech" name="rech" value="@ViewBag.Rech">
+                                <span class="input-group-btn">
+
+                                    <button type="submit" class="btn btn-purplebee ladda-button ladda-button-demo">Rechercher</button>
+                                </span>
+                            </div>
+
+                        }
+                    </div>
+
+                    <div id="toshoww" class="hide">
+                        @using (Html.BeginForm("Index", "ListeAbonnementsRecherche", FormMethod.Post))
+                        {
+
+                            <div class="input-group">
+                                <select name="rechOption" id="rechOption" class="form-control chosen-select">
+                                    <option value=00 selected>Tout</option>
+                                    <option value=9>Etude eligibité</option>
+                                    <option value=1>Reservation TT</option>
+                                    <option value=2>Tirage jarretière</option>
+                                    <option value=3>Migration offre fixe</option>
+                                    <option value=4>Réservation Matériel</option>
+                                    <option value=5>Paiement et livraison</option>
+                                    <option value=6>Facturation</option>
+                                    <option value=7>Valide</option>
+                                    <option value=8>Annulé</option>
+
+                                </select>
+                                <span class="input-group-btn">
+                                    <button type="submit" class="btn btn-purplebee ladda-button ladda-button-demo">Rechercher  </button>
+                                </span>
+                            </div>
+                        }
+                    </div>
+
+
+
+                    <div id="toshowww" class="hide">
+                        @using (Html.BeginForm("IndexAgence", "ListeAbonnementsRecherche", FormMethod.Post))
+                        {
+
+                            <div class="input-group">
+                                @if (ViewBag.ListeAgencesAbo != null)
+                                {
+                                    <select name="rechOOption" id="rechOOption" class="form-control chosen-select">
+                                        @foreach (var item in ViewBag.ListeAgencesAbo)
+                                        {
+                                            if (ViewBag.rechOOption != null)
+                                            {
+                                                if (ViewBag.rechOOption == item.A_Code)
+                                                {
+                                                    <option value="@item.A_Code" selected>@item.A_Intitule</option>
+                                                }
+                                                else
+                                                {
+                                                    <option value="@item.A_Code">@item.A_Intitule</option>
+                                                }
+                                            }
+                                            else
+                                            {
+                                                <option value="@item.A_Code">@item.A_Intitule</option>
+                                            }
+
+                                        }
+
+
+                                    </select>
+                                    <span class="input-group-btn">
+                                        <button type="submit" class="btn btn-purplebee ladda-button ladda-button-demo">Rechercher  </button>
+                                    </span>
+                                }
+                                else
+                                {
+                                    <div class="alert alert-warning">
+                                        aucun agence.
+                                    </div>
+                                }
+
+                            </div>
+                        }
+                    </div>
+                    <div id="toshowww4" class="hide">
+                        @using (Html.BeginForm("IndexDate", "ListeAbonnementsRecherche", FormMethod.Post))
+                        {
+                        <div class="ibox-content">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label">Date début * </label>
+                                        <div class="col-sm-10">
+                                            <span class="help-block m-b-none">
+                                                <input type="date" class="form-control" id="rech" name="rech" value="@ViewBag.Rech" required>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label">Date fin * </label>
+                                        <div class="col-sm-10">
+                                            <span class="help-block m-b-none">
+                                                <input type="date" class="form-control" id="rech2" name="rech2" value="@ViewBag.Rech" required>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <div class="col-sm-10">
+                                            <span class="input-group-btn">
+
+                                                <button type="submit" class="btn btn-purplebee ladda-button ladda-button-demo">Rechercher</button>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    </div>
+                            </div>
+                        </div>
+                                    @*<div class="input-group">
+            <input type="date" class="form-control" id="rech" name="rech" value="@ViewBag.Rech">
+            <input type="date" class="form-control" id="rech2" name="rech2" value="@ViewBag.Rech">
+
+            <span class="input-group-btn">
+
+                <button type="submit" class="btn btn-purplebee ladda-button ladda-button-demo">Rechercher</button>
+            </span>
+        </div>*@
+
+                                    }
+                                </div>
+                                <div id="toshowww5" class="hide">
+                                    @using (Html.BeginForm("IndexOffre", "ListeAbonnementsRecherche", FormMethod.Post))
+                                    {
+
+                                        <div class="input-group">
+                                            @if (ViewBag.Offre != null)
+                                            {
+                                                <select name="rechOOption" id="rechOOption" class="form-control chosen-select">
+                                                    @foreach (var item in ViewBag.Offre)
+                                                    {
+                                                        if (ViewBag.rechOOption != null)
+                                                        {
+                                                            if (ViewBag.rechOOption == item.AR_Design)
+                                                            {
+                                                                <option value="@item.AR_Design" selected>@item.AR_Design</option>
+                                                            }
+                                                            else
+                                                            {
+                                                                <option value="@item.AR_Design">@item.AR_Design</option>
+                                                            }
+                                                        }
+                                                        else
+                                                        {
+                                                            <option value="@item.AR_Design">@item.AR_Design</option>
+                                                        }
+
+                                                    }
+
+
+                                                </select>
+                                                <span class="input-group-btn">
+                                                    <button type="submit" class="btn btn-purplebee ladda-button ladda-button-demo">Rechercher  </button>
+                                                </span>
+                                            }
+                                            else
+                                            {
+                                                <div class="alert alert-warning">
+                                                    aucune offre.
+                                                </div>
+                                            }
+
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+        </div>
+        @if (ViewBag.msg != null || ViewBag.listeabonnements != null)
+        {
+
+            <div class="col-lg-12">
+                <div class="ibox-content">
+                    <div class="row">
+                        @if (ViewBag.msg != null)
+                        {
+                            <div class="alert alert-danger alert-dismissable">
+                                <button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>
+                                @ViewBag.msg
+                            </div>
+                        }
+                        @if (ViewBag.listeabonnements != null)
+                        {
+
+                            <div class="table-responsive">
+
+                                <table class="table table-striped dataTables-example" id="dataTables-example" @*style="width:100px ;height:800px ;"*@>
+                                    <thead>
+                                        <tr>
+                                            <th>Statut</th>
+                                            <th>Etape</th>
+                                            <th>Type abonnement</th>
+                                            <th>Date Etape</th>
+                                            <th>Réference TT </th>
+                                            <th>Numero Fixe</th>
+                                            <th>Offre </th>
+                                            <th>Réference Abonnement </th>
+                                            <th>Téléphone</th>
+                                            <th>Client</th>
+                                            <th>Identifiant</th>
+                                            <th>Agence</th>
+                                            <th>Gouvernorat</th>
+                                            <th>Avancement</th>
+                                            <th>Type Agence</th>
+                                            <th>Date de création</th>
+                                            <th></th>
+
+                                        </tr>
+                                    </thead>
+
+                                    <tbody>
+                                        @foreach (var item in ViewBag.listeabonnements)
+                                        {
+
+
+                                        <tr class="gradeX">
+                                            @if (item.Statut == "Valide")
+                                            {
+
+                                                <td class="text-greenbee">@item.Statut</td>
+                                            }
+                                            else if (item.Statut == "En cours")
+                                            {
+
+                                                <td class="text-purplebee">@item.Statut</td>
+                                            }
+                                            else if (item.Statut == "Annulé")
+                                            {
+
+                                                <td class="text-graybee">@item.Statut</td>
+                                            }
+                                            else if (item.Statut == "Résilié")
+                                            {
+
+                                                <td class="text-danger">@item.Statut</td>
+                                            }
+                                            else if (item.Statut == "Migré")
+                                            {
+
+                                                <td class="text-success">@item.Statut</td>
+                                            }
+                                            else
+                                            {
+                                                <td class="text-success">--</td>
+                                            }
+                                            @if (item.DOEtape == 0)
+                                            {
+                                                <td><p class="text-default">Etude eligibité</p></td>
+                                            }
+                                            else if (item.DOEtape == 1)
+                                            {
+                                                <td><p class="text-primary">Reservation TT</p></td>
+                                            }
+                                            else if (item.DOEtape == 2)
+                                            {
+                                                <td><p class="text-secondary">Tirage jarretière</p></td>
+                                            }
+                                            else if (item.DOEtape == 3)
+                                            {
+                                                <td><p class="text-success">Migration offre fixe</p></td>
+                                            }
+                                            else if (item.DOEtape == 4)
+                                            {
+                                                <td><p class="text-warning">Réservation Matériel</p></td>
+                                            }
+                                            else if (item.DOEtape == 5)
+                                            {
+                                                <td><p class="text-info">Paiement et livraison</p></td>
+                                            }
+                                            else if (item.DOEtape == 6)
+                                            {
+                                                <td><p class="text-dark">Facturation</p></td>
+                                            }
+                                            else if (item.DOEtape == 7)
+                                            {
+                                                <td><p class="text-greenbee">Valide</p></td>
+                                            }
+                                            else if (item.DOEtape == 8)
+                                            {
+                                                <td><p class="text-danger">Annulé</p></td>
+                                            }
+                                            else
+                                            {
+                                                <td><p class="text-danger">Annulé</p></td>
+                                            }
+                                            <td>@item.TypeAbonnements</td>
+                                            @if (item.DateEtape != null)
+                                            {
+                                                <td>@item.DateEtape</td>
+                                            }
+                                            else
+                                            {
+                                                <td> -- </td>
+                                            }
+
+                                            <td>@item.ReferenceTT</td>
+                                            <td>@item.NumeFixe</td>
+                                            <td>@item.Offre</td>
+                                            <td>@item.DO_Piece</td>
+                                            <td>@item.Téléphone</td>
+                                            <td>@item.Client</td>
+                                            <td>@item.Identifiant</td>
+                                            <td>@item.IntituleAgence</td>
+                                            <td>@item.CT_Gouvernorat</td>
+                                            <td>
+                                                <small>Pourcentage: @item.Avancement %</small>
+                                                <div class="progress progress-mini"><div style="width:@item.Avancement%;" class="progress-bar"></div></div>
+                                            </td>
+                                            <td>@item.TypeAgence</td>
+                                            <td>@item.DateCreation.ToString("dd/MM/yyyy")</td>
+                                            <td class="project-completion">
+                                                <a href=@Url.Action("Details/" + @item.Cbmarq, "Abonnement") class="btn btn-sm btn-outline btn-purplebee ">
+                                                    <i class="fa fa-eye "></i> Détails
+                                                </a>
+                                                @*@if (item.Etape == 0)
+            {
+                <button type="button" onClick="AnnulerAbo(@item.Cbmarq)" title="Annuler la demande d'abonnement" class="btn btn-sm btn-outline btn-danger ">
+                    <i class="fa fa-trash "></i> Annuler
+                </button>
+                <button type="button" onClick="Reaffecter(@item.Cbmarq)" title="Réaffecter l'abonnement"
+                        class="btn btn-sm btn-outline btn-greenbee ">
+                    <i class="fa fa-trash "></i> Réaffecter
+                </button>
+            }
+            else
+            {
+                <button type="button" title="Annuler la demande d'abonnement" class="btn btn-sm btn-outline btn-default disabled">
+                    <i class="fa fa-trash "></i> Annuler
+                </button>
+                <button type="button" onClick="Reaffecter(@item.Cbmarq)" title="Réaffecter l'abonnement"
+                        class="btn btn-sm btn-outline btn-greenbee ">
+                    <i class="fa fa-trash "></i> Réaffecter
+                </button>
+            }*@
+                                            </td>
+
+                                        </tr>
+
+
+                                        }
+
+                                    </tbody>
+
+                                </table>
+                            </div>
+                        }
+                    </div>
+
+
+
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+<div class="modal inmodal" id="ReaffectationModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content animated flipInY">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Fermer</span></button>
+                <i class="fa fa-cubes modal-icon"></i>
+                <h4 class="modal-title">Réaffecter l'abonnement  </h4>
+                <small class="font-bold">Confirmer la réaffectation de cet abonnement à une autre agence </small>
+            </div>
+            <div class="modal-body">
+                <p>
+                    Choisissez l'agence
+                </p>
+                <div class="form-group">
+                    @if (ViewBag.ListeAgences != null)
+                    {
+                        <select class="form-control chosen-select" id="A_Code">
+                            @foreach (var item2 in ViewBag.ListeAgences)
+                            {
+                                <option value="@item2.A_Code">@item2.A_Intitule</option>
+                            }
+                        </select>
+                    }
+                </div>
+                <div class="form-group">
+                    <textarea placeholder="Commentaires " class="form-control" id="CommentairesReaffectation"></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-white" data-dismiss="modal">Fermer</button>
+                <button type="button" class="btn btn-purplebee ladda-button" id="ValiderReaffecter">Valider </button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal inmodal" id="Export" tabindex="-1" role="dialog" aria-hidden="true" data-keyboard="false" data-backdrop="static">
+    <div class="modal-dialog">
+        <div class="modal-content animated flipInY">
+            <div class="modal-header">
+
+                <h4 class="modal-title text-purplebee">Export Excel</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <form role="form">
+                        <div class="form-group">
+                            @if (ViewBag.msg == null)
+                            {
+                                <center>
+                                    <div class="spinner-border text-purplebee" role="status">
+                                        <i class="fa fa-spinner fa-spin" style="font-size:50px"></i>
+                                        <br />
+                                        <h1>Veuillez patienter jusqu'à la fin d'export...</h1>
+                                    </div>
+                                    <br />
+                                    <h5 class="text-purplebee">  Une fois l'export faite avec succés , merci d'actualiser la page afin de continuer les autres exports</h5>
+                                    <br />
+                                </center>
+                            }
+                            else
+                            {
+                                <i class="fa fa-check-circle"></i>
+                                <br />
+                                <h3 class="bg-danger">Merci,vous pouvez continuer les autres exports maintenant </h3>
+                            }
+
+
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+<script src="~/js/jquery-3.1.1.min.js"></script>
+<script src="~/js/plugins/metisMenu/jquery.metisMenu.js"></script>
+<script src="~/js/plugins/pace/pace.min.js"></script>
+<script src="~/js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+<script src="~/js/plugins/chosen/chosen.jquery.js"></script>
+<script src="~/js/plugins/dataTables/datatables.min.js"></script>
+<!-- Sweet alert -->
+<script src="~/js/plugins/sweetalert/sweetalert.min.js"></script>
+
+
+<script>
+
+
+    $('.go-btn').click(function () {
+       // alert(" If you just want value ==>" + $('#my-dropdown').val());
+            $.ajax({
+                type: "get",
+                url: '/ListeAbonnementsRecherche/Index?rech=' + $('#my-dropdown').val(), // we are calling json method
+                dataType: 'json',
+                success: function (msg) {
+                    if (msg.result == "Error") {
+                        toastr.error('ce NS:° Nouv num serie; en stock mais reservée !', 'Error');
+
+                    }
+                    else {
+                        toastr.success('Vous ne peut pas réaffecter aux méme abonnement! ', 'success');
+                        location.reload();
+                    }
+
+                }
+            });
+    });
+
+
+    $(document).ready(function () {
+
+        $('.dataTables-example').DataTable({
+            order:false,
+            pageLength: 25,
+            responsive: true,
+            dom: '<"html5buttons"B>lTfgitp',
+            buttons: [
+            { extend: 'copy' },
+            { extend: 'csv' },
+            { extend: 'excel', title: 'ExampleFile' },
+            { extend: 'pdf', title: 'ExampleFile' },
+            {
+                extend: 'print',
+                customize: function (win) {
+                    $(win.document.body).addClass('white-bg');
+                    $(win.document.body).css('font-size', '10px');
+                    $(win.document.body).find('table')
+                        .addClass('compact')
+                        .css('font-size', 'inherit');
+                }
+            }
+            ]
+
+        });
+
+        var ckbox = $('#defaultGroupExample1');
+
+        $('input:radio').on('click', function () {
+            if (ckbox.is(':checked')) {
+                //alert('You have Checked it defaultGroupExample1');
+                //$('.a').slideToggle("slow");
+                var elementtoShow = document.getElementById('to-show');
+                var elementtoShoww = document.getElementById('toshoww');
+                var elementtoS3 = document.getElementById('toshowww');
+                var elementtoS4 = document.getElementById('toshowww4');
+                var elementtoS5 = document.getElementById('toshowww5');
+                if (elementtoShow.className === 'hide') {
+                    elementtoShow.className = 'show';
+                    document.getElementsByTagName('body')[0].className = 'on';
+                    elementtoShoww.className = 'hide';
+                    elementtoS3.className = 'hide';
+                    elementtoS4.className = 'hide';
+                    elementtoS5.className = 'hide';
+
+                }
+                else {
+                    elementtoShow.className = 'hide';
+
+                    document.getElementsByTagName('body')[0].className = 'off';
+
+
+                }
+
+            }
+
+        });
+
+        var ckboxx = $('#defaultGroupExample2');
+
+        $('input:radio').on('click', function () {
+            if (ckboxx.is(':checked')) {
+                //alert('You have Checked it defaultGroupExample2');
+                //$('.aa').slideToggle("slow");
+                var elementtoShoww = document.getElementById('toshoww');
+                var elementtoS = document.getElementById('to-show');
+
+                var elementtoS3 = document.getElementById('toshowww');
+                var elementtoS4 = document.getElementById('toshowww4');
+                var elementtoS5 = document.getElementById('toshowww5');
+                if (elementtoShoww.className === 'hide') {
+                    elementtoShoww.className = 'show';
+                    document.getElementsByTagName('body')[0].className = 'on';
+                    //document.getElementById('show-element').className = 'active';
+                    elementtoS.className = 'hide';
+                    elementtoS3.className = 'hide';
+                    elementtoS4.className = 'hide';
+                    elementtoS5.className = 'hide';
+
+                } else {
+                    elementtoShoww.className = 'hide';
+                    document.getElementsByTagName('body')[0].className = 'off';
+                    //document.getElementById('show-element').className = '';
+
+                }
+
+            }
+
+        });
+
+        var ckboxx3 = $('#defaultGroupExample3');
+
+        $('input:radio').on('click', function () {
+            if (ckboxx3.is(':checked')) {
+              //  alert('You have Checked it defaultGroupExample3');
+                //$('.aa').slideToggle("slow");
+                var elementtoShoww = document.getElementById('toshoww');
+                var elementtoS = document.getElementById('to-show');
+                var elementtoS3 = document.getElementById('toshowww');
+                var elementtoS4 = document.getElementById('toshowww4');
+                var elementtoS5 = document.getElementById('toshowww5');
+                if (elementtoS3.className === 'hide') {
+                    elementtoS3.className = 'show';
+                    document.getElementsByTagName('body')[0].className = 'on';
+                    //document.getElementById('show-element').className = 'active';
+                    elementtoS.className = 'hide';
+                    elementtoShoww.className = 'hide';
+                    elementtoS4.className = 'hide';
+                    elementtoS5.className = 'hide';
+
+                } else {
+                    elementtoS3.className = 'hide';
+                    document.getElementsByTagName('body')[0].className = 'off';
+                    //document.getElementById('show-element').className = '';
+
+                }
+
+            }
+
+        });
+
+
+        var ckboxx4 = $('#defaultGroupExample4');
+
+        $('input:radio').on('click', function () {
+            if (ckboxx4.is(':checked')) {
+                //  alert('You have Checked it defaultGroupExample3');
+                //$('.aa').slideToggle("slow");
+                var elementtoShoww = document.getElementById('toshoww');
+                var elementtoS = document.getElementById('to-show');
+                var elementtoS3 = document.getElementById('toshowww');
+                var elementtoS4 = document.getElementById('toshowww4');
+                var elementtoS5 = document.getElementById('toshowww5');
+                if (elementtoS4.className === 'hide') {
+                    elementtoS4.className = 'show';
+                    document.getElementsByTagName('body')[0].className = 'on';
+                    //document.getElementById('show-element').className = 'active';
+                    elementtoS.className = 'hide';
+                    elementtoShoww.className = 'hide';
+                    elementtoS3.className = 'hide';
+                    elementtoS5.className = 'hide';
+
+
+                } else {
+                    elementtoS4.className = 'hide';
+                    document.getElementsByTagName('body')[0].className = 'off';
+                    //document.getElementById('show-element').className = '';
+
+                }
+
+            }
+
+        });
+
+        var ckboxx5 = $('#defaultGroupExample5');
+
+        $('input:radio').on('click', function () {
+            if (ckboxx5.is(':checked')) {
+                //  alert('You have Checked it defaultGroupExample3');
+                //$('.aa').slideToggle("slow");
+                var elementtoShoww = document.getElementById('toshoww');
+                var elementtoS = document.getElementById('to-show');
+                var elementtoS3 = document.getElementById('toshowww');
+                var elementtoS4 = document.getElementById('toshowww4');
+                var elementtoS5 = document.getElementById('toshowww5');
+                if (elementtoS5.className === 'hide') {
+                    elementtoS5.className = 'show';
+                    document.getElementsByTagName('body')[0].className = 'on';
+                    //document.getElementById('show-element').className = 'active';
+                    elementtoS.className = 'hide';
+                    elementtoShoww.className = 'hide';
+                    elementtoS3.className = 'hide';
+                    elementtoS4.className = 'hide';
+
+                } else {
+                    elementtoS4.className = 'hide';
+                    document.getElementsByTagName('body')[0].className = 'off';
+                    //document.getElementById('show-element').className = '';
+
+                }
+
+            }
+
+        });
+
+        Ladda.bind('.ladda-button', { timeout: 2000 });
+
+        // Bind progress buttons and simulate loading progress
+        Ladda.bind('.progress-demo .ladda-button', {
+            callback: function (instance) {
+                var progress = 0;
+                var interval = setInterval(function () {
+                    progress = Math.min(progress + Math.random() * 0.1, 1);
+                    instance.setProgress(progress);
+
+                    if (progress === 1) {
+                        instance.stop();
+                        clearInterval(interval);
+                    }
+                }, 20000);
+            }
+        });
+
+
+        var l = Ladda.bind('.ladda-button-demo');
+
+        l.click(function () {
+            // Start loading
+            l.ladda('start');
+
+            // Timeout example
+            // Do something in backend and then stop ladda
+            setTimeout(function () {
+                l.ladda('stop');
+            }, 12000)
+
+
+        });
+
+
+        if (($('#rechOption').val() != "") && ($('#rech').val() == "") && ($('#rechOOption').val() == "")) {
+            var optionToSelect = 'Paiementetlivraison';
+            //alert(optionToSelect);
+            $('#rechOption option:contains(' + optionToSelect + ')').prop({ selected: true });
+
+            $('#to-show').removeClass('hide');
+            $('#toshowwW').removeClass('hide');
+            $('#toshowwW').removeClass('hide');
+        }
+
+        if (($('#rechOption').val() == "") && ($('#rech').val() != "") && ($('#rechOOption').val() == "")) {
+            $('#toshowwW').removeClass('hide');
+            $('#toshoww').removeClass('hide');
+        }
+        if (($('#rechOption').val() == "") && ($('#rech').val() == "") && ($('#rechOOption').val() != "")) {
+            $('#to-show').removeClass('hide');
+            $('#toshoww').removeClass('hide');
+        }
+
+
+
+    });
+
+
+    function Vide() {
+
+        $('form input[type= text]').each(function () {
+            //If the field's empty
+            if ($(this).val() == '') {
+                //alert("viiiide");
+                toastr.error('Veuillez tapez le numéro de série,etat abonnement ou bien désigniation article !', 'Erreur');
+            }
+        });
+
+    }
+
+    function Reaffecter(cbm) {
+
+        $("#ReaffectationModal").modal();
+        $("#ValiderReaffecter").click(function () {
+
+            $.ajax({
+                type: "get",
+                url: '/Abonnement/ReaffecterAbonnements?cbm=' + cbm + '&&agences=' + $('select#A_Code').find("option:selected").val() + '&&Notes=' + $('#CommentairesReaffectation').val(), // we are calling json method
+                dataType: 'json',
+                success: function (result) {
+                    if (result != -1) {
+                        swal("Succès!", result + "Abonnement réaffectés avec succès! ", "success");
+                        window.location = "/ListeAbonnements/Index";
+                    }
+                    else {
+                        swal({
+                            title: "Aucune modification ",
+                            text: "Ok",
+                            type: "warning"
+                        });
+                        window.location = "/ListeAbonnements/Index";
+
+                    }
+                }
+            });
+
+        });
+    }
+    function AnnulerAbo(data) {
+        swal({
+            title: "Annuler cet abonnement ?",
+            text: " ",
+            type: "warning",
+            showCancelButton: true,
+            cancelButtonText: 'Annuler',
+            confirmButtonColor: "#DD6B55",
+            confirmButtonText: "Oui.",
+            closeOnConfirm: false
+        }, function () {
+            $.ajax({
+                type: "get",
+                url: '/Abonnement/AnnulerAbonnement?id=' + data, // we are calling json method
+                dataType: 'json',
+                success: function (result) {
+                    if (result == 0) {
+                        swal("Annulé!", "Abonnement Annulé avec succès! ", "success");
+                    }
+                    else {
+                        swal({
+                            title: "L'abonnement n'a pas été annulé.",
+                            text: "Ok",
+                            type: "warning"
+                        });
+
+                        window.location = "/ListeAbonnements/Index";
+
+                    }
+                }
+            });
+        });
+
+
+    }
+
+    //$('.chosen-select').chosen({ width: "100%" });
+</script>
+

@@ -1,0 +1,613 @@
+﻿@using Microsoft.AspNet.Identity
+@{
+    ViewBag.Title = "Interroger Freelancer";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<link href="~/css/plugins/iCheck/custom.css" rel="stylesheet">
+<link href="~/css/plugins/jasny/jasny-bootstrap.min.css" rel="stylesheet">
+<link href="~/css/plugins/footable/footable.core.css" rel="stylesheet">
+<link href="~/css/plugins/chosen/bootstrap-chosen.css" rel="stylesheet">
+<!-- Ladda style -->
+<link href="~/css/plugins/ladda/ladda-themeless.min.css" rel="stylesheet">
+<!-- Toastr style -->
+<link href="~/css/plugins/toastr/toastr.min.css" rel="stylesheet">
+
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-lg-10">
+        <br />
+        <ol class="breadcrumb">
+            <li>
+                <a href="@Url.Action("Index","Home")">Acceuil</a>
+            </li>
+            <li>
+                <a href="@Url.Action("Index","EspaceFreelancer")">Interrogation Freelancer</a>
+            </li>
+            
+        </ol>
+    </div>
+</div>
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-lg-12">
+
+            <div class="ibox float-e-margins">
+                <div class="ibox-title" style="height:150px;">
+
+                    @using (Html.BeginForm("Index", "InterrogationRevendeur", FormMethod.Post))
+                    {
+                        <div class="col-sm-8">
+                            <label class="control-label">Selectionner une agence </label>
+                            <select name="A_Code" class="form-control chosen-select">
+                                @foreach (var item in ViewBag.ListeAgence)
+                                {
+                                    if (ViewBag.Agence.cbMarq == item.cbMarq)
+                                    {
+                                        <option value="@item.cbMarq" selected>@item.A_Intitule</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="@item.cbMarq">@item.A_Intitule</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                        <div class="col-sm-4">
+                            <br />
+                            <button type="submit" class="btn btn-purplebee btn-rounded btn-outline">Interroger  </button>
+                        </div>
+                        @*<div class="col-sm-4">
+                            <br />
+                            <a href='@Url.Action("CommissionFreelancer", "Manage")' class="btn btn-sm btn-greenbee circle" title="Calule Commission">
+                                <i class="fa fa-dollar"></i> Calucl Commission Freelancer
+                            </a>
+                        </div>*@
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox float-e-margins">
+                <div class="col-lg-2">
+                    <div class="widget style1 blue-bg">
+                        <div class="row vertical-align">
+                            <div class="col-xs-3">
+                                <small><i class="fa fa-user fa-3x"></i>Total demandes abonnements</small>
+                            </div>
+                            <div class="col-xs-9 text-right">
+                                <small class="font-bold">@ViewBag.Total_demandes_abonnements</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-2">
+                    <div class="widget style1 navy-bg">
+                        <div class="row vertical-align">
+                            <div class="col-xs-3">
+                                <small><i class="fa fa-check-circle-o fa-3x"></i>Total demandes Valides</small>
+                            </div>
+                            <div class="col-xs-9 text-right">
+                                <small class="font-bold">@ViewBag.Total_demandes_abonnements_Valides</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-2">
+                    <div class="widget style1 red-bg">
+                        <div class="row vertical-align">
+                            <div class="col-xs-3">
+                                <small><i class="fa fa-close fa-3x"></i>Total demandes Annulés</small>
+                            </div>
+                            <div class="col-xs-9 text-right">
+                                <small class="font-bold">@ViewBag.Total_demandes_abonnements_Annule</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-2">
+                    <div class="widget style1 navy-bg">
+                        <div class="row vertical-align">
+                            <div class="col-xs-3">
+                                <small><i class="fa fa-plus-square-o fa-3x"></i>Total avance commission</small>
+                            </div>
+                            <div class="col-xs-9 text-right">
+                                <small class="font-bold">@String.Format("{0:N3}", ViewBag.TotalCommission) <small>TND</small></small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-2">
+                    <div class="widget style1 lazur-bg">
+                        <div class="row vertical-align">
+                            <div class="col-xs-3">
+                                <small><i class="fa fa-dollar fa-3x"></i>Total Versements valides</small>
+                            </div>
+                            <div class="col-xs-9 text-right">
+                                <small class="font-bold">@String.Format("{0:N3}", ViewBag.Total_Versements) <small>TND</small></small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-2">
+                    <div class="widget yellow-bg">
+                        <div class="row vertical-align">
+                            <div class="col-xs-3">
+                                <small><i class="fa fa-euro fa-3x"></i>Total commission</small>
+                            </div>
+                            <div class="col-xs-9 text-right">
+                                <small class="font-bold">@String.Format("{0:N3}", ViewBag.TotalCommission) <small>TND</small></small>
+                            </div>
+                        </div>
+                        <br />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox">
+                <div class="ibox-content">
+
+                    @if (ViewBag.Error != null)
+                    {
+                        <div class="alert alert-danger alert-dismissable">
+                            <button type="button" class="close " data-dismiss="alert">×</button>
+                            <p>@ViewBag.Error</p>
+                        </div>
+                    }
+
+                    <div class="clients-list">
+                        <ul class="nav nav-tabs">
+
+                            @foreach (var item in ViewBag.commissionfreelancer)
+                            {
+                                <li class="active"><a data-toggle="tab" href="#@item.GetType().GetProperty("Key").GetValue(item) "><i class="fa fa-calendar"></i>@item.GetType().GetProperty("Key").GetValue(item) </a></li>
+
+                            }
+
+                            @if (ViewBag.commission_notif != 0 && ViewBag.commission_notif != null)
+                            {
+                                <li class=""><a data-toggle="tab" href="#tab-2">Commission <span class="label label-danger right"> @ViewBag.commission_notif</span></a></li>
+                            }
+                            else
+                            {
+                                <li class="">
+                                    <a data-toggle="tab" href="#tab-2">
+                                        Commission
+                                    </a>
+                                </li>
+                            }
+                        </ul>
+                        <div class="tab-content">
+                            @foreach (var item in ViewBag.commissionfreelancer)
+                            {
+                                <div id="@item.GetType().GetProperty("Key").GetValue(item)" class="tab-pane active text-black-50">
+                                    <div class="full-height-scroll">
+                                        <div class="table-responsive">
+                                            <table class="table table-striped ">
+                                                @*<thead>*@
+                                                <tr hidden></tr>
+                                                <tr>
+                                                    <th class="hidden"></th>
+                                                    <th>Mois</th>
+                                                    <th>Montant commission CDE</th>
+                                                    <th>Montant commission CA </th>
+                                                    <th>Montant commission CL </th>
+                                                    <th>Total Commission </th>
+                                                    <th>Statut</th>
+                                                </tr>
+                                                @*</thead>*@
+                                                <tbody>
+                                                    @foreach (var grouped in item)
+                                                    {
+                                                        <tr>
+                                                            <td class="hidden">@grouped.cbMarq</td>
+                                                            <td>@System.Globalization.CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(grouped.Mois)</td>
+                                                            <td>@String.Format("{0:N3}", grouped.DO_Montant_CDE) <small>TND</small></td>
+                                                            <td>@String.Format("{0:N3}", grouped.DO_Montant_CA) <small>TND</small></td>
+                                                            <td>@String.Format("{0:N3}", grouped.DO_Montant_CL) <small>TND</small></td>
+                                                            <td><strong>@String.Format("{0:N3}", grouped.DO_TotalMontantCom) TND</strong></td>
+                                                            @if (grouped.Com_Cloture == 0 && grouped.DO_StatCommission == 0)
+                                                            {
+                                                                <td>
+                                                                    <div class="stat-percent font-bold text-greenbee pull-right"> En cours<i class="fa fa-clock"></i></div>
+                                                                    <br /> <div class="text-graybee pull-right">  N°: @grouped.DO_Piece</div>
+                                                                </td>
+
+                                                            }
+                                                            else if (grouped.Com_Cloture == 1 && grouped.DO_StatCommission == 0)
+                                                            {
+                                                                <td>
+                                                                    <div class="stat-percent font-bold text-success pull-right"> Proformat<i class="fa fa-check"></i></div>
+                                                                    <br /> <div class="text-graybee pull-right">  N°: @grouped.DO_Piece</div>
+                                                                </td>
+                                                            }
+                                                            else
+                                                            {
+                                                                <td>
+                                                                    <div class="stat-percent font-bold text-warning pull-right"> Annulé<i class="fa fa-close"></i></div>
+                                                                    <br /> <div class="text-graybee pull-right">  N°: @grouped.DO_Piece</div>
+                                                                </td>
+                                                            }
+                                                        </tr>
+                                                    }
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                 
+                                    </div>
+                                 
+                                </div>
+                            }
+                            <div id="tab-2" class="tab-pane text-black-50 TableCommFacture">
+                                <div class="full-height-scroll">
+                                    @if (ViewBag.Factures_Freelancer == null || ViewBag.Factures_Freelancer.Count == 0)
+                                    {
+                                        <code>Aucune facture </code>
+                                    }
+                                    else
+                                    {
+                                        <div class="table-responsive">
+                                            <table class="table table-striped table-hover">
+                                                <thead>
+                                                <tr hidden></tr>
+                                                <tr>
+                                                    <th> Statut </th>
+                                                    <th> N° Piece </th>
+                                                    <th> N° Facture</th>
+                                                    <th> Date Facture </th>
+                                                    <th> Montant H.T </th>
+                                                    <th> Montant T.T.C </th>
+                                                    <th> Commentaire</th>
+                                                    <th> Détails </th>
+                                                    <th> Action </th>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                    @foreach (var item in ViewBag.Factures_Freelancer)
+                                                    {
+                                                        <tr>
+                                                            <td>
+                                                                @if (item.code_externe == "")
+                                                                {
+                                                                    if (item.DO_Statut == 1)
+                                                                    {
+                                                                        <div class="text-danger"><i class="fa fa-close"></i> Annulé </div>
+                                                                    }
+                                                                    else if (item.DO_Statut == 13)
+                                                                    {
+                                                                        <div class="text-warning"><i class="fa fa-clock"></i> En cours </div>
+                                                                    }
+                                                                }
+                                                                else
+                                                                {
+                                                                    <div class="text-success"><i class="fa fa-file"></i> Facturé </div>
+                                                                }
+                                                            </td>
+                                                            <td><small>@item.DO_Piece</small></td>
+                                                            <td>@item.DO_Ref</td>
+                                                            <td>@item.DO_Date.ToString("dd/MM/yyyy")</td>
+                                                            <td>@String.Format("{0:N3}", item.DO_TotalHT) <small>TND</small> </td>
+                                                            <td>@String.Format("{0:N3}", item.DO_totalTTC /*+ (decimal)0.600*/) <small>TND</small> </td>
+                                                            <td>@item.DO_Commentaire</td>
+                                                            <td>
+                                                                
+                                                                <a class="btn btn-greenbee btn-xs btn-bitbucket" title=" "
+                                                                   href="@Url.Action("DetailsProformat", "EspaceRevendeur", new { id = item.cbMarq })" target="_blank">
+                                                                    <i title="Details Proformat" class="fa fa-eye"></i>
+                                                                </a>
+                                                            </td>
+                                                            <td>
+
+                                                                @if (@item.code_externe != "")
+                                                                {
+                                                                    <span class="text-purplebee">@item.code_externe</span>
+                                                                }
+                                                                else
+                                                                {
+                                                                    if (item.DO_Statut == 1)
+                                                                    {
+                                                                        @*<button type="button" onclick="Comments(@item.cbMarq)" class="btn btn-greenbee btn-xs btn-bitbucket" title="Voir commentaire">
+                                                                            <i class="fa fa-comments-o"></i>
+                                                                        </button>*@
+                                                                       
+                                                                        <div class="text-danger"><i class="fa fa-close"></i> Annulé </div>
+                                                                    }
+                                                                    else if (@item.DO_Statut != 1 && @item.DO_Statut != 0)
+                                                                    {
+                                                                        <button type="button" onclick="ValiderProformat(@item.cbMarq)" class="btn btn-greenbee btn-xs btn-bitbucket" title="Valider">
+                                                                            <i class="fa fa-check-circle"></i>
+                                                                        </button>
+                                                                        <button type="button" id="PaiementCommission" onclick="annuler(@item.cbMarq)" class="btn btn-danger btn-xs btn-bitbucket" title="Annuler">
+                                                                            <i class="fa fa-close"></i>
+                                                                        </button>
+                                                                    }
+
+                                                                }
+                                                            </td>
+                                                        </tr>
+                                                    }
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    <!--  <div class="col-sm-4">
+            <div class="ibox ">
+
+                <div class="ibox-content">
+                    <div class="tab-content">
+                        <div id="contact-1" class="tab-pane active" style="height:655px;">
+                            <div class="row m-b-lg center-block text-purplebee">
+                                <center>
+                                    <img src="@Url.Action("Photo", "Account" , new { UserId=User.Identity.GetUserId() })" class="img-responsive img-circle circle-border m-b-md" alt="profile"
+                                         style="width:100px" />
+                                    <h5>Agence selectionné</h5>
+                                    <h2>
+                                        <b>@ViewBag.Agence.A_Intitule</b>
+                                    </h2>
+                                </center>
+                            </div>
+                            <div class="client-detail">
+                                <div class="full-height-scroll">
+                                    <ul class="list-group clear-list">
+                                        <li class="list-group-item">
+                                            <span class="pull-right text-purplebee"><b> @ViewBag.Total_demandes_abonnements</b></span>
+                                            Total demandes abonnements
+                                        </li>
+                                        <li class="list-group-item">
+                                            <span class="pull-right text-purplebee"><b>@ViewBag.Total_demandes_abonnements_Valides </b> </span>
+                                            Total demandes Valides
+                                        </li>
+                                        <li class="list-group-item">
+                                            <span class="pull-right text-purplebee"><b>@ViewBag.Total_demandes_abonnements_Annule </b></span>
+                                            Total demandes Annulés
+                                        </li>
+
+                                        <li class="list-group-item">
+                                            <span class="pull-right text-purplebee"><b>@ViewBag.Total_demandes_Livraison </b></span>
+                                            Total demandes Livraison
+                                        </li>
+                                        <li class="list-group-item">
+                                            <span class="pull-right text-purplebee"><b>@String.Format("{0:N3}", ViewBag.Total_Versements) </b></span>
+                                            Total Versements valides
+                                        </li>
+                                        @*<li class="list-group-item">
+                                            <span class="pull-right text-purplebee"><b> @String.Format("{0:N3}", ViewBag.Avances_Commission) <small>TND</small></b> </span>
+                                            Total Avances sur commission
+                                        </li>*@
+                                        <li class="list-group-item">
+                                            <span class="pull-right text-purplebee"><b> @String.Format("{0:N3}", ViewBag.TotalCommission) <small>TND</small></b></span>
+                                            Total commission
+                                        </li>
+
+                                    </ul>
+
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>-->  
+
+        <div class="modal inmodal" id="PaiementCommissionModal" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content animated bounceIn">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                        <i class="fa fa-money modal-icon"></i>
+                        <h4 class="modal-title">Annuler la demande</h4>
+                    </div>
+                    <div class="modal-body">
+                        <fieldset id="SubmitForm" class="float-e-margins">
+                            <div class="row">
+                                <div class="form-group float-e-margins">
+                                    <input id="Valider" name="Valider" value="0" class="hidden" />
+                                    <div class="row">
+                                        <div class="ibox float-e-margins">
+                                            <div class="ibox-content">
+                                                <form class="form-horizontal">
+
+                                                    <div class="alert alert-danger alert-dismissable">
+                                                        <button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>
+                                                        Attention!
+                                                        Temporairement c'est à dire la commission peut étre facturer une autre fois
+                                                        <br/>
+                                                        Définitivement c'est à dire la commission ne peut pas étre facturer qu'une seul fois
+                                                    </div>
+
+
+                                                    <br />
+                                                    <div class="form-group">
+                                                        <label class="col-lg-4 control-label">Vous voulez annulez la commisssion facturé *</label>
+                                                        <div class="col-lg-8">
+                                                            <select class="col-lg-8 form-control chosen-search " id="cbindice" name="cbindice">
+                                                                 <option class="font-bold" value="1"> Temporairement </option>
+                                                                  <option class="font-bold" value="2"> Définitivement </option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label class="col-lg-4 control-label">Commentaire</label>
+                                                        <div class="col-lg-8">
+                                                            <input type="text" class="form-control" name="Commentaire" id="Commentaire" placeholder="Commentaire" maxlength="250" required />
+                                                        </div>
+                                                    </div>
+                                                    <hr />
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </fieldset>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="reset" class="btn btn-white" data-dismiss="modal">Annuler</button>
+                        <button type="button" class="btn btn-purplebee ladda-button" id="PayerFacture"  @*onclick="this.disabled=true"*@><i class="fa fa-money"></i>Confirmer l'annulation</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+   
+</div>
+
+<script src="~/js/plugins/iCheck/icheck.min.js"></script>
+<script src="~/js/jquery-3.1.1.min.js"></script>
+<script src="~/js/plugins/chosen/chosen.jquery.js"></script>
+<!-- Ladda -->
+<script src="~/js/plugins/ladda/spin.min.js"></script>
+<script src="~/js/plugins/ladda/ladda.min.js"></script>
+<script src="~/js/plugins/ladda/ladda.jquery.min.js"></script>
+<!-- Toastr script -->
+<script src="~/js/plugins/toastr/toastr.min.js"></script>
+
+<script>
+    $(document).ready(function () {
+        $('.chosen-select').chosen({ width: "100%" });
+
+        // Bind normal buttons
+        Ladda.bind('.ladda-button', { timeout: 2000 });
+
+        // Bind progress buttons and simulate loading progress
+        Ladda.bind('.progress-demo .ladda-button', {
+            callback: function (instance) {
+                var progress = 0;
+                var interval = setInterval(function () {
+                    progress = Math.min(progress + Math.random() * 0.1, 1);
+                    instance.setProgress(progress);
+
+                    if (progress === 1) {
+                        instance.stop();
+                        clearInterval(interval);
+                    }
+                }, 200);
+            }
+        });
+
+
+        var l = Ladda.bind('.ladda-button-demo');
+
+        l.click(function () {
+            // Start loading
+            l.ladda('start');
+
+            // Timeout example
+            // Do something in backend and then stop ladda
+            setTimeout(function () {
+                l.ladda('stop');
+            }, 12000)
+
+
+        });
+    });
+
+    function ValiderProformat(data) {
+        swal({
+            title: "Valider cette facture?",
+            text: " ",
+            type: "warning",
+            showCancelButton: true,
+            cancelButtonText: 'Annuler',
+            confirmButtonColor: "#DD6B55",
+            confirmButtonText: "Oui.",
+            closeOnConfirm: false
+        }, function () {
+            $.ajax({
+                type: "get",
+                url: "/GestionFactures/ValiderProformat?id=" + data, // valider facturation des commissions
+                dataType: 'json',
+                //data: { id: data },
+                success: function (msg) {
+                    if (msg.msg == 0) {
+                        swal("Validé", msg.result, "success");
+                    }
+                    else {
+                        swal({
+                            title: "Echec!",
+                            text: "Un problème est survenu",
+                            type: "danger"
+                        });
+                    }
+                }
+            });
+        });
+    }
+
+
+    function annuler(data) {
+        $("#PaiementCommissionModal").modal();
+        //var row = $(button).closest("tr");
+        //var Piece = $("td", row).eq(1).html();
+        var AnnulationChoisi = 1;
+        $('#cbindice').change(function () {
+
+            AnnulationChoisi=$('select#cbindice').find("option:selected").val();
+
+        });
+        //var commentaire = $('#description').val();
+        //alert(Piece + AnnulationChoisi + commentaire);
+        $("#PayerFacture").click(function () {
+            $.ajax({
+                type: "get",
+                url: '/InterrogationRevendeur/AnnulerProformatFreelancer?id=' + data + '&&AnnulationChoisi=' + AnnulationChoisi + '&&Commentaire=' + $('#Commentaire').val(),
+                dataType: 'json',
+                success: function (msg) {
+                    if (msg.result == "success") {
+                        toastr.success('l annulation ce fait avec succès ! ', 'success');
+                        location.reload();
+                    }
+                    else{
+                        toastr.error('Vous ne peut pas annuler la proformat sélectionner! ', 'error');
+                    }
+
+                }
+            });
+        });
+    };
+
+    function Comments(data) {
+        swal({
+            title: "Voulez vous voir votre commentaire ?",
+            text: " ",
+            type: "warning",
+            showCancelButton: true,
+            cancelButtonText: 'Annuler',
+            confirmButtonColor: "#DD6B55",
+            confirmButtonText: "Oui",
+            closeOnConfirm: false
+        }, function () {
+            $.ajax({
+                type: "get",
+                url: "/InterrogationRevendeur/Comments?id=" + data, // valider facturation des commissions
+                dataType: 'json',
+                //data: { id: data },
+                success: function (msg) {
+                    if (msg.msg == 0) {
+                        swal("Votre commentaire est :", msg.result, "success");
+                    }
+                    else {
+                        swal({
+                            title: "Echec!",
+                            text: "Un problème est survenu",
+                            type: "danger"
+                        });
+                    }
+                }
+            });
+        });
+    }
+</script>

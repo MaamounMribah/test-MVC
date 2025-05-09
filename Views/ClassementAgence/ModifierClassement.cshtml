@@ -1,0 +1,219 @@
+﻿@model BeeProj.Models.B_AGENCECLASSEMENT
+
+@{
+    ViewBag.Title = "ModifierClassement";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<link href="~/css/plugins/chosen/bootstrap-chosen.css" rel="stylesheet">
+<link href="~/css/plugins/sweetalert/sweetalert.css" rel="stylesheet">
+
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-lg-8">
+        <h2>Nouveau classement </h2>
+        <ol class="breadcrumb">
+            <li>
+                <a href="@Url.Action("index","Administration")">Administration</a>
+            </li>
+            <li>
+                <a href="@Url.Action("Index","ClassementAgence")">Liste classement</a>
+            </li>
+            <li class="active">
+                <strong><a href="@Url.Action("ModifierClassement","ClassementAgence")">Nouveau modèle de classement</a></strong>
+            </li>
+        </ol>
+    </div>
+    <div class="col-lg-2">
+
+    </div>
+</div>
+
+
+@using (Html.BeginForm("ModifierClassement", "ClassementAgence", FormMethod.Post, new { @class = "form-horizontal", role = "form", enctype = "multipart/form-data" }))
+{
+    <div class="wrapper wrapper-content animated fadeInRight">
+
+        <div class="row">
+            <div class="col-md-12">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-content">
+                        <div class="form-horizontal">
+
+                            <div class="wrapper wrapper-content animated fadeInRight">
+
+
+                                <div class="ibox float-e-margins">
+
+
+
+                                    <div class="ibox-content">
+                                        @Html.HiddenFor(model => model.cbMarq)
+
+
+                                        <div class="row">
+
+
+                                            <div class="panel" style="border-color:#1ab394;">
+                                                <div class="panel-heading" style="background-color:#1ab394;border-color:#1ab394;">
+                                                    <h4 class="text-white">  Modifier Classement </h4>
+                                                </div>
+
+
+                                                <div class="panel-body">
+                                                    <div class="form-group">
+                                                        <label class="col-md-4 control-label">Intitulé du classement </label>
+                                                        <div class="col-md-4">
+                                                            <input id="C_Intitule" name="C_Intitule" class="form-control" value="@Model.C_Intitule" />
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="form-group">
+                                                        <label class="col-md-4 control-label">Modèle de commission</label>
+                                                        <div class="col-md-4">
+                                                            <select class="col-sm-6 form-control chosen-select" id="ModeleCommission" name="ModeleCommission">
+                                                                <option value="">  </option>
+                                                                @foreach (var item2 in ViewBag.ListeModelesCommissions)
+                                                                {
+                                                                    if (Model.ModeleCommission == item2.cbMarq)
+                                                                    {
+                                                                        @*<option class="font-bold" selected="selected" value=@item2.cbMarq> @item2.MC_Intitule</option>*@
+                                                                        <option class="font-bold" selected="selected" value=@item2.cbMarq> @item2.C_Intitule</option>
+
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        <option class="font-bold" value=@item2.cbMarq> @item2.C_Intitule</option>
+
+                                                                    }
+                                                                }
+                                                            </select>
+
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label class="col-md-4 control-label">Etat</label>
+                                                        <div class="col-md-4">
+                                                            <select class="col-sm-6 form-control chosen-select" id="C_Etat" name="C_Etat">
+
+                                                                @if (Model.C_Etat == 0)
+                                                                {
+                                                                    <option value="0" selected>Active </option>
+                                                                    <option value="1">Inactive </option>
+
+                                                                }
+                                                                else
+                                                                {
+
+                                                                    <option value="0">Active </option>
+                                                                    <option value="1" selected>Inactive </option>
+                                                                }
+
+                                                            </select>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="form-group">
+                                                        <label class="col-md-4 control-label">Liste des agences bénéficiant de cette classement</label>
+                                                        <div class="col-sm-8">
+
+                                                            <select required class="chosen-select col-sm-6" multiple style="width:490px;" tabindex="5" name="ListeAGENCEDATEAVANCECOM" id="ListeAGENCEDATEAVANCECOM">
+
+                                                               
+                                                                    @foreach (var item in ViewBag.ag)
+                                                                    {
+                                                                        if (Model.cbMarq == item.A_Classement)
+                                                                        {
+
+                                                                            <option class="font-bold" selected="selected" value=@item.A_Code> @item.A_Intitule</option>
+
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <option class="font-bold" value=@item.A_Code>@item.A_Intitule</option>
+
+
+                                                                        }
+                                                                    }
+                                                              
+                                                            </select>
+
+                                                        </div>
+                                                    </div>
+
+                                                    <button class="btn btn-primary pull-right ladda-button" type="submit" id="EnregistrerClassement">Enregistrer les modifications</button>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    @*<button class="btn btn-greenbee pull-right   m-l-sm" type="submit" id="EnregistrerClassement">Enregistrer les modifications</button>*@
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+}
+
+
+
+<script src="~/js/jquery-3.1.1.min.js"></script>
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+<!-- Chosen -->
+<script src="~/js/plugins/chosen/chosen.jquery.js"></script>
+
+<script src="~/js/plugins/sweetalert/sweetalert.min.js"></script>
+
+<script>
+
+    $(document).ready(function () {
+
+
+        $('.chosen-select').chosen();
+
+    });
+
+    $(document).ready(function () {
+
+        // Bind normal buttons
+        Ladda.bind('.ladda-button', { timeout: 5000 });
+
+        // Bind progress buttons and simulate loading progress
+        Ladda.bind('.progress-demo .ladda-button', {
+            callback: function (instance) {
+                var progress = 0;
+                var interval = setInterval(function () {
+                    progress = Math.min(progress + Math.random() * 0.1, 1);
+                    instance.setProgress(progress);
+
+                    if (progress === 1) {
+                        instance.stop();
+                        clearInterval(interval);
+                    }
+                }, 200);
+            }
+        });
+
+
+        var l = Ladda.bind('.ladda-button-demo');
+
+        l.click(function () {
+            // Start loading
+            l.ladda('start');
+
+            // Timeout example
+            // Do something in backend and then stop ladda
+            setTimeout(function () {
+                l.ladda('stop');
+            }, 12000)
+
+
+        });
+
+    });
+</script>
+
+

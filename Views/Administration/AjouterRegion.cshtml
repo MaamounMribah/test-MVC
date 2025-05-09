@@ -1,0 +1,341 @@
+﻿@model BeeProj.Models.RegionModel
+
+@{
+    ViewBag.Title = "AjouterRegion";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-lg-8">
+        <h2>Nouveau classement </h2>
+        <ol class="breadcrumb">
+            <li>
+                <a>Administration</a>
+            </li>
+            <li>
+                <a>Nouveau classement</a>
+            </li>
+            <li class="active">
+                <strong>Nouveau modèle de classement de commission</strong>
+            </li>
+        </ol>
+    </div>
+    <div class="col-lg-2">
+
+    </div>
+</div>
+@*@using (Html.BeginForm("SaveNouveauClassement", "Administration", FormMethod.Post, new { @class = "form-horizontal", role = "form", enctype = "multipart/form-data" }))
+    {*@
+
+
+
+@Html.AntiForgeryToken()
+<div class="wrapper wrapper-content animated fadeInRight">
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-content">
+                    <div class="form-horizontal">
+@using (Html.BeginForm("AjouterRegion", "Administration", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+{
+    if (ViewData.ModelState[""] != null && ViewData.ModelState[""].Errors.Count > 0)
+    {
+        <div class="alert alert-danger alert-dismissable">
+            <button type="button" class="close " data-dismiss="alert"> × </button>
+            @Html.ValidationSummary("", new { @class = "text-danger" })
+
+        </div>
+    }
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <div class="row">
+
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>BEE <small>Ajouter un nouvelle région</small></h5>
+                </div>
+                <div class="ibox-content">
+                    <div class="row">
+                        <fieldset id="myForm">
+                            <div class="col-sm-10 b-r">
+                                <form role="form">
+                                    <div class="form-group">
+                                        <label class="col-md-4 control-label">Code Région</label>
+                                        <div class="col-md-8">
+                                            @Html.TextBoxFor(m => m.R_CodeRegion, new { @class = "form-control", @id = "R_CodeRegion", @name = "R_CodeRegion" })
+                                            @Html.ValidationMessageFor(model => model.R_CodeRegion,"", new { @class = "text-warning" })
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-md-4 control-label">Intitulé</label>
+                                        <div class="col-md-8">
+                                            @Html.TextBoxFor(m => m.R_Intitule, new { @class = "form-control", @id = "R_Intitule", @name = "R_Intitule" })
+                                            @Html.ValidationMessageFor(model => model.R_Intitule, "", new { @class = "text-warning" })
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-md-4 control-label">Abrege</label>
+                                        <div class="col-md-8">
+                                            @Html.TextBoxFor(m => m.R_Abrege, new { @class = "form-control", @id = "R_Abrege", @name = "R_Abrege", @maxlength = "3" })
+                                            @Html.ValidationMessageFor(model => model.R_Abrege, "", new { @class = "text-warning" })
+
+
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-md-4 control-label">Code Postal</label>
+                                        <div class="col-md-8">
+                                            @Html.TextBoxFor(m => m.CodePostal, new { @class = "form-control", @id = "CodePostal", @name = "CodePostal", @maxlength = "5" })
+                                            @Html.ValidationMessageFor(model => model.CodePostal, "", new { @class = "text-warning" })
+
+
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </fieldset>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <button class="btn btn-primary pull-right" type="submit" id="EnregistrerClassement">Enregistrer</button>
+
+
+
+
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="panel panel-default">
+
+                    <div class="panel-body">
+                        <div class="row">
+
+                            <div class="col-md-4 hidden">
+                                <label class="col-md-4 control-label">Adresse</label>
+                                <div class="col-md-8">
+                                    <input id="searchTextField" type="text" size="50" class="form-control">
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="col-md-4 control-label">Latitude</label>
+                                <div class="col-md-8">
+                                    <input id="A_Latitude" name="A_Latitude" class="MapLat form-control" type="text" placeholder="Latitude">
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="col-md-4 control-label">Longitude</label>
+                                <div class="col-md-8">
+                                    <input id="A_Longitude" name="A_Longitude" class="MapLon form-control" type="text" placeholder="Longitude">
+                                </div>
+                            </div>
+                        </div>
+                        <div id="mymap" style="height: 400px;width: inherit;margin: 0.6em;"></div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+}
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<script src="~/js/jquery-3.1.1.min.js"></script>
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+
+
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA33W2W9f4R0lboGHuxYJgklTTR-8-1Tyo&libraries=places&callback=initAutocomplete&region=tn&language=fr&sensor=true"></script>
+
+
+<script>
+
+    $(function () {
+        initialize2();
+    });
+
+    function initialize2()
+    {
+        var latlng = { lat: 35.763451, lng: 10.803751  };
+
+        var geocoder = new google.maps.Geocoder();
+        var image = {
+            // Adresse de l'icône personnalisée
+           // url: '{{ asset('bundles/sekanfront/image/nav.png') }}',
+            // Taille de l'icône personnalisée
+            scaledSize : new google.maps.Size(35, 35),
+            // Origine de l'image, souvent (0, 0)
+            origin: new google.maps.Point(0,0),
+            // L'ancre de l'image. Correspond au point de l'image que l'on raccroche à la carte. Par exemple, si votre îcone est un drapeau, cela correspond à son mâts
+        };
+        var mapOptions =
+            {
+                zoom: 10,
+                mapTypeId: google.maps.MapTypeId.HYBRID ,
+                mapTypeControl: true,
+                disableDefaultUI: true
+            }
+
+       // var e = document.getElementById("sekan_frontbundle_user_ville");
+     
+
+        var map = new google.maps.Map(document.getElementById('mymap'), mapOptions);
+        var marker;
+
+
+      
+            marker = new google.maps.Marker({
+                position: latlng,
+                map: map,
+                draggable:true,
+                title:"Drag me!"
+             //   icon: image
+            });
+            // Center the map on the marker
+            map.setZoom(8);
+            map.panTo(marker.position);
+
+            google.maps.event.addListener(marker, 'dragend', function(event) {
+                //$('.MapLat').val(event.latLng.lat());
+                //$('.MapLon').val(event.latLng.lng());
+                $('.MapLat').val((event.latLng.lat().toFixed(6)).replace('.', ','));
+                $('.MapLon').val((event.latLng.lng().toFixed(6)).replace('.', ','));
+            });
+
+            google.maps.event.addListener(map, 'click', function(event) {
+                //$('.MapLat').val(event.latLng.lat());
+                //$('.MapLon').val(event.latLng.lng());
+                $('.MapLat').val((event.latLng.lat().toFixed(6)).replace('.', ','));
+                $('.MapLon').val((event.latLng.lng().toFixed(6)).replace('.', ','));
+                marker.setPosition(event.latLng);
+                // Center the map on the marker
+                map.setZoom(8);
+                map.panTo(marker.position);
+            });
+
+
+
+        //}
+        //else {
+        //    map.panTo( new google.maps.LatLng( document.getElementById("sekan_frontbundle_user_lat").value,$('.MapLat').value));
+        //    marker = new google.maps.Marker({
+        //        position: new google.maps.LatLng(document.getElementById("sekan_frontbundle_user_lat").value, $('.MapLon').value),
+        //        map: map,
+        //        draggable:true,
+        //        title:"Drag me!"
+        //     //   icon: image
+        //    });
+        //    // Center the map on the marker
+        //    map.setZoom(8);
+        //    //map.panTo(marker.position);
+        //    marker.setMap(map);
+
+        //    google.maps.event.addListener(marker, 'dragend', function(event) {
+        //        $(".MapLat").value = event.latLng.lat();
+        //        $('.MapLon').value = event.latLng.lng();
+        //    });
+
+        //    google.maps.event.addListener(map, 'click', function(event) {
+        //        $('.MapLat').value = event.latLng.lat();
+        //        $('.MapLon').value = event.latLng.lng();
+        //        marker.setPosition(event.latLng);
+        //        map.setZoom(8);
+        //        map.panTo(marker.position);
+        //    });
+
+        //}
+    }
+</script>
+@*<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCDtrxC4SA0NJdCKtzOq3DfAytbq_2ucJI&libraries=places&callback=initAutocomplete&region=tn&language=fr&sensor=true"></script>
+
+<script>
+    $(function () {
+
+        var lat = 35.723341,
+            lng = 10.580125,
+            latlng = new google.maps.LatLng(lat, lng),
+          //  image = 'https://cdn3.iconfinder.com/data/icons/agriculture-farming-and-gardening-vol-6/90/Bee6-128.png'
+        draggable = true
+        ;
+        //zoomControl: true,
+        //zoomControlOptions: google.maps.ZoomControlStyle.LARGE,
+        var mapOptions = {
+            center: new google.maps.LatLng(lat, lng),
+            zoom: 10,
+            mapTypeId: google.maps.MapTypeId.ROADMAP,
+            panControl: true,
+            panControlOptions: {
+                position: google.maps.ControlPosition.TOP_RIGHT
+            },
+            zoomControl: true,
+            zoomControlOptions: {
+                style: google.maps.ZoomControlStyle.LARGE,
+                position: google.maps.ControlPosition.TOP_left
+            }
+        },
+        map = new google.maps.Map(document.getElementById('map_canvas'), mapOptions),
+            marker = new google.maps.Marker({
+                position: latlng,
+                map: map,
+                draggable: true
+                //   icon: image
+            });
+        var input = document.getElementById('searchTextField');
+        var autocomplete = new google.maps.places.Autocomplete(input, {
+            types: ["geocode"]
+        });
+        autocomplete.bindTo('bounds', map);
+        var infowindow = new google.maps.InfoWindow();
+        google.maps.event.addListener(autocomplete, 'place_changed', function (event) {
+            infowindow.close();
+            var place = autocomplete.getPlace();
+            if (place.geometry.viewport) {
+                map.fitBounds(place.geometry.viewport);
+            } else {
+                map.setCenter(place.geometry.location);
+                map.setZoom(17);
+            }
+            moveMarker(place.name, place.geometry.location);
+            $('.MapLat').val(place.geometry.location.lat());
+            $('.MapLon').val(place.geometry.location.lng());
+        });
+        google.maps.event.addListener(map, 'click', function (event) {
+            $('.MapLat').val((event.latLng.lat().toFixed(6)).replace('.', ','));
+            $('.MapLon').val((event.latLng.lng().toFixed(6)).replace('.', ','));
+            infowindow.close();
+            var geocoder = new google.maps.Geocoder();
+            geocoder.geocode({
+                "latLng": event.latLng
+            }, function (results, status) {
+                console.log(results, status);
+                if (status == google.maps.GeocoderStatus.OK) {
+                    console.log(results);
+                    var lat = results[0].geometry.location.lat(),
+                        lng = results[0].geometry.location.lng(),
+                        placeName = results[0].address_components[0].long_name,
+                        latlng = new google.maps.LatLng(lat, lng);
+
+                    moveMarker(placeName, latlng);
+                    $("#searchTextField").val(results[0].formatted_address);
+                }
+            });
+        });
+        function moveMarker(placeName, latlng) {
+            marker.setIcon(image);
+            marker.setPosition(latlng);
+            infowindow.setContent(placeName);
+            alert(placeName);
+            infowindow.open(map, marker);
+        }
+    });
+</script>*@

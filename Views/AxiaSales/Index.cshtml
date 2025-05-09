@@ -1,0 +1,190 @@
+﻿@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<link href="~/css/plugins/iCheck/custom.css" rel="stylesheet">
+<link href="~/css/plugins/jasny/jasny-bootstrap.min.css" rel="stylesheet">
+<link href="~/css/plugins/footable/footable.core.css" rel="stylesheet">
+<link href="~/css/plugins/chosen/bootstrap-chosen.css" rel="stylesheet">
+<link href="~/css/plugins/sweetalert/sweetalert.css" rel="stylesheet">
+<script src="~/Scripts/jquery-1.10.2."></script>
+<!-- Ladda style -->
+<link href="~/css/plugins/ladda/ladda-themeless.min.css" rel="stylesheet">
+<!-- Toastr style -->
+<link href="~/css/plugins/toastr/toastr.min.css" rel="stylesheet">
+<link href="~/css/plugins/c3/c3.min.css" rel="stylesheet">
+<link href="~/css/plugins/morris/morris-0.4.3.min.css" rel="stylesheet">
+
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <!--<div class="col-lg-6">
+            <div class="contact-box center-version">
+                <a href="#">
+                    <h3 class="m-b-xs"><strong>Générer les factures automatique </strong></h3>
+                </a>
+
+
+                <label class="col-sm-2 control-label">Date de génération </label>
+                <div class="col-sm-10">
+                    <input type="date" name="dateauto" class="form-control" id="dateauto">
+                     <span class="help-block m-b-none">
+                          choisir la date fin avant l'alignement </span>
+                </div>-->
+                @*<div class="m-5 p-5" style="text-align: center">
+                    <div id="wait">
+
+                        <div class="spinner-border text-purplebee" role="status">
+                            <i class="fa fa-spinner fa-spin" style="font-size:50px"></i>
+                            <br />
+                            <h3>Merci de  patienter...</h3>
+                        </div>
+                    </div>
+
+                </div>*@
+                <!--<div class="contact-box-footer">
+                    <div class="m-t-xs btn-group">
+                        <div class="btn btn-success btn-rounded ladda-button" id="FA-auto" onclick="FAauto()">Générer </div>
+                    </div>
+                </div>
+            </div>
+        </div>-->
+        <div class="col-lg-6">
+            <div class="contact-box center-version">
+                <a href="#">
+                    <h3 class="m-b-xs"><strong>Générer premières factures </strong></h3>
+                </a>
+                @if (TempData["MSG"] != null)
+                {
+                    <div class="alert alert-warning alert-dismissable">
+                        <button type="button" class="close " data-dismiss="alert"> × </button>
+                        <p class="text-danger">@TempData["MSG"]</p>
+                    </div>
+
+                }
+                @*<div class="m-5 p-5" style="text-align: center">
+                    <div id="wait">
+
+                        <div class="spinner-border text-purplebee" role="status">
+                            <i class="fa fa-spinner fa-spin" style="font-size:50px"></i>
+                            <br />
+                            <h3>Merci de  patienter...</h3>
+                        </div>
+                    </div>
+
+                </div>*@
+                <div class="contact-box-footer">
+                    <div class="m-t-xs btn-group">
+                        <div class="btn btn-success btn-rounded ladda-button" onclick="FAabo()" id="FA-abo">Générer </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="~/js/jquery-3.1.1.min.js"></script>
+<script src="~/js/bootstrap.min.js"></script>
+<script src="~/js/jquery-3.1.1.min.js"></script>
+<script src="~/js/jquery-2.1.1.js"></script>
+<script src="~/js/plugins/slick/slick.min.js"></script>
+<!-- Mainly scripts -->
+<script src="~/js/jquery-3.1.1.min.js"></script>
+<script src="~/js/bootstrap.min.js"></script>
+<script src="~/js/plugins/metisMenu/jquery.metisMenu.js"></script>
+<script src="~/js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+<!-- Chosen -->
+<script src="~/js/plugins/chosen/chosen.jquery.js"></script>
+<link href="~/css/plugins/ladda/ladda-themeless.min.css" rel="stylesheet">
+<!-- Ladda -->
+<script src="~/js/plugins/ladda/spin.min.js"></script>
+<script src="~/js/plugins/ladda/ladda.min.js"></script>
+<script src="~/js/plugins/ladda/ladda.jquery.min.js"></script>
+<script>
+
+    //$(document).ready(function () {
+    //    $(document).ajaxStart(function () {
+    //        $("#wait").css("display", "block");
+    //        $("#annulerCochage").css("display", "none");
+    //    });
+    //    $(document).ajaxComplete(function () {
+    //        $("#wait").css("display", "none");
+    //        $("#annulerCochage").css("display", "inline-block");
+    //    });
+    //    $("button").click(function () {
+    //        $("#txt").load("demo_ajax_load.asp");
+    //    });
+    //});
+ 
+    function FAauto() {
+        console.log(document.getElementById('dateauto').value)
+        // alert(" If you just want value ==>" + $('#my-dropdown').val());
+        $.ajax({
+            type: "post",
+            url: '/AxiaSales/FactureAuto?dateauto=' + document.getElementById('dateauto').value, // we are calling json method
+            dataType: 'json',
+            success: function (msg) {
+                if (msg.result == "Error") {
+                    toastr.error('pas de factures genereres !', 'Error');
+                }
+                else {
+                    toastr.success('Factures generer! ', 'success');
+                    location.reload();
+                }
+
+            }
+        })
+    }
+    console.log("here out")
+    function FAabo() {
+        // alert(" If you just want value ==>" + $('#my-dropdown').val());
+        console.log("here")
+        $.ajax({
+            type: "post",
+            url: "/AxiaSales/FactureAbo", // we are calling json method
+            dataType: 'json',
+            success: function (msg) {
+                if (msg.result == "Error") {
+                    toastr.error('pas de factures genereres !', 'Error');
+                }
+                else {
+                    toastr.success('Factures generer! ', 'success');
+                    location.reload();
+                }
+
+            }
+        });
+    }
+
+
+   
+    // Bind normal buttons
+    Ladda.bind('.ladda-button', { timeout: 200000 });
+    // Bind progress buttons and simulate loading progress
+    Ladda.bind('.progress-demo .ladda-button', {
+        callback: function (instance) {
+            var progress = 0;
+            var interval = setInterval(function () {
+                progress = Math.min(progress + Math.random() * 0.1, 1);
+                instance.setProgress(progress);
+
+                if (progress === 1) {
+                    instance.stop();
+                    clearInterval(interval);
+                }
+            }, 200000);
+        }
+    });
+
+    var l = Ladda.bind('.ladda-button-demo');
+
+    l.click(function () {
+        // Start loading
+        l.ladda('start');
+
+        // Timeout example
+        // Do something in backend and then stop ladda
+        setTimeout(function () {
+            l.ladda('stop');
+        }, 1200000)
+    });
+</script>

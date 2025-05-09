@@ -1,0 +1,55 @@
+﻿<!-- Toastr style -->
+<link href="~/css/plugins/toastr/toastr.min.css" rel="stylesheet">
+
+    @using (Html.BeginForm("SaveTask", "Reminder", FormMethod.Post, new { @class = "form-horizontal", @name = "myForm", role = "form", enctype = "multipart/form-data" }))
+    {
+        <div class="form-group">
+            <label>Date du rappel <sup>*</sup></label>
+            <input type="date" pattern="\d{1,2}/\d{1,2}/\d{4}" class="form-control" required name="DateRap" id="DateRap" />
+        </div>
+        <div class="form-group">
+            <label>Heure du Rappel <sup>*</sup></label>
+            <input type="time" class="form-control" name="DureeRap" id="DureeRap" required>
+        </div>
+        <div class="form-group">
+            <label>Description du Rappel <sup>*</sup></label>
+            <textarea type="time" class="form-control" name="Tache" id="Tache" required></textarea>
+        </div>
+        <div>
+            <button class="btn btn-sm btn-purplebee pull-right m-t-n-xs" type="submit" ><strong>Ajouter </strong></button>
+        </div>
+    }
+
+<!-- Toastr script -->
+<script src="~/js/plugins/toastr/toastr.min.js"></script>
+
+<script>
+
+
+
+
+        //$(".SubmitTask").click(function () {
+        //     var data = $("#SubmitForm").serialize();
+
+        //    $.ajax({
+        //        type: "Post",
+        //        url: "/Reminder/SaveTask",
+        //        data: data,
+        //        success: function (msg) {
+        //            if (msg.result == 1) {
+        //                toastr.success(msg.msg, 'Succes');
+        //                document.getElementById("SubmitForm").reset();
+
+        //                $(".RefreshToDo").load('/Reminder/SmalltodoList');
+        //                //$.get('/Reminder/SmalltodoList', function (data) {
+        //                //    $('#RefreshToDo').html(data);
+        //                //});
+
+        //            } else {
+        //                toastr.error(msg.msg, 'Erreur');
+
+        //            }
+        //        }
+        //    })
+        //});
+</script>

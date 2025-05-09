@@ -1,0 +1,127 @@
+﻿@model BeeProj.Models.C_SERVICE
+@{
+    ViewBag.Title = "NewService";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-lg-10">
+        <h2>Profile</h2>
+        <ol class="breadcrumb">
+            <li>
+
+                <a>Acceuil </a>
+            </li>
+            <li class="active">
+                <a href="@Url.Action("index","Administration")">Administration</a>
+            </li>
+            <li class="active">
+                <a href="@Url.Action("ListeServices","Listes")">Liste des Services</a>
+            </li>
+
+        </ol>
+    </div>
+    <div class="col-lg-2">
+       
+    </div>
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox float-e-margins">
+                <br/>
+                @using (Html.BeginForm("EnvoyerService", "Listes", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+                {
+              
+                <div class="ibox-content">
+                    <form method="get" class="form-horizontal">
+
+                        <div class="row">
+                            <div class="col-xs-1"></div>
+                            <div class="form-group col-xs-5">
+                                <br />
+                                <label class="col-sm-2 control-label">Intitulé</label>
+
+                                <div class="col-sm-10">
+
+                                    @Html.TextBoxFor(model => model.S_Type, new { @class = "form-control", @placeholder = "intitulé" })
+                                  
+                                </div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <button class="btn  btn-primary pull-right " type="submit"><strong>Envoyer</strong></button>
+
+                        </div>
+                        <div>
+                            <button class="btn btn-default pull-right" type="reset"><strong>Annuler</strong></button>
+
+                        </div>
+                    </form>
+                </div>
+
+                }    
+            </div>
+        </div>
+    </div>
+    </div>
+<link href="~/css/plugins/dataTables/datatables.min.css" rel="stylesheet">
+
+
+
+<script src="~/js/plugins/dataTables/datatables.min.js"></script>
+<script src="~/js/jquery-3.1.1.min.js"></script>
+<script src="~/js/bootstrap.min.js"></script>
+<script src="~/js/plugins/metisMenu/jquery.metisMenu.js"></script>
+<script src="~/js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+
+<script src="~/js/plugins/dataTables/datatables.min.js"></script>
+
+<!-- Custom and plugin javascript -->
+<script src="~/js/inspinia.js"></script>
+<script src="~/js/plugins/pace/pace.min.js"></script>
+<script>
+    $(document).ready(function () {
+
+        var table = $("#Services").DataTable({
+            "ajax": {
+
+                "url": "/Listes/getListeServices",
+                "type": 'get',
+                "datatype": "json"
+            },
+            "columns": [
+                 { "data": "S_Type" },
+            { "data": "cbMarq" }
+
+            ],
+         });
+
+        $("#Services").dataTable().destroy();
+
+            $('.dataTables-example').DataTable({
+                pageLength: 25,
+                responsive: true,
+                dom: '<"html5buttons"B>lTfgitp',
+                buttons: [
+                    { extend: 'copy'},
+                    {extend: 'csv'},
+                    {extend: 'excel', title: 'ExampleFile'},
+                    {extend: 'pdf', title: 'ExampleFile'},
+
+                    {extend: 'print',
+                     customize: function (win){
+                            $(win.document.body).addClass('white-bg');
+                            $(win.document.body).css('font-size', '10px');
+
+                            $(win.document.body).find('table')
+                                    .addClass('compact')
+                                    .css('font-size', 'inherit');
+                    }
+                    }
+                ]
+
+            });
+
+        });
+
+</script>

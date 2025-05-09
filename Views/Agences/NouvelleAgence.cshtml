@@ -1,0 +1,764 @@
+﻿@model BeeProj.Models.AgenceModel
+@{
+    ViewBag.Title = "NouvelleAgence";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<link href="~/css/plugins/chosen/bootstrap-chosen.css" rel="stylesheet">
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-lg-8">
+        <h2>Nouvelle agence</h2>
+        <ol class="breadcrumb">
+            <li>
+                <a>Administration</a>
+            </li>
+            <li>
+                <a href='@Url.Action("index","Agences")'>Liste Agences</a>
+            </li>
+            <li class="active">
+                <strong>Nouvelle Agence</strong>
+            </li>
+        </ol>
+    </div>
+    <div class="col-lg-2">
+
+    </div>
+</div>
+<div class="wrapper wrapper-content animated fadeIn">
+    @if (ViewBag.MaxAgencies == false)
+    {
+        <div class="alert alert-danger">
+            Vous avez atteint le nombre maximal des agences  <a class="alert-link" href="@Url.Action("Licensing", "Administration")">Licence</a>.
+        </div>
+    }
+    else
+    {
+        using (Html.BeginForm("NouvelleAgence", "Agences", FormMethod.Post, new { @class = "form-horizontal", role = "form", enctype = "multipart/form-data", id = "AgenceForm" }))
+        {
+            if (ViewData.ModelState[""] != null && ViewData.ModelState[""].Errors.Count > 0)
+            {
+                <div class="alert alert-danger alert-dismissable">
+                    <button type="button" class="close " data-dismiss="alert"> × </button>
+                    @Html.ValidationSummary("", new { @class = "text-danger" })
+                </div>
+            }
+            @Html.AntiForgeryToken()
+<div class="wrapper wrapper-content animated fadeIn">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>Créer une nouvelle agence Bee <small class="m-l-sm">#@ViewBag.CurrAgNO</small></h5>
+                    <div class="ibox-tools">
+                        <a class="collapse-link">
+                            <i class="fa fa-chevron-up"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="ibox">
+
+                    <div class="ibox-content">
+
+                        <div class="form-group float-e-margins">
+
+                            <div class="col-md-4">
+                                <div class="form-group">
+
+                                    <label class="col-md-4 control-label">Type agence</label>
+
+                                    <div class="col-md-8">
+                                        <select name="A_Type" class="chosen-select form-control" id="A_Type">
+
+                                            @foreach (var item in ViewBag.listTypeAgence)
+
+                                            {
+                                                <option value="@item.Value">@item.Text</option>
+                                            }
+
+
+                                        </select>
+
+                                    </div>
+
+                                </div>
+                            </div>
+
+                            <div class="col-md-4" id="hideAgMere">
+
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label">Agence mère</label>
+                                    <div class="col-md-8">
+                                        <select name="A_Parent" class="form-control" id="A_Parent">
+
+                                            @foreach (var item in ViewBag.AgenceSiege)
+
+                                            {
+                                                <option value="@item.cbMarq">@item.A_Code @item.A_Intitule</option>
+                                            }
+
+
+
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="col-md-4 control-label">Dépôt Agence</label>
+                                <div class="col-md-8">
+                                    <input class="form-control" disabled id="DE_No" name="DE_No" />
+                                </div>
+
+                            </div>
+                        </div>
+
+
+                        <div class="form-group">
+                            <div class="col-md-4">
+                                <label class="col-md-4 control-label">Région Agence</label>
+                                <div class="col-md-8">
+                                    <select name="R_CodeRegionAgence" class="chosen-select form-control" id="R_CodeRegionAgence">
+
+                                        @foreach (var item in ViewBag.ListeRegions)
+
+                                        {
+                                            <option value="@item.R_CodeRegion">@item.R_CodeRegion: @item.R_Intitule </option>
+                                        }
+
+
+
+                                    </select>
+
+                                </div>
+
+                            </div>
+                            <div class="col-md-4  hidden" id="classementForPDV">
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label">Modèle de commission </label>
+
+                                    <div class="col-md-8">
+                                        @if (ViewBag.ModeleClassement == null)
+                                        {
+
+                                            <a href='@Url.Action("ModeleCommission", "Administration")' target="_blank">
+                                                créer un nouveau modèle de classement de commission
+                                            </a>
+                                        }
+                                        else
+                                        {
+
+                                            <select name="A_Classement" class="chosen-select form-control" id="A_Classement">
+                                                <optgroup label="Parent">
+                                                    <option>--choisir--</option>
+                                                    @foreach (var item in ViewBag.ModeleClassement)
+
+                                                    {
+                                                        <option value="@item.cbMarq">@item.Intitule </option>
+                                                    }
+
+                                                </optgroup>
+
+                                            </select>
+
+
+                                            <span class="help-block m-b-none"><a href='@Url.Action("ModeleCommission", "Administration")' target="_blank">créer un nouveau modèle de classement de commission</a></span>
+
+                                        }
+
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="ibox">
+                    <div class="ibox-content">
+                        <div class="form-group">
+                            @*<label class="col-md-4 control-label">Identifiant agence<sup style="color : red">*</sup></label>*@
+                            <label class="col-md-4 control-label">Identifiant agence <sup style="color:red">*</sup></label>
+                            <div class="col-md-8">
+                                @*<input id="A_Identifiant" name="A_Identifiant" class="form-control" maxlength="17" required />*@
+
+                                @Html.TextBoxFor(m => m.A_Identifiant, new { @class = "form-control", id = "A_Identifiant", maxlength = "17" })
+                                @Html.ValidationMessageFor(model => model.A_Identifiant, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        @*<div class="col-md-8">*@
+
+                        <div class="form-group">
+                            <label class="col-md-4 control-label">Intitulé agence <sup style="color:red">*</sup></label>
+                            <div class="col-md-8">
+                                @*<input id="A_Intitule" name="A_Intitule" class="form-control" required />*@
+                                @Html.TextBoxFor(m => m.A_Intitule, new { @class = "form-control", id = "A_Intitule", maxlength = "69" })
+                                @Html.ValidationMessageFor(model => model.A_Intitule, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @*<label class="col-md-4 control-label">Raison Sociale</label>*@
+                            <label class="col-md-4 control-label">Raison Sociale <sup style="color:red">*</sup></label>
+                            <div class="col-md-8">
+                                @*<input id="A_RaisonSociale" name="A_RaisonSociale" class="form-control" />*@
+                                @Html.TextBoxFor(m => m.A_RaisonSociale, new { @class = "form-control", id = "A_RaisonSociale", maxlength = "50" })
+                                @Html.ValidationMessageFor(model => model.A_RaisonSociale, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="ibox">
+
+                    <div class="ibox-content">
+
+                        <div class="form-group">
+                            <label class="col-md-4 control-label">Adresse Agence<sup style="color:red">*</sup></label>
+                            <div class="col-md-8">
+
+                                @*<textarea id="A_Adresse" name="A_Adresse" class="form-control"></textarea>*@
+                                @Html.TextAreaFor(m => m.A_Adresse, new { @class = "form-control", id = "A_Adresse" })
+                                @Html.ValidationMessageFor(model => model.A_Adresse, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.A_Complement, new { @class = "col-md-4 control-label" })
+                            <div class="col-md-8">
+
+                                @*<textarea id="A_Complement" name="A_Complement" class="form-control"></textarea>*@
+                                @Html.TextAreaFor(m => m.A_Complement, new { @class = "form-control", id = "A_Complement" })
+                                @Html.ValidationMessageFor(model => model.A_Complement, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-md-4 control-label">Gouvernorat<sup style="color:red">*</sup></label>
+                            <div class="col-md-8">
+                                <select class="form-control chosen-select" id="search" name="CT_Gouvernorat" required>
+                                    <option selected="selected">-- Choisir --</option>
+                                    @foreach (var item in ViewBag.Gouvernoratt)
+                                    {
+                                        <option value="@item.Gouvernorat">@item.Gouvernorat</option>
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-4 control-label">Ville<sup style="color:red">*</sup></label>
+                            <div class="col-md-8">
+                                <select class="form-control" name="A_Ville" id="A_Ville" required></select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-md-4 control-label">Cité<sup style="color:red">*</sup></label>
+                            <div class="col-md-8">
+                                <select class="form-control" name="CT_Localite" id="Localite" required></select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @*<label class="col-md-4 control-label">Code Postal<sup style="color : red">*</sup></label>*@
+                            <label class="col-md-4 control-label">Code Postal <sup style="color:red">*</sup></label>
+
+                            <div class="col-md-8">
+                                <input type="text" class="form-control" name="A_CodePostal" id="A_CodePostal" required>
+                                @*@Html.TextBoxFor(m => m.A_CodePostal, new { @class = "form-control", id = "A_CodePostal" })*@
+                                @Html.ValidationMessageFor(model => model.A_CodePostal, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="ibox">
+
+                    <div class="ibox-content">
+
+                        @*<div class="form-group">
+                                <label class="col-md-4 control-label">Identifiant T.V.A<sup style="color : red">*</sup></label>
+
+                                <div class="col-md-8">
+                                    <input id="A_MatriculeFiscale" name="A_MatriculeFiscale" class="form-control" />
+
+                                    @Html.ValidationMessageFor(model => model.A_MatriculeFiscale, "", new { @class = "text-danger" })
+                                </div>
+                            </div>*@
+                        <div class="form-group">
+                            <label class="col-md-4 control-label">Identifiant T.V.A <sup style="color:red">*</sup></label>
+                            <div class="col-md-8">
+                                @Html.TextBoxFor(m => m.A_MatriculeFiscale, new { @class = "form-control", id = "A_MatriculeFiscale", maxlength = "50" })
+                                @Html.ValidationMessageFor(model => model.A_MatriculeFiscale, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-4 control-label">Registre de commerce </label>
+                            <div class="col-md-8">
+                                @*<input id="A_REGISTRE" name="A_REGISTRE" class="form-control" />*@
+                                @Html.TextBoxFor(m => m.A_REGISTRE, new { @class = "form-control", id = "A_REGISTRE", maxlength = "20" })
+                                @Html.ValidationMessageFor(model => model.A_REGISTRE, "", new { @class = "text-danger" })
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+                <div class="ibox">
+                    <div class="ibox-content">
+                        <div class="form-group">
+                            @*<label class="col-md-4 control-label">Contact principal<sup style="color : red">*</sup></label>*@
+                            <label class="col-md-4 control-label">Contact principal <sup style="color:red">*</sup></label>
+                            <div class="col-md-8">
+                                @*<input id="A_Contact" name="A_Contact" class="form-control" required />*@
+                                @Html.TextBoxFor(m => m.A_Contact, new { @class = "form-control", id = "A_Contact" })
+                                @Html.ValidationMessageFor(model => model.A_Contact, "", new { @class = "text-danger" })
+
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @*<label class="col-md-4 control-label">Email<sup style="color : red">*</sup></label>*@
+                            <label class="col-md-4 control-label">Adresse Mail <sup style="color:red">*</sup></label>
+                            <div class="col-md-8">
+                                @*<input name="A_Mail" id="A_Mail" type="email" class="form-control" required />*@
+                                @Html.TextBoxFor(m => m.A_Mail, new { @class = "form-control", id = "A_Mail" })
+                                @Html.ValidationMessageFor(model => model.A_Mail, "", new { @class = "text-danger" })
+
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-4 control-label">Téléphone agence <sup style="color:red">*</sup></label>
+                            <div class="col-md-8">
+                                @*<input id="A_Telephone" name="A_Telephone" class="form-control" />*@
+                                @Html.TextBoxFor(m => m.A_Telephone, new { @class = "form-control", @id = "A_Telephone", @name = "A_Telephone", @maxlength = "8" })
+                                @Html.ValidationMessageFor(model => model.A_Telephone, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-4 control-label">Télécopie agence </label>
+                            <div class="col-md-1"></div>
+                            <div class="col-md-8">
+                                @*<input id="A_Telecopie" name="A_Telecopie" class="form-control" />*@
+                                @Html.TextBoxFor(m => m.A_Telecopie, new { @class = "form-control", @id = "A_Telecopie", @name = "A_Telecopie", @maxlength = "8" })
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="ibox hidden" id="iboxFreelancer">
+                    <div class="ibox-content">
+                        <div class="form-group hidden" id="freelancer">
+                            <div class="form-group">
+
+                                <label class="col-md-4 control-label">Utilisateur</label>
+                                <div class="col-md-8">
+                                    @Html.DropDownListFor(m => m.UserName, ViewBag.ListUsers as SelectList, "--Utilisateur--", new { @name = "UserName", @id = "UserName", @class = "chosen-select" })
+                                    <code>
+                                        N.B: Un seul Freelancer pour chaque Agence.
+                                    </code>
+                                    <span class="help-block m-b-none" id="NouvelUtilisateur">
+                                        <a class="btn btn-block btn-greenbee">
+                                            Créer un nouvel utilisateur
+                                            <i class="fa fa-user-circle"></i>
+                                        </a>
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="col-lg-4">
+                            </div>
+                            <div class="col-lg-8 hidden " id="CreerNouvelUtilisateur">
+                                <div class="panel panel-success">
+
+                                    <div class="panel-body">
+                                        <div class="form-group">
+
+                                            @Html.Label("Prénom", new { @class = "control-label col-md-2" })
+                                            <div class="col-md-4">
+                                                @Html.TextBoxFor(m => m.FirstName, new { @class = "form-control" })
+
+                                            </div>
+                                            @Html.Label("Nom", new { @class = "control-label col-md-2" })
+                                            <div class="col-md-4">
+                                                @Html.TextBoxFor(m => m.LastName, new { @class = "form-control" })
+                                                @Html.ValidationMessageFor(model => model.LastName)
+                                            </div>
+                                        </div>
+
+
+                                        <div class="form-group">
+                                            @Html.LabelFor(m => m.Email, new { @class = "col-md-2 control-label" })
+                                            <div class="col-md-10">
+                                                @Html.TextBoxFor(m => m.Email, new { @class = "form-control" })
+                                            </div>
+                                        </div>
+
+                                        <div class="hr-line-dashed"></div>
+                                        <div class="form-group">
+                                            @Html.Label("Adresse", new { @class = "control-label col-md-2" })
+                                            <div class="col-md-10">
+                                                @Html.TextBoxFor(m => m.Address, new { @class = "form-control" })
+
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            @Html.Label("Téléphone", new { @class = "control-label col-md-2" })
+                                            <div class="col-md-10">
+                                                @Html.TextBoxFor(m => m.Phone, new { @class = "form-control", name = "Telephone" })
+
+                                            </div>
+                                        </div>
+
+
+                                        <div class="hr-line-dashed"></div>
+
+
+                                        <div class="form-group">
+                                            <label class="col-md-2 control-label">
+                                                Groupe d'utilisateur
+                                            </label>
+                                            <div class="col-md-10">
+                                                <select data-placeholder="--Choisir les groupes--" class="chosen-select" multiple style="width:350px;" tabindex="4" name="selectedGroups">
+                                                    @foreach (var item in (SelectList)ViewBag.GroupsList)
+                                                    {
+                                                        <option name="selectedGroups" value="@item.Value">@item.Text</option>
+
+                                                    }
+                                                </select>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="ibox">
+        <div class="ibox-content">
+            <div class="form-group float-e-margins">
+                <div class="col-md-6">
+                    <div class="form-group">
+
+                        <label class="col-md-4 control-label">Seuil1</label>
+                        <div class="col-md-8">
+                            @Html.TextBoxFor(m => m.Seuil1, new { @class = "form-control", id = "Seuil1" })
+                            @Html.ValidationMessageFor(model => model.Seuil1, "", new { @class = "text-danger" })
+
+                        </div>
+
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label class="col-md-4 control-label">Seuil2</label>
+                        <div class="col-md-8">
+                            @Html.TextBoxFor(m => m.Seuil2, new { @class = "form-control", id = "Seuil2" })
+                            @Html.ValidationMessageFor(model => model.Seuil2, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="ifospayement" style="display:none">
+        <div class="ibox">
+            <div class="ibox-content">
+                <div class="form-group float-e-margins">
+                    <div class="col-md-6">
+                        <div class="form-group">
+
+                            <label class="col-md-4">Nombre de <strong style="font-size:1.2em">Jours</strong> de blocage paiement <strong style="font-size:1.2em">(Bordereau)</strong> </label>
+                            <div class="col-md-8">
+                                @Html.TextBoxFor(m => m.ValueBord, new { @class = "form-control", id = "ValueBord" })
+                                @Html.ValidationMessageFor(model => model.ValueBord, "", new { @class = "text-danger" })
+
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="col-md-4">Nombre de <strong style="font-size:1.2em">Jours</strong> de blocage paiement <strong style="font-size:1.2em">(Réglement)</strong> </label>
+                            <div class="col-md-8">
+                                @Html.TextBoxFor(m => m.ValueReg, new { @class = "form-control", id = "ValueReg" })
+                                @Html.ValidationMessageFor(model => model.ValueReg, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="col-md-4">Nombre de <strong style="font-size:1.2em">Jours</strong> de blocage paiement <strong style="font-size:1.2em">(Réglement)</strong> </label>
+                            <div class="col-md-8">
+                                @Html.TextBoxFor(m => m.NbreJoursBord, new { @class = "form-control", id = "NbreJoursBord" })
+                                @Html.ValidationMessageFor(model => model.NbreJoursBord, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="panel panel-default">
+
+                <div class="panel-body">
+                    <div class="row">
+
+                        <div class="col-md-4">
+                            <label class="col-md-4 control-label">Adresse</label>
+                            <div class="col-md-8">
+                                <input id="searchTextField" type="text" size="50" class="form-control">
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="col-md-4 control-label">Latitude</label>
+                            <div class="col-md-8">
+                                <input id="A_Latitude" name="A_Latitude" value="35,797278" class="MapLat form-control" type="text" placeholder="Latitude" maxlength="16">
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="col-md-4 control-label">Longitude</label>
+                            <div class="col-md-8">
+                                <input id="A_Longitude" name="A_Longitude" value="10,606183" class="MapLon form-control" type="text" placeholder="Longitude" maxlength="16">
+                            </div>
+                        </div>
+                    </div>
+                    <div id="mymap" style="height: 400px;width: inherit;margin: 0.6em;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+            <button type="submit" class="btn btn-primary btn-block"> Créer</button>
+        }
+    }
+</div>
+
+<script src="~/js/jquery-3.1.1.min.js"></script>
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
+<script src="~/js/plugins/chosen/chosen.jquery.js"></script>
+@*<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCDtrxC4SA0NJdCKtzOq3DfAytbq_2ucJI&libraries=places&callback=initAutocomplete&region=tn&language=fr&sensor=true"></script>*@
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA33W2W9f4R0lboGHuxYJgklTTR-8-1Tyo&libraries=places&callback=initAutocomplete&region=tn&language=fr&sensor=true"></script>
+<script>
+
+    $('#A_Type').change(function () {
+        if ($('#A_Type').val() == 1) {
+            document.getElementById("ifospayement").style.display = "none";
+        }
+        else {
+          
+            document.getElementById("ifospayement").style.display = "block";
+
+
+        }
+    });
+
+
+    $("#NouvelUtilisateur").click(function () {
+        $("#CreerNouvelUtilisateur").removeClass("hidden");
+
+        $("#Email").val($("#A_Mail").val());
+        $("#Telephone").val($("#A_Telephone").val());
+        $("#FirstName").val($("#A_Contact").val());
+        $("#LastName").val($("#A_Contact").val());
+    });
+    $('#search').change(function () {
+        //  $('#selectCP').addClass('chosen-select');
+        region = $('select#search').find("option:selected").val();
+        getRegion();
+        // alert(region);
+
+    });
+
+    function getRegion() {
+
+        $.ajax({
+            type: "get",
+            url: '@Url.Action("isRegionExists", "Abonnement")', // we are calling json method
+            dataType: 'json',
+            data: { identifiant: $('select#search').find("option:selected").val() },
+            success: function (msg) {
+                if (msg.result == 0) {
+
+                    var len = msg.data.length;
+
+                    $("#A_Ville").empty();
+                    $("#A_Ville").append("<option>-- Choisir --</option>");
+
+                    for (var i = 0; i < len; i++) {
+
+                        $("#A_Ville").append("<option value='" + msg.data[i].trim() + "'>" + msg.data[i].trim() + "</option>");
+                        //$("#CT_CodePostal").append("<input type='" + text + "class='" + form - control + "name='" + CT_CodePostal + "id='" + CT_CodePostal + "value='" + msg.cpostal[i] + "'>");
+
+                    }
+
+                }
+            }
+        });
+    }
+            @*---------------------------------------------------- 19/08/2019 manel ---------------------------------------------------------------*@
+    $('#A_Ville').change(function () {
+                //  $('#selectCP').addClass('chosen-select');
+        ville = $('select#A_Ville').val();
+                getCitee();
+                // alert(ville);
+
+            });
+    function getCitee() {
+
+        $.ajax({
+            type: "get",
+            url: '@Url.Action("isCiteeExists", "Abonnement")', // we are calling json method
+            dataType: 'json',
+            data: { identifiant: $('select#A_Ville').find("option:selected").val() },
+            success: function (msg) {
+                if (msg.result == 0) {
+
+                    var len = msg.data.length;
+                    $("#Localite").empty();
+                    $("#Localite").append("<option> -- Choisir --</option>");
+
+                    for (var i = 0; i < len; i++) {
+
+                        $("#Localite").append("<option value='" + msg.data[i].trim() + "'>" + msg.data[i].trim() + "</option>");
+
+                    }
+
+                }
+            }
+        });
+    }
+
+    $('#Localite').change(function () {
+        //  $('#selectCP').addClass('chosen-select');
+        citee = $('select#Localite').val();
+        getCodepostal();
+        // alert(ville);
+
+    });
+    function getCodepostal() {
+
+        $.ajax({
+            type: "get",
+            url: '@Url.Action("isCodePostalExists", "Abonnement")', // we are calling json method
+            dataType: 'json',
+            data: { identifiant: $('select#Localite').find("option:selected").val() },
+            success: function (msg) {
+                if (msg.result == 0) {
+                    $("#A_CodePostal").val(msg.data);
+                }
+            }
+        });
+    }
+    $(document).ready(function () {
+        $('.chosen-select').chosen({ width: "100%" });
+
+
+
+        var latlng = { lat: 35.81154768143363, lng: 10.630902611630404 };
+        var geocoder = new google.maps.Geocoder();
+        var image = {
+            // Adresse de l'icône personnalisée
+            // url: '{{ asset('bundles/sekanfront/image/nav.png') }}',
+            // Taille de l'icône personnalisée
+            scaledSize: new google.maps.Size(35, 35),
+            // Origine de l'image, souvent (0, 0)
+            origin: new google.maps.Point(0, 0),
+            // L'ancre de l'image. Correspond au point de l'image que l'on raccroche à la carte. Par exemple, si votre îcone est un drapeau, cela correspond à son mâts
+        };
+        var mapOptions =
+            {
+                zoom: 10,
+                mapTypeId: google.maps.MapTypeId.HYBRID,
+                mapTypeControl: true,
+                disableDefaultUI: true
+            }
+        // var e = document.getElementById("sekan_frontbundle_user_ville");
+        var map = new google.maps.Map(document.getElementById('mymap'), mapOptions);
+        var marker;
+        marker = new google.maps.Marker({
+            position: latlng,
+            map: map,
+            draggable: true,
+            title: "Drag me!"
+            //   icon: image
+        });
+        // Center the map on the marker
+        map.setZoom(8);
+        map.panTo(marker.position);
+        google.maps.event.addListener(marker, 'dragend', function (event) {
+            //$('.MapLat').val(event.latLng.lat());
+            //$('.MapLon').val(event.latLng.lng());
+
+            $('.MapLat').val((event.latLng.lat().toFixed(6)).replace('.', ','));
+            $('.MapLon').val((event.latLng.lng().toFixed(6)).replace('.', ','));
+        });
+        google.maps.event.addListener(map, 'click', function (event) {
+            $('.MapLat').val((event.latLng.lat().toFixed(6)).replace('.', ','));
+            $('.MapLon').val((event.latLng.lng().toFixed(6)).replace('.', ','));
+            //$('.MapLat').val(event.latLng.lat());
+            //$('.MapLon').val(event.latLng.lng());
+            marker.setPosition(event.latLng);
+            // Center the map on the marker
+            map.setZoom(8);
+            map.panTo(marker.position);
+        });
+        //switch classementForPDV show or hide classementForPDV typeagence
+        //alert("ok");
+        $('select#A_Type').change(function () {
+            if ($('select#A_Type').find("option:selected").val() == 2  ) {
+                $('#classementForPDV').removeClass('hidden');
+                $('#freelancer').addClass('hidden');
+                $("#iboxFreelancer").addClass("hidden");
+
+
+            } else if ($('select#A_Type').find("option:selected").val() == 3) {
+                $('#classementForPDV').removeClass('hidden');
+                $('#freelancer').removeClass('hidden');
+                $("#iboxFreelancer").removeClass("hidden");
+
+            }
+            else {
+                $('#classementForPDV').addClass('hidden');
+                $('#freelancer').addClass('hidden');
+                $("#iboxFreelancer").addClass("hidden");
+
+
+            }
+        });
+
+
+		$('#A_Intitule').keyup(function () {
+                    $("#DE_No").val($('#A_Intitule').val());
+                });
+                $('#A_Type').change(function () {
+                    //  $('#selectCP').addClass('chosen-select');
+                    if ($('select#A_Type').find("option:selected").val() == 2) {
+                        $("#A_Parent").empty();
+                        $("#A_Parent").append('@foreach(var item in ViewBag.AgenceParentList){<option value="@item.cbMarq">@item.A_Code @item.A_Intitule</option>}');
+                        $('#hideAgMere').removeClass('hidden');
+                    }
+                    else if ($('select#A_Type').find("option:selected").val() == 1 || $('select#A_Type').find("option:selected").val() == 3) {
+                        $("#A_Parent").empty();
+                        $("#A_Parent").append('@foreach(var item in ViewBag.AgenceSiege){<option value="@item.cbMarq">@item.A_Code @item.A_Intitule</option>}');
+
+                        $('#hideAgMere').removeClass('hidden');
+                    }
+                    else {
+                        $('#hideAgMere').addClass('hidden');
+                    }
+                });
+				        $('.chosen-select').chosen({ width: "100%" });
+
+    });
+
+</script>

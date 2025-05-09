@@ -1,0 +1,344 @@
+﻿@model BeeProj.Models.NouveauVersement
+@{
+    ViewBag.Title = "Nouveau versement";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<link href="~/css/plugins/dataTables/datatables.min.css" rel="stylesheet">
+<!-- Toastr style -->
+<link href="~/css/plugins/toastr/toastr.min.css" rel="stylesheet">
+<!-- Ladda style -->
+<link href="css/plugins/ladda/ladda-themeless.min.css" rel="stylesheet">
+<link href="~/css/plugins/jasny/jasny-bootstrap.min.css" rel="stylesheet">
+
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-lg-10">
+        <h2>Liste des versements</h2>
+        <ol class="breadcrumb">
+            <li>
+                <a href=@Url.Action("Index","Home")>Acceuil</a>
+            </li>
+            <li>
+                <a href=@Url.Action("NouveauVersement", "GestionFactures")>Gestion des Factures</a>
+            </li>
+            <li class="active">
+                <strong>Liste des versements</strong>
+            </li>
+        </ol>
+    </div>
+    <div class="col-lg-2">
+
+    </div>
+</div>
+
+
+@*@if (Model == null)
+    {
+        <strong>@TempData["MSG"] </strong>
+    }
+    else
+    {*@
+
+@*@if (ViewBag.TotalAverse != null)
+    {
+    <div class="alert alert-info">
+        <p> Total réglements a versés <strong> @String.Format("{0:N3}", (decimal)(@ViewBag.TotalAverse)) DT</strong></p>
+
+    </div>
+    }*@
+
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title" style="height:80px;">
+                    @if (Request.IsAuthenticated && (User.IsInRole("Admin")))
+                    {
+
+                        using (Html.BeginForm("NouveauVersement", "GestionFactures", FormMethod.Post))
+                        {
+                            <div class="col-sm-4">
+                                <label class="control-label" for="">Filtrer par date du</label>
+                                <div class="input-daterange input-group" id="datepicker">
+                                    @Html.TextBoxFor(model => model.StartDate, new { type = "date", @class = "form-control" })
+                                    <span class="input-group-addon">au </span>
+                                    @Html.TextBoxFor(model => model.EndDate, new { type = "date", @class = "form-control", })
+                                </div>
+                            </div>
+                            <div class="col-sm-4">
+                                <label class="control-label">Par Utilisateur </label>
+                                @Html.DropDownListFor(m => m.UserN, ViewBag.ListOfUsers as SelectList, "--Tout--", new { @name = "UserN", @id = "UserN", @class = "form-control chosen-select" })
+                            </div>
+
+
+                            if (Request.IsAuthenticated && (User.IsInRole("Admin") || User.IsInRole("Versement par type")))
+                            {
+                                <div class="col-sm-2">
+                                    <label class="control-label">Type </label>
+                                    @Html.DropDownListFor(m => m.typeReglements, ViewBag.ListeTypeModeRe as SelectList, new { @name = "typeReglements", @id = "typeReglements", @class = "form-control chosen-select" })
+                                </div>
+                            }
+
+                            if (Request.IsAuthenticated && (User.IsInRole("Admin") || User.IsInRole("Versement par agence")))
+                            {
+                                <div class="col-sm-2">
+                                    <label class="control-label">Par Agence</label>
+
+                                    <select class="form-control" id="parAgence" name="parAgence">
+
+                                        <option value=null> -- Tout --</option>
+                                        @foreach (var item in ViewBag.ParListeAgences)
+                                        {
+                                            <option value="@item.Value">@item.Text</option>
+                                        }
+                                    </select>
+                                    @*@Html.DropDownListFor(m => m.parAgence, ViewBag.ParListeAgences as SelectList, "--Tout--",  new { @name = "parAgence", @id = "parAgence", @class = "form-control chosen-select" })*@
+                                </div>
+                            }
+                            <div class="col-sm-2">
+                                <br />
+                                <button type="submit" class="btn btn-purplebee btn-rounded btn-outline">Filtrer </button>
+                            </div>
+                        }
+
+                    }
+                </div>
+                <div class="ibox-content">
+                    <table class="table table-striped table-bordered table-hover dataTables-example full-width">
+                        <thead>
+                            <tr>
+                                <th>N° Facture</th>
+                                <th>N° Règlement</th>
+                                <th width="40px">Référence Abonnement</th>
+                                <th>Code Client</th>
+                                <th>Client</th>
+                                <th>Date </th>
+                                <th>Montant TTC</th>
+                                <th>Agence </th>
+                                <th>Utilisateur </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in ViewBag.ListeReglements)
+                            {
+                                <tr class="gradeX">
+                                    <td>
+                                        @foreach (var item2 in item.DO_Piece)
+                                        {
+                                            @item2.DO_Piece <br />
+                                        }
+                                    </td>
+                                    <td>@item.RG_Piece</td>
+                                    <td>@item.AB_Piece</td>
+                                    <td>@item.DO_Tiers</td>
+                                    <td>@item.CT_Intitule</td>
+                                    <td>
+                                        @item.DO_Date
+                                        <hr />
+                                        @item.cbModification
+                                    </td>
+                                    <td>@String.Format("{0:N3}", (decimal)(item.DO_MontantTTC))</td>
+
+                                    <td>@item.A_Intitule</td>
+                                    <td>@item.cbCreateur</td>
+
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+
+                @if (@ViewBag.test == true)
+                {
+                    <center>
+                        <h3>
+                            <strong>
+                                @TempData["MSG"]
+                            </strong>
+                            <p> Total réglements a versés <strong> @String.Format("{0:N3}", (decimal)(@ViewBag.TotalAverse)) DT</strong></p>
+                        </h3>
+                    </center>
+
+                }
+                else
+                {
+                    <div class="ibox-footer">
+
+
+                        <button type="button" class="btn btn-purplebee btn-rounded btn-block" data-toggle="modal" data-target="#modalVersement">
+                            <i class="fa fa-money"></i> Verser les règlements
+                        </button>
+
+
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal inmodal" id="modalVersement" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog">
+        <div class="modal-content animated fadeIn">
+            <div class="modal-header">
+
+                <div class="alert alert-success alert-dismissable hidden" id="alertVers">
+                    <button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>
+                    Règlements versés avec succès !
+                </div>
+
+
+                <i class="fa fa-money modal-icon"></i>
+                <br />
+                <h3 class="font-bold">Versement en banque </h3>
+            </div>
+
+            <fieldset id="SubmitForm">
+
+                <div class="modal-body">
+                    Vous <strong>confirmer le versement </strong> des règlements sélectionnés du
+                    @Model.StartDate.GetValueOrDefault().ToString("dd/MM/yyyy") au @Model.EndDate.GetValueOrDefault().ToString("dd/MM/yyyy")?
+
+                    <div class="input-daterange input-group hidden" id="datepicker">
+                        @Html.TextBoxFor(model => model.StartDate, new { type = "date", @class = "form-control disabled" })
+                        <span class="input-group-addon">au </span>
+                        @Html.TextBoxFor(model => model.EndDate, new { type = "date", @class = "form-control disabled" })
+                    </div>
+                    <h3>Total: <strong>@ViewBag.TotalVersement DT </strong> </h3>
+
+                    @if (User.IsInRole("avance sur commission"))
+                    {
+                        <h3>Net à verser : <strong>@ViewBag.NetVerser DT </strong> </h3>
+                    }
+
+                    <input class="hidden" value="@Model.UserN" name="UserN" id="UserN" />
+                    <input class="hidden" value="@Model.typeReglements" name="typeReglements" id="typeReglements" />
+                    <input class="hidden" value="@Model.parAgence" name="parAgence" id="parAgence" />
+                    <div class="m-5 p-5" style="text-align: center">
+                        <div id="wait">
+
+                            <div class="spinner-border text-purplebee" role="status">
+                                <i class="fa fa-spinner fa-spin" style="font-size:50px"></i>
+                                <br />
+                                <h3>Merci de  patienter...</h3>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="modal-footer ">
+
+                    <button type="button" onClick="this.disabled=true;" class="btn btn-greenbee disablethis" id="disablethis">Confirmer </button>
+                    <button type="button" class="btn btn-white" data-dismiss="modal" id="annulerCochage">Annuler</button>
+
+                </div>
+            </fieldset>
+        </div>
+    </div>
+</div>
+@*}*@
+
+<script src="~/js/plugins/dataTables/datatables.min.js"></script>
+<script src="~/js/jquery-3.1.1.min.js"></script>
+<script src="~/js/plugins/metisMenu/jquery.metisMenu.js"></script>
+<script src="~/js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+<script src="~/js/plugins/dataTables/datatables.min.js"></script>
+<!-- Toastr script -->
+<script src="~/js/plugins/toastr/toastr.min.js"></script>
+<script src="~/js/accounting.js"></script>
+<script src="~/js/accounting.min.js"></script>
+<!-- Ladda -->
+<script src="~/js/plugins/ladda/spin.min.js"></script>
+<script src="~/js/plugins/ladda/ladda.min.js"></script>
+<script src="~/js/plugins/ladda/ladda.jquery.min.js"></script>
+<script>
+
+   $("#disablethis").click(function () {
+
+		      document.getElementById("disablethis").disabled = true;
+			  var data = $("#SubmitForm").serialize();
+
+
+				$.ajax({
+					type: "Post",
+					url: "/GestionFactures/VerserReglements" ,
+					data: data,
+					success: function (res) {
+					                    window.location = "/GestionFactures/ListeVersement";
+
+											}
+					})
+					});
+
+function EnvoyerVersement(RegIDs) {
+    if (RegIDs == null || RegIDs == "") {
+
+        toastr.error('Veuillez selectionner au moins un règlement à verser !', 'Erreur');
+
+    }
+    else {
+        $("#modalVersement").modal();
+        $("#VerserRegs").click(function () {
+            var fileUpload = $("#FileUpload1").get(0);
+            var files = fileUpload.files;
+            // Create FormData object
+            var fileData = new FormData();
+            // Looping over all files and add it to FormData object
+            for (var i = 0; i < files.length; i++) {
+                fileData.append(files[i].name, files[i]);
+            }
+            fileData.append('BEE', 'EasyBee');
+
+            $.ajax({
+                type: "Post",
+                url: "/GestionFactures/VerserReglements?ids=" + RegIDs,
+                dataType: 'json',
+                contentType: false, // Not to set any content header
+                processData: false, // Not to process data
+                data: fileData,
+                success: function (result) {
+                    if (result.data == 0) {
+                        $('#alertVers').removeClass('hidden');
+                        $('#VerserRegs').addClass('hidden');
+
+                        toastr.success("Versement ajouté avec succès !", 'Success');
+
+                        window.location = "/GestionFactures/DetailsVersement/" + result.result;
+
+
+                    }
+                    else {
+                    //    alert(result.result);
+                        toastr.error(result.result, 'Erreur');
+                    }
+                    //    var div = document.getElementById('printRecu');
+                    ////    alert(result);
+                    //    var id = result;
+                    //    div.innerHTML += '<a class="btn btn-xs bg-primary btn-rounded" href="/GestionFactures/ImprimerReçu/' + id + '" target="_blank">Imprimer reçu</a>';
+                    @*div.innerHTML += '<a class="btn bg-primary btn-xs btn-rounded" href="@Url.Action("ImprimerReçu", "GestionFactures", new { id =  })">Générer contrat </a>';*@
+                    }
+            })
+        });
+    }
+}
+
+
+  $(document).ready(function () {
+        $(document).ajaxStart(function () {
+            $("#wait").css("display", "block");
+            $("#annulerCochage").css("display", "none");
+        });
+        $(document).ajaxComplete(function () {
+            $("#wait").css("display", "none");
+            $("#annulerCochage").css("display", "inline-block");
+        });
+        $("button").click(function () {
+            $("#txt").load("demo_ajax_load.asp");
+        });
+    });
+
+
+</script>
+
+

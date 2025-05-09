@@ -1,0 +1,135 @@
+﻿@{
+    ViewBag.Title = "SoldesClients";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+
+
+<div class="wrapper wrapper-content  animated fadeInRight">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="ibox">
+                <div class="ibox-content">
+
+                    <table class="table table-striped table-bordered table-hover dataTables-example" id="ListeFacturesVersee">
+
+                        <thead>
+                            <tr>
+                                <th>Nom Client </th>
+                                <th>Code abonnement</th>
+                                <th>Reftt </th>
+                                <th>Satut</th>
+                                <th>Gouvernorat et Agence</th>
+                                <th>Identifiant</th>
+                                <th>Numero fixe</th>
+                                <th>Numero Portable</th>
+                                <th>Solde</th>
+                                <th>Chiffre d'affaires</th>
+                                <th>Nombre de facture impayée</th>
+                                <th>Somme Avance</th>
+                                <th>Montant Avoir non imputé</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in ViewBag.SoldeClient)
+                            {
+
+                                <tr>
+
+                                    <td>
+                                        <a href="/InterrogeClient/DetailsClient/@item.cbmarqclient" target="_blank">@item.CT_Intitule</a>
+
+                                    </td>
+                                    <td>
+                                        <a href="/Abonnement/details/@item.cbmarqabo" target="_blank">@item.DO_Piece</a>
+
+                                    </td>
+                                    <td>@item.DO_RefTT</td>
+                                    <td>@item.Statut</td>
+                                    <td>@item.gouvernerat <br /> @item.agence</td>
+                                    <th>@item.identifiant</th>
+                                    <td>@item.NumeroFixe</td>
+                                    <td>@item.NumeroPortable</td>
+                                    <td>@item.Solde</td>
+                                    @*<td>@item.ChiffreAffaire</td>*@
+                                    <td>@String.Format("{0:N3}", item.ChiffreAffaire) <b>DT</b></td>
+
+                                    <td>@item.NumeroFactureImpayee</td>
+                                    @if (item.SommeAvance == null)
+                                    {
+                                        <td>0,000000 <b>DT</b></td>
+                                    }
+                                    else
+                                    {
+                                        <td>@item.SommeAvance <b>DT</b></td>
+
+                                    }
+                                    <td>@String.Format("{0:N3}", item.MontantAvoirNonImputer) <b>DT</b></td>
+
+                                    @*@if (item.MontantAvoirNonImputer == null)
+                                        {
+                                            <td>0,000000 <b>DT</b></td>
+                                        }
+                                        else
+                                        {
+                                            <td>@item.MontantAvoirNonImputer <b>DT</b></td>
+                                        }*@
+                                    @*<td>@item.SommeAvance</td>
+                                        <td>@item.MontantAvoirNonImputer</td>*@
+
+                                </tr>
+                            }
+
+                        </tbody>
+                    </table>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="~/js/jquery-3.1.1.min.js"></script>
+<script src="~/js/plugins/metisMenu/jquery.metisMenu.js"></script>
+<script src="~/js/plugins/pace/pace.min.js"></script>
+<script src="~/js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+<script src="~/js/plugins/chosen/chosen.jquery.js"></script>
+<script src="~/js/plugins/dataTables/datatables.min.js"></script>
+
+<script>
+    $(function () {
+
+        //$("#infoClient").attr("href", "/InterrogeClient/DetailsClient/" + msg.data.cbMarq);
+        $('.dataTables-example').DataTable({
+            pageLength: 15,
+            "order": [[1, "desc"]],
+            responsive: true,
+            dom: '<"html5buttons"B>lTfgitp',
+            buttons: [
+                { extend: 'copy' },
+                { extend: 'csv' },
+                { extend: 'excel', title: 'ExampleFile' },
+                { extend: 'pdf', title: 'ExampleFile' },
+
+                {
+                    extend: 'print',
+                    customize: function (win) {
+                        $(win.document.body).addClass('white-bg');
+                        $(win.document.body).css('font-size', '100px');
+
+                        $(win.document.body).find('table')
+                                .addClass('compact')
+                                .css('font-size', 'inherit');
+                    }
+                }
+            ]
+
+        });
+
+    });
+</script>
+
+
+
+

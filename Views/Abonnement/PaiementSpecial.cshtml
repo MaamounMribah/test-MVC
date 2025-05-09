@@ -1,0 +1,402 @@
+﻿@model BeeProj.ViewModels.AjoutReglement
+@{
+    ViewBag.Title = "PaiementSpecial";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<!-- Toastr style -->
+<link href="~/css/plugins/toastr/toastr.min.css" rel="stylesheet">
+<link href="~/css/plugins/datapicker/datepicker3.css" rel="stylesheet" />
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+<link href="~/css/plugins/chosen/bootstrap-chosen.css" rel="stylesheet">
+<link href="~/css/plugins/awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css" rel="stylesheet">
+<link href="~/css/plugins/iCheck/custom.css" rel="stylesheet">
+<!-- Sweet Alert -->
+<link href="~/css/plugins/sweetalert/sweetalert.css" rel="stylesheet">
+<!-- Ladda style -->
+<link href="~/css/plugins/ladda/ladda-themeless.min.css" rel="stylesheet">
+<link href="~/css/plugins/touchspin/jquery.bootstrap-touchspin.min.css" rel="stylesheet">
+<link href="~/css/plugins/jasny/jasny-bootstrap.min.css" rel="stylesheet">
+@if (ViewBag.Abonn.DO_Etape == 5)
+{
+    <div class="row wrapper border-bottom white-bg page-heading">
+        <div class="col-lg-10">
+            <h2>Liste des abonnements</h2>
+            <ol class="breadcrumb">
+                <li>
+                    <a href="#">Acceuil</a>
+                </li>
+                <li>
+                    <a href="@Url.Action("Modifier", "Abonnement")">Modifier abonnement</a>
+                </li>
+                <li class="active">
+                    <strong>Paiement abonnement </strong>
+                </li>
+            </ol>
+        </div>
+    </div>
+
+    <div class="wrapper wrapper-content animated fadeInRight">
+
+        <div class="row">
+            <div class="col-lg-9">
+                <div class="wrapper wrapper-content animated fadeInUp">
+                    @if (ViewBag.msg != null)
+                {
+                        <div class="alert alert-danger alert-dismissable">
+                            <button type="button" class="close " data-dismiss="alert">×</button>
+                            <p>@ViewBag.msg</p>
+                        </div>
+                    }
+                    @if (ViewBag.Test != null)
+                {
+                        <div class="alert alert-danger alert-dismissable">
+                            <button type="button" class="close " data-dismiss="alert">×</button>
+                            <p>@ViewBag.Test</p>
+                        </div>
+                    }
+                    <div class="ibox">
+                        <div class="ibox-content">
+                            <div class="row">
+                                @using (Html.BeginForm("PaiementSpecial", "Abonnement", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+                                {
+                                    <p class="text-info">
+                                        Voulez vous vraiment confirmer la livraison des matériels !
+                                        <small class="text-muted"> Un contrat sera généré à partir les informations entrées. ainsi des bon de sortie </small>
+                                    </p>
+                                    <div class="alert alert-danger alert-dismissable hidden" id="alertmodalite">
+                                        <button type="button" class="close " data-dismiss="alert">×</button>
+                                        <p>Notez qu'en choisissant cette modalité de paiement, la fréquence de paiement sera celle de l'abonnement soit (@ViewBag.Abonn.Periode_Engage mois)</p>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-md-2 control-label"> Référence abonnement </label>
+                                        <div class="col-md-6">
+                                            <input id="Abonnement" name="Abonnement" readonly type="text" class="form-control" value="@ViewBag.Abonnement">
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="form-group">
+                                            <label class="col-md-4 control-label"> Fréquence abonnement </label>
+                                            <div class="col-md-8">
+                                                <strong class="text-success">@ViewBag.Abonn.AB_FrequenceFacture  </strong><strong>Mois </strong>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="form-group">
+                                            <label class="col-md-4 control-label"> Engagement abonnement </label>
+                                            <div class="col-md-8">
+                                                <strong class="text-success">@ViewBag.Abonn.Periode_Engage </strong><strong>Mois </strong>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="form-group">
+                                            <label class="col-md-4 control-label"> Remise </label>
+
+                                            @foreach (var item in ViewBag.ArtPACK)
+                                            {
+                                                <div class="col-md-8">
+                                                    @if (item.AR_Type == 1)
+                                                    {
+                                                        <strong class="text-success">@String.Format("{0:N2}", (decimal)(item.DL_RemiseValeur)) </strong><strong> % </strong>
+                                                    }
+                                                </div>
+                                            }
+                                        </div>
+                                    </div>
+                                    <hr />
+                                    <div class="row">
+                                        <div class="col-md-12">
+
+                                            <div class="form-group">
+                                                <label class="col-md-4 control-label"> Articles réservés pour cet abonnement </label>
+                                                <div class="col-md-8">
+
+                                                    @foreach (var item in ViewBag.ArtPACK)
+                                                    {
+                                                        if (item.AR_Type == 0 && item.AR_Ref != "FRAIS_RACCORDEMENT" && item.AR_Ref != "FRAIS_INSTALLATION")
+                                                        {
+                                                            <strong class="text-success">@item.DL_Design :</strong> <strong> @item.LS_NoSerie </strong>
+                                                            <br />
+                                                        }
+                                                    }
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="col-md-4 control-label">Total Engagement</label>
+                                        <div class="col-md-6">
+                                            <div class="input-group m-b">
+                                                <input readonly type="text" class="form-control" value="@String.Format("{0:N3}", (decimal)(ViewBag.MontantPack_TotalEngagement))">
+                                                <span class="input-group-addon">TND</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-md-4 control-label">Total Abonnement</label>
+                                        <div class="col-md-6">
+                                            <div class="input-group m-b">
+                                                <input id="totalabonnement" readonly type="text" class="form-control" value="@String.Format("{0:N3}", (decimal)(ViewBag.MontantPack_TotalEngagement - ViewBag.ReglementsTotal))">
+                                                <span class="input-group-addon">TND</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <hr />
+                                    <div class="row">
+                                        <div class="form-group">
+                                            <label class="col-md-4 control-label">Choisir votre mode de paiement</label>
+                                            <div class="col-md-6">
+                                                <select data-placeholder="Choisir Modalité de paiement..." id="Modalitepaie" name="Modalitepaie" class="chosen-select form-control " required>
+                                                    <option value=""></option>
+                                                    <option value="Garantie">Garantie</option>
+                                                    @if (ViewBag.modalite != null)
+                                                    {
+                                                        foreach (var item in ViewBag.modalite)
+                                                        {
+                                                            <option value="@item.P_MODALITEPAIEMENT.cbMarq">
+                                                                @item.P_MODALITEPAIEMENT.Intitule @item.P_MODALITEPAIEMENT.NbCheques chéques  avec
+                                                                @String.Format("{0:N2}", item.P_MODALITEPAIEMENT.Remise)  % remise.
+                                                            </option>
+                                                        }
+                                                    }
+                                                </select>
+                                                <span id="MontantRemise" class="help-block m-b-none text-warning"></span>
+                                                <input id="MontantRemises" name="MontantRemises" class="hidden" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div id="GarantieArticle" style="display:none">
+                                        <div class="row">
+                                            <div class="form-group">
+                                                <label class="col-lg-4 control-label">Identifiant *</label>
+                                                <div class="col-lg-6">
+                                                    <input type="text" class="form-control" name="identifiantpay" id="identifiantpay" placeholder="N° Chèque,Référence de paiement TPE , N° Compte du client," />
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="col-lg-4 control-label">Libellé</label>
+                                                <div class="col-lg-6">
+                                                    <input type="text" class="form-control" name="Libelle" id="Libelle" placeholder="Nom de la banque,N° Ordre de virement" />
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="col-lg-4 control-label">Description</label>
+                                                <div class="col-lg-6">
+                                                    <input type="text" class="form-control" name="Reference" id="Reference" placeholder="Titulaire du Chèque" maxlength="17" />
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="col-lg-4 control-label">Date Echéance </label>
+                                                <div class="col-lg-6">
+                                                    <input type="date" pattern="\d{1,2}/\d{1,2}/\d{4}" class="form-control" name="dateecheance" id="dateecheance" placeholder="Date d'échéance du chèque (format : jj/mm/aaaa)" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <hr />
+                                        <div class="row">
+                                            <div class="form-group">
+                                                <label class="col-lg-4 control-label">Choisir votre mode de paiement </label>
+                                                <div class="col-lg-6">
+                                                    @Html.DropDownListFor(m => m.ModeReglement, ViewBag.ModeReglementAgence as SelectList, new { @name = "cbindice", @id = "cbindice", @class = "form-control chosen-select" })
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div id="ifospayement" style="display:none">
+                                            <div class="row">
+                                                <div class="form-group">
+                                                    <label class="col-lg-4 control-label">Identifiant *</label>
+                                                    <div class="col-lg-6">
+                                                        <input type="text" class="form-control" name="identifiantpay" id="identifiantpay" placeholder="N° Chèque,Référence de paiement TPE , N° Compte du client," />
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="col-lg-4 control-label">Libellé</label>
+                                                    <div class="col-lg-6">
+                                                        <input type="text" class="form-control" name="libelle" id="libelle" placeholder="Nom de la banque,N° Ordre de virement" />
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="col-lg-4 control-label">Description</label>
+                                                    <div class="col-lg-6">
+                                                        <input type="text" class="form-control" name="Reference" id="Reference" placeholder="Titulaire du Chèque" maxlength="17" />
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="col-lg-4 control-label">Date Echéance </label>
+                                                    <div class="col-lg-6">
+                                                        <input type="date" pattern="\d{1,2}/\d{1,2}/\d{4}" class="form-control" name="dateecheance" id="dateecheance" placeholder="Date d'échéance du chèque (format : jj/mm/aaaa)" />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <br />
+                                        <div class="row">
+                                            <div class="form-group">
+                                                <label class="col-md-4 control-label">Total Règlements </label>
+                                                <div class="col-md-6">
+                                                    <div class="input-group m-b">
+                                                        <input type="text" class="form-control" disabled value="@String.Format("{0:N3}", (decimal)(ViewBag.ReglementsTotal))">
+                                                        <span class="input-group-addon">TND</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-md-4 control-label">Net à payer  </label>
+                                            <div class="col-md-6">
+                                                <div class="input-group m-b">
+                                                    <input type="text" class="form-control" name="Montants" readonly value="@String.Format("{0:N3}", (decimal)(ViewBag.NetAPayer))">
+                                                    <span class="input-group-addon">TND</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <hr />
+                                    <br />
+                                    <div class="row">
+                                        <div class="form row" id="p_scents">
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="form-group">
+                                            <label class="col-sm-4 control-label">Commentaires</label>
+                                            <div class="col-sm-6">
+                                                <textarea class="form-control" name="AC_Notes6" id="AC_Notes6"></textarea>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <br />
+                                    <button type="submit" class="btn btn-primary ladda-button pull-right">Confirmer</button>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3">
+                @Html.Action("TimelineAbonnement", "Abonnement", new { id = ViewBag.Abonn.cbMarq })
+            </div>
+        </div>
+    </div>
+}
+else
+{
+    <div class="alert alert-danger alert-dismissable">
+        <button type="button" class="close " data-dismiss="alert">×</button>
+        <p>L'abonnement doit etre a l'etape paiement et livraison</p>
+    </div>
+}
+<!-- Toastr script -->
+<script src="~/js/plugins/toastr/toastr.min.js"></script>
+<script src="~/js/jquery-3.1.1.min.js"></script>
+<!-- Chosen -->
+<script src="~/js/plugins/chosen/chosen.jquery.js"></script>
+<script src="~/js/plugins/datapicker/bootstrap-datepicker.js"></script>
+<!-- Sweet alert -->
+<script src="~/js/plugins/sweetalert/sweetalert.min.js"></script>
+<!-- TouchSpin -->
+<script src="~/js/plugins/touchspin/jquery.bootstrap-touchspin.min.js"></script>
+<!-- Ladda -->
+<script src="~/js/plugins/ladda/spin.min.js"></script>
+<script src="~/js/plugins/ladda/ladda.min.js"></script>
+<script src="~/js/plugins/ladda/ladda.jquery.min.js"></script>
+<script src="~/js/plugins/dataTables/datatables.min.js"></script>
+<script>
+        $('#cbindice').change(function () {
+            if ($('#cbindice').val() != 2) {
+                document.getElementById("ifospayement").style.display = "block";
+            }
+            else {
+                document.getElementById("ifospayement").style.display = "none";
+            }
+        });
+        $('#Modalitepaie').change(function () {
+            //On récupère l'id
+            var value = $(this).val();
+
+
+            var TotalAbonnnnn = $("#totalabonnement").val().replace(/\s/g, '');
+            var montantabonnement = TotalAbonnnnn;
+            $('#MontantRemises').val(montantabonnement);
+            $('#MontantRemise').text("Total Abonnement avec remise de paiement: " + montantabonnement);
+            var selectedvalue = $(this).find("option:selected").text();
+            var scntDiv = $('#p_scents');
+            if (value == "Garantie" && selectedvalue == "Garantie") {
+                scntDiv.empty();
+                document.getElementById("GarantieArticle").style.display = "block";
+                document.getElementById("p_scents").style.display = "none";
+                $('div#GarantieArticle').prop("disabled", true);
+                $('div#p_scents').prop("disabled", false);
+                $('#alertmodalite').addClass("hidden")
+            }
+            else {
+
+                var nbcheque = 0;
+                var Remise = 0;
+
+                //****recuperer modalite
+                $.ajax({
+                    type: "get",
+                    url: '/Abonnement/GetPaiementSpecial?cbmarq=' + value + '&&PieceAbonnement=' + $("#Abonnement").val(),
+                    dataType: 'json',
+                    success: function (res) {
+                        nbcheque = res.nbcheques;
+                        Remise = res.remise;
+                        document.getElementById("p_scents").style.display = "block";
+                        document.getElementById("GarantieArticle").style.display = "none";
+                        $('div#GarantieArticle').prop("disabled", false);
+                        $('div#p_scents').prop("disabled", true);
+                        $('#alertmodalite').removeClass("hidden");
+                        //var montantabonnements = parseFloat($("#totalabonnement").val());
+                        //var montantabonnements = $("#totalabonnement").val();
+                        //montantabonnements = montantabonnements.replace(/\s/g, '');
+                        //montantabonnements = montantabonnements.replace(",", ".");
+                        //montantabonnements = parseFloat(montantabonnements);
+                        var RemiseAbonnement = res.netapayer; //montantabonnements - ((Number(montantabonnements)) * Remise / 100);
+                        var montantcheque = RemiseAbonnement / nbcheque;
+
+                        RemiseAbonnement = RemiseAbonnement.toFixed(3)
+                        RemiseAbonnement = RemiseAbonnement.toString();
+                        RemiseAbonnement = RemiseAbonnement.replace(".", ",");
+                        $('#MontantRemises').val(RemiseAbonnement);
+                        $('#MontantRemise').text("Total Abonnement avec remise de paiement: " + RemiseAbonnement);
+
+                        var montantchequearrondi = montantcheque.toFixed(3);
+                        // alert("arrrondi:");
+                        //alert(montantchequearrondi);
+                        montantcheque = montantcheque.toString();
+                        montantcheque = montantchequearrondi.replace(".", ",");
+                        //alert(montantcheque);
+                        var i = 0;
+                        scntDiv.empty();
+                        for (i; i < nbcheque; i++) {
+                            $('<div class="row"><div class="form-group"><label class="col-sm-4 control-label">Remplir les informations <br /><small class="text-navy"> du chèque </small></label><div class="col-lg-6"><div class="col-lg-6"><input type="text" class="form-control" name="identifiantpay" id="identifiantpay" placeholder="N° Chèque,Référence de paiement TPE , N° Compte du client," /><br /><div class="input-group m-b"><input type="text" placeholder="Montant de chèque" class="form-control" pattern="[0-9,]+" value="' + montantcheque + '" id="Montant" name="Montant"><span class="input-group-addon">TND</span></div><input type="text" class="form-control" name="libelle" id="libelle" placeholder="Nom de la banque,N° Ordre de virement" /></div><div class="col-lg-6"><input type="text" class="form-control" name="Reference" id="Reference" placeholder="Titulaire du Chèque" maxlength="17" /><br /><input type="date" class="form-control" name="dateecheance"  placeholder="Date échéance du chèque (format : jj/mm/aaaa)" /></div></div></div></div><hr />').appendTo(scntDiv);
+                        }
+                    }
+                });
+            }
+        });
+
+        //$(".dateechcheq").change(function () {
+
+        //    var firstdate = $(this).val();
+        //    alert(firstdate);
+        //    alert(addMonths(firstdate,1));
+
+        //});
+
+        //function addMonths(date, months) {
+        //    var d = date.getDate();
+        //    date.setMonth(date.getMonth() + +months);
+        //    if (date.getDate() != d) {
+        //        date.setDate(0);
+        //    }
+        //    return date;
+        //}
+
+</script>
+
+
+

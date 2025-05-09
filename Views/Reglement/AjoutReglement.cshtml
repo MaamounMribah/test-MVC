@@ -1,0 +1,404 @@
+﻿@{
+    ViewBag.Title = "AjoutReglement";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-lg-10">
+        <h2>Liste Réglements</h2>
+        <ol class="breadcrumb">
+            <li>
+                <a href="@Url.Action("ListeReglements","Reglement")">Liste Réglements </a>
+            </li>
+            <li class="active">
+                <strong> <a href="@Url.Action("AjoutReglement","Reglement")">Ajout Reglement</a></strong>
+            </li>
+        </ol>
+    </div>
+</div>
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-lg-12">
+
+            @if (ViewBag.ClientNotFound != null)
+            {
+                <div class="alert alert-danger alert-dismissable">
+                    <button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>
+                    Aucune information existe avec les information saisies !
+                </div>
+            }
+            @if (ViewBag.msg != null)
+            {
+                <div class="alert alert-success alert-dismissable">
+                    <button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>
+                    @ViewBag.msg
+                </div>
+            }
+            <div class="ibox float-e-margins">
+                <div class="ibox-title" style="height:80px;">
+                    @using (Html.BeginForm("AjoutReglement", "Reglement", FormMethod.Post))
+                    {
+                        <label class="control-label">Recherche </label>
+                        <div class="input-group m-b">
+                            <input type="text" class="form-control" id="facture" name="recherche" value=@ViewBag.rech>
+
+                            <span class="input-group-btn">
+                                <button type="submit" class="btn btn-purplebee ladda-button">
+                                    Rechercher!
+                                </button>
+                            </span>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@if (ViewBag.client != null)
+{
+    <div class="row">
+        <div class="ibox">
+            <div class="ibox-title">
+                <h4>Information sur le Client</h4>
+            </div>
+            <div class="ibox-content">
+                @foreach (var item1 in ViewBag.client)
+                {
+                    <div class="row">
+
+                        <div class="col-lg-5">
+                            <dl class="dl-horizontal">
+                                <dt>Statut</dt>
+                                @if (item1.CT_Type == 0)
+                                {
+                                    <dd><i class="label bg-info ">Client</i></dd>
+                                }
+                                else if (item1.CT_Type == 1)
+                                {
+                                    <dd><i class="label bg-warning">Prospect</i></dd>
+                                }
+                                <br />
+                                <dt>Intitulé client</dt>
+                                <dd>@item1.CT_Intitule</dd>
+                                <dt>N° Pièce d'identité</dt>
+                                <dd>@item1.CT_Identifiant</dd>
+                                @if(item1.CT_DateNaiss  != null)
+                                { 
+                                <dt>Date de naissance</dt>
+                                <dd>@item1.CT_DateNaiss.ToString("dd/MM/yyyy")</dd>
+                                <br />
+                                }
+                            </dl>
+                        </div>
+                        <div class="col-lg-5" id="cluster_info">
+                            <dl class="dl-horizontal">
+                                <dt>Agence</dt>
+                                <dd>
+                                    @foreach (var Agenceitem in @ViewBag.Agence)
+                                    {
+                                        <p>@Agenceitem</p>
+                                    }
+                                </dd>
+
+                                <dt>Référence Abonnemnt</dt>
+                                @if (item1.CT_Type == 0)
+                                {
+                                    <dd>
+                                        @foreach (var Abonnementitem in @ViewBag.abonnements)
+                                        {
+                                            <p>@Abonnementitem</p>
+                                        }
+                                    </dd>
+                                }
+                                else if (item1.CT_Type == 1)
+                                {
+                                    <dd>
+                                        @foreach (var EngagementItem in @ViewBag.Engagement)
+                                        {
+                                            <p>@EngagementItem</p>
+                                        }
+                                    </dd>
+
+                                }
+                                <dt>Code Région</dt>
+                                <dd>@item1.CT_CodeRegion</dd>
+                            </dl>
+
+                        </div>
+                    </div>
+                }
+            </div>
+
+        </div>
+    </div>
+
+}
+
+
+@if (ViewBag.abonnement != null)
+{
+
+    using (Html.BeginForm("ajout", "Reglement", FormMethod.Post, new { id = "popupForm" }))
+    {
+        if (ViewBag.Abonnement.Count != 0)
+        {
+            <div class="row">
+                <div class="ibox">
+                    <div class="ibox-title">
+                        <h4>Ajouter Réglement</h4>
+                    </div>
+                    <div class="ibox-content">
+                        <div class="row">
+                            <div class="form-group col-xs-6">
+                                <label class="col-sm-5 control-label">Choisir l'abonnement : <sup> *  </sup></label>
+                                <div class="col-sm-7">
+                                    <select class="form-control chosen-search" id="Value" name="Value" required>
+                                        <option class="font-bold" value="0"> Avance </option>
+                                        <option class="font-bold" value="1"> Contre reçu </option>
+
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group col-xs-6">
+                                <label class="col-sm-5 control-label">Choisir l'abonnement : <sup> *  </sup></label>
+                                <div class="col-sm-7">
+                                    <select class="form-control chosen-search" id="Abonnement" name="Abonnement" required>
+
+                                        @foreach (var item in ViewBag.abonnement)
+                                        {
+                                            <option class="font-bold" value="@item.DO_Piece" required> @item.DO_Piece </option>
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="form-group col-xs-6">
+                                    <label class="col-sm-5 control-label">saisir le montant :<sup> *  </sup></label>
+                                    <div class="col-sm-7">
+                                        <input type="text" pattern="\d*([,\/]?\d+)" class="form-control" id="montant" name="montant" required>
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="form-group col-xs-6">
+                                    <label class="col-sm-5 control-label">Frais résiliation </label>
+                                    <div class="col-sm-7">
+                                        <input type="radio" class="custom-control-input" id="IsReliquat" name="IsReliquat" value="1">
+                                        <label class="checkbox-inline i-checks" >
+                                            oui
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                        </div>
+                            <div class="form-group col-xs-6">
+                                <div class="row">
+                                    <label class="col-sm-5 control-label">Choisir votre mode de paiement  <sup> *   </sup></label>
+                                    <div class="col-sm-7">
+                                        <select class="form-control chosen-search " id="ModeReglement" name="ModeReglement">
+                                            <option class="font-bold" value="2"> Choisir </option>
+
+                                            @foreach (var item in ViewBag.ModeReglementAgence)
+                                            {
+                                                <option class="font-bold" value="@item.Value">@item.Text</option>
+                                            }
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group col-xs-6">
+                                    <div id="ifospayement" style="display:none">
+                                        <div class="form-group">
+                                            <label class="col-lg-4 control-label">Identifiant <sup>*</sup></label>
+                                            <div class="col-lg-8">
+                                                <input type="text" class="form-control" name="identifiantpay" id="identifiantpay" placeholder="N° Chèque,Référence de paiement TPE , N° Compte du client," />
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-lg-4 control-label">Libellé</label>
+                                            <div class="col-lg-8">
+                                                <input type="text" class="form-control" name="Libelle" id="Libelle" placeholder="Nom de la banque,N° Ordre de virement" />
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-lg-4 control-label">Description</label>
+                                            <div class="col-lg-8">
+                                                <input type="text" class="form-control" name="Reference" id="Reference" placeholder="Titulaire du Chèque" />
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-lg-4 control-label">Date Echéance </label>
+                                            <div class="col-lg-8">
+                                                <input type="text" pattern="\d{1,2}/\d{1,2}/\d{4}" class="form-control" name="dateecheance" id="dateecheance" placeholder="Date d'échéance du chèque (format : jj/mm/aaaa)" />
+                                            </div>
+                                        </div>
+                                    </div>
+                            <br /><br />
+                            </div>
+                            <div class="row">
+                                <button type="submit" class="btn btn-greenbee pull-right">
+                                    <i class="fa fa-plus"></i> Ajouter
+                                </button>
+                            </div>
+                        </div>
+                </div>
+            </div>
+        }
+        else
+        {
+            <div class="alert alert-danger alert-dismissable">
+                <button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>
+                Pas d'abonnements
+            </div>
+        }
+    }
+}
+<script src="~/js/jquery-3.1.1.min.js"></script>
+<script src="~/js/plugins/metisMenu/jquery.metisMenu.js"></script>
+<script src="~/js/plugins/pace/pace.min.js"></script>
+<script src="~/js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+<script src="~/js/plugins/chosen/chosen.jquery.js"></script>
+<script src="~/js/plugins/dataTables/datatables.min.js"></script>
+<!-- Sweet alert -->
+<script src="~/js/plugins/sweetalert/sweetalert.min.js"></script>
+<!-- Chosen -->
+<script src="~/js/plugins/chosen/chosen.jquery.js"></script>
+<link href="~/css/plugins/ladda/ladda-themeless.min.css" rel="stylesheet">
+<!-- Ladda -->
+<script src="~/js/plugins/ladda/spin.min.js"></script>
+<script src="~/js/plugins/ladda/ladda.min.js"></script>
+<script src="~/js/plugins/ladda/ladda.jquery.min.js"></script>
+
+<script>
+    $(function () {
+                    $('#ModeReglement').change(function () {
+        if ($('#ModeReglement').val() != 2) {
+            document.getElementById("ifospayement").style.display = "block";
+        }
+                        else {
+            document.getElementById("ifospayement").style.display = "none";
+        }
+    });
+
+
+
+
+    });
+  
+    
+                $(document).ready(function () {
+                    $('.i-checks').iCheck({
+                        checkboxClass: 'icheckbox_square-green',
+                        radioClass: 'iradio_square-green'
+                    });
+                    $(".todo-list").sortable({
+                        placeholder: "sort-highlight",
+                        handle: ".handle",
+                        forcePlaceholderSize: true,
+                        zIndex: 999999
+                    }).disableSelection();
+
+                    $('.classDate').datepicker();
+
+                    $('.i-checks').iCheck({
+                        radioClass: 'iradio_square-green'
+                    });
+                    $('.chosen-select').chosen({ width: "100%" });
+
+
+                });
+                $("#facture").change(function () {
+
+                    if ($("#facture").val() == null) {
+                        $("#searchClient").prop('disabled', true);
+                    }
+                    else {
+                        $("#searchClient").prop('disabled', false);
+                    }
+                });
+                $("#searchClient").click(function () {
+
+                    $("#showClientInfos").removeClass("hidden");
+
+                });
+                function Decaler(button) {
+                    $("#Decaler").modal();
+                    var row = $(button).closest("tr");
+                    var piecereglement = $("td", row).eq(0).html();
+                    var AbonnementChoisi = $('select[name^="facture"]', row).val();
+                    $('#facture').change(function () {
+
+                        AbonnementChoisi = $('select#facture').find("option:selected").val();
+
+                    });
+                    $("#Decaler").click(function () {
+                        $.ajax({
+                            type: "get",
+                            url: '/Correction/Decaler',
+                            dataType: 'json',
+                            success: function (msg) {
+                                if (msg.result == "Succes") {
+                                    toastr.success('Décalage ce fait avec succès ! ', 'Succes');
+                                    location.reload();
+                                }
+
+                            }
+                        });
+                    });
+                };
+                function ChangerVisibiliteFacture(cbm) {
+                    swal({
+                        title: "Changer la visibilité de cete facture ?",
+                        text: " ",
+                        type: "warning",
+                        showCancelButton: true,
+                        cancelButtonText: 'Annuler',
+                        confirmButtonColor: "#DD6B55",
+                        confirmButtonText: "Oui.",
+                        closeOnConfirm: false
+                    }, function () {
+                        $.ajax({
+                            type: "get",
+                            url: '/GestionFactures/ChangerVisibiliteFacture?id=' + cbm, // we are calling json method
+                            dataType: 'json',
+                            success: function (result) {
+                                swal("visibilité changée!", "visibilité de facture changée avec succès! ", "success");
+                                window.location = "/GestionFactures/DetailsFacture/" + cbm;
+                            }
+                        });
+                    });
+                }
+                // Bind normal buttons
+                Ladda.bind('.ladda-button', { timeout: 100000 });
+                // Bind progress buttons and simulate loading progress
+                Ladda.bind('.progress-demo .ladda-button', {
+                    callback: function (instance) {
+                        var progress = 0;
+                        var interval = setInterval(function () {
+                            progress = Math.min(progress + Math.random() * 0.1, 1);
+                            instance.setProgress(progress);
+
+                            if (progress === 1) {
+                                instance.stop();
+                                clearInterval(interval);
+                            }
+                        }, 100000);
+                    }
+                });
+
+                var l = Ladda.bind('.ladda-button-demo');
+
+                l.click(function () {
+                    // Start loading
+                    l.ladda('start');
+
+                    // Timeout example
+                    // Do something in backend and then stop ladda
+                    setTimeout(function () {
+                        l.ladda('stop');
+                    }, 1000000)
+                });
+</script>
+

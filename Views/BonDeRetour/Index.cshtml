@@ -1,0 +1,175 @@
+﻿
+@{
+    ViewBag.Title = "BonDeRetour";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<link href="~/css/plugins/chosen/bootstrap-chosen.css" rel="stylesheet">
+<link href="~/css/plugins/ladda/ladda-themeless.min.css" rel="stylesheet">
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-lg-10">
+        <br />
+        <ol class="breadcrumb">
+            <li>
+                <a href="@Url.Action("index","Home")">Acceuil</a>
+            </li>
+            <li>
+                <a href="@Url.Action("Index","BonDeRetour")">Retour stock</a>
+            </li>
+           
+        </ol>bon de retour
+    </div>
+</div>
+<br />
+@if (ViewBag.messageError != null)
+{
+    <div class="alert alert-danger alert-dismissable">
+        <button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>
+        @ViewBag.messageError
+    </div>
+}
+else if (ViewBag.MessageSuccess != null)
+{
+    <div class="alert alert-success alert-dismissable">
+        <button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>
+        @ViewBag.MessageSuccess
+    </div>
+}
+<div class="ibox-content">
+    <div class="row m-t-sm">
+        <div class="col-lg-12">
+            <div class="panel blank-panel">
+
+
+                <div class="panel-body">
+
+                    <div class="tab-content">
+                      
+
+                        @using (Html.BeginForm("Index", "BonDeRetour", FormMethod.Post, new { id = "popupForm" }))
+                        {
+                            <fieldset id="SubmitForm" class="form-horizontal bordered-row">
+                             
+                                <div class="row">
+                               
+                                    <div class="row form-group col-md-5">
+                                        <div class="col-md-12">
+
+                                            <label>Veuillez saisir le numéro de BL<sup>*</sup></label>
+
+
+                                            <div class="input-group">
+                                                <span class="input-group-addon"><i class="fa fa-file"></i></span>
+                                                <input type="text" class="form-control" id="BL" name="BL" value="@ViewBag.BL">
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+                                    <div class="row form-group col-md-5">
+                                        <div class="col-md-12">
+
+                                            <label>Veuillez saisir le dépot du retour<sup>*</sup></label>
+
+
+                                            <div class="input-group">
+                                                <span class="input-group-addon"><i class="fa fa-university"></i></span>
+
+                                                <select class="form-control chosen-select" id="DepositDest" name="DepositDest">
+                                                    <option class="font-bold" > Choisir </option>
+                                                    @foreach (var item in ViewBag.ListOfAgences)
+                                                    {
+                                                        <option value="@item.Value">@item.Text</option>
+                                                    }
+                                                </select>
+                                              
+
+                                            </div>
+
+                                        </div>
+                                        
+                                        <button type="submit" class="btn btn-purplebee ladda-button ladda-button-demo" data-style="zoom-in" style="margin-right:-165px;margin-top:22px;margin-left:15px;">
+                                            Confirmer
+                                            <span class="ladda-spinner"></span>
+                                        </button>
+                                    </div>
+                                 
+                                    
+                                </div>
+
+                              
+
+                            </fieldset>
+
+                        }
+
+
+
+
+
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<script src="~/js/jquery-3.1.1.min.js"></script>
+<script src="~/js/plugins/metisMenu/jquery.metisMenu.js"></script>
+<script src="~/js/plugins/pace/pace.min.js"></script>
+<script src="~/js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+<script src="~/js/plugins/chosen/chosen.jquery.js"></script>
+<script src="~/js/plugins/dataTables/datatables.min.js"></script>
+
+<!-- Ladda -->
+<script src="~/js/plugins/ladda/spin.min.js"></script>
+<script src="~/js/plugins/ladda/ladda.min.js"></script>
+<script src="~/js/plugins/ladda/ladda.jquery.min.js"></script>
+
+<script>
+
+    $('.chosen-select').chosen({ width: "100%" });
+    $(document).ready(function () {
+
+        // Bind normal buttons
+        Ladda.bind('.ladda-button', { timeout: 2000 });
+
+        // Bind progress buttons and simulate loading progress
+        Ladda.bind('.progress-demo .ladda-button', {
+            callback: function (instance) {
+                var progress = 0;
+                var interval = setInterval(function () {
+                    progress = Math.min(progress + Math.random() * 0.1, 1);
+                    instance.setProgress(progress);
+
+                    if (progress === 1) {
+                        instance.stop();
+                        clearInterval(interval);
+                    }
+                }, 20000);
+            }
+        });
+
+
+        var l = Ladda.bind('.ladda-button-demo');
+
+        l.click(function () {
+            // Start loading
+            l.ladda('start');
+
+            // Timeout example
+            // Do something in backend and then stop ladda
+            setTimeout(function () {
+                l.ladda('stop');
+            }, 12000)
+
+
+        });
+
+    });
+
+</script>

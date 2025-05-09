@@ -1,0 +1,198 @@
+﻿@model IEnumerable<BeeProj.Models.MigrationModel>
+@{
+    ViewBag.Title = "Liste demande migration";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<link href="~/css/plugins/dataTables/datatables.min.css" rel="stylesheet">
+
+<div class="row">
+    <div class="col-lg-3">
+        <div class="widget style1 bg-purplebee-light">
+            <div class="row">
+                <div class="col-xs-4">
+                    <i class="fa fa-bandcamp fa-5x"></i>
+                </div>
+                <div class="col-xs-8 text-right">
+                    <span> Nouvelles Demandes </span>
+                    <h2 class="font-bold"> @Model.Where(x => x.StatutDemande == "Nouveau").Count() </h2>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-3">
+        <div class="widget style1 bg-purplebee">
+            <div class="row">
+                <div class="col-xs-4">
+                    <i class="fa fa-shopping-cart fa-5x"></i>
+                </div>
+                <div class="col-xs-8 text-right">
+                    <span> Demandes En cours </span>
+                    <h2 class="font-bold">@Model.Where(x => x.StatutDemande == "En cours").Count()  </h2>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-3">
+        <div class="widget style1 bg-greenbee">
+            <div class="row">
+                <div class="col-xs-4">
+                    <i class="fa fa-check-circle-o fa-5x"></i>
+                </div>
+                <div class="col-xs-8 text-right">
+                    <span> Demandes Validées </span>
+                    <h2 class="font-bold">@Model.Where(x => x.StatutDemande == "Validé").Count()</h2>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-3">
+        <div class="widget style1 bg-graybee-light">
+            <div class="row">
+                <div class="col-xs-4">
+                    <i class="fa fa-warning fa-5x"></i>
+                </div>
+                <div class="col-xs-8 text-right">
+                    <span> Demandes Annulées </span>
+                    <h2 class="font-bold">@Model.Where(x => x.StatutDemande == "Annulé").Count()</h2>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>Liste des demandes de migration</h5>
+                    <div class="project-actions">
+
+                        <a href=@Url.Action("Nouveau", "Migration") class="btn btn-sm btn-outline bg-purplebee" target="_blank">
+                            <i class="fa fa-plus "></i> Nouvelle demande
+                        </a>
+
+                    </div>
+                </div>
+
+
+            </div>
+            <div class="ibox-content">
+                <div class="table-responsive">
+                    <table class="table table-striped table-bordered table-hover dataTables-example display" id="ListeMigrationss">
+                        <thead>
+                            <tr>
+                                <th> Statut </th>
+                                <th> N° Demande </th>
+                                <th> Date Création </th>
+                                <th>Telephone</th>
+                                <th> Intitule Client </th>
+                                <th> Intitule Agence </th>
+                                <th> Commentaires </th>
+                                <th> Ancienne Offre  </th>
+                                <th> Nouvelle Offre  </th>
+                                <th> Avancement  </th>
+                                <th width="10px"> </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr class="gradeX">
+                                    <td>
+                                        @if (item.StatutDemande == "Nouveau")
+                                        {
+                                            <span class="label bg-purplebee-light"> Nouveau</span>
+                                        }
+                                        else if (item.StatutDemande == "En cours")
+                                        {
+                                            <span class="label bg-purplebee"> En cours </span>
+                                        }
+                                        else if (item.StatutDemande == "Validé")
+                                        {
+                                            <span class="label bg-greenbee"> Validé </span>
+                                        }
+                                        else if (item.StatutDemande == "Annulé")
+                                        {
+                                            <span class="label bg-graybee-light"> Annulé </span>
+                                        }
+                                        else
+                                        {
+
+                                        }
+                                    </td>
+                                    <td>@item.GD_Piece</td>
+                                    <td>@item.GD_Date.GetValueOrDefault().ToString("dd/MM/yyyy")</td>
+
+                                    <td>@item.CT_Telephone</td>
+
+
+                                    <td>@item.CT_Intitule</td>
+                                    <td>
+
+                                            @item.IntituleAgence
+                                        </td>
+                                    <td>@item.GD_Description</td>
+                                    <td>@item.GD_AncienService</td>
+                                    <td>@item.GD_NouveauService</td>
+                                    <td>
+                                        <small>Pourcentage: @item.GD_Avancement%</small><div class="progress progress-mini"><div style="width:@item.GD_Avancement%;" class="progress-bar"></div></div>
+                                    </td>
+                                    <td>
+                                        @*<a href=@Url.Action("Details/" + item.cbMarq, "Migration") class="btn btn-sm btn-outline btn-purplebee ">
+                                                <i class="fa fa-eye "></i> Détails
+                                            </a>*@
+                                        <a class="btn btn-white " value="@item.cbMarq"
+                                           title="Voir détails" href="/Migration/Details/@item.cbMarq" target="_blank">
+                                            <i class="fa fa-eye"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script src="~/js/jquery-3.1.1.min.js"></script>
+<script src="~/js/plugins/metisMenu/jquery.metisMenu.js"></script>
+<script src="~/js/plugins/pace/pace.min.js"></script>
+<script src="~/js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+<script src="~/js/plugins/chosen/chosen.jquery.js"></script>
+<script src="~/js/plugins/dataTables/datatables.min.js"></script>
+
+<script>
+    $(document).ready(function () {
+
+
+        $('#ListeMigrationss').DataTable({
+
+
+            responsive: true,
+            order: false,
+            dom: '<"html5buttons"B>lTfgitp',
+            buttons: [
+                { extend: 'copy' },
+                { extend: 'csv' },
+                { extend: 'excel', title: 'ExampleFile' },
+                { extend: 'pdf', title: 'ExampleFile' },
+                {
+                    extend: 'print',
+                    customize: function (win) {
+                        $(win.document.body).addClass('white-bg');
+                        $(win.document.body).css('font-size', '10px');
+
+                        $(win.document.body).find('table')
+                                .addClass('compact')
+                                .css('font-size', 'inherit');
+                    }
+                }
+            ]
+        });
+
+    });
+</script>

@@ -1,0 +1,201 @@
+﻿@model BeeProj.Models.IndexViewModel
+@using Microsoft.AspNet.Identity
+
+@if (Request.IsAuthenticated)
+{
+
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="ibox">
+
+
+        <div class="ibox-content">
+
+
+            <div class="row m-b-lg m-t-lg">
+                <div class="col-md-8">
+
+                    <div class="profile-image">
+                        @*<img src="img/a4.jpg" class="img-circle circle-border m-b-md" alt="profile">*@
+                        <img src="@Url.Action("Photo", "Account" , new { UserId=User.Identity.GetUserId() })" class="img-circle circle-border m-b-md" alt="profile" />
+
+                    </div>
+                    <div class="profile-info">
+                        <div class="">
+                            <div>
+                                <h2 class="no-margins">
+                                    @Html.ActionLink(User.Identity.GetUserName(), "Index", "Manage", routeValues: null, htmlAttributes: new { title = "Manage" })
+                                </h2>
+                                <h4></h4>
+
+                                @using (Html.BeginForm("ChangePassword", "Manage", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+                                {
+                                    @Html.AntiForgeryToken()
+
+                                    <hr />
+                                    @Html.ValidationSummary("", new { @class = "text-danger" })
+
+                                    <div class="row"  id="pwd-container4">
+                                        <div class="ibox">
+                                            <div class="ibox-content">
+
+                                                <div class="form-group">
+                                                    @Html.LabelFor(m => m.OldPassword, new { @class = "col-md-4 control-label" })
+                                                    <div class="col-md-8">
+                                                        @Html.PasswordFor(m => m.OldPassword, new { @class = "form-control" })
+                                                    </div>
+                                                </div>
+
+                                                <div class="form-group">
+                                                    @Html.LabelFor(m => m.NewPassword, new { @class = "col-md-4 control-label" })
+                                                    <div class="col-md-8">
+                                                        @Html.PasswordFor(m => m.NewPassword, new { @class = "form-control example4" })
+                                                    </div>
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <div class="col-md-4">
+                                                    </div>
+                                                        <div class="col-md-8">
+                                                            <span class="font-bold pwstrength_viewport_verdict4"></span>
+                                                            <span class="pwstrength_viewport_progress4"></span>
+                                                            
+                                                        </div>
+
+                                                    </div>
+
+
+                                                <div class="form-group">
+                                                    @Html.LabelFor(m => m.ConfirmPassword, new { @class = "col-md-4 control-label" })
+                                                    <div class="col-md-8">
+                                                        @Html.PasswordFor(m => m.ConfirmPassword, new { @class = "form-control" })
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <div class="col-md-offset-2 col-md-10">
+                                                        <input type="submit" value="Changer le mot de passe" class="btn btn-primary pull-right" />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <table class="table">
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <button type="button" class="btn btn-danger m-r-sm">@ViewBag.demande</button>
+                                    Migrations
+                                </td>
+                                <td>
+                                    <button type="button" class="btn btn-primary m-r-sm">@ViewBag.reclamation </button>
+                                    Réclamations
+                                </td>
+                                <td>
+                                    <button type="button" class="btn btn-instagram m-r-sm">@ViewBag.abonnement</button>
+                                    Abonnements
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td>
+                                    <button type="button" class="btn btn-warning m-r-sm">20</button>
+                                    Versements
+                                </td>
+                                <td>
+                                    <button type="button" class="btn btn-success m-r-sm">@ViewBag.resiliation</button>
+                                    Résiliations
+                                </td>
+                                <td>
+                                    <button type="button" class="btn btn-info m-r-sm">@ViewBag.appro</button>
+                                    Approvisionnement
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+
+
+
+
+
+                @*<div class="col-md-3">
+                    <small>Taux de vente </small>
+                    <h2 class="no-margins">206 480</h2>
+                    <div id="ventes"></div>
+                </div>*@
+
+
+            </div>
+
+
+
+
+        </div>
+    </div>
+
+
+
+</div>
+
+
+
+
+
+
+
+
+}
+
+
+<script src="~/js/plugins/sparkline/jquery.sparkline.min.js"></script>
+
+
+
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+
+
+    <script src="~/js/plugins/dataTables/datatables.min.js"></script>
+    <script src="~/js/jquery-3.1.1.min.js"></script>
+    <script src="~/js/plugins/metisMenu/jquery.metisMenu.js"></script>
+    <script src="~/js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+
+    <script src="~/js/plugins/dataTables/datatables.min.js"></script>
+
+    <script src="~/js/accounting.js"></script>
+    <script src="~/js/accounting.min.js"></script>
+
+    <!-- Chosen -->
+    <script src="~/js/plugins/chosen/chosen.jquery.js"></script>
+    <!-- Sweet alert -->
+    <script src="~/js/plugins/sweetalert/sweetalert.min.js"></script>
+<!-- Password meter -->
+<script src="~/js/plugins/pwstrength/pwstrength-bootstrap.min.js"></script>
+<script src="~/js/plugins/pwstrength/zxcvbn.js"></script>
+
+
+    <script>
+        $(document).ready(function () {
+
+            var options4 = {};
+            options4.ui = {
+                container: "#pwd-container4",
+                viewports:
+                    {
+                        progress: ".pwstrength_viewport_progress4",
+                        verdict: ".pwstrength_viewport_verdict4"
+                    }
+            };
+            options4.common = {
+                zxcvbn: true,
+                zxcvbnTerms: ['samurai', 'shogun', 'bushido', 'daisho', 'seppuku'],
+                //userInputs: ['#year', '#familyname']
+            };
+            $('.example4').pwstrength(options4);
+        });
+    </script>

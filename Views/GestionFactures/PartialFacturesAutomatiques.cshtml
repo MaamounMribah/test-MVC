@@ -1,0 +1,17 @@
+﻿@if (ViewBag.Is_Generated != 0)
+{
+<a class="dropdown-toggle count-info" data-toggle="dropdown" href="#" title="Factures automatiques">
+    <i class="fa fa-question"></i>
+    <span class="label label-info">@ViewBag.Is_Generated</span>
+</a>
+<ul class="dropdown-menu dropdown-alerts " style="overflow:scroll; height: 500px;">
+        <li>
+            <a href="#">
+                <div>
+                    <i class="fa fa-safari fa-fw">Vous avez des factures non générées automatiquement.</i> 
+
+                </div>
+            </a>
+        </li>
+</ul>
+}

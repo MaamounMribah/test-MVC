@@ -1,0 +1,490 @@
+﻿@model BeeProj.Models.B_AGENCE
+
+@{
+    ViewBag.Title = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-lg-8">
+        <h2>Agence</h2>
+        <ol class="breadcrumb">
+            <li>
+                <a>Administration</a>
+            </li>
+            <li>
+                <a>Agence</a>
+            </li>
+            <li class="active">
+                <strong>Détails Agence</strong>
+            </li>
+        </ol>
+    </div>
+    <div class="col-lg-2">
+
+    </div>
+</div>
+<div class="wrapper wrapper-content animated fadeInRight">
+
+    <div class="ibox">
+        <div class="ibox-content">
+
+@if (Request.IsAuthenticated && (User.IsInRole("Admin") || User.IsInRole("Modifier Agence")))
+{
+            <button type="button" class="btn btn-w-m btn-info pull-right" onclick="location.href='@Url.Action("Modifier", "Agences", new { id = @Model.cbMarq })'">Modifier l'agence</button>
+}
+            <div class="row m-b-lg m-t-lg ">
+                <div class="col-md-6">
+
+                    <div class="profile-image">
+                        <img src="~/img/bee.png" class="img-circle circle-border m-b-md" alt="profile">
+                    </div>
+                    <div class="profile-info">
+                        <div class="">
+                            <div>
+                                <h2 class="no-margins">
+                                    @Model.A_Intitule - #@Model.A_Code
+                                </h2>
+                                <h4>@Model.A_Contact</h4>
+                                <small>
+                                    @Model.A_Adresse @Model.A_CodePostal
+                                </small>
+                                </small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <table class="table small m-b-xs">
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <strong>@ViewBag.NombreAbonnements</strong> Abonnements
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <strong>@String.Format("{0:N3}", (decimal)(Model.Seuil1 ?? 0)) TND </strong> Seuil 1
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <strong>@String.Format("{0:N3}", (decimal)(Model.Seuil2 ?? 0)) TND </strong> Seuil 2
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <p>Nombre de <strong style="font-size:1.2em">Jours</strong> de blocage paiement <strong style="font-size:1.2em">(Bordereau) :</strong><strong> @String.Format("{0:N0}", (decimal)(Model.ValueBord ?? 0)) </strong>jours </p>
+
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <p>Nombre de <strong style="font-size:1.2em">Jours</strong> de blocage paiement <strong style="font-size:1.2em">(Réglement) : </strong><strong> @String.Format("{0:N0}", (decimal)(Model.ValueReg ?? 0)) </strong>jours</p>
+                                </td>
+                                
+                            </tr>
+                            <tr>
+                                <td>
+                                    <p>Nombre de <strong style="font-size:1.2em">Jours</strong> de blocage Bordereau <strong style="font-size:1.2em">(Bordereau) : </strong><strong> @String.Format("{0:N0}", (decimal)(Model.NbreJoursBord ?? 0)) </strong>jours</p>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    @using (Html.BeginForm("EditAgence", "Agences", FormMethod.Post, new { @class = "form-horizontal", role = "form", enctype = "multipart/form-data" }))
+    {
+        <div class="wrapper wrapper-content animated fadeInRight">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="ibox float-e-margins">
+                        <div class="ibox-content">
+                            <div class="form-horizontal">
+                                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                                <div class="wrapper wrapper-content animated fadeInRight">
+                                    <div class="row">
+                                        <div class="ibox float-e-margins">
+                                            <div class="ibox-content">
+                                                <div class="row">
+                                                    <div class="col-lg-12">
+                                                        <div class="panel panel-default">
+                                                            <div class="panel-heading">
+                                                                Informations générales
+                                                            </div>
+                                                            <div class="panel-body">
+                                                                <div class="form-group">
+                                                                    <div class="col-md-4">
+                                                                        <div class="form-group">
+                                                                            <label class="col-md-4 control-label">Type agence</label>
+                                                                            <div class="col-md-8">
+                                                                                @if (Model.A_Type == 0)
+                                                                                {
+                                                                                    <input id="A_Type" name="A_Type" class="form-control" value="Siège" disabled />
+                                                                                }
+                                                                                else if (Model.A_Type == 1)
+                                                                                {
+                                                                                    <input id="A_Type" name="A_Type" class="form-control" value="PVD" disabled />
+                                                                                }
+                                                                                else if (Model.A_Type == 2)
+                                                                                {
+                                                                                    <input id="A_Type" name="A_Type" class="form-control" value="PVI" disabled />
+                                                                                }
+                                                                                else if (Model.A_Type == 3)
+                                                                                {
+                                                                                    <input id="A_Type" name="A_Type" class="form-control" value="FREELANCER" disabled />
+                                                                                }
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    @if (Model.A_Type != 0)
+                                                                    {
+                                                                        <div class="col-md-4">
+                                                                            <div class="form-group">
+                                                                                <label class="col-md-4 control-label">Agence mère</label>
+                                                                                <div class="col-md-8">
+                                                                                    <input id="A_Parent" name="A_Parent" class="form-control" value="@ViewBag.AgenceMere" disabled />
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    }
+                                                                    <div class="col-md-4">
+                                                                        <label class="col-md-4 control-label">Dépôt Agence</label>
+                                                                        <div class="col-md-8">
+                                                                            <input class="form-control" disabled id="DE_No" name="DE_No" value="@ViewBag.Depot" />
+                                                                        </div>
+
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group">
+
+
+                                                                    <div class="col-md-4">
+                                                                        <label class="col-md-4 control-label">Souche Agence</label>
+                                                                        <div class="col-md-8">
+                                                                            <input id="S_Intitule" name="S_Intitule" class="form-control" value="@Model.Id_Souche" disabled />
+
+                                                                        </div>
+
+                                                                    </div>
+
+
+                                                                    <div class="col-md-4">
+                                                                        <label class="col-md-4 control-label">Région Agence</label>
+                                                                        <div class="col-md-8">
+                                                                            <input id="R_CodeRegion" name="R_CodeRegion" class="form-control" value="@Model.R_CodeRegion" disabled />
+
+                                                                        </div>
+
+                                                                    </div>
+
+
+                                                                    @if (Model.A_Type == 2)
+                                                                    {
+                                                                        <div class="col-md-4" id="classementForPDV">
+                                                                            <div class="form-group">
+                                                                                <label class="col-md-4 control-label">Modèle de commission</label>
+
+                                                                                <div class="col-md-8">
+
+
+                                                                                    <input id="A_Classement" name="A_Classement" class="form-control" value="@ViewBag.Class" disabled />
+
+
+
+
+
+                                                                                </div>
+                                                                            </div>
+
+                                                                        </div>
+
+                                                                    }
+
+
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+
+
+
+
+
+
+                                                    </div>
+
+
+                                                    <div class="col-lg-6">
+                                                        <div class="ibox">
+                                                            @*<div class="ibox-title">
+
+                    </div>*@
+
+                                                            <div class="ibox-content">
+
+                                                                <div class="form-group">
+                                                                    <label class="col-md-4 control-label">Identifiant agence</label>
+                                                                    <div class="col-md-8">
+                                                                        <input id="A_Identifiant" name="A_Identifiant" class="form-control" value="@Model.A_Identifiant" disabled />
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label class="col-md-4 control-label">Intitulé</label>
+                                                                    <div class="col-md-8">
+                                                                        <input id="A_Intitule" name="A_Intitule" class="form-control" value="@Model.A_Intitule" disabled />
+                                                                    </div>
+                                                                </div>
+
+                                                                <div class="form-group">
+                                                                    <label class="col-md-4 control-label">Raison Sociale</label>
+                                                                    <div class="col-md-8">
+                                                                        <input id="A_RaisonSociale" name="A_RaisonSociale" class="form-control" value="@Model.A_RaisonSociale" disabled />
+                                                                    </div>
+                                                                </div>
+
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+
+                                                    <div class="col-lg-6">
+                                                        <div class="ibox">
+
+                                                            <div class="ibox-content">
+
+                                                                <div class="form-group">
+                                                                    <label class="col-md-4 control-label">Adresse agence</label>
+                                                                    <div class="col-md-8">
+
+                                                                        <textarea id="A_Adresse" name="A_Adresse" class="form-control" disabled>@Model.A_Adresse</textarea>
+                                                                    </div>
+                                                                </div>
+
+
+                                                                <div class="form-group">
+                                                                    <label class="col-md-4 control-label">Ville</label>
+                                                                    <div class="col-md-8">
+                                                                        <input name="A_Ville" id="A_Ville" class="form-control" value="@Model.A_Ville" disabled />
+                                                                    </div>
+                                                                </div>
+
+                                                                <div class="form-group">
+                                                                    <label class="col-md-4 control-label">Code Postal</label>
+                                                                    <div class="col-md-8">
+                                                                        <input id="A_CodePostal" name="A_CodePostal" class="form-control" value="@Model.A_CodePostal" disabled />
+                                                                    </div>
+
+                                                                </div>
+
+
+
+
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                   
+                                                          <div class="col-lg-6">
+                                                                    <div class="ibox">
+                                                                        <div class="ibox-content">
+
+                                                                            <div class="form-group">
+                                                                                <label class="col-md-4 control-label">Identifiant Fiscale</label>
+                                                                                <div class="col-md-8">
+                                                                                    <input id="A_MatriculeFiscale" name="A_MatriculeFiscale" class="form-control" value="@Model.A_MatriculeFiscale" disabled />
+                                                                                </div>
+                                                                            </div>
+
+                                                                            <div class="form-group">
+                                                                                <label class="col-md-4 control-label">Registre de commerce</label>
+                                                                                <div class="col-md-8">
+                                                                                    <input id="A_REGISTRE" name="A_REGISTRE" class="form-control" value="@Model.A_REGISTRE" disabled />
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+
+
+                                                                <div class="col-lg-6">
+
+                                                                    <div class="ibox">
+
+                                                                        <div class="ibox-content">
+
+
+
+                                                                            <div class="form-group">
+
+                                                                                <label class="col-md-4 control-label">Contact principal</label>
+                                                                                <div class="col-md-8">
+                                                                                    <input id="A_Contact" name="A_Contact" class="form-control" value="@Model.A_Contact" disabled />
+                                                                                </div>
+                                                                            </div>
+
+                                                                            <div class="form-group">
+                                                                                <label class="col-md-4 control-label">Email</label>
+                                                                                <div class="col-md-8">
+                                                                                    <input name="A_Mail" id="A_Mail" type="email" class="form-control" value="@Model.A_Mail" disabled />
+                                                                                </div>
+                                                                            </div>
+
+
+
+
+                                                                            <div class="form-group">
+                                                                                <label class="col-md-4 control-label">Téléphone agence</label>
+                                                                                <div class="col-md-8">
+                                                                                    <input id="A_Telephone" name="A_Telephone" class="form-control" value="@Model.A_Telephone" disabled />
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="form-group">
+
+                                                                                <label class="col-md-4 control-label">Télécopie</label>
+                                                                                <div class="col-md-8">
+                                                                                    <input id="A_Telecopie" name="A_Telecopie" class="form-control" value="@Model.A_Telecopie" disabled />
+                                                                                </div>
+                                                                            </div>
+                                                                          
+                                                                                        <div class="form-group">
+                                                                                            <label class="col-md-4 control-label">Identifiant Agence</label>
+                                                                                            <div class="col-md-8">
+                                                                                                <input id="CT_Num" name="Identifiant Agence" class="form-control" value="@Model.CT_Num" disabled />
+                                                                                            </div>                                                                                    
+                                                                                      </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+
+
+
+                                                            </div>
+
+
+
+
+                                                            <div class="row">
+                                                                <div class="col-lg-12">
+                                                                    <div class="panel panel-default">
+
+                                                                        <div class="panel-body">
+                                                                            <div class="row">
+                                                                                <div class="col-md-6">
+                                                                                    <label class="col-md-4 control-label">Latitude</label>
+                                                                                    <div class="col-md-8">
+                                                                                        <input id="A_Latitude" name="A_Latitude" value="@Model.A_Latitude" class="MapLat form-control" type="text" placeholder="Latitude" disabled="disabled">
+                                                                                    </div>
+
+                                                                                </div>
+
+
+                                                                                <div class="col-md-6">
+                                                                                    <label class="col-md-4 control-label">Longitude</label>
+                                                                                    <div class="col-md-8">
+                                                                                        <input id="A_Longitude" name="A_Longitude" value="@Model.A_Longitude" class="MapLon form-control" type="text" placeholder="Longitude">
+
+                                                                                    </div>
+
+                                                                                </div>
+
+
+                                                                            </div>
+                                                                            <div id="map_canvas" style="height: 400px;width:inherit;margin: 0.6em;"></div>
+
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+                                                        </div>
+                                                    </div>
+
+
+
+                                                </div>
+
+
+
+
+                                </div>
+
+                            </div>
+
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+    }
+
+</div>
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+<script src="~/js/jquery-3.1.1.min.js"></script>
+ 
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCDtrxC4SA0NJdCKtzOq3DfAytbq_2ucJI&libraries=places&callback=initAutocomplete&region=tn&language=fr&sensor=true"></script>
+
+
+<script>
+    $(function () {
+        var icone = {
+            url: "/img/Marker1.png", // url
+            scaledSize: new google.maps.Size(50, 50), // scaled size
+            origin: new google.maps.Point(0, 0), // origin
+            anchor: new google.maps.Point(0, 0) // anchor
+        };
+        var icone2 = {
+            url: "/img/Marker2.png", // url
+            scaledSize: new google.maps.Size(50, 50), // scaled size
+            origin: new google.maps.Point(0, 0), // origin
+            anchor: new google.maps.Point(0, 0) // anchor
+        };
+
+
+        var lngg = $('#A_Longitude').val().replace(",", ".");
+        var latt = $('#A_Latitude').val().replace(",", "."); 
+        var lat = latt,
+            lng = lngg,
+            latlng = new google.maps.LatLng(lat, lng)
+          //  image = 'https://cdn3.iconfinder.com/data/icons/agriculture-farming-and-gardening-vol-6/90/Bee6-128.png';
+
+        //zoomControl: true,
+        //zoomControlOptions: google.maps.ZoomControlStyle.LARGE,
+
+        var mapOptions = {
+            center: new google.maps.LatLng(lat, lng),
+            zoom: 10,
+            mapTypeId: google.maps.MapTypeId.ROADMAP,
+            panControl: true,
+            panControlOptions: {
+                position: google.maps.ControlPosition.TOP_RIGHT
+            },
+            zoomControl: true,
+            zoomControlOptions: {
+                style: google.maps.ZoomControlStyle.LARGE,
+                position: google.maps.ControlPosition.TOP_left
+            }
+        },
+        map = new google.maps.Map(document.getElementById('map_canvas'), mapOptions),
+            marker = new google.maps.Marker({
+                position: latlng,
+                map: map,
+                icon: icone2
+            });
+
+        var infowindow = new google.maps.InfoWindow();
+
+       
+      
+
+    });
+
+</script>

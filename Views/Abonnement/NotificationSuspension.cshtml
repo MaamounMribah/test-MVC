@@ -1,0 +1,204 @@
+﻿
+@{
+    ViewBag.Title = "NotificationSuspension";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<link href="~/css/plugins/dataTables/datatables.min.css" rel="stylesheet">
+<!-- Sweet Alert -->
+<link href="~/css/plugins/sweetalert/sweetalert.css" rel="stylesheet">
+<link href="~/css/plugins/datapicker/datepicker3.css" rel="stylesheet">
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-lg-10">
+        <h2>Liste des abonnements</h2>
+        <ol class="breadcrumb">
+            <li>
+                <a href="#">Acceuil</a>
+            </li>
+            <li>
+                <a href="@Url.Action("ListeAbonnement", "Abonnement")">Recouvrement </a>
+            </li>
+            <li class="active">
+                <a href="@Url.Action("ListeAbonnement", "Abonnement")"><strong>Notification de résiliation </strong></a>
+            </li>
+        </ol>
+    </div>
+
+</div>
+
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+
+        <div class="col-lg-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>Informations sur les abonnements</h5>
+
+                </div>
+                <div class="ibox-content">
+                    @using (Html.BeginForm("NotificationSuspension", "Abonnement", FormMethod.Post))
+                    {
+
+
+
+                        <div class="input-group">
+                            <input type="date" class="form-control" name="date" id="date" value="@ViewBag.date"> <span class="input-group-btn">
+                                <button type="submit" class="btn btn-primary">
+                                    Rechercher une date
+                                </button>
+                            </span>
+                        </div>
+                        
+                    }
+                    <div class="alert alert-danger alert-dismissable">
+                        <button type="button" class="close " data-dismiss="alert"> × </button>
+                        @ViewBag.date <br />
+                        Alerte de suspension des abonnements (x jours non payés selon fréquence paiement)
+
+                    </div>
+                    
+
+
+
+
+
+                    <div class="table-responsive">
+                        <table class="table table-responsive table-hover " id="listeAbo">
+                            <thead>
+                                <tr>
+                                   
+                                    <th> Réference TT </th>
+                                    <th> Client </th>
+                                    <th> Freq </th>
+                                    <th> Date de création </th>
+                                    <th> Ville </th>
+                                    <th> Gouvernorat </th>
+                                    <th> Téléphone Fixe </th>
+                                    <th> Téléphone </th>
+                                    <th> Identifiant </th>
+                                    <th> Pack Abonnement </th>
+                                    <th> Type Agence </th>
+                                    <th> IntituleAgence</th>
+                                    <th>NB non payé</th>
+                                    <th>Montant facture</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in ViewBag.listeabonnements)
+                                {
+                                    <tr class="gradeX">
+                                        <td>@item.ReferenceTT</td>
+                                        <td>@item.Client</td>
+
+                                        <td>
+                                            <small>@item.FrequenceFacture</small>
+                                        </td>
+
+                                        <td>@item.DateCreation.ToString("dd/MM/yyyy")</td>
+
+                                        <td>@item.Ville</td>
+                                        <td>@item.CT_Gouvernorat</td>
+                                        <td>@item.NumeFixe</td>
+
+                                        <td>@item.Téléphone</td>
+                                        <td>@item.Identifiant</td>
+                                        <td >@item.Offre</td>
+                                        <td>@item.TypeAgence</td>
+                                        <td>@item.IntituleAgence</td>
+
+                                        <td>@item.Nombre</td>
+                                        <td>@item.DO_totalTTC</td>
+                                        <td class="project-completion">
+                                            <a href=@Url.Action("Details/" + @item.Cbmarq, "Abonnement") class="btn btn-sm btn-outline btn-purplebee ">
+                                                <i class="fa fa-eye "></i> Détails
+                                            </a>
+                                           
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+ 
+<script src="~/js/jquery-3.1.1.min.js"></script>
+<script src="~/js/plugins/metisMenu/jquery.metisMenu.js"></script>
+<script src="~/js/plugins/pace/pace.min.js"></script>
+<script src="js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+<script src="~/js/plugins/chosen/chosen.jquery.js"></script>
+<script src="~/js/plugins/dataTables/datatables.min.js"></script>
+<!-- Sweet alert -->
+<script src="~/js/plugins/sweetalert/sweetalert.min.js"></script>
+    <!-- Date range use moment.js same as full calendar plugin -->
+<script src="~/js/plugins/fullcalendar/moment.min.js"></script>     
+<script src="~/js/plugins/daterangepicker/daterangepicker.js"></script>
+
+<!-- Select2 -->
+<script src="~/js/plugins/select2/select2.full.min.js"></script>
+<script>
+    $(document).ready(function () {
+
+        $('#listeAbo').DataTable({
+            pageLength: 30,
+            responsive: true,
+            dom: '<"html5buttons"B>lTfgitp',
+            buttons: [
+                { extend: 'copy' },
+                { extend: 'csv' },
+                { extend: 'excel', title: 'ExampleFile' },
+                { extend: 'pdf', title: 'ExampleFile' },
+                {
+                    extend: 'print',
+                    customize: function (win) {
+                        $(win.document.body).addClass('white-bg');
+                        $(win.document.body).css('font-size', '10px');
+
+                        $(win.document.body).find('table')
+                                .addClass('compact')
+                                .css('font-size', 'inherit');
+                    }
+                }
+            ]
+
+        });
+		});
+
+    function Reaffecter(cbm) {
+
+
+        $("#ReaffectationModal").modal();
+
+        $("#ValiderReaffecter").click(function () {
+
+            $.ajax({
+                type: "get",
+                url: '/Abonnement/ReaffecterAbonnements?cbm=' + cbm + '&&agences=' + $('select#A_Code').find("option:selected").val() + '&&Notes=' + $('#CommentairesReaffectation').val(), // we are calling json method
+                dataType: 'json',
+                success: function (result) {
+                    if (result != -1) {
+                        swal("Succès!", result + "Abonnement réaffectés avec succès! ", "success");
+                        window.location = "/Abonnement/ListeAbonnement";
+                    }
+                    else {
+                        swal({
+                            title: "Aucune modification ",
+                            text: "Ok",
+                            type: "warning"
+                        });
+                        window.location = "/Abonnement/ListeAbonnement";
+
+                    }
+                }
+            });
+
+        });
+    }
+
+
+</script>

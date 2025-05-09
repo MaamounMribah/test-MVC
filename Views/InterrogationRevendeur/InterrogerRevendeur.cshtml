@@ -1,0 +1,853 @@
+﻿@using Microsoft.AspNet.Identity
+@{
+    ViewBag.Title = "InterrogerRevendeur";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<link href="~/css/plugins/sweetalert/sweetalert.css" rel="stylesheet">
+<link href="~/css/plugins/dataTables/datatables.min.css" rel="stylesheet">
+
+<!-- Ladda style -->
+<link href="~/css/plugins/ladda/ladda-themeless.min.css" rel="stylesheet">
+<!-- Toastr style -->
+<link href="~/css/plugins/toastr/toastr.min.css" rel="stylesheet">
+
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-lg-10">
+        <br />
+        <ol class="breadcrumb">
+            <li>
+                <a href="@Url.Action("Index", "Home")">Acceuil</a>
+            </li>
+            <li>
+                <a href="@Url.Action("Index", "EspaceRevendeur")">Interrogation revendeur</a>
+            </li>
+            <li class="active">
+                <strong>Interrogation revendeur</strong>
+            </li>
+        </ol>
+    </div>
+</div>
+<div class="wrapper wrapper-content animated fadeInRight">
+    @if (ViewBag.AgenceConn == 0)
+    {
+        <div class="row">
+            <div class="col-lg-12">
+
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title" style="height:80px;">
+
+                        @using (Html.BeginForm("Index", "InterrogationRevendeur", FormMethod.Post))
+                        {
+                            <div class="col-sm-2">
+                                <label class="control-label">Selectionner une agence </label>
+                            </div>
+                            <div class="col-sm-6">
+                                <select name="A_Code" class="form-control chosen-select">
+                                    @foreach (var item in ViewBag.ListeAgence)
+                                    {
+                                        if (ViewBag.Agence.cbMarq == item.cbMarq)
+                                        {
+                                            <option value="@item.cbMarq" selected>@item.A_Intitule</option>
+                                        }
+                                        else
+                                        {
+                                            <option value="@item.cbMarq">@item.A_Intitule</option>
+                                        }
+                                    }
+                                </select>
+                            </div>
+                            <div class="col-sm-2">
+                                <button type="submit" class="btn btn-purplebee btn-rounded btn-outline">Interroger  </button>
+                            </div>
+
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+    else if (@ViewBag.test == true)
+    {
+        <div class="row">
+            <div class="col-lg-12">
+
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title" style="height: 80px;">
+
+                        @using (Html.BeginForm("Index", "InterrogationRevendeur", FormMethod.Post))
+                        {
+                            <div class="col-sm-2">
+                                <label class="control-label">Selectionner une agence </label>
+                            </div>
+                            <div class="col-sm-6">
+                                <select name="A_Code" class="form-control chosen-select">
+                                    @foreach (var item in ViewBag.ListeAgence)
+                                    {
+                                        if (ViewBag.Agence.cbMarq == item.cbMarq)
+                                        {
+                                            <option value="@item.cbMarq" selected>@item.A_Intitule</option>
+                                        }
+                                        else
+                                        {
+                                            <option value="@item.cbMarq">@item.A_Intitule</option>
+                                        }
+                                    }
+                                </select>
+                            </div>
+                            <div class="col-sm-4">
+                                <button type="submit" class="btn btn-purplebee btn-rounded btn-outline">Interroger  </button>
+                            </div>
+
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+
+    <div class="row">
+        <div class="col-md-2 col-md-offset-1">
+            <div class="widget style1 blue-bg">
+                <div class="row vertical-align">
+                    <div class="col-xs-4">
+                        <strong> <i class="fa fa-list fa-3x"></i> Total demandes abonnements</strong>
+                    </div>
+                    <div class="col-xs-8 text-right">
+                        <strong class="font-bold" style="font-size :1.3em">@ViewBag.Total_demandes_abonnements</strong>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="widget style1 navy-bg">
+                <div class="row vertical-align">
+                    <div class="col-xs-3">
+                        <strong><i class="fa fa-check-circle-o fa-3x"></i>Total demandes Valides</strong>
+                    </div>
+                    <div class="col-xs-9 text-right">
+                        <strong class="font-bold" style="font-size :1.3em">@ViewBag.Total_demandes_abonnements_Valides</strong>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="widget style1 red-bg">
+                <div class="row vertical-align">
+                    <div class="col-xs-3">
+                        <strong><i class="fa fa-close fa-3x"></i>Total demandes Annulés</strong>
+                    </div>
+                    <div class="col-xs-9 text-right">
+                        <strong class="font-bold" style="font-size :1.3em">@ViewBag.Total_demandes_abonnements_Annule</strong>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="widget style1 lazur-bg">
+                <div class="row vertical-align">
+                    <div class="col-xs-3">
+                        <strong><i class="fa fa-dollar fa-3x"></i>Total Versements valides</strong>
+                    </div>
+                    <div class="col-xs-9 text-right">
+                        <strong class="font-bold" style="font-size :1.3em">@String.Format("{0:N3}", ViewBag.Total_Versements) <small>TND</small></strong>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="widget yellow-bg">
+                <div class="row vertical-align">
+                    <div class="col-xs-3">
+                        <strong><i class="fa fa-euro fa-3x"></i>Total commission</strong>
+                    </div>
+                    <div class="col-xs-9 text-right">
+                        <strong class="font-bold" style="font-size :1.3em">@String.Format("{0:N3}", ViewBag.TotalCommission) <small>TND</small></strong>
+                    </div>
+                </div>
+                <br />
+            </div>
+        </div>
+    </div>
+
+    <br />
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="ibox">
+                <div class="ibox-content">
+
+                    @if (ViewBag.Error != null)
+                    {
+                        <div class="alert alert-danger alert-dismissable">
+                            <button type="button" class="close " data-dismiss="alert">×</button>
+                            <p>@ViewBag.Error</p>
+                        </div>
+                    }
+
+                    <div class="clients-list">
+
+                        @*<div class="pull-right">
+                            <button class="btn btn-graybee-light  btn-block" type="button" id="PaiementCommission"><i class="fa fa-dollar"></i> Payer </button>
+                        </div>
+                        <br />*@
+                        <ul class="nav nav-tabs">
+
+                            @foreach (var item in ViewBag.commission_revendeur)
+                            {
+                                if (item.Annee == System.DateTime.Now.Year)
+                                {
+                                    <li class="active"><a data-toggle="tab" href="#@item.Annee "><i class="fa fa-calendar"></i>@item.Annee </a></li>
+
+                                }
+                                else
+                                {
+                                    <li><a data-toggle="tab" href="#@item.Annee "><i class="fa fa-calendar"></i>@item.Annee </a></li>
+
+                                }
+                            }
+                            @*<li class=""><a data-toggle="tab" href="#tab-2"><i class="fa fa-hand-paper-o"></i>Commission  <span class="class="badge badge-danger /label label-warning-light pull-right">5</span></a></li>*@
+                            @*<li class=""><a data-toggle="tab" href="#tab-2">Commission <span class="label label-danger right"> @ViewBag.commission_notif</span></a></li>*@
+                            @*@if (ViewBag.commission_notif != 0 && ViewBag.commission_notif != null)
+                            {
+                                <li class=""><a data-toggle="tab" href="#tab-2">Commission <span class="label label-danger right"> @ViewBag.commission_notif</span></a></li>
+                            }
+                            else
+                            {
+                                <li class="">
+                                    <a data-toggle="tab" href="#tab-2">
+                                        Commission
+                                    </a>
+                                </li>
+                            }*@
+
+
+                        </ul>
+                        <div class="tab-content">
+
+                            @foreach (var item in ViewBag.commission_revendeur)
+                            {
+                                if (item.Annee == System.DateTime.Now.Year)
+                                {
+                                    <div id="@item.Annee" class="tab-pane active text-black-50">
+                                        <div class="full-height-scroll">
+                                            <div class="table-responsive">
+                                                <table class="table table-striped table-hover interrrevendeur">
+                                                    <thead>
+                                                        <tr hidden></tr>
+                                                        <tr>
+                                                            <th class="hidden"></th>
+                                                            <th>Mois</th>
+                                                            @if (item.Result == true)
+                                                            {
+                                                                <th>Bonus</th>
+                                                            }
+                                                            <th>Commission Acquisition </th>
+                                                            <th>Commission de Base  </th>
+                                                            <th>Total Commission </th>
+                                                            <th>Statut commission </th>
+                                                            <th>Dernière date </th>
+                                                            <th> Commentaire</th>
+                                                            <th>Détails</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        @foreach (var grouped in item.COMMISSIONREVENDEUR)
+                                                        {
+                                                        <tr>
+                                                            <td class="hidden">@grouped.cbMarq</td>
+                                                            <td>@System.Globalization.CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(grouped.Mois) </td>
+                                                            @if (item.Result == true)
+                                                            {
+                                                                <td>
+                                                                    @String.Format("{0:N3}", @grouped.Montant) TND
+                                                                    <a class="btn btn-greenbee btn-xs btn-bitbucket" title="Détails Ristourne"
+                                                                       href="@Url.Action("DetailsRistourne", "InterrogationRevendeur", new { A_code = grouped.A_Code, Annee = grouped.Annee, Mois = grouped.Mois })" target="_blank">
+                                                                        <i title="Détails Ristourne " class="glyphicon glyphicon-edit"></i>
+                                                                    </a>
+                                                                </td>
+                                                            }
+                                                            <td> @String.Format("{0:N3}", grouped.DO_Montant_Com_Acquisition) TND </td>
+                                                            <td> @String.Format("{0:N3}", grouped.DO_Montant_Com_Standard) TND </td>
+                                                            <td><strong> @String.Format("{0:N3}", grouped.DO_TotalMontantCom) TND </strong></td>
+                                                            <td>
+                                                                @if (grouped.DO_StatCommission == 0)
+                                                                {
+                                                                    <div class="text-danger"><i class="fa fa-close"></i> Non facturé </div>
+                                                                }
+
+                                                                else if (grouped.DO_StatCommission == 1)
+                                                                {
+                                                                    <div class="text-success"><i class="fa fa-file"></i> Facture Acceptée </div>
+                                                                }
+                                                                else if (grouped.DO_StatCommission == 2)
+                                                                {
+                                                                    <div class="text-success"><i class="fa fa-file"></i> Facture Validée </div>
+                                                                }
+
+                                                                else if (grouped.DO_StatCommission == 3)
+                                                                {
+                                                                    <div class="text-success"><i class="fa fa-file"></i> Facture Payée </div>
+                                                                }
+                                                            </td>
+                                                            <td>@grouped.cbModification</td>
+                                                            <td>@grouped.DO_Commentaire</td>
+                                                            <td>
+                                                                <a class="btn btn-greenbee btn-xs btn-bitbucket" title="DetailsMoisCommission"
+                                                                   href="@Url.Action("DetailsMoisCommission", "EspaceRevendeur", new { id = grouped.cbMarq })" target="_blank">
+                                                                    <i title="Détails mois " class="glyphicon glyphicon-list-alt"></i>
+                                                                </a>
+                                                            </td>
+                                                        </tr>
+
+
+                                                        }
+                                                    </tbody>
+                                                </table>
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div id="@item.Annee" class="tab-pane  text-black-50">
+                                        <div class="full-height-scroll">
+                                            <div class="table-responsive">
+                                                <table class="table table-striped table-hover interrrevendeur" style="width:100%;">
+                                                    <thead>
+                                                        <tr hidden></tr>
+                                                        <tr>
+                                                            <th class="hidden"></th>
+                                                            <th>Mois</th>
+                                                            @if (item.Result == true)
+                                                            {
+                                                                <th>Bonus</th>
+                                                            }
+                                                            <th>Commission Acquisition </th>
+                                                            <th>Commission de Base  </th>
+                                                            <th>Total Commission </th>
+                                                            <th>Statut commission </th>
+                                                            <th> Dernière date</th>
+                                                            <th> Commentaire</th>
+                                                            <th>Détails</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        @foreach (var grouped in item.COMMISSIONREVENDEUR)
+                                                        {
+                                                        <tr>
+                                                            <td class="hidden">@grouped.cbMarq</td>
+                                                            <td>@System.Globalization.CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(grouped.Mois) </td>
+                                                            @if (item.Result == true)
+                                                            {
+                                                                <td>
+                                                                    @String.Format("{0:N3}", @grouped.Montant) TND
+                                                                    <a class="btn btn-greenbee btn-xs btn-bitbucket" title="Détails Ristourne"
+                                                                       href="@Url.Action("DetailsRistourne", "InterrogationRevendeur", new { A_code = grouped.A_Code, Annee = grouped.Annee, Mois = grouped.Mois })" target="_blank">
+                                                                        <i title="Détails Ristourne " class="glyphicon glyphicon-edit"></i>
+                                                                    </a>
+                                                                </td>
+                                                            }
+                                                            <td> @String.Format("{0:N3}", grouped.DO_Montant_Com_Acquisition) TND </td>
+                                                            <td> @String.Format("{0:N3}", grouped.DO_Montant_Com_Standard) TND </td>
+                                                            <td><strong> @String.Format("{0:N3}", grouped.DO_TotalMontantCom) TND </strong></td>
+
+                                                            <td>
+                                                                @if (grouped.DO_StatCommission == 0)
+                                                                {
+                                                                    <div class="text-danger"><i class="fa fa-close"></i> Non facturé </div>
+                                                                }
+
+                                                                else if (grouped.DO_StatCommission == 1)
+                                                                {
+                                                                    <div class="text-success"><i class="fa fa-file"></i> Facture Acceptée </div>
+                                                                }
+                                                                else if (grouped.DO_StatCommission == 2)
+                                                                {
+                                                                    <div class="text-success"><i class="fa fa-file"></i> Facture Validée </div>
+                                                                }
+
+                                                                else if (grouped.DO_StatCommission == 3)
+                                                                {
+                                                                    <div class="text-success"><i class="fa fa-file"></i> Facture Payée </div>
+                                                                }
+                                                            </td>
+                                                            <td>@grouped.cbModification</td>
+                                                            <td>@grouped.DO_Commentaire</td>
+                                                            
+                                                            <td>
+                                                                <a class="btn btn-greenbee btn-xs btn-bitbucket" title="DetailsMoisCommission"
+                                                                   href="@Url.Action("DetailsMoisCommission", "EspaceRevendeur", new { id = grouped.cbMarq })" target="_blank">
+                                                                    <i title="Détails mois " class="glyphicon glyphicon-list-alt"></i>
+                                                                </a>
+                                                            </td>
+                                                        </tr>
+
+
+                                                        }
+                                                    </tbody>
+                                                </table>
+
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+                                }
+
+                            }
+                            <!--<div id="tab-2" class="tab-pane text-black-50">-->
+                                @*style="height:1000px;"*@
+                                <!--<div class="full-height-scroll">
+                                    @if (ViewBag.Factures_Revendeur == null || ViewBag.Factures_Revendeur.Count == 0)
+                                    {
+                                        <code>Aucune facture </code>
+                                    }
+                                    else
+                                    {
+                                        <div class="table-responsive">
+                                            <table class="table table-striped table-hover commrevendeur">
+                                                <thead>
+                                                    <tr hidden></tr>
+                                                    <tr>
+                                                        <th> Statut </th>
+                                                        <th> N° Facture </th>
+                                                        <th> Date Facture </th>
+                                                        <th> Montant T.T.C </th>
+                                                        <th> Commentaire</th>
+                                                        <th> Détails Commission </th>
+                                                        <th> Détails </th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    @foreach (var item in ViewBag.Factures_Revendeur)
+                                                    {
+                                                    <tr>
+                                                        <td>
+
+                                                            @if (item.DO_Statut == 3)
+                                                            {
+                                                                <div class="text-danger"><i class="fa fa-close"></i> Facture Annulée </div>
+                                                            }
+                                                          
+                                                            else if (item.DO_Statut == 0)
+                                                            {
+                                                              <div class="text-success"><i class="fa fa-file"></i> Facture Acceptée </div>
+                                                            }
+                                                            else if (item.DO_Statut == 1)
+                                                            {
+                                                                <div class="text-success"><i class="fa fa-file"></i> Facture Validée </div>
+                                                            }
+
+                                                            else if (item.DO_Statut == 2)
+                                                            {
+                                                                <div class="text-success"><i class="fa fa-file"></i> Facture Payée </div>
+                                                            }
+                                                        </td>
+                                                        <td>@item.DO_Piece</td>
+                                                        <td>@item.DO_Date.ToString("dd/MM/yyyy")</td>
+                                                        <td>@String.Format("{0:N3}", item.DO_totalTTC) TND </td>
+                                                        <td>@item.DO_Commentaire</td>
+                                                        <td>
+                                                            @foreach (var item2 in item.ListComm)
+                                                            {
+                                                                <p> @item2.DL_Design (<strong>@item2.DO_TotalTTC </strong>) </p>
+                                                                <hr />
+
+                                                            }
+                                                        </td>
+                                                        <td>
+                                                            <a class="btn btn-greenbee btn-xs btn-bitbucket" title=" "
+                                                               href="@Url.Action("DetailsProformat", "EspaceRevendeur", new { id = item.cbMarq })" target="_blank">
+                                                                <i title="Détails proformat" class="fa fa-eye"></i>
+                                                            </a>
+                                                        </td>
+                                                      
+
+                                                    </tr>
+                                                    }
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    }
+                                </div>
+                            </div>-->
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+
+
+    </div>
+    <div class="modal inmodal" id="PaiementCommissionModal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content animated bounceIn">
+                <div class="modal-header">
+                    <div class="pull-right">
+                        <button type="button" id="RefreshListCbmarqCom"><i class="fa fa-close"></i></button>
+                    </div>
+                    <i class="fa fa-money modal-icon"></i>
+                    <h4 class="modal-title">Facturation commission </h4>
+                </div>
+                <div class="modal-body">
+                    <fieldset id="SubmitForm" class="float-e-margins">
+                        <div class="row">
+                            <div class="form-group float-e-margins">
+                                <input id="Valider" name="Valider" value="0" class="hidden" />
+                                <div class="row">
+                                    <div class="ibox float-e-margins">
+                                        <div class="ibox-content">
+                                            <form class="form-horizontal">
+
+                                                <div class="alert alert-danger alert-dismissable">
+                                                    <button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>
+                                                    Attention! Quand vous réclamer votre commission, toute facture payée dans le mois déjà payé ne sera plus pris en considération.
+                                                    Il est mieux de réclamer vos commission lorsque vous avez cloturé le mois.
+                                                </div>
+
+
+                                                <br />
+                                                <strong>Total Facture : </strong>
+                                                <h3 class="label label-primary" id="netapayer">  </h3>
+                                                <br />
+                                                <div class="form-group">
+                                                    <label class="col-lg-4 control-label">Vous pouvez saisir le n° de votre facture</label>
+                                                    <div class="col-lg-8">
+                                                        <input type="text" class="form-control" maxlength="19" name="NFacture" id="NFacture" placeholder="Votre numéro de facture courante " value="@ViewBag.PieceCourante" />
+                                                    </div>
+                                                </div>
+
+                                                <hr />
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </fieldset>
+                </div>
+                <div class="modal-footer">
+                    <button type="reset" class="btn btn-white" data-dismiss="modal">Annuler</button>
+                    <button type="button" class="btn btn-purplebee ladda-button" id="PayerFacture" onclick="this.disabled=true"><i class="fa fa-money"></i>Transformer en proformat </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal inmodal" id="PaiementCommissionModal1" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content animated bounceIn">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <i class="fa fa-money modal-icon"></i>
+                    <h4 class="modal-title">Annuler la demande</h4>
+                </div>
+                <div class="modal-body">
+                    <fieldset id="SubmitForm" class="float-e-margins">
+                        <div class="row">
+                            <div class="form-group float-e-margins">
+                                <input id="Valider" name="Valider" value="0" class="hidden" />
+                                <div class="row">
+                                    <div class="ibox float-e-margins">
+                                        <div class="ibox-content">
+                                            <form class="form-horizontal">
+                                                <div class="alert alert-danger alert-dismissable">
+                                                    <button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>
+                                                    Attention!
+                                                    Temporairement c'est à dire la commission peut étre facturer une autre fois
+                                                    <br />
+                                                    Définitivement c'est à dire la commission ne peut pas étre facturer qu'une seul fois
+                                                </div>
+                                                <br />
+                                                <div class="form-group">
+                                                    <label class="col-lg-4 control-label">Vous voulez annulez la commisssion facturé *</label>
+                                                    <div class="col-lg-8">
+                                                        <select class="col-lg-8 form-control chosen-search " id="cbindice" name="cbindice">
+                                                            <option class="font-bold" value="1"> Temporairement </option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="col-lg-4 control-label">Commentaire</label>
+                                                    <div class="col-lg-8">
+                                                        <input type="text" class="form-control" name="Commentaire" id="Commentaire" placeholder="Commentaire" maxlength="250" required />
+                                                    </div>
+                                                </div>
+                                                <hr />
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </fieldset>
+                </div>
+                <div class="modal-footer">
+                    <button type="reset" class="btn btn-white" data-dismiss="modal"><i class="fa fa-close"></i> Annuler </button>
+                    <button type="button" class="btn btn-purplebee ladda-button" id="PayerFacture1"><i class="fa fa-check"></i> Confirmer </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<script src="~/js/jquery-3.1.1.min.js"></script>
+<script src="~/js/plugins/dataTables/datatables.min.js"></script>
+<script src="~/js/plugins/sweetalert/sweetalert.min.js"></script>
+<!-- Ladda -->
+<script src="~/js/plugins/ladda/spin.min.js"></script>
+<script src="~/js/plugins/ladda/ladda.min.js"></script>
+<script src="~/js/plugins/ladda/ladda.jquery.min.js"></script>
+<!-- Toastr script -->
+<script src="~/js/plugins/toastr/toastr.min.js"></script>
+
+<script>
+    $('.commrevendeur').DataTable({
+        ordering: false,
+        responsive: true,
+        dom: '<"html5buttons"B>lTfgitp',
+        buttons: [
+            { extend: 'copy' },
+            { extend: 'csv' },
+            { extend: 'excel', title: 'ExampleFile' },
+            { extend: 'pdf', title: 'ExampleFile' },
+            {
+                extend: 'print',
+                customize: function (win) {
+                    $(win.document.body).addClass('white-bg');
+                    $(win.document.body).css('font-size', '10px');
+
+                    $(win.document.body).find('table')
+                        .addClass('compact')
+                        .css('font-size', 'inherit');
+                }
+            }
+        ]
+
+    });
+    $('.interrrevendeur').DataTable({
+        ordering: false,
+        responsive: true,
+        dom: '<"html5buttons"B>lTfgitp',
+        buttons: [
+            { extend: 'copy' },
+            { extend: 'csv' },
+            { extend: 'excel', title: 'ExampleFile' },
+            { extend: 'pdf', title: 'ExampleFile' },
+            {
+                extend: 'print',
+                customize: function (win) {
+                    $(win.document.body).addClass('white-bg');
+                    $(win.document.body).css('font-size', '10px');
+                    $(win.document.body).css('width', '100%');
+
+                    $(win.document.body).find('table')
+                        .addClass('compact')
+                        .css('font-size', 'inherit');
+                }
+            }
+        ]
+
+    });
+    $(document).ready(function () {
+        $('.chosen-select').chosen({ width: "100%" });
+
+        // Bind normal buttons
+        Ladda.bind('.ladda-button', { timeout: 2000 });
+
+        // Bind progress buttons and simulate loading progress
+        Ladda.bind('.progress-demo .ladda-button', {
+            callback: function (instance) {
+                var progress = 0;
+                var interval = setInterval(function () {
+                    progress = Math.min(progress + Math.random() * 0.1, 1);
+                    instance.setProgress(progress);
+
+                    if (progress === 1) {
+                        instance.stop();
+                        clearInterval(interval);
+                    }
+                }, 200);
+            }
+        });
+
+
+        var l = Ladda.bind('.ladda-button-demo');
+
+        l.click(function () {
+            // Start loading
+            l.ladda('start');
+
+            // Timeout example
+            // Do something in backend and then stop ladda
+            setTimeout(function () {
+                l.ladda('stop');
+            }, 12000)
+
+
+        });
+
+
+
+
+    });
+    function ValiderProformat(data) {
+        swal({
+            title: "Valider cette facture?",
+            text: " ",
+            type: "warning",
+            showCancelButton: true,
+            cancelButtonText: 'Annuler',
+            confirmButtonColor: "#DD6B55",
+            confirmButtonText: "Oui.",
+            closeOnConfirm: false
+        }, function () {
+            $.ajax({
+                type: "get",
+                url: "/GestionFactures/ValiderProformat?id=" + data, // valider facturation des commissions
+                dataType: 'json',
+                //data: { id: data },
+                success: function (msg) {
+                    if (msg.msg == 0) {
+                        swal("Validé", msg.result, "success");
+                    }
+                    else {
+                        swal({
+                            title: "Echec!",
+                            text: "Un problème est survenu",
+                            type: "danger"
+                        });
+                    }
+                }
+            });
+        });
+    };
+    function annuler(data) {
+        $("#PaiementCommissionModal1").modal();
+        //var row = $(button).closest("tr");
+        //var Piece = $("td", row).eq(1).html();
+        var AnnulationChoisi = 1;
+        $('#cbindice').change(function () {
+
+            AnnulationChoisi = $('select#cbindice').find("option:selected").val();
+
+        });
+        // var Commentaire = $('#Commentaire').val();
+        //alert(Piece + AnnulationChoisi + commentaire);
+        $("#PayerFacture1").click(function () {
+            $.ajax({
+                type: "get",
+                url: '/InterrogationRevendeur/AnnulerProformat?id=' + data + '&&AnnulationChoisi=' + AnnulationChoisi + '&&Commentaire=' + $('#Commentaire').val(),
+                dataType: 'json',
+                success: function (msg) {
+                    if (msg.result == "success") {
+                        toastr.success('l annulation ce fait avec succès ! ', 'success');
+                        location.reload();
+                    }
+                    else {
+                        toastr.error('Vous ne peut pas annuler la proformat sélectionner! ', 'error');
+                    }
+
+                }
+            });
+        });
+    };
+
+
+    function Comments(data) {
+        swal({
+            title: "Voulez vous voir votre commentaire ?",
+            text: " ",
+            type: "warning",
+            showCancelButton: true,
+            cancelButtonText: 'Annuler',
+            confirmButtonColor: "#DD6B55",
+            confirmButtonText: "Oui",
+            closeOnConfirm: false
+        }, function () {
+            $.ajax({
+                type: "get",
+                url: "/InterrogationRevendeur/Comments?id=" + data, // valider facturation des commissions
+                dataType: 'json',
+                //data: { id: data },
+                success: function (msg) {
+                    if (msg.msg == 0) {
+                        swal("Votre commentaire est :", msg.result, "success");
+                    }
+                    else {
+                        swal({
+                            title: "Echec!",
+                            text: "Un problème est survenu",
+                            type: "danger"
+                        });
+                    }
+                }
+            });
+        });
+    };
+
+
+
+      var cbMarqComm = [];
+    var MoisComm = [];
+    $("#PaiementCommission").click(function () {
+        cbMarqComm = [];
+        MoisComm = [];
+        var MontantCommission = 0;
+        $('.interrrevendeur').find('input[type="checkbox"]:checked').each(function () {
+
+            var newStr = ($(this).val()).replace(/,/g, '.');
+            MontantCommission = MontantCommission + parseFloat(newStr);
+            var tr = $(this).closest('tr');
+            var value = tr.find('td:eq(0)').html();
+            var value1 = tr.find('td:eq(1)').html();
+            cbMarqComm.push(value);
+            MoisComm.push(value1);
+        });
+        $("#netapayer").text((MontantCommission.toFixed(3) - parseFloat(@ViewBag.Avances_Commission)) + " TND");
+        @*alert(@ViewBag.Avances_Commission);
+        alert(cbMarqComm);*@
+        if (MontantCommission < 0 || cbMarqComm.length == 0) {
+            toastr.error('Veuillez sélectionner au moins un mois à facturer!', 'Erreur');
+        } else {
+            $("#PaiementCommissionModal").modal();
+        }
+        $("#PayerFacture").click(function () {
+            $.ajax({
+                type: "get",
+                url: '/EspaceRevendeur/ProformatCommission?cbmCommission=' + cbMarqComm + '&&Facture_Revendeur=' + $('#NFacture').val(),
+                dataType: 'json',
+                success: function (msg) {
+                    if (msg.result == "Facture générée")
+                    {
+                        toastr.success('Proformat de facture a été générée avec succès ! ', 'Succes');
+                        location.reload();
+                    }
+                    else
+                    {
+                        toastr.error('Veuillez contacter votre administateur ', 'error');
+                        location.reload();
+                    }
+
+                }
+            });
+        });
+
+    });
+
+    $("#RefreshListCbmarqCom").click(function () {
+
+        cbMarqComm = [];
+        $("#PaiementCommissionModal").modal('hide');
+
+
+    });
+</script>

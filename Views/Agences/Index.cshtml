@@ -1,0 +1,172 @@
+﻿
+@{
+    ViewBag.Title = "Agences";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<link href="~/js/ORGjs/jquery.orgchart.css" rel="stylesheet" />
+<style> 
+
+    .orgchart{
+  overflow-x: scroll;
+    width: 100% ;
+    }
+  
+</style>
+
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-lg-8">
+        <h2>Agence</h2>
+        <ol class="breadcrumb">
+            <li>
+                <a>Agences</a>
+            </li>
+            <li>
+                <a>Agence</a>
+            </li>
+            <li class="active">
+                <strong>Organigramme des agences</strong>
+            </li>
+        </ol>
+    </div>
+    <div class="col-lg-2">
+
+    </div>
+</div>
+<div class="wrapper wrapper-content animated fadeInRight">
+    @if (ViewData.ModelState[""] != null && ViewData.ModelState[""].Errors.Count > 0)
+    {
+    <div class="alert alert-success alert-dismissable">
+        <button type="button" class="close " data-dismiss="alert"> × </button>
+        @Html.ValidationSummary("", new { @class = "text-danger" })
+    </div>
+    }
+    <div class="row">
+        <div class="col-md-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-content center-block">
+                    <div class="ibox-content">
+
+                        @if (Request.IsAuthenticated && (User.IsInRole("Admin") || User.IsInRole("Liste Agence")))
+                        {
+                            <a href='@Url.Action("ListeAgences", "Agences")' class="btn btn-outline btn-primary btn-sm pull-right ">Voir la liste des agences</a>
+                        }
+                        else
+                        {
+                            <a href='#' class="btn btn-primary btn-outline btn-sm pull-right disabled">Voir la liste des agences</a>
+
+                        }
+                        @if (Request.IsAuthenticated && (User.IsInRole("Admin") || User.IsInRole("Creer Agence")))
+                        {
+                            <a href='@Url.Action("NouvelleAgence", "Agences")' class="btn btn-outline btn-danger  btn-sm pull-right  ">Nouvelle agence</a>
+                        }
+                        else
+                        {
+                            <a href='#' class="btn btn-outline btn-danger  btn-sm pull-right disabled  ">Nouvelle agence</a>
+
+                        }
+
+                        <div id="chart-container"></div>
+                                <div id="edit-panel" class="view-state">
+                                    <div class="ibox-content">
+                                        <form role="form" class="form-inline pull-right">
+                                            <div class="form-group">
+                                                @*<label for="exampleInputEmail2" class="sr-only">Email address</label>*@
+                                                <input type="text" id="selected-node" class="form-control" placeholder="séléctionner une agence" readonly="readonly">
+                                            </div>
+                                            <div class="form-group">
+                                                <button type="button" class="btn btn-primary" id="btn-report-path">voir hiérarchie</button>
+                                            </div>
+                                            <div class="form-group">
+                                                <button type="button" class="btn btn-primary" id="btn-reset">réinitialiser</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+
+                            </div>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+    <div class="wrapper wrapper-content animated fadeInDownBig">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-content center-block">
+
+                        @{Html.RenderAction("PointsdeVenteMap", "Agences");}
+
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+<script type="text/javascript" src="https://cdn.rawgit.com/stefanpenner/es6-promise/master/dist/es6-promise.auto.min.js"></script>
+<script src="~/js/jquery-3.1.1.min.js"></script>
+<script src="~/js/ORGjs/jquery.orgchart.js"></script>
+<script src="~/js/ORGjs/html2canvas.min.js"></script>
+<script src="~/js/ORGjs/jspdf.min.js"></script>
+<script type="text/javascript">
+    $(function () {
+        $.ajax({
+            type: 'POST',
+            url: '@Url.Action("GetAllAgences")', // we are calling json method
+            dataType: 'json',
+            success: function (data) {
+                var oc = $('#chart-container').orgchart({
+                    'data': data[0],
+                    'nodeTitle' : 'title',
+                    'nodeContent': 'title',
+                    'nodeID': 'id',
+                    'createNode': function ($node, data) {
+                        var secondMenuIcon = $('<i>', {
+                            click: function () {
+                                $(this).siblings('.second-menu').toggle();
+                            }
+                        });
+                        //           ' + data.id + '
+                        var secondMenu = '<a href="/Agences/Details/' + data.id + '" class="btn btn-warning btn-circle btn-outline"><i class="fa fa-forumbee"></i></a>';
+                        $node.append(secondMenuIcon).append(secondMenu);
+                    },
+                    'exportButton': true,
+                    'exportFilename': 'BEEOrganigrammeAgences',
+
+
+                });
+                oc.$chart.find('.node').on('click', function () {
+                   $('#selected-node').val($(this).children('.title').text());    
+               });
+             }
+        });
+        $('#btn-report-path').on('click', function () {
+            var $selected = $('#chart-container').find('.node.focused');
+            if ($selected.length) {
+                $selected.parents('.nodes').children(':has(.focused)').find('.node:first').each(function (index, superior) {
+                    if (!$(superior).find('.horizontalEdge:first').closest('table').parent().siblings().is('.hidden')) {
+                        $(superior).find('.horizontalEdge:first').trigger('click');
+                    }
+                });
+                alert('Veuillez sélectionner une agence avant')
+                $(this).prop('disabled', true);
+            } else {;
+            }
+        });
+
+        $('#btn-reset').on('click', function () {
+            $('#chart-container').find('.hidden').removeClass('hidden')
+                .end().find('.slide-up, .slide-right, .slide-left, .focused').removeClass('slide-up slide-right slide-left focused');
+     
+            $('#btn-report-path').prop('disabled', false);
+            $('#selected-node').val('');
+        });
+
+        initialize();
+
+    });
+
+</script>

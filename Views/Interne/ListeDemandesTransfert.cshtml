@@ -1,0 +1,230 @@
+﻿@model IEnumerable<BeeProj.Controllers.InterneController.DemandeTransfertInterne>
+@{
+    ViewBag.Title = "ListeDemandesTransfert";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<link href="~/css/plugins/dataTables/datatables.min.css" rel="stylesheet">
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-lg-10">
+        <h2>Liste des demandes de Transfert </h2>
+        <ol class="breadcrumb">
+            <li>
+                <a href="@Url.Action("index","Home")">Acceuil </a>
+
+            </li>
+            <li>
+                <a href="@Url.Action("ListeDemandesTransfert","Interne")">Gestion Interne </a>
+
+            </li>
+            <li class="active">
+                <strong>Liste demandes de transfert</strong>
+            </li>
+        </ol>
+    </div>
+    <div class="col-lg-2">
+
+    </div>
+</div>
+<div class="row m-t-md">
+    <div class="col-lg-3">
+        <div class="widget style1 text-purplebee" style="background-color: #e5e5f5;">
+            <div class="row">
+                <div class="col-xs-4">
+                    <i class="fa fa-window-restore fa-5x"></i>
+                </div>
+                <div class="col-xs-8 text-right">
+                    <h3 class="font-bold"> Demandes Saisies </h3>
+                    <h2 class="font-bold">@ViewBag.saisie</h2>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-3">
+        <div class="widget style1 text-purplebee" style="background-color: #d0f2e7;">
+            <div class="row">
+                <div class="col-xs-4">
+                    <i class="fa fa-pencil-square fa-5x"></i>
+                </div>
+                <div class="col-xs-8 text-right">
+                    <h3 class="font-bold"> Demandes Traitées </h3>
+                    <h2 class="font-bold">@ViewBag.transfere</h2>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-3">
+        <div class="widget style1 bg-greenbee ">
+            <div class="row">
+                <div class="col-xs-4">
+                    <i class="fa fa-check-circle-o fa-5x"></i>
+                </div>
+                <div class="col-xs-8 text-right">
+                    <h3 class="font-bold"> Demandes  Confirmées </h3>
+                    <h2 class="font-bold">@ViewBag.valide</h2>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-3">
+        <div class="widget style1 bg-purplebee">
+            <div class="row">
+                <div class="col-xs-4">
+                    <i class="fa fa-exclamation-triangle fa-5x"></i>
+                </div>
+                <div class="col-xs-8 text-right">
+                    <h3 class="font-bold"> Demandes Annulées </h3>
+                    <h2 class="font-bold">@ViewBag.annule</h2>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="wrapper wrapper-content animated fadeInUp">
+
+                <div class="ibox">
+                    <div class="ibox-title">
+                        @if (Request.IsAuthenticated && User.IsInRole("TransfertArticle"))
+                        {
+                            <div class="ibox-tools">
+                                <a href=@Url.Action("NouveauTransfert", "Interne") class="btn  btn-success  ">Nouvelle demande</a>
+                            </div>
+                        }
+                    </div>
+                    <div class="ibox-content">
+                        <div class="project-list">
+                            <table class="table table-hover dataTables-example" id="DemandeTR">
+                                <thead>
+                                    <tr>
+                                        <th>Statut</th>
+                                        <th>N° </th>
+
+                                        <th>Date</th>
+                                        <th>Description</th>
+                                        <th>
+                                            Emetteur
+                                        </th>
+                                        <th>
+                                            Recepteur
+                                        </th>
+                                        <th>Code Région </th>
+                                        <th>
+                                            Détails
+                                        </th>
+                                        <th class="hidden"></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+
+                                    @foreach (var item in Model)
+                                    {
+                                    <tr>
+                                        @if (item.TR_Statut == 0)
+                                        {
+                                            <td>
+                                                <i class="label text-purplebee" style="background-color: #e5e5f5;">En cours</i>
+                                            </td>
+                                        }
+                                        else if (item.TR_Statut == 1)
+                                        {
+                                            <td><i class="label bg-greenbee">Validé</i></td>
+                                        }
+                                        else if (item.TR_Statut == 2)
+                                        {
+                                            <td><i class="label  bg-purplebee">Confirmé</i></td>
+                                        }
+                                        else
+                                        {
+
+                                            <td>
+                                                <i class="label bg-graybee">Annulé</i>
+                                            </td>
+                                        }
+                                        <td>@item.TR_Piece</td>
+                                        <td>@item.TR_Date.GetValueOrDefault().ToString("dd/MM/yyyy")</td>
+                                        <td>@item.Description</td>
+                                        <td>
+                                            @item.CbCreateur -  @item.DE_NoOUTintitule
+                                            <div class="font-bold text-danger">
+                                                <i class="fa fa-arrow-right"></i>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            @item.DE_NoINintitule
+                                            <div class="font-bold text-greenbee">
+                                                <i class="fa fa-arrow-left"></i>
+                                            </div>
+                                        </td>
+                                        <td>@item.R_CodeRegion</td>
+                                        <td>
+                                            <a href=@Url.Action("DetailsTransfert/" + item.cbMarq, "Interne") class="btn btn-sm btn-outline btn-purplebee ">
+                                                <i class="fa fa-eye "></i> Détails
+                                            </a>
+                                            @if (item.TR_Statut == 2)
+                                            {
+                                                <a class="btn btn-sm btn-outline btn-purplebee " title="voir la BL"
+                                                   href="@Url.Action("ImprimerBLTransfert","Interne", new { id = item.cbMarq })" target="_blank">
+                                                    <i title="Imprimer BL " class="fa fa-print"></i> Imprimer
+                                                </a>
+                                            }
+
+                                        </td>
+                                        <td class="hidden"> @item.cbMarq</td>
+                                    </tr>
+
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+<script src="~/js/jquery-3.1.1.min.js"></script>
+<script src="~/js/plugins/metisMenu/jquery.metisMenu.js"></script>
+<script src="~/js/plugins/pace/pace.min.js"></script>
+<script src="~/js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+<script src="~/js/plugins/chosen/chosen.jquery.js"></script>
+<script src="~/js/plugins/dataTables/datatables.min.js"></script>
+
+<script>
+    $(function () {
+        $('.dataTables-example').DataTable({
+            //pageLength: 15,
+            //"order": [[1, "desc"]],
+            order: false,
+            responsive: true,
+            dom: '<"html5buttons"B>lTfgitp',
+            buttons: [
+                { extend: 'copy' },
+                { extend: 'csv' },
+                { extend: 'excel', title: 'ExampleFile' },
+                { extend: 'pdf', title: 'ExampleFile' },
+
+                {
+                    extend: 'print',
+                    customize: function (win) {
+                        $(win.document.body).addClass('white-bg');
+                        $(win.document.body).css('font-size', '100px');
+
+                        $(win.document.body).find('table')
+                            .addClass('compact')
+                            .css('font-size', 'inherit');
+                    }
+                }
+            ]
+
+        });
+
+    });
+
+</script>
+
+

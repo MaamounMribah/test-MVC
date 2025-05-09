@@ -1,0 +1,77 @@
+﻿
+<div id="map-canvas" style="height: 500px;width: inherit;margin: 0.6em;"></div>
+<button id="next" class="btn btn-facebook pull-right" >Suivant </button>
+
+@*<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCDtrxC4SA0NJdCKtzOq3DfAytbq_2ucJI&libraries=places&callback=initAutocomplete&region=tn&language=fr&sensor=true"></script>*@
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCDtrxC4SA0NJdCKtzOq3DfAytbq_2ucJI&libraries=places&callback=initAutocomplete&region=tn&language=fr&sensor=true"></script>
+
+
+<script>
+    function initialize() {
+
+        var icone = {
+            url: "/img/Marker1.png", // url
+            scaledSize: new google.maps.Size(35, 35), // scaled size
+            origin: new google.maps.Point(0, 0), // origin
+            anchor: new google.maps.Point(0, 0) // anchor
+        };
+        var icone2 = {
+            url: "/img/Marker2.png", // url
+            scaledSize: new google.maps.Size(50, 50), // scaled size
+            origin: new google.maps.Point(0, 0), // origin
+            anchor: new google.maps.Point(0, 0) // anchor
+        };
+
+
+
+
+        var markers = [];
+        var counter = 0;
+
+        var myLatlng = new google.maps.LatLng(36.444109, 10.157623);
+
+        var map = new google.maps.Map(document.getElementById("map-canvas"), {
+            zoom: 8,
+            center: myLatlng,
+            mapTypeId: google.maps.MapTypeId.HYBRID
+        });
+
+
+        $.ajax({
+            type: "get",
+            url: '@Url.Action("GetListeAgences")', // we are calling json method
+            dataType: 'json',
+            success: function (msg) {
+
+                for (var i = 0; i <= msg.data.length; i++) {
+                    // Create some markers
+                    var location = new google.maps.LatLng(msg.data[i].A_Latitude, msg.data[i].A_Longitude);
+                    var marker = new google.maps.Marker({
+                        position: location,
+                        draggable: false,
+                        map: map,
+                        icon : icone,
+                        title: msg.data[i].A_Intitule
+                    });
+
+                    markers.push(marker);
+                }
+            }
+        });
+
+
+
+        $('#next').click(function () {
+
+            if (counter <= markers.length) {
+                map.setCenter(markers[counter].position);
+                counter++;
+            }
+
+            if (counter >= markers.length) {
+                counter = 0;
+            }
+        });
+    }
+
+</script>

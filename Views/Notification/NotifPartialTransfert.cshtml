@@ -1,0 +1,66 @@
+﻿<a class="dropdown-toggle count-info" data-toggle="dropdown" href="#" title="Demande de Transfert">
+    <i class="fa fa-truck"></i>
+    <span class="label label-success">@ViewBag.NombreNotifTransfert</span>
+</a>
+<ul class="dropdown-menu dropdown-alerts " style="overflow:scroll; height: 500px;">
+    @if (ViewBag.NotificationTransfert == null)
+    {
+        <li>
+            <a href="#">
+                <div>
+                    <i class="fa fa-envelope fa-fw"></i> Aucune Notif de doc de transfert
+
+                </div>
+            </a>
+        </li>
+    }
+    else
+    {
+        foreach (var item in ViewBag.NotificationTransfert)
+        {
+            <li>
+                <a href="@Url.Action("DetailsTransfert","Interne", new { id = @item.cbMarq })" onClick="ReadNotifTransf(@item.cbMarq);">
+
+                        <div>
+                            <i class="fa fa-bell fa-fw"></i> @item.TR_Piece
+                            <span class="pull-right text-info small">Document de Transfert </span>
+                        </div>
+                    </a>
+            </li>
+
+                <li class="divider"></li>
+        }
+
+
+    }
+
+
+
+
+
+
+
+
+
+</ul>
+
+<script src="~/js/jquery-3.1.1.min.js"></script>
+
+<script>
+    function ReadNotifTransf(cbm) {
+
+
+        $.ajax({
+            type: "get",
+            url: "/Notification/ReadNotifTrans?cbmarq=" + cbm,
+            dataType: "json",
+            success: function (msg) {
+
+
+
+            }
+        });
+    }
+
+
+</script>

@@ -1,0 +1,122 @@
+﻿@model IEnumerable<BeeProj.Models.D_COMPTET>
+
+@{
+    ViewBag.Title = "ListeMorale";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<link href="~/css/plugins/dataTables/datatables.min.css" rel="stylesheet">
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-lg-10">
+        <h2>Liste des Client</h2>
+        <ol class="breadcrumb">
+            <li>
+                <a href="@Url.Action("index","Home")">Acceuil </a>
+            </li>
+            <li class="active">
+                <strong> <a href="@Url.Action("ListeMorale","Structure")">Liste des personnes morales </a></strong>
+            </li>
+        </ol>
+    </div>
+    <div class="col-lg-2">
+
+    </div>
+</div>
+
+<div class="wrapper wrapper-content  animated fadeInRight">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="ibox">
+
+                <div class="ibox-tools">
+                    <a href=@Url.Action("AddClMoral", "Structure") class="btn btn-primary btn-xs">Ajouter personne morale</a>
+                </div>
+
+
+                <div class="ibox-content">
+
+                    <table class="table table-striped table-bordered table-hover dataTables-example" id="ListeFacturesVersee">
+
+                        <thead>
+                            <tr>
+                                <th>Type</th>
+                                <th>Code Client</th>
+                                <th>Intitulé Client</th>
+                                <th>Téléphone</th>
+                                <th>Identifiant</th>
+                                <th>Adresse</th>
+                                <th>Action</th>
+
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>Personne morale </td>
+                                    <td>@item.CT_Num</td>
+                                    <td>@item.CT_Intitule</td>
+                                    <td>@item.CT_Telephone</td>
+                                    <td>@item.CT_Identifiant</td>
+                                    <td>@item.CT_Adresse</td>
+                                    <td>
+                                        <a class="btn btn-purplebee btn-circle   btn-outline" title="voir détails"
+                                           href="@Url.Action("DetailsClient","Structure", new { id = item.cbMarq })" target="_blank">
+                                            <i title="details Client " class="fa fa-edit"></i>
+                                        </a>
+
+                                        <a class="btn btn-greenbee btn-circle   btn-outline" title="voir détails"
+                                           href="@Url.Action("ModifierClient","Structure", new { id = item.cbMarq })" target="_blank">
+                                            <i title="Modifier Client " class="fa fa-edit"></i>
+                                        </a>
+                                    </td>
+
+                                </tr>
+                            }
+
+                        </tbody>
+                    </table>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="~/js/jquery-3.1.1.min.js"></script>
+<script src="~/js/plugins/metisMenu/jquery.metisMenu.js"></script>
+<script src="~/js/plugins/pace/pace.min.js"></script>
+<script src="~/js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+<script src="~/js/plugins/chosen/chosen.jquery.js"></script>
+<script src="~/js/plugins/dataTables/datatables.min.js"></script>
+
+<script>
+    $(function () {
+        $('.dataTables-example').DataTable({
+            pageLength: 15,
+            "order": [[1, "desc"]],
+            responsive: true,
+            dom: '<"html5buttons"B>lTfgitp',
+            buttons: [
+                { extend: 'copy' },
+                { extend: 'csv' },
+                { extend: 'excel', title: 'ExampleFile' },
+                { extend: 'pdf', title: 'ExampleFile' },
+
+                {
+                    extend: 'print',
+                    customize: function (win) {
+                        $(win.document.body).addClass('white-bg');
+                        $(win.document.body).css('font-size', '10px');
+
+                        $(win.document.body).find('table')
+                                .addClass('compact')
+                                .css('font-size', 'inherit');
+                    }
+                }
+            ]
+
+        });
+
+    });
+</script>

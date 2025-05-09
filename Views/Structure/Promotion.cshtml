@@ -1,0 +1,100 @@
+﻿
+@{
+    ViewBag.Title = "Promotion";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-lg-8">
+        <h2>Liste des promotions</h2>
+        <ol class="breadcrumb">
+            <li>
+                <a href="@Url.Action("index","Home")">Acceuil </a>
+            </li>
+            <li class="active">
+                <strong><a>Gestion des promotions</a></strong>
+            </li>
+        </ol>
+    </div>
+
+</div>
+
+
+
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="ibox product-detail">
+
+        <div class="ibox-content">
+            <div class="row">
+                <div class="project-actions">
+                    <a href='@Url.Action("NouvellePromotion", "Structure")' class="btn btn-outline btn-danger  btn-sm pull-right  ">Ajouter une nouvelle promotion </a>
+                </div>
+
+                @if (ViewBag.listeArts.Count == 0)
+                {
+
+
+
+
+                    <p> Aucune promotion ajoutée. </p>
+
+
+                }
+                else {
+
+
+                    foreach (var item in ViewBag.listeArts)
+                    {
+                        <div class="row">
+                            <div class="col-md-3" >
+                                <div class="" >
+                                    @*----------------------------02/08/2019 manel ----------------------*@
+                                    <img src="@Url.Action("PhotoArticle", "Structure", new { id = item.AR_Photo })" class="img-preview img-responsive" onError="this.onerror=null;this.src='/img/DefaultImage.png';"  />
+                                    @*<img src="@Url.Action("PhotoArticle", "Structure", new { id = item.AR_Photo })" class="img-preview img-responsive" onError="this.onerror=null;this.src='/img/DefaultImage.png';" style="height:30rem;"/>*@
+                                    @*----------------------------02/08/2019 manel ----------------------*@
+                                </div>
+
+                            </div>
+                            <div class="col-md-7">
+
+                                <h2 class="font-bold m-b-xs">
+                                    @item.P_Intitule
+                                </h2>
+                                <small>Remise:  @item.Remise % </small>
+                                <div class="m-t-md">
+                                    <h2 class="product-main-price"> @String.Format("{0:N3}", item.prixTTC) TND <small class="text-muted">Taxe inclu </small> </h2>
+                                </div>
+                                <hr>
+
+                                <h4>Description de la promotion</h4>
+
+                                <div class="large text-greenbee">
+                                    <h3> @item.P_Description </h3>
+                                </div>
+      
+
+                             
+                                    <div class="btn btn-xs btn-outline btn-purplebee pull-right">
+
+                                        <a href="@Url.Action("ModifierPromotion", "Structure", new { id = @item.cbMarq })" > Modifier<i class="fa fa-edit"></i> </a>
+                                        @*<a href="#" class="btn btn-xs btn-outline btn-default"> Mettre en sommeil <i class="fa fa-power-off"></i> </a>*@
+                                    </div>
+                              
+                                <hr>
+
+
+                            </div>
+                        </div>
+
+
+
+                       <br />
+                    }
+                }
+                        </div>
+        </div>
+    </div>
+</div>
+
+    <script src="~/js/jquery-3.1.1.min.js"></script>

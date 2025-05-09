@@ -1,0 +1,78 @@
+﻿
+@using BeeProj.Models;
+
+<a class="dropdown-toggle count-info" data-toggle="dropdown" href="#" title="Demandes Migration">
+    <i class="fa fa-safari"></i>
+
+    <span class="label label-info">@ViewBag.NombreNotifMig</span>
+
+
+</a>
+
+
+
+<ul class="dropdown-menu dropdown-alerts " style="overflow:scroll; height: 500px;">
+
+    @if (ViewBag.NotificationMig == null)
+    {
+        <li>
+            <a href="#">
+                <div>
+                    <i class="fa fa-safari fa-fw"></i> Aucune notification de Migration
+
+                </div>
+            </a>
+        </li>
+    }
+    else
+    {
+        foreach (var item in ViewBag.NotificationMig)
+        {
+            if (item.GD_Type == 3)
+            {
+                <li>
+
+                    <a href="@Url.Action("DetailsDemande","Demande", new { id = @item.cbMarq })" onClick ="ReadNotif2(@item.cbMarq);">
+                        <div>
+                            <i class="fa fa-safari fa-fw"></i> @item.GD_Reference
+                            <span class="pull-right text-info small">Demande de Migration </span>
+                        </div>
+                    </a>
+                </li>
+            }
+
+
+
+           
+
+            
+
+            <li class="divider"></li>
+        }
+
+
+
+    }
+</ul>
+
+
+<script src="~/js/jquery-3.1.1.min.js"></script>
+
+<script>
+    function ReadNotif2(cbm) {
+
+
+        $.ajax({
+            type: "get",
+            url: "/Notification/ReadNotif2?cbmarq=" + cbm,
+            dataType: "json",
+            success: function (msg) {
+
+
+
+            }
+        });
+    }
+
+
+</script>

@@ -1,0 +1,95 @@
+﻿@model IEnumerable<BeeProj.Models.B_DATEAVANCECOMMISSION>
+
+@{
+    ViewBag.Title = "ListeAgenceAvancesurCommission";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<link href="~/css/plugins/chosen/bootstrap-chosen.css" rel="stylesheet">
+<link href="~/css/plugins/iCheck/custom.css" rel="stylesheet">
+
+<link href="~/css/plugins/chosen/bootstrap-chosen.css" rel="stylesheet">
+<link href="~/css/plugins/awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css" rel="stylesheet">
+
+
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-lg-8">
+        <h2>Liste des règles avance su commission </h2>
+        <ol class="breadcrumb">
+            <li>
+                <a>Administration</a>
+            </li>
+            <li>
+                <a>Date avance sur commission </a>
+            </li>
+            <li class="active">
+                <strong>Date avance sur commission</strong>
+            </li>
+        </ol>
+    </div>
+</div>
+
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+       
+
+        <div class="ibox-content">
+
+            <div class="panel-body">
+                <a class="btn btn-success text-white btn-purplebee btn-xs pull-right"
+                   href=@Url.Action("CreateModelAvanceAgence", "Administration")>Créer un nouveau modèle</a>
+
+                <table class="table">
+                    <tr>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Description)
+                        </th>
+                        <th>
+                            Date Début
+                        </th>
+                        <th>
+                            Date Fin
+                        </th>
+                        <th>Montant Avance</th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Etat)
+                        </th>
+                        <th></th>
+                    </tr>
+
+                    @foreach (var item in Model)
+                        {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Description)
+                            </td>
+                            <td>
+                                @item.A_DateDebutAvanceCom.GetValueOrDefault().ToString("dd/MM/yyyy")
+                            </td>
+                            <td>
+                                @item.A_DateFinAvanceCom.GetValueOrDefault().ToString("dd/MM/yyyy")
+                            </td>
+                            <td>
+                                @String.Format("{0:N3}", item.Montant_Avance) DT
+                            </td>
+                            <td>
+                                @if (item.Etat == 0)
+                                    {
+                                    <div class="font-bold text-purplebee">Actif <i class="fa fa-level-up"></i></div>
+                                    }
+                                    else
+                                    {
+                                    <div class="font-bold text-graybee">Inactif <i class="fa fa-level-down"></i></div>
+                                    }
+                            </td>
+                            <td>
+                                @Html.ActionLink("Détail", "AgenceAvancesurCommission", new { id = item.cbMarq })
+                            </td>
+                        </tr>
+                        }
+
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

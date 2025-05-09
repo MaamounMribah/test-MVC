@@ -1,0 +1,189 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-lg-8">
+        <h2>Liste des packs d'abonnement</h2>
+        <ol class="breadcrumb">
+            <li>
+                <a>Acceuil</a>
+            </li>
+            <li>
+                <a>Gestion des Abonnements</a>
+            </li>
+
+        </ol>
+    </div>
+    <div class="col-lg-2">
+
+    </div>
+</div>
+<div class="wrapper wrapper-content animated fadeInRight">
+
+    <div class="row">
+        @*@if ((ViewBag.CodeAg == 0 || ViewBag.CodeAg == 1))
+            {*@
+        @foreach (var item in ViewBag.ListeFamilles)
+        {
+
+            <div class="col-md-4">
+                <div class="ibox">
+                    <div class="ibox-content product-box">
+
+                        @if (User.Identity.Name.ToUpper() == "N.CHELBIA")
+                        {
+                            <div class="">
+                                <a href="@Url.Action("TypeAbonnement","abonnement", new { id = @item.FA_CodeFamille })" class="">
+                                    <img src="@Url.Action("PhotoFamille", "Structure" , new { id= @item.cbMarq })" class="img-preview img-responsive" onError="this.onerror=null;this.src='/img/DefaultImage.png';" />
+                                </a>
+                            </div>
+                            <div class="product-desc">
+
+                                <small class="text-muted">@item.FA_CodeFamille</small>
+                                <a href="@Url.Action("TypeAbonnement","abonnement", new { id = @item.FA_CodeFamille })" class="product-name"> @item.FA_Intitule </a>
+                            </div>
+
+                        }
+                        else
+                        {
+                            <div class="">
+                                @if (item.isConventionnelle == 1)
+                                {
+                                    if (User.IsInRole("Admin") || User.IsInRole("OffreConventionnelle"))
+                                    {
+                                        <a href="@Url.Action("GroupeConventionnels","abonnement", new { id = @item.FA_CodeFamille })" class="">
+                                            <img src="@Url.Action("PhotoFamille", "Structure" , new { id= @item.cbMarq })" class="img-preview img-responsive" onError="this.onerror=null;this.src='/img/DefaultImage.png';" />
+                                        </a>
+                                    }
+                                }
+                                else
+                                {
+                                    <a href="@Url.Action("AbonnementDeBase","abonnement", new { id = @item.FA_CodeFamille })" class="">
+                                        <img src="@Url.Action("PhotoFamille", "Structure" , new { id= @item.cbMarq })" class="img-preview img-responsive" onError="this.onerror=null;this.src='/img/DefaultImage.png';" />
+                                    </a>
+                                }
+                            </div>
+                            <div class="product-desc">
+                                <small class="text-muted">@item.FA_CodeFamille</small>
+                                @if (item.isConventionnelle == 1)
+                                {
+                                    if (User.IsInRole("Admin") || User.IsInRole("OffreConventionnelle"))
+                                    {
+                                        <a href="@Url.Action("GroupeConventionnels", "abonnement", new { id = @item.FA_CodeFamille })" class="product-name"> @item.FA_Intitule </a>
+                                    }
+                                }
+                                else
+                                {
+                                    <a href="@Url.Action("AbonnementDeBase","abonnement", new { id = @item.FA_CodeFamille })" class="product-name"> @item.FA_Intitule </a>
+                                }
+                            </div>
+                        }
+
+
+                    </div>
+                </div>
+            </div>
+
+
+
+        }
+        @*}*@
+
+        @*else
+            {
+                foreach (var item in ViewBag.ListeFamillesSansFtth)
+                {
+
+                    <div class="col-md-3">
+                        <div class="ibox">
+                            <div class="ibox-content product-box">
+
+                                @if (User.Identity.Name.ToUpper() == "N.CHELBIA")
+                                {
+                                    <div class="">
+                                        <a href="@Url.Action("TypeAbonnement","abonnement", new { id = @item.FA_CodeFamille })" class="">
+                                            <img src="@Url.Action("PhotoFamille", "Structure" , new { id= @item.cbMarq })" class="img-preview img-responsive" onError="this.onerror=null;this.src='/img/DefaultImage.png';" />
+                                        </a>
+                                    </div>
+                                    <div class="product-desc">
+
+                                        <small class="text-muted">@item.FA_CodeFamille</small>
+                                        <a href="@Url.Action("TypeAbonnement","abonnement", new { id = @item.FA_CodeFamille })" class="product-name"> @item.FA_Intitule </a>
+                                    </div>
+
+                                }
+                                else
+                                {
+                                    <div class="">
+                                        @if (item.isConventionnelle == 1)
+                                        {
+                                            if (User.IsInRole("Admin") || User.IsInRole("OffreConventionnelle"))
+                                            {
+                                                <a href="@Url.Action("GroupeConventionnels","abonnement", new { id = @item.FA_CodeFamille })" class="">
+                                                    <img src="@Url.Action("PhotoFamille", "Structure" , new { id= @item.cbMarq })" class="img-preview img-responsive" onError="this.onerror=null;this.src='/img/DefaultImage.png';" />
+                                                </a>
+                                            }
+                                        }
+                                        else
+                                        {
+                                            <a href="@Url.Action("AbonnementDeBase","abonnement", new { id = @item.FA_CodeFamille })" class="">
+                                                <img src="@Url.Action("PhotoFamille", "Structure" , new { id= @item.cbMarq })" class="img-preview img-responsive" onError="this.onerror=null;this.src='/img/DefaultImage.png';" />
+                                            </a>
+                                        }
+                                    </div>
+                                    <div class="product-desc">
+                                        <small class="text-muted">@item.FA_CodeFamille</small>
+                                        @if (item.isConventionnelle == 1)
+                                        {
+                                            if (User.IsInRole("Admin") || User.IsInRole("OffreConventionnelle"))
+                                            {
+                                                <a href="@Url.Action("GroupeConventionnels", "abonnement", new { id = @item.FA_CodeFamille })" class="product-name"> @item.FA_Intitule </a>
+                                            }
+                                        }
+                                        else
+                                        {
+                                            <a href="@Url.Action("AbonnementDeBase","abonnement", new { id = @item.FA_CodeFamille })" class="product-name"> @item.FA_Intitule </a>
+                                        }
+                                    </div>
+                                }
+
+
+                            </div>
+                        </div>
+                    </div>
+
+
+
+                }
+            }*@
+        @if (User.IsInRole("Admin") || User.IsInRole("OffreConventionnelle"))
+        {
+            <div class="col-md-4">
+                <div class="ibox">
+                    <div class="ibox-content product-box">
+                        <div class="">
+                            <img src='/img/DefaultImage.png' class="img-preview img-responsive" onError="this.onerror=null;this.src='/img/DefaultImage.png';" />
+                        </div>
+                        <div class="product-desc">
+                            <small class="text-muted">Offre mutuelle, groupe collectivité</small>
+                            <a href="@Url.Action("OffreConventionnelle", "abonnement")" class="product-name">CONVENTION</a>
+                            <div class="small m-t-xs">
+                                Offre utuelle, groupe collectivité
+                            </div>
+                            <div class="m-t text-righ">
+                                <a href="@Url.Action("OffreConventionnelle", "abonnement")" class="product-name"> Offre conventionnelle </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+
+    </div>
+
+</div>
+
+<script src="~/js/jquery-3.1.1.min.js"></script>

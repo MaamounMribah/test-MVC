@@ -1,0 +1,81 @@
+﻿    <!-- Sweet Alert -->
+    <link href="~/css/plugins/sweetalert/sweetalert.css" rel="stylesheet">
+        <ul class="todo-list m-t small-list RefreshToDo" id="RefreshToDo">
+          
+            @if (ViewBag.listetachenow == null || ViewBag.listetachenow .Count == 0 )
+            {
+                <li> Aucun rappel pour aujourd'hui.</li>
+            }
+            else
+            {
+
+              foreach (var item in ViewBag.listetachenow)
+              {
+                  //foreach(var item2 in ViewBag.difftime)
+                  //{
+                  if (item.Activee == 0)
+                  {
+                    <li>
+                        <a href="#" class="check-mail" onclick="Done(@item.Cbmarq)"><i id="done" class="fa fa-square-o"></i></a>@*</button>*@
+
+                        <span class="m-l-xs"> @item.Tache </span>
+
+                        @if (item.DureeRap < System.DateTime.Now.TimeOfDay)
+                        {
+                            <small class="label label-warning">
+                                <i class="fa fa-clock-o"></i> @string.Format("Vers {0} minutes", item.DureeRap)
+                                    </small>
+                        }
+                        else
+                        {
+                            <small class="label label-greenbee"><i class="fa fa-clock-o"></i> @string.Format("Vers {0} minutes", item.DureeRap) </small>
+                        }
+
+                    </li>
+                  }
+                  else
+                  {
+                    <li>
+                        <a href="#" onClick="Done(@item.Cbmarq)" class="check-link"><i class="fa fa-check-square"></i> </a>
+                        <span class="m-l-xs todo-completed">@item.Tache </span>
+
+
+                    </li>
+
+                      //}
+                  }
+              }
+            }
+
+        </ul>
+
+<!-- Sweet alert -->
+<script src="~/js/plugins/sweetalert/sweetalert.min.js"></script>
+<!-- Peity -->
+<script src="~/js/plugins/peity/jquery.peity.min.js"></script>
+<script src="~/js/demo/peity-demo.js"></script>
+
+    <script>
+
+        function Done(data) {
+            swal({
+
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#DD6B55",
+                confirmButtonText: "Oui modifier !",
+                cancelButtonText: "Annuler ! ",
+                closeOnConfirm: false
+            },
+                $.ajax({
+                    type: "get",
+                    url: '/Reminder/Done?id=' + data, // we are calling json method
+                    dataType: 'json',
+                    success: function () {
+                        swal("Modifié!", "Statut de la tâche modifié", "success");
+                    }
+                })
+            );
+        }
+
+    </script>

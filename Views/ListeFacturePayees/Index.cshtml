@@ -1,0 +1,136 @@
+﻿
+@{
+    ViewBag.Title = "Factures Payées";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<link href="~/css/plugins/dataTables/datatables.min.css" rel="stylesheet">
+<!-- Sweet Alert -->
+<link href="~/css/plugins/sweetalert/sweetalert.css" rel="stylesheet">
+<!-- Toastr style -->
+<link href="~/css/plugins/toastr/toastr.min.css" rel="stylesheet">
+<link href="~/css/plugins/jasny/jasny-bootstrap.min.css" rel="stylesheet">
+<!-- Ladda style -->
+<link href="~/css/plugins/ladda/ladda-themeless.min.css" rel="stylesheet">
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-lg-10">
+        <h2>Liste des Factures</h2>
+        <ol class="breadcrumb">
+            <li>
+                <a href=@Url.Action("Index","Home")>Acceuil</a>
+            </li>
+            <li>
+                <a href=@Url.Action("ListeFacture", "GestionFactures")>Gestion des Factures</a>
+            </li>
+            <li class="active">
+                <strong>Liste des Factures</strong>
+            </li>
+        </ol>
+    </div>
+    <div class="col-lg-2">
+    </div>
+</div>
+
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>Liste des factures</h5>
+                    <a class="btn btn-greenbee btn-xs " href=@Url.Action("ResfreshData", "ListeFacturePayees") title="Actualiser"><i class="fa fa-refresh"></i>  </a>
+                </div>
+
+                <div class="ibox-content">
+                    @if (ViewData.ModelState[""] != null && ViewData.ModelState[""].Errors.Count > 0)
+                    {
+                        <div class="alert alert-danger alert-dismissable">
+                            <button type="button" class="close " data-dismiss="alert"> × </button>
+                            @Html.ValidationSummary("", new { @class = "text-danger" })
+
+                        </div>
+                    }
+
+                    <a class="btn btn-success text-white btn-purplebee pull-right" href=@Url.Action("InterrogationListeFactures", "GestionFactures")><i class="fa fa-file-excel-o"> </i> Exporter la liste des Factures</a>
+                    <div class="tabs-container">
+                        <div class="tab-content">
+                        <div class="panel-body">
+                            <table class="table table-striped table-bordered table-hover dataTables-example1" id="ListeFactPayees">
+                                <thead>
+                                    <tr>
+                                        <th> N° Facture</th>
+                                        <th> N° Règlement</th>
+                                        <th>Référence Abonnement</th>
+                                        <th>Client</th>
+                                        <th>Date Paiement</th>
+                                        <th>Montant Facture</th>
+                                        <th>Utilisateur</th>
+                                        <th>Commission</th>
+                                        <th>Agence</th>
+                                        <th width="10px"></th>
+                                        <th width="10px"></th>
+
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="~/js/jquery-3.1.1.min.js"></script>
+<script src="~/js/plugins/metisMenu/jquery.metisMenu.js"></script>
+<script src="~/js/plugins/pace/pace.min.js"></script>
+<script src="~/js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+<script src="~/js/plugins/chosen/chosen.jquery.js"></script>
+<script src="~/js/plugins/dataTables/datatables.min.js"></script>
+<!-- Sweet alert -->
+<script src="~/js/plugins/sweetalert/sweetalert.min.js"></script>
+<!-- Toastr script -->
+<script src="~/js/plugins/toastr/toastr.min.js"></script>
+<!-- Ladda -->
+<script src="~/js/plugins/ladda/spin.min.js"></script>
+<script src="~/js/plugins/ladda/ladda.min.js"></script>
+<script src="~/js/plugins/ladda/ladda.jquery.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $('#ListeFactPayees').dataTable({
+            "processing": true,
+            "serverSide": true,
+            "info": true,
+            "stateSave": true,
+            "lengthMenu": [[10, 20, 50, -1], [10, 20, 50, "All"]],
+            "ajax":{
+                "url": "@string.Format("{0}://{1}{2}", Request.Url.Scheme, Request.Url.Authority, Url.Content("~"))/ListeFacturePayees/AjaxGetJsonData",
+                "type": "GET"
+            },
+            "columns": [
+                { "data": "SG_CodeAbonnement", "orderable": true },
+                { "data": "DO_Piece", "orderable": true },
+                { "data": "AB_Piece", "orderable": true },
+				{ "data": "CT_Intitule", "orderable": true },
+                { "data": "dodate", "orderable": true },
+                { "data": "DO_MontantTTC", "orderable": true },
+               
+                { "data": "cbCreateur", "orderable": true },
+                { "data": "DO_MontantCom", "orderable": true },
+                { "data": "A_Intitule", "orderable": true },
+                {
+                    data: "SG_CodeFacture", "orderable": false, render: function (data, type, full, meta) {
+                        return type === 'display' ?
+                            '<a class="btn btn-purplebee  btn-circle  btn-outline" title="voir la facture" target="_blank" href="/GestionFactures/VisualiserFacture/' + full.SG_CodeFacture + '" target="_blank"><i title="Imprimer Facture " class="fa fa-print"></i></a>' : data;
+                    }
+                },
+				{
+				    data: "SG_CodeFacture", "orderable": false, render: function (data, type, full, meta) {
+				        return type === 'display' ?
+                            '<a class="btn btn-greenbee btn-circle btn-outline" title="voir le reçu de paiement " target="_blank" href="/GestionFactures/DetailsFacture/' + full.SG_CodeFacture + '"><i title="Details Facture" class="fa fa-edit"></i></a>' : data;
+				    }
+				}
+            ]
+        });
+    });
+</script>

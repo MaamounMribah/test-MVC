@@ -1,0 +1,366 @@
+﻿@model BeeProj.Models.B_DOCENTETE
+
+@{
+    ViewBag.Title = "DecalageFacture";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-lg-10">
+        <h2>Décalage Facture</h2>
+        <ol class="breadcrumb">
+            <li>
+                <a href="@Url.Action("index","Administration")">Administration </a>
+            </li>
+            <li>
+                <a href="@Url.Action("index","Correction")">Correction </a>
+            </li>
+            <li class="active">
+                <strong> <a href="@Url.Action("DecalageFacture","Correction")">Décalage Facture</a></strong>
+            </li>
+        </ol>
+    </div>
+  
+</div>
+
+
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-lg-12">
+
+            @if (ViewBag.existepas != null)
+            {
+                <div class="alert alert-danger alert-dismissable">
+                    <button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>
+                    Aucune facture existe avec les information saisies !
+                </div>
+            }
+
+           @if (ViewBag.msg != null)
+            {
+            <div class="alert alert-success alert-dismissable">
+                <button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>
+                @ViewBag.msg
+            </div>
+
+           } 
+        @if (TempData["MSG"] != null)
+            {
+            <div class="alert alert-warning alert-dismissable">
+                <button type="button" class="close " data-dismiss="alert"> × </button>
+                <p class="text-danger">@TempData["MSG"]</p>
+            </div>
+
+        }
+            <div class="ibox float-e-margins">
+                <div class="ibox-title" style="height:80px;">
+
+                    @using (Html.BeginForm("DecalageFacture", "Correction", FormMethod.Post))
+                    {
+                        <label class="control-label">Recherche par facture </label>
+
+
+                            <div class="input-group m-b">
+                                @if (Model != null)
+                                {
+                                    <input type="text" class="form-control" id="facture" name="facture" value="@Model.DO_Piece" />
+
+                                }
+                                else
+                                {
+                                    <input type="text" class="form-control" id="facture" name="facture" value="" />
+
+                                }
+
+                                <span class="input-group-btn">
+                                    <button type="submit" class="btn btn-purplebee ladda-button">Rechercher!</button>
+                                </span>
+
+                            </div>
+
+                    }
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+        @if (Model != null)
+        {
+
+            <div class="ibox-content">
+                @using (Html.BeginForm("Decaler", "Correction", FormMethod.Post, new { id = "popupForm" }))
+                {
+                    @Html.HiddenFor(model => model.cbMarq)
+                    @*if (ViewData.ModelState[""] != null && ViewData.ModelState[""].Errors.Count > 0)
+                    {
+                        <div class="alert alert-danger alert-dismissable">
+                            <button type="button" class="close " data-dismiss="alert"> × </button>
+                            @Html.ValidationSummary("", new { @class = "text-danger" })
+
+                        </div>
+                    }*@
+                if (ViewBag.docentete != null && ViewBag.docentete != 0 )
+                {
+                        <div class="alert alert-danger alert-dismissable">
+                            <button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>
+                            Il existe @ViewBag.docentete facture(s) posterieures à @Model.DO_Piece  ils seront aussi decalées
+                        </div>
+                }
+              
+                    <div class="row">
+                        <div class="ibox-title">
+                            Informations Facture<a href="@Url.Action("DetailsFacture", "GestionFactures", new { id = Model.cbMarq })" title="Voir détails facture">
+                                @Model.DO_Piece
+                            </a>
+
+                        </div>
+
+                        <div class="col-md-2">
+                            <label class="control-label" for="date_added">Date début</label>
+
+                        </div>
+
+
+                        <div class="input-group m-b">
+                            <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                            @Html.TextBoxFor(model => model.DO_DebutPeriod, "{0:yyyy-MM-dd}", new { type = "date", @class = "form-control" })
+                            @Html.ValidationMessageFor(model => model.DO_DebutPeriod)
+
+                      
+                            <span class="input-group-btn">
+                                <button type="submit" class="btn btn-greenbee ladda-button">Décaler</button>
+
+                            </span>
+
+                        </div>
+
+
+                    </div>
+                    
+                        <div class="row">
+                            <div class="col-lg-12">
+                                    <div class="ibox-title">
+                                       
+                                        <center>
+                                            <h5>La facture @Model.DO_Piece </h5>
+                                        </center>
+                                        @if (Model.DO_Statut == 0)
+                                        {
+
+                                            
+                            <span class="label label-warning"><i class="fa fa-remove"></i> Non payée</span>
+                                        }
+                                        else
+                                        {     
+                                            <span class="label label-success"><i class="fa fa-check"></i> Payée</span>
+
+                                        }
+
+                                       
+                                    </div>
+                                <div>
+                                    <div class="ibox-content profile-content">
+                                        <h4><strong>@ViewBag.Abonnement.CT_Intitule</strong></h4>
+                                        <span>Facture #<strong>@ViewBag.RangFacture</strong></span>
+                                        <p><i class="fa fa-map-marker"></i> @ViewBag.Abonnement.CT_Adresse</p>
+                                        <h5>
+                                            #@ViewBag.Abonnement.DO_Piece
+                                            <br />
+                                            <a href=@Url.Action("Details/" + ViewBag.Abonnement.cbMarq, "Abonnement") target="_blank"><i class="fa fa-edit"></i> Voir l'abonnement </a>
+                                        </h5>
+                                        <p><i class="fa fa-phone"></i> @ViewBag.Abonnement.CT_Telephone</p>
+                                        <h5>                                           
+                                            #@Model.DO_Piece
+                                            <br />
+                                            <a href="@Url.Action("VisualiserFacture","GestionFactures", new { id = Model.cbMarq })" target="_blank"><i class="fa fa-edit"></i> Visualiser la facture </a>
+                                        </h5>
+                                        <p>
+                                            Période du  <strong>@Model.DO_DebutPeriod.GetValueOrDefault().ToString("dd/MM/yyyy")</strong>
+                                            au <strong>@Model.DO_FinPeriod.GetValueOrDefault().ToString("dd/MM/yyyy")</strong>
+                                        </p>
+                                        <p>
+                                            Périodicité  <strong>@Model.DO_Period</strong>
+                                             <strong>Mois</strong>
+                                        </p>
+                                        <br />
+                                        <p>RefTT <strong> @ViewBag.Abonnement.DO_RefTT </strong></p>
+                                        <p>
+                                            <span>Total Facture </span>
+                                            <strong>@String.Format("{0:N3}", Model.DO_totalTTC /*+ (decimal)0.600*/) </strong> TND
+                                        </p>
+                                     
+<p>@Model.DO_Commentaire </p>
+
+                                   
+                                    </div>
+                                </div>
+                            </div>
+                         
+                        </div>
+               
+            }
+                    </div>
+
+            }
+
+
+
+        </div>
+
+
+
+<script src="~/js/jquery-3.1.1.min.js"></script>
+<script src="~/js/plugins/metisMenu/jquery.metisMenu.js"></script>
+<script src="~/js/plugins/pace/pace.min.js"></script>
+<script src="~/js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+<script src="~/js/plugins/chosen/chosen.jquery.js"></script>
+<script src="~/js/plugins/dataTables/datatables.min.js"></script>
+<!-- Sweet alert -->
+<script src="~/js/plugins/sweetalert/sweetalert.min.js"></script>
+<!-- Chosen -->
+<script src="~/js/plugins/chosen/chosen.jquery.js"></script>
+<link href="~/css/plugins/ladda/ladda-themeless.min.css" rel="stylesheet">
+    <!-- Ladda -->
+<script src="~/js/plugins/ladda/spin.min.js"></script>
+<script src="~/js/plugins/ladda/ladda.min.js"></script>
+<script src="~/js/plugins/ladda/ladda.jquery.min.js"></script>
+<script>
+
+    $(document).ready(function () {
+
+        // Bind normal buttons
+        Ladda.bind('.ladda-button', { timeout: 2000 });
+
+        // Bind progress buttons and simulate loading progress
+        Ladda.bind('.progress-demo .ladda-button', {
+            callback: function (instance) {
+                var progress = 0;
+                var interval = setInterval(function () {
+                    progress = Math.min(progress + Math.random() * 0.1, 1);
+                    instance.setProgress(progress);
+
+                    if (progress === 1) {
+                        instance.stop();
+                        clearInterval(interval);
+                    }
+                }, 200);
+            }
+        });
+
+
+        var l = Ladda.bind('.ladda-button-demo');
+
+        l.click(function () {
+            // Start loading
+            l.ladda('start');
+
+            // Timeout example
+            // Do something in backend and then stop ladda
+            setTimeout(function () {
+                l.ladda('stop');
+            }, 12000)
+
+
+        });
+
+    });
+
+
+    $(document).ready(function () {
+        $('.i-checks').iCheck({
+            checkboxClass: 'icheckbox_square-green',
+            radioClass: 'iradio_square-green'
+        });
+        $(".todo-list").sortable({
+            placeholder: "sort-highlight",
+            handle: ".handle",
+            forcePlaceholderSize: true,
+            zIndex: 999999
+        }).disableSelection();
+
+        $('.classDate').datepicker();
+
+        $('.i-checks').iCheck({
+            radioClass: 'iradio_square-green'
+        });
+        $('.chosen-select').chosen({ width: "100%" });
+
+
+    });
+
+
+
+    $("#facture").change(function () {
+
+        if ($("#facture").val() == null) {
+            $("#searchClient").prop('disabled', true);
+        }
+        else {
+            $("#searchClient").prop('disabled', false);
+        }
+    });
+    $("#searchClient").click(function () {
+
+        $("#showClientInfos").removeClass("hidden");
+
+    });
+
+
+
+
+
+    function Decaler(button) {
+        $("#Decaler").modal();
+        var row = $(button).closest("tr");
+        var piecereglement = $("td", row).eq(0).html();
+        var AbonnementChoisi = $('select[name^="facture"]', row).val();
+        $('#facture').change(function () {
+
+            AbonnementChoisi = $('select#facture').find("option:selected").val();
+
+        });
+        $("#Decaler").click(function () {
+            $.ajax({
+                type: "get",
+                url: '/Correction/Decaler',
+                dataType: 'json',
+                success: function (msg) {
+                    if (msg.result == "Succes") {
+                        toastr.success('Décalage ce fait avec succès ! ', 'Succes');
+                        location.reload();
+                    }
+
+                }
+            });
+        });
+    };
+
+
+
+    function ChangerVisibiliteFacture(cbm) {
+        swal({
+            title: "Changer la visibilité de cete facture ?",
+            text: " ",
+            type: "warning",
+            showCancelButton: true,
+            cancelButtonText: 'Annuler',
+            confirmButtonColor: "#DD6B55",
+            confirmButtonText: "Oui.",
+            closeOnConfirm: false
+        }, function () {
+            $.ajax({
+                type: "get",
+                url: '/GestionFactures/ChangerVisibiliteFacture?id=' + cbm, // we are calling json method
+                dataType: 'json',
+                success: function (result) {
+                    swal("visibilité changée!", "visibilité de facture changée avec succès! ", "success");
+                    window.location = "/GestionFactures/DetailsFacture/" + cbm;
+                }
+            });
+        });
+
+
+    }
+
+</script>

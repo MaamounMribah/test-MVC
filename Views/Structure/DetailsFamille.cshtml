@@ -1,0 +1,164 @@
+﻿@model BeeProj.Models.D_FAMILLE
+@{
+    ViewBag.Title = "DetailsFamille";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="ibox-content">
+
+        <h3>Détails Famille:  Ref# @Model.FA_CodeFamille</h3>
+        <ol class="breadcrumb">
+
+            <li>
+                <a href="@Url.Action("index","Home")">Acceuil </a>
+            </li>
+            <li>
+                <a href=@Url.Action("ListeFamilles", "Structure")>Liste des familles</a>
+            </li>
+
+            <li class="active">
+                <strong>Détails famille </strong>
+            </li>
+        </ol>
+    </div>
+</div>
+
+<div class="row m-t-md">
+    <div class="col-lg-12">
+
+        <div class="ibox product-detail">
+            <div class="ibox-content">
+
+                <div class="row">
+                    <div class="col-md-5">
+
+
+                        <div class="product-images">
+
+                            <div>
+                                <div class="">
+
+                                    <img src="@Url.Action("PhotoFamille", "Structure" , new { id= Model.cbMarq })" class="img-preview img-responsive img-rounded" onError="this.onerror=null;this.src='/img/DefaultImage.png';" />
+                                </div>
+                            </div>
+
+
+                        </div>
+
+                    </div>
+                    <div class="col-md-7">
+
+                        <h2 class="font-bold m-b-xs">
+                            Le produit Ref# @Model.FA_CodeFamille
+                        </h2>
+                        </br>
+                        </br>
+                        <h3>Détails de la famille</h3>
+                        </br>
+                        <div class="col-lg-5">
+                            <dl class="dl-horizontal">
+
+                                <dt>Désignation : </dt>
+                                <dd>@Html.DisplayFor(model => model.FA_Intitule)</dd>
+                              
+                                </br>
+                                <dt>Unite: </dt>
+                                <dd><strong>@Html.DisplayFor(model => model.FA_Unite)</strong></dd>
+
+                                </br>
+
+
+                            </dl>
+
+                        </div>
+                        <div class="col-lg-5">
+
+                            <dl class="dl-horizontal">
+
+                                <dt>Type: </dt>
+                                @if(Model.FA_Type == 1) { 
+                                <dd>Service</dd>
+                                }
+                                else if (Model.FA_Type == 0)
+                                {
+                                    <dd>
+                                        Matériel
+                                    </dd>
+                                }
+                                        </br>
+
+                                <dt>Description :</dt>
+                                <dd>@Html.DisplayFor(model => model.FA_Description)</dd>
+
+                                </br>
+
+                                <dt>Conventionné :</dt>
+                                @if (Model.isConventionnelle == 1)
+                                {
+                                    <dd>Oui</dd>
+                                }
+                                else if (Model.isConventionnelle == 0)
+                                {
+                                    <dd>
+                                        Non
+                                    </dd>
+                                }
+                                else 
+                                {
+                                    <dd>
+                                        Non
+                                    </dd>
+                                }
+
+                                </br>
+                                
+
+                            </dl>
+
+                        </div>
+                        <div class="ibox-content">
+
+                        </div>
+
+
+
+
+
+
+                    </div>
+                    
+                </div>
+                <div class="pull-right">
+                    <div class="btn-group">
+                        <a href=@Url.Action("ModifierFamille/"+Model.cbMarq, "Structure") class="btn btn-primary btn-sm"><i class="fa fa-binoculars "></i>Modifier</a>
+
+                        @*<button class="btn btn-primary btn-sm"><i class="fa fa-cart-plus"></i> Modifier</button>*@
+                        @*<button class="btn btn-white btn-sm"><i class="fa fa-star"></i> Mettre en Someil </button>*@
+                        @*<button class="btn btn-white btn-sm"><i class="fa fa-trash"></i> Supprimer </button>*@
+                    </div>
+                </div>
+            </div>
+           
+        </div>
+        
+    </div>
+   
+</div>
+
+<script src="~/js/plugins/metisMenu/jquery.metisMenu.js"></script>
+
+
+<script src="~/js/plugins/dataTables/datatables.min.js"></script>
+<script src="~/js/jquery-3.1.1.min.js"></script>
+<script src="~/js/bootstrap.min.js"></script>
+<script src="~/js/plugins/metisMenu/jquery.metisMenu.js"></script>
+<script src="~/js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+
+<script src="~/js/plugins/dataTables/datatables.min.js"></script>
+
+<!-- Custom and plugin javascript -->
+<script src="~/js/inspinia.js"></script>
+<script src="~/js/plugins/pace/pace.min.js"></script>

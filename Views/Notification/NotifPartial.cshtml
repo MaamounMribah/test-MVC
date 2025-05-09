@@ -1,0 +1,83 @@
+﻿@using BeeProj.Models;
+
+<a class="dropdown-toggle count-info" data-toggle="dropdown" href="#" title="demandes d'appro" >
+    <i class="fa fa-exchange"></i>
+
+        <span class="label label-warning">@ViewBag.NombreNotifInterne</span>
+
+
+</a>
+
+
+
+    <ul class="dropdown-menu dropdown-alerts " style="overflow:scroll; height: 500px;">
+
+        @if (ViewBag.NotificationInterne == null)
+    {
+            <li>
+                <a href="#">
+                    <div>
+                        <i class="fa fa-envelope fa-fw"></i> Aucune Notif de demande interne
+
+                    </div>
+                </a>
+            </li>
+        }
+        else
+        {
+            foreach (var item in ViewBag.NotificationInterne)
+            {
+                if(item.TypeTransfert == 0)
+                {
+                <li>
+                    <a href="@Url.Action("DetailsDemandeTransfert","Interne", new { id = @item.cbMarq })" onClick ="ReadNotifInterne(@item.cbMarq);">
+                        <div>
+                            <i class="fa fa-bell fa-fw"></i> @item.DM_Piece
+                            <span class="pull-right text-info small">Demande de Transfert </span>
+                        </div>
+                    </a>
+                </li>
+
+                <li class="divider"></li>
+                }
+                else if (item.TypeTransfert == 1)
+                {
+                    <li>
+                        <a href="@Url.Action("DetailDemandeAppro","Interne", new { id = @item.cbMarq })" onClick="ReadNotifInterne(@item.cbMarq);">
+                            <div>
+                                <i class="fa fa-bar-chart fa-fw"></i> @item.DM_Piece
+                                <span class="pull-right text-info small">Demande d'appro </span>
+                            </div>
+                        </a>
+                    </li>
+
+                    <li class="divider"></li>
+                }
+            }
+
+
+
+        }
+  </ul>
+
+
+<script src="~/js/jquery-3.1.1.min.js"></script>
+
+<script>
+    function ReadNotifInterne(cbm) {
+
+
+        $.ajax({
+            type: "get",
+            url: "/Notification/ReadNotifInterne?cbmarq=" + cbm,
+            dataType: "json",
+            success: function (msg) {
+
+
+
+            }
+        });
+    }
+
+
+</script>

@@ -1,0 +1,164 @@
+﻿@model BeeProj.Models.B_PROMOTION
+
+@{
+    ViewBag.Title = "NouvellePromotion";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<link href="~/css/plugins/chosen/bootstrap-chosen.css" rel="stylesheet">
+
+<link href="~/css/plugins/dropzone/basic.css" rel="stylesheet">
+<link href="~/css/plugins/dropzone/dropzone.css" rel="stylesheet">
+
+
+<link href="~/css/plugins/jasny/jasny-bootstrap.min.css" rel="stylesheet">
+<link href="~/css/plugins/codemirror/codemirror.css" rel="stylesheet">
+
+
+
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-lg-8">
+        <h2>Nouvelle promotion</h2>
+        <ol class="breadcrumb">
+            <li>
+                <a>Liste Promotion</a>
+            </li>
+            <li>
+                <a>Promotion</a>
+            </li>
+            <li class="active">
+                <strong>Nouvelle Promotion</strong>
+            </li>
+        </ol>
+    </div>
+    <div class="col-lg-2">
+
+    </div>
+</div>
+@using (Html.BeginForm("NouvellePromotion", "Structure", FormMethod.Post, new { @class = "form-horizontal", role = "form", enctype = "multipart/form-data" }))
+{
+    if (ViewData.ModelState[""] != null && ViewData.ModelState[""].Errors.Count > 0)
+    {
+        <div class="alert alert-danger alert-dismissable">
+            <button type="button" class="close " data-dismiss="alert"> × </button>
+            @Html.ValidationSummary("", new { @class = "text-danger" })
+        </div>
+    }
+    @Html.AntiForgeryToken()
+    <div class="wrapper wrapper-content animated fadeIn">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-content">
+                        <div class="form-group float-e-margins">
+
+                                    <div class="form-group">
+                                        <label class="col-md-4 control-label">Article en promotion </label>
+                                        <div class="col-md-8">
+                                            <select name="AR_Ref" class="chosen-select form-control" id="AR_Ref">
+                                                @foreach (var item in ViewBag.listeArticleService)
+                                                {
+                                                    <option value="@item.AR_Ref">@item.AR_Design</option>
+                                                }
+                                            </select>
+                                        </div>
+
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-md-4 control-label">Intitulé</label>
+                                        <div class="col-md-8">
+                                            <input class="form-control" id="P_Intitule" name="P_Intitule" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-md-4 control-label">Description </label>
+                                        <div class="col-md-8">
+                                            <textarea class="form-control" id="P_Description" name="P_Description"> </textarea>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-md-4 control-label">Date de début de la promotion</label>
+                                        <div class="col-md-8">
+                                            <input type="date" class="form-control" id="P_RemiseDebut" name="P_RemiseDebut" value="01/01/1900" />
+
+                                        </div>
+
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-md-4 control-label">Date de fin de la promotion</label>
+                                        <div class="col-md-8">
+                                            <input type="date" class="form-control" id="P_RemiseFin" name="P_RemiseFin" value="01/01/1900" />
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="col-md-4 control-label">Durée de la promotion en mois </label>
+                                        <div class="col-md-8">
+                                            <input class="form-control" type="number" id="P_Duree" name="P_Duree" />
+                                        </div>
+                                    </div>
+
+                            <div class="form-group">
+                                <label class="col-md-4 control-label">Remise  </label>
+                                <div class="col-md-8">
+                                    <div class="input-group m-b" >
+                                    <input class="form-control" type="number" id="Remise" name="Remise"> 
+                                        <span class="input-group-addon">%</span>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                                    <div class="form-group">
+                                        <label class="col-md-4 control-label">Sélectionner une image de la promotion </label>
+                                        <div class="col-md-8">
+                                            <div class="fileinput fileinput-new input-group" data-provides="fileinput">
+                                                <div class="form-control" data-trigger="fileinput">
+                                                    <i class="glyphicon glyphicon-file fileinput-exists"></i>
+                                                    <span class="fileinput-filename"></span>
+                                                </div>
+                                                <span class="input-group-addon btn btn-default btn-file">
+                                                    <span class="fileinput-new">Selectionner</span>
+                                                    <span class="fileinput-exists">Changer</span>
+                                                    <input type="file" name="AR_Photo" id="AR_Photo" accept=".png,.jpg,.jpeg,.gif,.tif" />
+
+                                                </span>
+                                                <a href="#" class="input-group-addon btn btn-default fileinput-exists" data-dismiss="fileinput">Supprimer</a>
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+                                <button type="submit" class="btn btn-primary btn-block"> Créer</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+}
+<div>
+</div>
+
+
+<script src="~/js/plugins/chosen/chosen.jquery.js"></script>
+<!-- Jasny -->
+<script src="~/js/plugins/jasny/jasny-bootstrap.min.js"></script>
+
+<!-- DROPZONE -->
+<script src="~/js/plugins/dropzone/dropzone.js"></script>
+
+<!-- CodeMirror -->
+<script src="~/js/plugins/codemirror/codemirror.js"></script>
+<script src="~/js/plugins/codemirror/mode/xml/xml.js"></script>
+<script>
+
+$(document).ready(function () {
+
+    $('.chosen-select').chosen({ width: "100%" });
+ 
+
+});
+</script>

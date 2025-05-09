@@ -1,0 +1,1176 @@
+﻿@model BeeProj.Models.D_COMPTET
+@{
+    ViewBag.Title = "DetailsClient";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style>
+    .dataTables_filter, .dataTables_info, .dataTables_length, .dataTables_paginate {
+        display: none;
+    }
+
+    .dataTableMargin .ui-datatable-tablewrapper {
+        overflow: hidden;
+    }
+
+    .table .table-bordered .table-striped {
+        overflow-x: hidden;
+        overflow-y: hidden;
+    }
+
+    .dataTables_scroll {
+        overflow: auto;
+    }
+
+
+    table {
+        table-layout: fixed;
+        width: 98% !important;
+    }
+</style>
+
+<style>
+    td.details-control {
+        background: url('~/img/icons-minus.png') no-repeat center center;
+        cursor: pointer;
+    }
+
+    tr.shown td.details-control {
+        background: url('~/img/icons-plus.png') no-repeat center center;
+    }
+</style>
+
+
+<link href="~/css/bootstrap.min.css" rel="stylesheet">
+<link href="~/font-awesome/css/font-awesome.css" rel="stylesheet">
+
+<!-- Toastr style -->
+<link href="~/css/plugins/toastr/toastr.min.css" rel="stylesheet">
+
+<link href="~/css/animate.css" rel="stylesheet">
+<link href="~/css/style.css" rel="stylesheet">
+
+<link href="~/css/plugins/chosen/bootstrap-chosen.css" rel="stylesheet">
+<!-- Sweet Alert -->
+<link href="~/css/plugins/sweetalert/sweetalert.css" rel="stylesheet">
+
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-sm-4">
+        <h2> Détails Client</h2>
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a href="@Url.Action("index","Home")">Acceuil </a>
+            </li>
+            <li class="breadcrumb-item ">
+                <a href="@Url.Action("ListeClients","Structure")">Liste des Clients </a>
+            </li>
+            <li class="breadcrumb-item ">
+                <strong> <a href="@Url.Action("DetailsClient","Structure")">Détails Client </a></strong>
+            </li>
+        </ol>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-12">
+        <div class="wrapper wrapper-content animated fadeInUp">
+            <div class="ibox">
+                <div class="ibox-content">
+                    <div class="row">
+                        <div class="col-lg-12">
+
+                        </div>
+                    </div>
+                    <a href=@Url.Action("ModifierClient/" + Model.cbMarq, "Structure") class="btn btn-outline btn-purplebee pull-right">Modifier </a>
+
+                    @*----------------------------------------------------------------------------------------------------------*@
+                    <div class="row">
+                        <div class="col-lg-2">
+                            <dl class="dl-horizontal">
+                                @if (Model.CT_Civilite == 0)
+                                {
+                                    <span>
+                                        <img alt="image" class="img-circle" src="~/img/homme.png" style="width:70%">
+                                    </span>
+                                }
+                                else if (Model.CT_Civilite == 1)
+                                {
+                                    <span>
+                                        <img alt="image" class="img-circle" src="~/img/femme.png" style="width:70%">
+                                    </span>
+                                }
+
+                            </dl>
+
+                        </div>
+                        <div class="col-lg-5">
+                            <dl class="dl-horizontal">
+                                <dt>Statut</dt>
+                                @if (Model.CT_Type == 0)
+                                {
+
+                                    <dd><i class="label bg-info ">Client</i></dd>
+                                }
+                                else if (Model.CT_Type == 1)
+                                {
+
+                                    <dd><i class="label bg-warning">Prospect</i></dd>
+                                }
+                                <br />
+                                <dt>Intitulé client</dt>
+                                <dd>@Model.CT_Intitule</dd>
+                                <dt>N° Pièce d'identité</dt>
+                                <dd>@Model.CT_Identifiant</dd>
+                                <dt>Date de naissance</dt>
+                                <dd>@Model.CT_DateNaiss.GetValueOrDefault().ToString("dd/MM/yyyy")</dd>
+                                <br />
+                            </dl>
+                        </div>
+                        <div class="col-lg-5" id="cluster_info">
+                            <dl class="dl-horizontal">
+                                <br />
+                                <dt>Agence</dt>
+                                <dd>
+                                    @foreach (var Agenceitem in @ViewBag.Agence)
+                                    {
+                                        <p>@Agenceitem</p>
+                                    }
+                                </dd>
+
+                                <dt>Référence Abonnemnt</dt>
+                                @if (Model.CT_Type == 0)
+                                {
+                                    <dd>
+                                        @foreach (var Abonnementitem in @ViewBag.Abonnement)
+                                        {
+                                            <p>@Abonnementitem</p>
+                                        }
+                                    </dd>
+                                }
+                                else if (Model.CT_Type == 1)
+                                {
+                                    <dd>
+                                        @foreach (var EngagementItem in @ViewBag.Engagement)
+                                        {
+                                            <p>@EngagementItem</p>
+                                        }
+                                    </dd>
+                                }
+                                <dt>Date de début</dt>
+                                <dd>@Model.CT_DateCreate.GetValueOrDefault().ToString("dd/MM/yyyy")</dd>
+                                <dt>Code Région</dt>
+                                <dd>@Model.CT_CodeRegion</dd>
+                            </dl>
+                            @if (ViewBag.ConventionClient != null)
+                            {
+                                <dl class="dl-horizontal">
+                                    <dt>Convention client </dt>
+                                    <dd>@ViewBag.ConventionClient.Intitule  </dd>
+                                    <dt>Matricule </dt>
+                                    <dd>@Model.CT_MatriculeSociete  </dd>
+                                </dl>
+                            }
+                        </div>
+                        <!--********************************here-->
+                        <div class="panel-body">
+
+                            <div class="tab-content">
+                                <!--FIN AVANCEMENT -->
+
+                            </div>
+                        </div>
+
+                        <div class="row m-t-sm">
+                            <div class="col-lg-12">
+                                <div class="panel blank-panel">
+                                    <div class="panel-heading">
+                                        <div class="panel-options">
+                                            <ul class="nav nav-tabs">
+                                                <li class="nav-link active"><a href="#tab-1" data-toggle="tab">Généralité</a></li>
+                                                <li class="nav-link"><a href="#tab-2" data-toggle="tab">Carnet d'Adresse</a></li>
+                                                <li class="nav-link"><a href="#tab-3" data-toggle="tab">Contacts</a></li>
+                                                <li class=""><a href="#tab-5" data-toggle="tab">Abonnoment</a></li>
+                                                <li class=""><a href="#tab-4" data-toggle="tab">Documents</a></li>
+                                                <li class=""><a href="#tab-6" data-toggle="tab">Factures</a></li>
+                                                <li class=""><a href="#tab-avoir" data-toggle="tab">Factures Avoir</a></li>
+                                                <li class=""><a href="#tab-7" data-toggle="tab">Sortie</a></li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    <div class="panel-body">
+                                        <div class="tab-content">
+                                            <!-- Généralité-->
+                                            <div class="tab-pane active " id="tab-1">
+                                                <div class="col-md-8">
+                                                    <form method="get" class="form-horizontal">
+                                                        <div class="ibox float-e-margins">
+                                                            <div class="form-group">
+                                                                <label class="col-sm-2 control-label">Adresse</label>
+                                                                <div class="col-sm-10">
+                                                                    <span class="help-block m-b-none">
+                                                                        @Html.TextBoxFor(model => model.CT_Adresse, new { @class = "form-control", @Readonly = "Readonly" })
+                                                                    </span>
+                                                                </div>
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="col-md-6">
+                                                                    <div class="form-group">
+                                                                        <label class="col-sm-4 control-label">Téléphone</label>
+                                                                        <div class="col-sm-8">
+                                                                            <span class="help-block m-b-none">
+                                                                                @Html.TextBoxFor(model => model.CT_Telephone, new { @class = "form-control", @Readonly = "Readonly" })
+                                                                            </span>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-6">
+                                                                    <div class="form-group">
+                                                                        <label class="col-sm-4 control-label">Fax</label>
+                                                                        <div class="col-sm-8">
+                                                                            <span class="help-block m-b-none">
+                                                                                @Html.TextBoxFor(model => model.CT_Telecopie, new { @class = "form-control", @Readonly = "Readonly" })
+                                                                            </span>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label class="col-sm-2 control-label">E-mail </label>
+                                                                <div class="col-sm-10">
+                                                                    <span class="help-block m-b-none">
+                                                                        @Html.TextBoxFor(model => model.CT_EMail, new { @class = "form-control", @Readonly = "Readonly" })
+                                                                    </span>
+                                                                </div>
+                                                            </div>
+                                                            @*<div class="form-group">
+                                                    <label class="col-sm-2 control-label">Profession</label>
+                                                    <div class="col-sm-10">
+                                                        <span class="help-block m-b-none">
+                                                            @Html.TextBoxFor(model => model.CT_Employes, new { @class = "form-control", @Readonly = "Readonly" })
+                                                        </span>
+                                                    </div>
+                                                </div>*@
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div class="payment-card">
+                                                        <i class="fa fa-user payment-icon-big text-success"></i>
+                                                        <h2 class="pull-right">
+                                                            Solde : <strong>@String.Format("{0:N3}", (decimal)(@ViewBag.SoldeClient))  </strong> TND
+                                                        </h2>
+                                                        <div class="row">
+                                                            <div class="col-sm-6">
+                                                                <small>
+                                                                    <strong>Identidiant:</strong> @Model.CT_Identifiant
+                                                                </small>
+                                                                <small>
+                                                                    <strong>Code Client:</strong> @Model.CT_Num
+                                                                </small>
+                                                            </div>
+                                                            <div class="col-sm-6 text-right">
+                                                                <small>
+                                                                    <strong>Client:</strong> @Model.CT_Intitule
+                                                                </small>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!-- FIN Généralité-->
+                                            <!-- Carnet d'adresse-->
+                                            <div class="tab-pane " id="tab-2">
+                                                <div class="row">
+                                                    <div class="col-lg-12">
+                                                        <div class="ibox">
+                                                            <strong><span style="font-size:1em">Liste Adresses</span></strong>
+                                                            <button type="submit" class="btn btn-graybee pull-right" data-toggle="modal" data-target="#NouvelleAdresse">Nouvelle Adresse  </button>
+                                                            <div class="ibox-content">
+                                                                <div class="row">
+                                                                    @foreach (var item in ViewBag.ClientAbonnement)
+                                                                    {
+                                                                        foreach (var items in item.Articles)
+                                                                        {
+                                                                            <div class="col-lg-4">
+                                                                                <strong><span style="font-size:1em;text-align:center">@items</span></strong>
+                                                                                <div class="panel panel-info">
+                                                                                    <div class="panel-heading">
+                                                                                        <i class="fa fa-address-book"></i>
+                                                                                        <strong>
+                                                                                            <a href="@Url.Action("Details", "Abonnement", new { id = item.CbmarqAbonnement})" title="Modifier adresse" style="color:white">
+                                                                                                &nbsp;&nbsp;@item.AbonnementNames
+                                                                                            </a>
+                                                                                        </strong>
+                                                                                    </div>
+                                                                                    @foreach (var Adr in item.Adresses)
+                                                                                    {
+                                                                                        <div class="panel-body">
+                                                                                            <a href="@Url.Action("ModifierAdresse", "Structure", new { id = Adr.cbmarq })" title="Modifier adresse">
+                                                                                                <i class="fa fa-address-card"></i>&nbsp;&nbsp;@Adr.Adresse &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                                                                                &nbsp;&nbsp;
+                                                                                            </a>
+                                                                                            <small style="color:darkblue;text-align:center">@Adr.Type</small>
+                                                                                        </div>
+                                                                                    }
+                                                                                </div>
+                                                                            </div>
+                                                                        }
+                                                                    }
+                                                                </div>
+
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="row">
+                                                    <div class="col-lg-12">
+                                                        <div class="ibox">
+                                                            <strong><span style="font-size:1em">Autres adresses</span></strong>
+                                                            <div class="ibox-content">
+                                                                <div class="row">
+                                                                    @if (ViewBag.AutreAdresse.Count != 0)
+                                                                    {
+                                                                        foreach (var adresse in ViewBag.AutreAdresse)
+                                                                        {
+                                                                            <div class="col-lg-4">
+                                                                                <div class="panel panel-warning">
+                                                                                    <div class="panel-heading">
+                                                                                        <i class="fa fa-address-book"></i><strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Autres Adresses</strong>
+                                                                                    </div>
+                                                                                    <div class="panel-body">
+                                                                                        <a href="@Url.Action("ModifierAdresse", "Structure", new { id = adresse.cbMarq })" title="Modifier adresse">
+                                                                                            <i class="fa fa-address-card"></i>&nbsp;&nbsp;@adresse.LI_Adresse
+                                                                                        </a>
+                                                                                    </div>
+
+                                                                                </div>
+                                                                            </div>
+                                                                        }
+                                                                    }
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!-- Fin Carnet d'adresse-->
+                                            <!-- Contact-->
+                                            <div class="tab-pane " id="tab-3">
+                                                <div class="row">
+                                                    <div class="col-lg-12">
+                                                        <div class="ibox">
+                                                            <button type="submit" class="btn btn-purplebee  btn-outline pull-right" data-toggle="modal" data-target="#AjoutNumero">Nouveau</button>
+                                                            <div class="ibox-content">
+                                                                <div class="row">
+                                                                    @if (ViewBag.numerostelephone != null)
+                                                                    {
+                                                                        foreach (var numero in ViewBag.numerostelephone)
+                                                                        {
+                                                                            if (numero.CT_Telephone1 == @Model.CT_Telephone)
+                                                                            {
+                                                                                using (Html.BeginForm("ModifierNumero", "Structure", FormMethod.Post, new { @class = "form-horizontal", role = "form", enctype = "multipart/form-data" }))
+                                                                                {
+                                                                                    <div class="col-lg-4">
+                                                                                        <div class="panel-body">
+
+                                                                                            <div class="media-main">
+
+                                                                                                <div class="pull-right btn-group-sm">
+
+                                                                                                    <input type="text" name="CbmarqNumero" value=@numero.cbMarq class="hidden">
+                                                                                                    @Html.HiddenFor(model => model.cbMarq)
+                                                                                                    <button type="submit" class="btn btn-greenbee tooltips"
+                                                                                                            data-original-title="Edit">
+                                                                                                        <i class="fa fa-pencil"></i>
+                                                                                                    </button>
+
+                                                                                                    <button type="button" class="btn btn-danger tooltips"
+                                                                                                            data-original-title="Edit" onclick="SuppressionNumero(@numero.cbMarq)">
+                                                                                                        <i class="fa fa-close"></i>
+                                                                                                    </button>
+                                                                                                </div>
+                                                                                                <div class="info">
+                                                                                                    <h4>@numero.CT_Nom</h4>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                            <div class="clearfix"></div>
+                                                                                            <ul class="social-links list-inline">
+                                                                                                <span>Premier numéro GSM</span>
+                                                                                                <input type="number" class="form-control" name="CT_Telephone1" id="CT_Telephone1" maxlength="8" value=@numero.CT_Telephone1>
+                                                                                                <input hidden id=code name=code type=text maxlength="7" placeholder="code de 7 caractères" required autofocus>
+                                                                                            </ul>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                }
+                                                                            }
+                                                                            else if (numero.CT_Telephone1 == @Model.CT_Telephone1)
+                                                                            {
+                                                                                using (Html.BeginForm("ModifierNumero", "Structure", FormMethod.Post, new { @class = "form-horizontal", role = "form", enctype = "multipart/form-data" }))
+                                                                                {
+                                                                                    <div class="col-lg-4">
+                                                                                        <div class="panel-body">
+
+                                                                                            <div class="media-main">
+
+                                                                                                <div class="pull-right btn-group-sm">
+
+                                                                                                    <input type="text" name="CbmarqNumero" value=@numero.cbMarq class="hidden">
+                                                                                                    @Html.HiddenFor(model => model.cbMarq)
+                                                                                                    <button type="submit" class="btn btn-greenbee tooltips"
+                                                                                                            data-original-title="Edit">
+                                                                                                        <i class="fa fa-pencil"></i>
+                                                                                                    </button>
+
+                                                                                                    <button type="button" class="btn btn-danger tooltips"
+                                                                                                            data-original-title="Edit" onclick="SuppressionNumero(@numero.cbMarq)">
+                                                                                                        <i class="fa fa-close"></i>
+                                                                                                    </button>
+                                                                                                </div>
+                                                                                                <div class="info">
+                                                                                                    <h4>@numero.CT_Nom</h4>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                            <div class="clearfix"></div>
+                                                                                            <ul class="social-links list-inline">
+                                                                                                <span>Deuxième numéro GSM</span>
+                                                                                                <input type="number" class="form-control" inputMode="numeric" name="CT_Telephone1" id="CT_Telephone1" pattern="[0-9]*" min="8" max="99999999" value=@numero.CT_Telephone1>
+                                                                                            </ul>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                }
+                                                                            }
+                                                                            else
+                                                                            {
+                                                                                using (Html.BeginForm("ModifierNumero", "Structure", FormMethod.Post, new { @class = "form-horizontal", role = "form", enctype = "multipart/form-data" }))
+                                                                                {
+                                                                                    <div class="col-lg-4">
+                                                                                        <div class="panel-body">
+
+                                                                                            <div class="media-main">
+
+                                                                                                <div class="pull-right btn-group-sm">
+
+                                                                                                    <input type="text" name="CbmarqNumero" value=@numero.cbMarq class="hidden">
+                                                                                                    @Html.HiddenFor(model => model.cbMarq)
+                                                                                                    <button type="submit" class="btn btn-greenbee tooltips"
+                                                                                                            data-original-title="Edit">
+                                                                                                        <i class="fa fa-pencil"></i>
+                                                                                                    </button>
+
+                                                                                                    <button type="button" class="btn btn-danger tooltips"
+                                                                                                            data-original-title="Edit" onclick="SuppressionNumero(@numero.cbMarq)">
+                                                                                                        <i class="fa fa-close"></i>
+                                                                                                    </button>
+                                                                                                </div>
+                                                                                                <div class="info">
+                                                                                                    <h4>@numero.CT_Nom</h4>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                            <div class="clearfix"></div>
+                                                                                            <ul class="social-links list-inline">
+                                                                                                <span>Autre Contact</span>
+                                                                                                <input type="number" class="form-control" inputMode="numeric" name="CT_Telephone1" id="CT_Telephone1" pattern="[0-9]*" min="8" max="99999999" value=@numero.CT_Telephone1>
+                                                                                            </ul>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                }
+                                                                            }
+
+                                                                        }
+
+                                                                    }
+
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!-- Fin Contact-->
+                                            <!-- Documents -->
+                                            <div id="tab-4" class="tab-pane">
+                                                <div class="panel-body full-height-scroll" style="overflow:scroll;height:inherit;width:inherit">
+                                                    <div class="table-responsive">
+                                                        <table class="table table-bordered table-stripped">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th> </th>
+                                                                    <th>
+                                                                        Intitulé Document
+                                                                    </th>
+                                                                    <th> Description </th>
+                                                                    <th>
+                                                                        Ajouté par
+                                                                    </th>
+                                                                    <th>
+                                                                        Date
+                                                                    </th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                @foreach (var item in ViewBag.Documents)
+                                                                {
+                                                                    <tr>
+                                                                        <td>
+                                                                            <a href=@item.Path target="_blank"> Voir </a>
+                                                                        </td>
+                                                                        <td>
+                                                                            @item.B_Intitule
+                                                                        </td>
+                                                                        <td>
+                                                                            @item.B_Description
+
+                                                                        </td>
+                                                                        <td> @item.cbCreateur</td>
+                                                                        <td> @item.cbModification</td>
+                                                                    </tr>
+                                                                }
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!--Article-->
+                                            <div id="tab-5" class="tab-pane">
+                                                <div class="panel-body full-height-scroll" style="overflow:scroll;height:inherit;width:inherit">
+
+                                                    <div class="table-responsive">
+                                                        <table class="table table-bordered table-stripped">
+                                                            <thead>
+                                                                <tr>
+
+                                                                    <th>
+                                                                        Intitulé abonnement
+                                                                    </th>
+
+
+                                                                    <th> article </th>
+                                                                    @*<th>Adresse</th>*@
+
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                @foreach (var item in ViewBag.ClientAbonnement)
+                                                                {
+                                                                    <tr>
+                                                                        <td>
+                                                                            @item.AbonnementNames
+                                                                        </td>
+
+
+                                                                        <td>
+                                                                            @foreach (var items in item.Articles)
+                                                                            {
+                                                                                <p>@items</p>
+                                                                            }
+
+                                                                        </td>
+                                                                        @*<td>
+                                                                @foreach (var Adr in item.Adresses)
+                                                                {
+                                                                    <p>@Adr</p>
+                                                                }
+
+                                                            </td>*@
+
+
+                                                                    </tr>
+                                                                }
+
+
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+
+
+
+                                                </div>
+                                            </div>
+                                            <!--Fin Document -->
+                                            <!-- Commercial-->
+
+                                            <div class="tab-pane" id="tab-6">
+
+                                                <table class="table table-striped table-hover" id="facture">
+                                                    <thead>
+                                                        <tr>
+
+                                                            <th>Statut</th>
+                                                            <th>N° Pièce</th>
+                                                            <th>Date </th>
+                                                            <th>Montant TTC</th>
+                                                            <th>Periode</th>
+                                                            <th></th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+
+                                                        @foreach (var Facturesitem in ViewBag.Factures)
+                                                        {
+                                                            <tr>
+
+                                                                <td>
+                                                                    @Facturesitem.FactureStatut
+                                                                </td>
+                                                                <td>
+                                                                    @Facturesitem.FacturePiece
+                                                                </td>
+                                                                <td>
+                                                                    @Facturesitem.DateFacture
+                                                                </td>
+                                                                <td>
+                                                                    @Facturesitem.FactureTotalTTC
+                                                                </td>
+
+                                                                <td>Du @Facturesitem.DO_DebutPeriod.ToString("dd/MM/yyyy") au @Facturesitem.DO_FinPeriod.ToString("dd/MM/yyyy")  </td>
+                                                                <td>
+
+                                                                    <a href="/GestionFactures/VisualiserFacture/@Facturesitem.FactureId" target="_blank" class="btn btn-outline btn-greenbee">
+                                                                        <i class="fa fa-eye"> Visualiser </i>
+                                                                    </a>
+
+
+
+
+                                                                </td>
+                                                            </tr>
+                                                        }
+                                                    </tbody>
+
+                                                </table>
+
+
+                                            </div>
+                                            <!--Fin Commercial-->
+                                            <div class="tab-pane" id="tab-avoir">
+
+                                                <table class="table table-striped table-hover" id="factureAvoir">
+                                                    <thead>
+                                                        <tr>
+
+                                                            <th>Statut</th>
+                                                            <th>N° Pièce</th>
+                                                            <th>Date </th>
+                                                            <th>Montant TTC</th>
+                                                            <th></th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+
+                                                        @foreach (var Facturesitem in ViewBag.FacturesAvoir)
+                                                        {
+                                                            <tr>
+
+                                                                <td>
+                                                                    @Facturesitem.FactureStatut
+                                                                </td>
+                                                                <td>
+                                                                    @Facturesitem.FacturePiece
+                                                                </td>
+                                                                <td>
+                                                                    @Facturesitem.DateFacture
+                                                                </td>
+                                                                <td>
+                                                                    @Facturesitem.FactureTotalTTC
+                                                                </td>
+                                                                <td>
+                                                                    <a href="/GestionFactures/VisualiserFactureAvoir/@Facturesitem.FactureId" target="_blank" class="btn btn-outline btn-greenbee">
+                                                                        <i class="fa fa-eye"> Visualiser </i>
+                                                                    </a>
+                                                                </td>
+                                                            </tr>
+                                                        }
+                                                    </tbody>
+
+                                                </table>
+
+
+                                            </div>
+
+                                            <!--Bon livraison-->
+                                            <div class="tab-pane" id="tab-7">
+
+                                                <table class="table table-striped table-hover" id="BonSortie">
+                                                    <thead>
+                                                        <tr>
+
+                                                            <th>Artcile</th>
+                                                            <th>Numéro série</th>
+                                                            <th>Voir</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        @if (ViewBag.BonSortie != null)
+                                                        {
+                                                            foreach (var BonSortiesitem in ViewBag.BonSortie)
+                                                            {
+                                                                if (BonSortiesitem != null)
+                                                                {
+                                                                    <tr>
+
+                                                                        <td>
+                                                                            @BonSortiesitem.DO_Piece
+                                                                        </td>
+                                                                        <td>
+                                                                            @BonSortiesitem.ArticleName
+                                                                        </td>
+                                                                        <td>
+                                                                            @BonSortiesitem.NoSerie
+                                                                        </td>
+                                                                        <td>
+                                                                            <a class="btn btn-purplebee  btn-circle  btn-outline" title="voir" href="/DocumentsVente/ImprimerBL/@BonSortiesitem.cbMarq" target="_blank"><i title="Imprimer BL " class="fa fa-print"></i></a>
+                                                                        </td>
+
+                                                                    </tr>
+                                                                }
+                                                            }
+                                                        }
+                                                    </tbody>
+
+                                                </table>
+
+
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+
+        @if (ViewBag.Adresses != null)
+        {
+            foreach (var Adresse in ViewBag.Adresses)
+            {
+
+                <div class="modal inmodal" id="myModal" tabindex="-1" role="dialog" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content animated bounceInRight">
+
+                            <div class="modal-body">
+
+
+
+                                <div class="row">
+
+
+                                    <div class="form-group">
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label class="control-label">Adresse</label>
+
+                                                @Adresse.LI_Adresse
+
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-white" data-dismiss="modal">Annuler</button>
+
+                                        <input type="submit" class="btn btn-success" value="Enregister" />
+
+                                    </div>
+                                </div>
+
+
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+            }
+        }
+    </div>
+
+</div>
+<div class="modal inmodal" id="NouvelleAdresse" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content animated flipInX">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Ok</span></button>
+                <h4 class="modal-title">Ajouter Adresse </h4>
+            </div>
+            <div class="modal-body">
+                @using (Html.BeginForm("AjoutAdresse", "Structure", FormMethod.Post))
+                {
+
+                    @Html.HiddenFor(Model => Model.CT_Num)
+
+
+                    <div class="row">
+                        <div class="form-group col-xs-6">
+                            <label class="col-sm-5 control-label">Adresse <sup>*</sup></label>
+                            <div class="col-sm-7">
+                                <textarea class="form-control" name="LI_Adresse" id="LI_Adresse" maxlength="34" required></textarea>
+                            </div>
+                        </div>
+                        <div class="form-group col-xs-6">
+                            <label class="col-sm-5 control-label">Complement Adresse</label>
+
+                            <div class="col-sm-7">
+                                <textarea class="form-control" name="LI_Complement" id="LI_Complement" maxlength="34">  </textarea>
+                                @*@Html.TextAreaFor(m => Model.CT_Complement, new { @class = "form-control", id = "CT_Complement", name = "CT_Complement" })
+                                    @Html.ValidationMessageFor(model => Model.CT_Complement, "", new { @class = "text-danger" })*@
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-xs-6">
+                            <label class="col-sm-5 control-label">Pays</label>
+
+                            <div class="col-sm-7">
+                                @*@Html.TextAreaFor(m => Model.CT_Pays, new { id = "CT_Pays", @placeholder = "CT_Pays...", @class = "form-control" })*@
+
+
+                                <input type="text" class="form-control" name="LI_Pays" id="LI_Pays" value="Tunisie" required>
+                            </div>
+                        </div>
+                        <div class="form-group col-xs-6">
+                            <label class="col-sm-5 control-label" required>Région</label>
+                            <div class="col-sm-7">
+                                <select class="form-control" id="search" name="LI_Gouvernorat" required>
+                                    <option selected="selected">-- Choisir --</option>
+                                    @foreach (var item in ViewBag.Gouvernoratt)
+                                    {
+                                        <option value="@item.Gouvernorat">@item.Gouvernorat</option>
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-xs-6">
+                            <label class="col-sm-5 control-label">Ville</label>
+
+                            <div class="col-sm-7">
+                                <select class="form-control" name="LI_Ville" id="LI_Ville" required></select>
+                            </div>
+                        </div>
+                        <div class="form-group col-xs-6">
+                            <label class="col-sm-5 control-label">Cité</label>
+
+                            <div class="col-sm-7">
+                                <select class="form-control" name="LI_Localite" id="Localite" required></select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-xs-6">
+                            <label class="col-sm-5 control-label">Code postal</label>
+                            <div class="col-sm-7">
+                                <input type="text" class="form-control" name="LI_CodePostal" id="LI_CodePostal" required>
+                            </div>
+                        </div>
+                        <div class="form-group col-xs-6">
+
+                            <label class="col-sm-5 control-label">Code Région</label>
+                            <div class="col-sm-7">
+                                <select class="form-control" name="LI_CodeRegion" id="LI_CodeRegion" required>
+                                    @foreach (var item in ViewBag.CodesRegions)
+                                    {
+                                        <option value="@item.R_CodeRegion" name="LI_CodeRegion"> @item.R_Intitule</option>
+                                    }
+                                </select>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-white" data-dismiss="modal">Annuler</button>
+
+
+                        <button type="submit" class="btn btn-primary ladda-button " data-style="expand-right">Ajouter </button>
+
+
+                    </div>
+
+                }
+            </div>
+
+        </div>
+
+    </div>
+</div>
+<div class="modal inmodal" id="AjoutNumero" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content animated flipInX">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Ok</span></button>
+                <h4 class="modal-title">Ajouter Numero de telephone  </h4>
+            </div>
+            <div class="modal-body">
+                @using (Html.BeginForm("AjoutNumero", "Structure", FormMethod.Post))
+                {
+                    @Html.HiddenFor(Model => Model.CT_Num)
+                    <div class="row">
+                        <div class="form-group col-xs-6">
+                            <label class="col-sm-5 control-label"> Nom et prenom</label>
+                            <div class="col-sm-7">
+                                <input type="text" class="form-control" name="CT_Nom" id="CT_Nom" required>
+                            </div>
+                        </div>
+                        <div class="form-group col-xs-6">
+                            <label class="col-sm-5 control-label">Civilité</label>
+                            <div class="col-sm-7">
+                                <select class="form-control" name="CT_Civilite" id="CT_Civilite">
+                                    <option value=0>Mr.</option>
+                                    <option value=1>Mme</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-xs-6">
+                            <label class="col-sm-5 control-label"> Telephone</label>
+                            <div class="col-sm-7">
+                                <input type="number" class="form-control" inputMode="numeric" name="CT_Telephone1" id="CT_Telephone1" pattern="[0-9]*" min="8" max="99999999" required>
+                            </div>
+                        </div>
+                        <div class="form-group col-xs-6">
+                            <label class="col-sm-5 control-label">Email</label>
+                            <div class="col-sm-7">
+                                <input type="email" class="form-control" name="CT_EMail" id="CT_EMail" value="@Model.CT_EMail">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-white" data-dismiss="modal">Annuler</button>
+                        <button type="submit" class="btn btn-primary ladda-button " data-style="expand-right">Ajouter </button>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+<input id="cbmDet" class="hidden" />
+<!-- Toastr script -->
+<script src="~/js/plugins/toastr/toastr.min.js"></script>
+<script src="~/js/plugins/dataTables/datatables.min.js"></script>
+<script src="~/js/jquery-3.1.1.min.js"></script>
+<script src="~/js/plugins/metisMenu/jquery.metisMenu.js"></script>
+<script src="~/js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+<script src="~/js/plugins/dataTables/datatables.min.js"></script>
+<script src="~/js/accounting.js"></script>
+<script src="~/js/accounting.min.js"></script>
+<!-- Chosen -->
+<script src="~/js/plugins/chosen/chosen.jquery.js"></script>
+<!-- Sweet alert -->
+<script src="~/js/plugins/sweetalert/sweetalert.min.js"></script>
+<!-- Mainly scripts -->
+@*<script src="~/js/jquery-3.1.1.min.js"></script>
+    <script src="~/js/bootstrap.min.js"></script>
+    <script src="~/js/plugins/metisMenu/jquery.metisMenu.js"></script>
+    <script src="~/js/plugins/slimscroll/jquery.slimscroll.min.js"></script>*@
+<!-- Nestable List -->
+<script src="~/js/plugins/nestable/jquery.nestable.js"></script>
+<script>
+    @*function getInformationClient() {
+
+        $.ajax({
+            type: "get",
+            url: '@Url.Action("isClientExists")', // we are calling json method
+            dataType: 'json',
+            success: function (msg) {
+                if (msg.result == 0) {
+                    $("#CT_Intitule").val(msg.data.CT_Intitule);
+                    $("#CT_Ville").val(msg.data.CT_Ville);
+                    $("#CT_CodePostal").val(msg.data.CT_CodePostal);
+                    $("textarea#CT_Adresse").val(msg.data.CT_Adresse);
+                }
+            }
+        });
+    }*@
+      $('#search').change(function () {
+                //  $('#selectCP').addClass('chosen-select');
+                region = $('select#search').find("option:selected").val();
+                getRegion();
+                // alert(region);
+            });
+            function getRegion() {
+                $.ajax({
+                    type: "get",
+                    url: '@Url.Action("isRegionExists")', // we are calling json method
+                    dataType: 'json',
+                    data: { identifiant: $('select#search').find("option:selected").val() },
+                    success: function (msg) {
+                        if (msg.result == 0) {
+                            var len = msg.data.length;
+                            $("#LI_Ville").empty();
+                            $("#LI_Ville").append("<option>-- Choisir --</option>");
+                            for (var i = 0; i < len; i++) {
+                                $("#LI_Ville").append("<option value='" + msg.data[i].trim() + "'>" + msg.data[i].trim() + "</option>");
+                            }
+                        }
+                    }
+                });
+            }
+            @*---------------------------------------------------- 19/08/2019 manel ---------------------------------------------------------------*@
+    $('#LI_Ville').change(function () {
+                //  $('#selectCP').addClass('chosen-select');
+                ville = $('select#LI_Ville').val();
+                getCitee();
+               // alert(ville);
+            });
+            function getCitee() {
+                $.ajax({
+                    type: "get",
+                    url: '@Url.Action("isCiteeExists")', // we are calling json method
+                    dataType: 'json',
+                    data: { identifiant: $('select#LI_Ville').find("option:selected").val() },
+                    success: function (msg) {
+                        if (msg.result == 0) {
+                            var len = msg.data.length;
+                            $("#Localite").empty();
+                            $("#Localite").append("<option>-- Choisir --</option>");
+                            for (var i = 0; i < len; i++) {
+                                $("#Localite").append("<option value='" + msg.data[i].trim() + "'>" + msg.data[i].trim() + "</option>");
+                            }
+                        }
+                    }
+                });
+            }
+            $('#Localite').change(function () {
+                //  $('#selectCP').addClass('chosen-select');
+                citee = $('select#Localite').val();
+                getCodepostal();
+                // alert(ville);
+            });
+            function getCodepostal() {
+                $.ajax({
+                    type: "get",
+                    url: '@Url.Action("isCodePostalExists")', // we are calling json method
+                    dataType: 'json',
+                    data: { identifiant: $('select#Localite').find("option:selected").val() },
+                    success: function (msg) {
+                        if (msg.result == 0) {
+                            $("#LI_CodePostal").val(msg.data);
+                        }
+                    }
+                });
+            }
+    function SupprimerAdresse(data) {
+        swal({
+            title: "Etes vous sûr?",
+            text: "Supprimer Adresse ?",
+            type: "warning",
+            showCancelButton: true,
+            cancelButtonText: 'Annuler',
+            confirmButtonColor: "#DD6B55",
+            confirmButtonText: "Supprimer.",
+            closeOnConfirm: false
+        }, function () {
+            $.ajax({
+                type: "get",
+                url: "/Structure/SupprimerAdresse?id=" + data,
+                dataType: 'json',
+                success: function (result) {
+                    if (result == 0) {
+                        swal("Supprimer!", "Adresse Supprimer avec success! ", "success");
+                    }
+                    else {
+                        swal({
+                            title: "Adresse n'a pas été Supprimer.",
+                            text: "Ok",
+                            type: "warning"
+                        });
+                        window.location = "/Structure/DetailsClient";
+
+                    }
+                }
+            });
+        });
+    }
+</script>
+<script>
+         $(document).ready(function(){
+             var updateOutput = function (e) {
+                 var list = e.length ? e : $(e.target),
+                         output = list.data('output');
+                 if (window.JSON) {
+                     output.val(window.JSON.stringify(list.nestable('serialize')));//, null, 2));
+                 } else {
+                     output.val('JSON browser support required for this demo.');
+                 }
+             };
+             // activate Nestable for list 1
+             $('#nestable').nestable({
+                 group: 1
+             }).on('change', updateOutput);
+
+             // activate Nestable for list 2
+             $('#nestable2').nestable({
+                 group: 1
+             }).on('change', updateOutput);
+             // output initial serialised data
+             updateOutput($('#nestable').data('output', $('#nestable-output')));
+             updateOutput($('#nestable2').data('output', $('#nestable2-output')));
+
+             $('#nestable-menu').on('click', function (e) {
+                 var target = $(e.target),
+                         action = target.data('action');
+                 if (action === 'expand-all') {
+                     $('.dd').nestable('expandAll');
+                 }
+                 if (action === 'collapse-all') {
+                     $('.dd').nestable('collapseAll');
+                 }
+             });
+         });
+         function SuppressionNumero(cbMarq){
+             //$("#SupprimerNumero").modal();
+            // $('.SupprimerNumero1').click(function () {
+                 $.ajax({
+                     type: "get",
+                     url: '@Url.Action("SupprimerNumero")', // we are calling json method
+                     data: {cbMarq:@Model.cbMarq, CbmarqNumero: cbMarq, allowGeneration: false },
+                     dataType: 'json',
+                     success: function (msg) {
+                         if (msg.result == 1) {
+                             swal("Supprimer!", "Numero client supprimé avec succès ! ", "success");
+                             swal({
+                                 title: "Supprimer ",
+                                 text: " ",
+                                 type: "success",
+                                 showCancelButton: true,
+                                 confirmButtonColor: "#DD6B55",
+                                 confirmButtonText: "Oui",
+                                 closeOnConfirm: false,
+                                 showCancelButton: false,
+                             },
+                             function () {
+                                 swal("Numero client supprimé", " ", "success");
+                                 location.reload();
+                             });
+                         }
+                         else {
+                             swal({
+                                 title: "Echec",
+                                 text: "Un problème est survenu " + msg.msg,
+                                 type: "danger"
+                             });
+                         }
+                     }
+             //    });
+
+
+             });
+         }
+
+</script>

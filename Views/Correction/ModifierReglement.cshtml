@@ -1,0 +1,255 @@
+﻿@model IEnumerable<BeeProj.ViewModels.Reglement>
+@{
+    ViewBag.Title = "ModifierReglement";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-lg-10">
+        <h2>Modifier réglement</h2>
+        <ol class="breadcrumb">
+            <li>
+                <a href="@Url.Action("index","Administration")">Administration </a>
+            </li>
+            <li>
+                <a href="@Url.Action("index","Correction")">Correction </a>
+            </li>
+            <li class="active">
+                <strong> <a href="@Url.Action("ModifierReglement","Correction")">Modifier Réglement</a></strong>
+            </li>
+        </ol>
+    </div>
+</div>
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-lg-12">
+            @if (ViewBag.existepas != null)
+            {
+                <div class="alert alert-danger alert-dismissable">
+                    <button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>
+                    Aucun réglement existe avec les information saisies !
+                </div>
+            }    
+            @if (TempData["MSG"] != null)
+            {
+                <div class="alert alert-warning alert-dismissable">
+                    <button type="button" class="close " data-dismiss="alert"> × </button>
+                    <p class="text-danger">@TempData["MSG"]</p>
+                </div>
+
+            }        
+            <div class="ibox float-e-margins">
+                <div class="ibox-title" style="height:80px;">
+                    @using (Html.BeginForm("ModifierReglement", "Correction", FormMethod.Post))
+                    {
+                        <label class="control-label">Recherche par réglement </label>
+                        <div class="input-group m-b">
+                           
+                                <input type="text" class="form-control" id="Recherche" name="Recherche" value="" />
+                            
+                            <span class="input-group-btn">
+                                <button type="submit" class="btn btn-purplebee ladda-button">Rechercher!</button>
+                            </span>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        @if (Model != null)
+        {
+            using (Html.BeginForm("ChangerReglement", "Correction", FormMethod.Post, new { id = "popupForm" }))
+            {
+                <div class="wrapper wrapper-content animated fadeInRight">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="ibox float-e-margins">
+                                <div class="ibox-title">
+                                    <h5>Informations Réglement </h5>
+                                </div>
+                                <div class="ibox-content">
+                                    <table class="table table-striped table-bordered table-hover dataTables-example">
+                                        <thead>
+                                            <tr>
+                                                <th>Client</th>
+                                                <th>Numero de Réglement</th>
+                                                <th>Abonnement </th>
+                                                <th>Montant </th>
+                                                <th>Agence</th> 
+                                                <th>Collaborateur</th> 
+                                                <th>Action</th>
+                                            </tr>
+                                        <tbody>
+                                            @foreach (var item in Model)
+                                            {
+                                                <tr>
+                                                    <td>
+                                                        <span>@item.IntituleClient</span>
+                                                    </td>
+                                                    <td name="NumReglement">
+                                                        <a href="@Url.Action("ImpressionRecu", "GestionFactures", new { id = item.CbMarq })" title="Voir détails réglement">
+                                                            @item.NumReglement
+                                                        </a>
+                                                    </td>                                                    
+                                                    <td>
+                                                        <a href=@Url.Action("Details/" + ViewBag.abo.cbMarq, "Abonnement") target="_blank">
+                                                            @item.Abonnement
+                                                        </a>
+                                                    </td>
+                                                    <td>
+                                                        @*<input type="text" pattern="\d*([,\/]?\d+)" name="Montant" class="form-control" value="@String.Format("{0:N3}", item.Montant)">*@
+                                                        <input  min="-5000000" max="5000000"  name="Montant" class="form-control" value="@String.Format("{0:N3}", item.Montant)">
+
+                                                    </td>
+                                                    <td>
+                                                        <select class="col-md-6 form-control chosen-select" id="CodeAgence" name="CodeAgence">
+                                                            @foreach (var item1 in ViewBag.Agences)
+                                                            {
+                                                                if (item1.A_Code == item.CodeAgence)
+                                                                {
+                                                                    <option class="font-bold" id="CodeAgence" value="@item1.A_Code" selected> @item1.A_Intitule </option>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <option class="font-bold" id="CodeAgence" value="@item1.A_Code"> @item1.A_Intitule </option>
+                                                                }
+                                                            }
+                                                        </select>
+                                                    </td>
+                                                    <td>                                                        
+                                                        <select class="form-control" @*value="@item.Collaborateur"*@ name="Collaborateur" id="Collaborateur">
+                                                            <option class="font-bold" id="Collaborateur" value="@item.Collaborateur"> @item.Collaborateur </option>
+                                                        </select>
+                                                    </td>
+                                                    <td>
+                                                        <center>
+                                                            <button type="submit" class="btn btn-purplebee ladda-button" name="CbMarq" value="@item.CbMarq">
+                                                                <i class="fa fa-save"></i> Modifier
+                                                            </button>
+                                                        </center>
+                                                    </td>
+                                                </tr>
+                                            }
+
+                                        </tbody>
+                                    </table>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+    </div>
+</div>
+
+
+
+<script src="~/js/jquery-3.1.1.min.js"></script>
+<script src="~/js/plugins/metisMenu/jquery.metisMenu.js"></script>
+<script src="~/js/plugins/pace/pace.min.js"></script>
+<script src="~/js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+<script src="~/js/plugins/chosen/chosen.jquery.js"></script>
+<script src="~/js/plugins/dataTables/datatables.min.js"></script>
+<!-- Sweet alert -->
+<script src="~/js/plugins/sweetalert/sweetalert.min.js"></script>
+<!-- Chosen -->
+<script src="~/js/plugins/chosen/chosen.jquery.js"></script>
+<link href="~/css/plugins/ladda/ladda-themeless.min.css" rel="stylesheet">
+<!-- Ladda -->
+<script src="~/js/plugins/ladda/spin.min.js"></script>
+<script src="~/js/plugins/ladda/ladda.min.js"></script>
+<script src="~/js/plugins/ladda/ladda.jquery.min.js"></script>
+<script>
+
+    $(document).ready(function () {
+
+        // Bind normal buttons
+        Ladda.bind('.ladda-button', { timeout: 2000 });
+
+        // Bind progress buttons and simulate loading progress
+        Ladda.bind('.progress-demo .ladda-button', {
+            callback: function (instance) {
+                var progress = 0;
+                var interval = setInterval(function () {
+                    progress = Math.min(progress + Math.random() * 0.1, 1);
+                    instance.setProgress(progress);
+
+                    if (progress === 1) {
+                        instance.stop();
+                        clearInterval(interval);
+                    }
+                }, 200);
+            }
+        });
+
+
+        var l = Ladda.bind('.ladda-button-demo');
+
+        l.click(function () {
+            // Start loading
+            l.ladda('start');
+
+            // Timeout example
+            // Do something in backend and then stop ladda
+            setTimeout(function () {
+                l.ladda('stop');
+            }, 12000)
+
+
+        });
+
+    });
+
+
+    $(document).ready(function () {
+        $('.i-checks').iCheck({
+            checkboxClass: 'icheckbox_square-green',
+            radioClass: 'iradio_square-green'
+        });
+        $(".todo-list").sortable({
+            placeholder: "sort-highlight",
+            handle: ".handle",
+            forcePlaceholderSize: true,
+            zIndex: 999999
+        }).disableSelection();
+
+        $('.classDate').datepicker();
+
+        $('.i-checks').iCheck({
+            radioClass: 'iradio_square-green'
+        });
+        $('.chosen-select').chosen({ width: "100%" });
+
+
+    });
+    $('#CodeAgence').change(function () {
+        //  $('#selectCP').addClass('chosen-select');
+        region = $('select#CodeAgence').find("option:selected").val();
+        GetUser();
+        // alert(region);
+
+    });
+    function GetUser() {
+        $.ajax({
+            type: "get",
+            url: '@Url.Action("isCollaboExists")', // we are calling json method
+            dataType: 'json',
+            data: { identifiant: $('select#CodeAgence').find("option:selected").val() },
+            success: function (msg) {
+                if (msg.result == 0) {
+                    var len = msg.data.length;
+                    $("#Collaborateur").empty();
+                    $("#Collaborateur").append("<option>-- Choisir --</option>");
+                    for (var i = 0; i < len; i++) {
+                        $("#Collaborateur").append("<option value='" + msg.data[i].trim() + "'>" + msg.data[i].trim() + "</option>");
+                    }
+                }
+            }
+        });
+    } 
+</script>
+
+

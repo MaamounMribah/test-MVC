@@ -1,0 +1,2817 @@
+﻿
+@model BeeProj.Models.EngagementModel
+
+@{
+    ViewBag.Title = "Modifier abonnement";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<!-- Toastr style -->
+<link href="~/css/plugins/toastr/toastr.min.css" rel="stylesheet">
+<link href="~/css/plugins/datapicker/datepicker3.css" rel="stylesheet" />
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+<link href="~/css/plugins/chosen/bootstrap-chosen.css" rel="stylesheet">
+<link href="~/css/plugins/awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css" rel="stylesheet">
+<link href="~/css/plugins/iCheck/custom.css" rel="stylesheet">
+<!-- Sweet Alert -->
+<link href="~/css/plugins/sweetalert/sweetalert.css" rel="stylesheet">
+<!-- Ladda style -->
+<link href="~/css/plugins/ladda/ladda-themeless.min.css" rel="stylesheet">
+<link href="~/css/plugins/touchspin/jquery.bootstrap-touchspin.min.css" rel="stylesheet">
+<link href="~/css/plugins/jasny/jasny-bootstrap.min.css" rel="stylesheet">
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-lg-10">
+        <h2>Liste des abonnements</h2>
+        <ol class="breadcrumb">
+            <li>
+                <a href="#">Acceuil</a>
+            </li>
+            <li>
+                <a href="@Url.Action("ListeAbonnement", "Abonnement")">Gestion des abonnements</a>
+            </li>
+            <li class="active">
+                <strong>Modification abonnement </strong>
+            </li>
+        </ol>
+    </div>
+
+</div>
+
+<div class="wrapper wrapper-content animated fadeInRight">
+
+    @if (ViewBag.AlerteSuspension)
+    {
+        <div class="alert alert-danger">
+            Alerte de résiliation. Cet abonnement a <strong>@ViewBag.NbFactureNonpayes</strong> factures non payées !!
+        </div>
+    }
+    @if (Model.DO_Etape == 2 && (String.IsNullOrEmpty(Model.DO_RefTT) || String.IsNullOrEmpty(Model.CT_Telephone)))
+    {
+        <div class="alert alert-warning alert-dismissable">
+            <p class="text-danger">Merci de renseigner les champs: Numéro fixe et Référence TT de l'abonnement .</p>
+        </div>
+
+    }
+
+ 
+    @if (ViewBag.Article == 0)
+    {
+        <div class="alert alert-success">
+            <p>Cet abonnement requiet un paiement spécial. </p>
+        </div>
+    }
+
+    @if (ViewData.ModelState[""] != null && ViewData.ModelState[""].Errors.Count > 0)
+    {
+        <div class="alert alert-warning alert-dismissable">
+            <button type="button" class="close " data-dismiss="alert"> × </button>
+            @Html.ValidationSummary("", new { @class = "text-danger" })
+        </div>
+    }
+    @if (TempData["MSG"] != null)
+    {
+        <div class="alert alert-danger alert-dismissable">
+            <button type="button" class="close " data-dismiss="alert">×</button>
+            <p>@TempData["MSG"] </p>
+        </div>
+    }
+
+    @if (ViewBag.ErreurFacture != null)
+    {
+        <div class="alert alert-danger alert-dismissable">
+            <button type="button" class="close " data-dismiss="alert">×</button>
+            <p>@ViewBag.ErreurFacture</p>
+        </div>
+    }
+    @if (ViewBag.AucunArticleLie != null)
+    {
+        <div class="alert alert-info alert-dismissable">
+            <button type="button" class="close " data-dismiss="alert">×</button>
+            <p>@ViewBag.AucunArticleLie</p>
+        </div>
+    }
+
+    @if (Model.DO_FinAbo != Convert.ToDateTime("01/01/1900") && Model.Resilie == 0)
+    {
+        <div class="alert alert-info alert-dismissable">
+            <p>L'abonnement est terminé. le @Model.DO_FinAbo.GetValueOrDefault().ToString("dd/MM/yyyy")</p>
+        </div>
+    }
+
+    @if (Model.Resilie == 1)
+    {
+        <div class="alert alert-danger alert-dismissable">
+            <p>L'abonnement a été  résilié. le @Model.DO_FinAbo.GetValueOrDefault().ToString("dd/MM/yyyy")</p>
+        </div>
+    }
+
+
+    @if (TempData["MSGNS"] != null)
+    {
+        <div class="alert alert-warning alert-dismissable">
+            <button type="button" class="close " data-dismiss="alert"> × </button>
+            <p class="text-danger">@TempData["MSGNS"]</p>
+        </div>
+
+    }
+
+    @if (TempData["MSGBR"] != null)
+    {
+        <div class="alert alert-warning alert-dismissable">
+            <button type="button" class="close " data-dismiss="alert"> × </button>
+            <p class="text-danger">@TempData["MSGBR"]</p>
+        </div>
+
+    }
+    @if (TempData["MSGBRR"] != null)
+    {
+        <div class="alert alert-warning alert-dismissable">
+            <button type="button" class="close " data-dismiss="alert"> × </button>
+            <p class="text-danger">@TempData["MSGBRR"]</p>
+        </div>
+
+    }
+    @if (TempData["MSGAn"] != null)
+    {
+        <div class="alert alert-warning alert-dismissable">
+            <button type="button" class="close " data-dismiss="alert"> × </button>
+            <p class="text-danger">@TempData["MSGAn"]</p>
+        </div>
+
+    }
+    @if (TempData["MSGRetourResiliation"] != null)
+    {
+        <div class="alert alert-warning alert-dismissable">
+            <button type="button" class="close " data-dismiss="alert"> × </button>
+            <p class="text-danger">@TempData["MSGRetourResiliation"]</p>
+        </div>
+
+    }
+    <div class="row">
+        <div class="col-lg-9">
+            <div class="wrapper wrapper-content animated fadeInUp">
+
+                <div class="ibox">
+
+
+                    <div class="ibox-content">
+                        <code id="is_suspendu_container" class="pull-right"></code>
+
+
+                        @if (Model.TypeAbonnement == 9)
+                        {
+                            <div class="alert alert-warning alert-dismissable">
+                                <button type="button" class="close " data-dismiss="alert"> × </button>
+                                Cet abonnement a été crée par la Poste Tunisienne.
+                            </div>
+                        }
+                        @if (Model.TypeAbonnement == 2)
+                        {
+                            <div class="alert alert-warning alert-dismissable">
+                                <button type="button" class="close " data-dismiss="alert"> × </button>
+                                Cet abonnement a été crée suite à une migration débit.
+                            </div>
+                        }
+
+                        @if (Model.TypeAbonnement == 5)
+                        {
+                            <div class="alert alert-warning alert-dismissable">
+                                <button type="button" class="close " data-dismiss="alert"> × </button>
+                                Cet abonnement a été crée suite à une demande de transfert de ligne.
+                            </div>
+                        }
+                        @if (Model.AP_APPRO != null)
+                        {<div class="row">
+                            <div class="alert alert-info alert-dismissable">
+                                <button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>
+                                Une demande d'appro. à été envoyée.  une notification vous sera envoyée dès que l'article est disponible dans votre stock.
+
+                                Cliquez <a class="alert-link" href="@Url.Action("DetailDemandeAppro", "Interne", new { id = Model.AP_APPRO })"> ici </a> pour voir la demande d'appro. envoyée.
+                            </div>
+                        </div>
+                        }
+
+                        @if (Model.DO_Statut == 5 || Model.DO_Statut == 6)
+                        {
+                            <div class="alert alert-info alert-dismissable">
+                                <button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>
+                                N.B: Vérifier la solvabilité du client et mettre à jour le statut de l'abonnement.
+                            </div>
+                        }
+
+
+                        <br />
+
+
+                        <div class="row">
+                            @if (ViewBag.AtteintSeuil)
+                            {
+                                <div class="alert alert-danger">
+                                    <strong>Vous avez atteint le seuil des paiement non versés! Merci d'effectuer vos versements.</strong>
+
+                                </div>
+                            }
+                            @using (Html.BeginForm("SaveRefandTel", "AbonnementSales", FormMethod.Post, new { @class = "form-horizontal", role = "form", enctype = "multipart/form-data" }))
+                            {
+
+                                @Html.HiddenFor(model => model.cbMarq)
+                                
+
+                                <div class="progress progress-striped">
+                                    <div style="width: @Model.A_Pourcent%;" aria-valuemax="100" aria-valuemin="0"
+                                         aria-valuenow="50" role="progressbar" class="progress-bar progress-bar-navy-light active">
+                                        <span class="sr-only">@Model.A_Pourcent%</span>
+                                    </div>
+                                </div>
+
+                                <div class="form-group col-xs-6">
+                                    <label class="col-md-6 control-label">Réf Abonnement TT:</label>
+
+                                    <div class="col-md-6"><input type="text" class="form-control" name="DO_Ref" id="DO_Ref" value="@Model.DO_Ref"></div>
+                                </div>
+
+                                <div class="form-group col-xs-4">
+                                    <label class="col-md-4 control-label">Téléphone:</label>
+
+                                    <div class="col-md-8">
+                                        <input type="text" class="form-control" data_mask="99999999" name="aboTel" id="aboTel" value="@Model.aboTel" maxlength="8">
+                                    </div>
+
+                                </div>
+
+
+                                <div class="form-group col-xs-2">
+                                    <button class="btn btn-danger btn-circle btn-outline" type="submit">
+                                        <i class="fa fa-edit"></i>
+                                    </button>
+                                </div>
+
+                            }
+
+
+                            @if (Model.DO_Valide == 0 && Model.DO_Etape <= 5 && Model.DO_Etape != 8 && (User.IsInRole("Admin") || User.IsInRole("ChangerParametreAbonnement")))
+                            {
+                                <button type="button" class="btn btn-sm btn-outline btn-purplebee pull-right  m-l-sm"
+                                        title="changer informations abonnements"
+                                        data-toggle="modal"
+                                        data-target="#ChangerInformationAbonnement">
+
+                                    <i class="fa fa-pencil"></i>
+                                    changer informations abonnements
+                                </button>
+                                <br />
+
+                            }
+                            <br />
+
+                        </div>
+
+                        <div class="row">
+                            @*manel*@
+                            @if (Model.TypeAbonnement == 9)
+                            {
+
+                                <a class="btn btn-purplebee  dim" title="Imprimer Facture" data-toggle="modal" data-target="#ListeFactures">
+                                    <i title="Imprimer Facture " class="fa fa-print"></i>
+                                </a>
+                                <a class="btn btn-purplebee dim" title="Imprimer Contrat" href="@Url.Action("ImprimerContrat","Abonnement", new { id = @Model.cbMarq  })" target="_blank">
+                                    <i title="Imprimer Contrat" class="fa fa-edit"></i>
+                                </a>
+
+                            }
+
+
+                            @*manel*@
+
+                            @if ((Model.DO_Etape > 4 && Model.DO_Etape != 8))
+                            {
+                                @*manel*@
+                            if (Model.DO_Valide == 1 && Model.TypeAbonnement != 9)
+                            {
+
+                                <a class="btn btn-purplebee  dim" title="Imprimer Facture" data-toggle="modal" data-target="#ListeFactures">
+                                    <i title="Imprimer Facture " class="fa fa-print"></i>
+                                </a>
+                            }
+
+
+                            else if (Model.DO_Etape == 5 @*&& Model.DO_Statut == 1*@ && Model.TypeAbonnement != 9 && Model.Resilie == 0 && (User.IsInRole("Admin") || User.IsInRole("Paiement et Livraison")))
+                            {
+
+                                if (!ViewBag.AtteintSeuil)
+                                {
+                                    if (ViewBag.Article == 0)
+                                    {
+                                        <a class="btn btn-purplebee dim" title="Paiement et livraison" href=@Url.Action("PaiementSpecial", "Abonnement", new { id = Model.cbMarq })>Paiement&Livraison</a>
+                                    }
+                                    else
+                                    {
+                                        <a class="btn btn-purplebee  dim" title="Paiement et livraison" data-toggle="modal"
+                                           data-target="#ModifierAboPaiementLivraisons">
+                                            Paiement&Livraison
+                                        </a>
+                                    }
+                                }
+                            }
+
+
+
+                            else if (Request.IsAuthenticated && (User.IsInRole("Admin")) && Model.DO_Etape < 7
+                                && Model.TypeAbonnement != 9 && Model.Resilie == 0)
+                            {
+                                <a class="btn btn-purplebee  dim" title="Imprimer Votre première Facture" data-toggle="modal"
+                                   data-target="#ModifierAboConfirmerFact">
+                                   Facturation
+                                </a>
+                                }
+
+                            }
+                            @if ((User.IsInRole("Admin") || User.IsInRole("RetourEtapeReservation")) && Model.DO_Etape == 5 && Model.DO_Statut == 1 && Model.TypeAbonnement != 9 && Model.Resilie == 0)
+                            {
+                                <button type="button" title="Retour à l'étape précedente" class="btn btn-sm btn-outline btn-greenbee pull-right  m-l-sm" data-toggle="modal" data-target="#RetourEtape">
+                                    <i class="fa fa-arrow-circle-o-right"></i>Retour
+                                </button>
+                            }
+                            @if ((User.IsInRole("Admin") || User.IsInRole("RetourEtapeFacturation")) && Model.DO_Etape == 6 && Model.DO_Statut == 3 && Model.TypeAbonnement != 9 && Model.Resilie == 0)
+                            {
+                                <button type="button" title="Retour a l'etape précedente" class="btn btn-sm btn-outline btn-greenbee pull-right  m-l-sm" data-toggle="modal" data-target="#RetourEtapeFact">
+                                    <i class="fa fa-arrow-circle-o-right"></i>Retour
+                                </button>
+                            }
+                            @if ((Model.DO_Etape >= 5 && Model.DO_Statut > 1) || Model.TypeAbonnement == 9)
+                            {
+
+                                <a class="btn btn-purplebee  dim" title="Imprimer les BL" data-toggle="modal" data-target="#ListeBL">
+                                    <i title="Imprimer BL " class="fa fa-files-o"></i>
+                                </a>
+                            }
+
+
+
+                            @if (Model.DO_Etape > 5 && Model.TypeAbonnement != 9)
+                            {
+                                <a class="btn btn-purplebee dim" title="Imprimer Contrat" href="@Url.Action("ImprimerContrat","Abonnement", new { id = @Model.cbMarq  })" target="_blank">
+                                    <i title="Imprimer Contrat" class="fa fa-edit"></i>
+                                </a>
+                            }
+                            @if (Model.DO_Valide == 1 && Model.Resilie == 0 && User.IsInRole("Admin") || (User.IsInRole("SuspensionAbonnement")))
+                            {
+                                if (Model.DO_Valide == 1 && Model.DO_FinAbo == Convert.ToDateTime("01/01/1900"))
+                                {
+                                    <button class="btn btn-warning btn-sm suspendrefacturation">Suspendre la facturation</button>
+                                }
+                                else
+                                {
+                                    <button class="btn btn-success btn-sm reactiverfacturation">Réactiver la facturation</button>
+                                }
+                            }
+
+
+                            @if (Model.DO_Etape > 5 && Model.Resilie == 0 && User.IsInRole("Admin") || (User.IsInRole("ResiliationAbonnement")))
+                            {
+                                <button type="button" title="Résilie la demande d'abonnement" class="btn btn-sm btn-outline btn-danger pull-right  m-l-sm" data-toggle="modal" data-target="#ResilieAbo">
+                                    <i class="fa fa-times-circle "></i>
+                                    Résilier l'abonnement
+                                </button>
+
+                            }
+
+                            @if (Model.Resilie == 0 && (User.IsInRole("Admin") || (User.IsInRole("ChangementDateContrat"))))
+                            {
+                                <button type="button" data-toggle="modal" data-target="#Changerdatecontrat" title="Modifier remise abonnement "
+                                        class="btn btn-sm btn-outline btn-purplebee pull-right ">
+                                    Changer date contrat
+                                </button>
+                            }
+
+                            @if (Model.DO_Etape > 5 && Model.Resilie == 0 && User.IsInRole("Admin") || (User.IsInRole("Activation radius")))
+                            {
+                                <button type="button" title="Activation modem" class="btn btn-sm btn-success" data-toggle="modal" data-target="#ActiverRadius">
+                                    <i class="fa fa-spinner "></i>
+                                    Activer le modem
+                                </button>
+
+                            }
+
+                            <button type="button" class="btn btn-sm btn-outline btn-purplebee pull-right" data-toggle="modal" data-target="#ShowListeReglements">
+                                <i title="Reçu de paiement" class="fa fa-check">Reçu </i>
+                            </button>
+                        </div>
+
+
+                    </div>
+                </div>
+
+
+
+                @using (Html.BeginForm("ModifierSales", "AbonnementSales", FormMethod.Post, new { @class = "form-horizontal", role = "form", enctype = "multipart/form-data" }))
+                {
+
+                    @Html.HiddenFor(model => model.cbMarq)
+                    <div class="ibox">
+
+                        <div class="ibox-content">
+                            <div class="row">
+
+                                <div class="col-md-6">
+                                    <h3>Réf Abonnement: #@Model.DO_Piece</h3>
+                                    <input hidden value=@Model.DO_Etape id="DO_Etape" name="DO_Etape"/>
+
+                                    <input hidden value=@Model.AR_Ref id="AR_Ref" name="AR_Ref"/>
+                                </div>
+                                <div class="col-md-6">
+
+                                    @if (Model.Resilie == 0 && Model.DO_Valide == 1 && (User.IsInRole("Admin") || (User.IsInRole("RemiseAbonnement"))))
+                                    {
+
+                                        <button type="button" data-toggle="modal" data-target="#AppliquerRemise" title="Modifier remise abonnement "
+                                                class="btn btn-sm btn-outline btn-purplebee pull-right ">
+                                            <i class="fa fa-percent "></i> Appliquer une remise
+                                        </button>
+                                    }
+
+                                    @if (Model.Resilie == 0 && Model.DO_Valide == 1 && (User.IsInRole("Admin") || (User.IsInRole("ChangerParametreAbonnement"))))
+                                    {
+                                        @*if (ViewBag.DO_Cloture == 1 && Request.IsAuthenticated && (User.IsInRole("Admin") || User.IsInRole("Changement Periodicite")))*@
+                                        <button type="button" data-toggle="modal" data-target="#ChangementPeriodiciteModel" title="Modifier paramètre abonnement "
+                                                class="btn btn-sm btn-outline btn-greenbee pull-right ">
+                                            <i class="fa fa-money "></i> Modifier les paramètres de l'abonnement
+                                        </button>
+                                    }
+
+
+                                    @if (Model.DO_Etape <= 5 && (User.IsInRole("Admin") || User.IsInRole("AnnulerAbonnement")))
+                                    {
+                                        <button type="button" title="Annuler la demande d'abonnement" class="btn btn-sm btn-outline btn-danger pull-right  m-l-sm" data-toggle="modal" data-target="#AnnulerAbo">
+                                            <i class="fa fa-trash "></i> Annuler l'abonnement
+                                        </button>
+                                    }
+                                  
+
+                                    @if (Model.DO_Etape == 1)
+                                    {
+                                        <button type="button" class="btn btn-sm btn-outline btn-danger pull-right" id="ModifDebit" data-toggle="modal" data-target="#ModifierAboChangerDebit">
+
+                                            <i class="fa fa-save"></i>Enregistrer
+                                        </button>
+                                    }
+
+
+                                    @if (Model.DO_Etape < 4 && Model.DO_Etape !=1)
+                                    {
+                                        <button type="submit" class="btn btn-sm btn-outline btn-danger pull-right" >Enregistrer
+                                            <input type="text" hidden value="ModifierStatutAbo" id="choixBt" name="choixBt" />
+                                        </button>
+                                    }
+
+                                    @if (Model.DO_Etape == 4)
+                                    {
+                                        <button type="button" class="btn btn-sm btn-outline btn-danger pull-right" id="reservation" data-toggle="modal" data-target="#ModifierAboMiseEnservice">
+
+                                            <i class="fa fa-save"></i>Enregistrer
+                                        </button>
+                                    }
+
+                                    @if (Model.Resilie == 1 && (User.IsInRole("Admin")))
+                                    {
+                                        <button type="button" title="Annuler la demande d'abonnement" class="btn btn-sm btn-outline
+                                                btn-greenbee pull-right  m-l-sm AnnulerResiliation">
+                                            <i class="fa fa-trash "></i> Annuler la résiliation
+                                        </button>
+                                    }
+                                </div>
+                                <div class="modal inmodal" id="ModifierAboFrais" tabindex="-1" role="dialog" aria-hidden="true">
+                                    <div class="modal-dialog modal-lg">
+                                        <div class="modal-content animated flipInX">
+                                            <div class="modal-header">
+                                                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Ok</span></button>
+                                            </div>
+                                            <div class="modal-body">
+
+                                                <div class="form-group">
+                                                    <label class="col-sm-5 control-label">Frais d'installation ? </label>
+
+                                                    <div class="col-sm-7">
+
+                                                        @*<div class="i-checks">
+                                                                @Html.CheckBoxFor(model => model.FraisInstallation, new { @class = "control-control checkbox checkbox-success i-checks", @type = "checkbox" })
+                                                            </div>*@
+
+                                                        @if (ViewBag.HasFraisInst)
+                                                        {
+                                                            <input class="checkbox-inline i-checks" type="radio" checked value=true id="HasFraisInstallation" name="HasFraisInstallation"> <span>Oui </span>
+                                                            <input class="checkbox-inline i-checks" type="radio" value=false id="HasFraisInstallation" name="HasFraisInstallation"> <span> Non </span>
+
+                                                        }
+                                                        else
+                                                        {
+                                                            <input class="checkbox-inline i-checks" type="radio" value=true id="HasFraisInstallation" name="HasFraisInstallation"> <span>Oui </span>
+                                                            <input class="checkbox-inline i-checks" type="radio" value=false checked id="HasFraisInstallation" name="HasFraisInstallation"> <span> Non </span>
+                                                        }
+
+                                                    </div>
+                                                </div>
+
+
+                                                <div class="form-group">
+                                                    <label class="control-label">Commentaires</label>
+                                                    <div class="">
+                                                        <textarea type="text" id="AC_Notes" name="AC_Notes" class="form-control col-sm-pull-2"></textarea>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-white" data-dismiss="modal">Annuler</button>
+
+
+                                                <button type="submit" class="btn btn-primary ladda-button " data-style="expand-right">Enregistrer les modifications </button>
+
+
+
+
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                               
+
+
+                                <div class="col-lg-12">
+                                    <div class="form-group col-xs-5">
+                                        <label class="col-md-4 control-label">Statut:</label>
+
+                                        <div class="col-md-8">
+                                            @if (Model.DO_Etape == 0)
+                                            {
+                                                <select class="chosen-select form-control" id="DO_Statut" name="DO_Statut">
+                                                    @if (Model.DO_Statut == 0)
+                                                    {
+                                                        <option value=0 selected="selected"> Saisi</option>
+                                                        <option value=5> Faisabilité technique</option>
+                                                        <option value=6> Solvabilité Client </option>
+                                                        <option value=7> Validation Client </option>
+                                                    }
+                                                    else if (Model.DO_Statut == 5)
+                                                    {
+                                                        <option value=0> Saisi</option>
+                                                        <option value=5 selected="selected"> Faisabilité technique</option>
+                                                        <option value=6> Solvabilité Client </option>
+                                                        <option value=7> Validation Client </option>
+                                                    }
+                                                    else if (Model.DO_Statut == 7)
+                                                    {
+                                                        <option value=0> Saisi</option>
+                                                        <option value=5> Faisabilité technique</option>
+                                                        <option value=6> Solvabilité Client </option>
+                                                        <option value=7 selected="selected"> Validation Client </option>
+                                                    }
+
+                                                    else if (Model.DO_Statut == 6)
+                                                    {
+                                                        <option value=0> Saisi</option>
+                                                        <option value=5> Faisabilité technique</option>
+                                                        <option value=6 selected="selected"> Solvabilité Client </option>
+                                                        <option value=7> Validation Client </option>
+                                                    }
+                                                    else 
+                                                    {
+                                                        <option value=0> Saisi</option>
+                                                        <option value=5> Faisabilité technique</option>
+                                                        <option value=6 > Solvabilité Client </option>
+                                                        <option value=7 selected="selected"> Validation Client </option>
+                                                    }
+
+                                                    @*else
+                                                        {
+                                                        @*<option value=1> En Cours</option>
+                                                        <option value=2> En Attente</option>
+                                                        <option value=3> Validé</option>
+                                                        }
+                                                    *@
+
+
+
+
+                                                </select>
+                                            }
+                                            else
+                                            {
+                                                <input Readonly="Readonly" class="form-control hidden" id="DO_Statut" name="DO_Statut" type="text" value=@Model.DO_Statut />
+
+                                                if (Model.Resilie == 1)
+                                                {
+                                                    <span class="label label-danger">Résilié</span>
+                                                    <br />
+                                                    <br />
+                                                    <button class="btn btn-danger btn-circle btn-outline" type="button" data-toggle="modal" data-target="#ChangerMotifResiliation">
+                                                        <i class="fa fa-edit"></i>
+                                                    </button>
+                                                }
+                                                else if (Model.DO_Etape == 7)
+                                                {
+                                                    <span class="label label-greenbee">Validé</span>
+
+                                                }
+                                                else if (Model.DO_Etape == 8)
+                                                {
+                                                    <span class="label label-graybee">Annulé</span>
+                                                    <span class="label label-greenbee">Motif: @Model.Motif_Annulation</span>
+                                                    <br />
+                                                    <br />
+                                                                                    <button class="btn btn-danger btn-outline" type="button" data-toggle="modal" data-target="#ChangerMotifAnnulation">
+                                                                                        <i class="fa fa-edit"></i>
+                                                                                    </button>
+                                                }
+                                                else if (Model.DO_Etape == 0)
+                                                {
+                                                    <span class="label label-info">Nouveau</span>
+
+                                                }
+                                                else if ((Model.DO_Etape != 8) && (Model.Resilie != 1) && (Model.Migre == 1))
+                                                {
+
+                                                    <span class="label label-success">Migré</span>
+                                                }
+                                                else
+                                                {
+
+                                                    <span class="label label-purplebee">En cours</span>
+                                                }
+                                            }
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+
+                            @*maneeeeeeeeeeel paiement et livraison 17/02/2020*@
+                            @if (Model.DO_Etape == 5 && Model.DO_Statut == 1 && Model.TypeAbonnement != 9)
+                            {
+                                <div class="modal inmodal" id="ModifierAboPaiementLivraisons" tabindex="-1" role="dialog" aria-hidden="true">
+                                    <div class="modal-dialog modal-lg">
+                                        <div class="modal-content animated flipInX">
+
+                                            <div class="modal-header">
+                                                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Ok</span></button>
+                                                <h4 class="modal-title"> Paiement et livraison </h4>
+                                            </div>
+                                            <div class="modal-body">
+
+                                                <div class="alert alert-success alert-dismissable hidden" id="alertAppro">
+                                                    <button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>
+                                                    La demande d'appro. à été envoyé avec succès !
+                                                    une notification vous sera envoyée dès que l'article est disponible dans votre stock.
+
+                                                    <br /> Cliquez <a class="alert-link" href="" id="hrefAppro"> ici </a> pour voir la demande d'appro. envoyée.
+                                                </div>
+
+                                                <fieldset id="">
+                                                    <div class="form-group">
+                                                        <p class="text-info">
+                                                            Voulez vous vraiment confirmer la livraison des matériels !
+                                                            <small class="text-muted"> Un contrat sera généré à partir les informations entrées. ainsi des bon de sortie </small>
+                                                        </p>
+                                                        <hr />
+                                                        <div class="form-group">
+                                                            <label class="col-sm-4 control-label">
+                                                                Articles réservés pour cet abonnement
+                                                            </label>
+                                                            @foreach (var item in ViewBag.ArtPACK)
+                                                            {
+                                                                <div class="col-sm-8">
+                                                                    @if (item.AR_Type == 0 && item.LS_NoSerie != null)
+                                                                    {
+                                                                        <strong class="text-success">@item.DL_Design :</strong> <strong> @item.LS_NoSerie </strong>
+
+                                                                    }
+                                                                </div>
+
+                                                            }
+                                                        </div>
+
+                                                        <div class="form-group">
+                                                            <label class="col-md-4 control-label">Total abonnement</label>
+
+                                                            <div class="col-md-8">
+                                                                @if (Model.DO_MontantTTC == null)
+                                                                {
+                                                                    <p> 0 TDN </p>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <input type="text" class="form-control" disabled value="@String.Format("{0:N3}", (decimal)(Model.DO_MontantTTC)) TND">
+                                                                }
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="form-group">
+                                                            <label class="col-md-4 control-label">Total Règlements </label>
+                                                            <div class="col-md-8">
+
+                                                                <input type="text" class="form-control" disabled value="@String.Format("{0:N3}", (decimal)(ViewBag.ReglementsTotal)) TND">
+
+
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label class="col-md-4 control-label">Net à payer  </label>
+                                                            <div class="col-md-8">
+
+                                                                <input type="text" class="form-control" disabled value="@String.Format("{0:N3}", (decimal)(ViewBag.NetAPayer)) TND">
+
+
+                                                            </div>
+                                                        </div>
+                                                        <hr />
+                                                        <div class="form-group">
+                                                            <label class="col-lg-4 control-label">Choisir votre mode de paiement </label>
+                                                            <div class="col-lg-8">
+                                                                @Html.DropDownListFor(m => m.cbindice, ViewBag.ModeReglementAgence as SelectList, new { @name = "cbindice", @id = "cbindice", @class = "form-control chosen-select" })
+                                                            </div>
+                                                        </div>
+
+
+                                                        <div id="ifospayement" style="display:none">
+                                                            <div class="form-group">
+                                                                <label class="col-lg-4 control-label">Identifiant *</label>
+                                                                <div class="col-lg-8">
+                                                                    <input type="text" class="form-control" name="identifiantpay" id="identifiantpay" placeholder="N° Chèque,Référence de paiement TPE , N° Compte du client," />
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label class="col-lg-4 control-label">Libellé</label>
+                                                                <div class="col-lg-8">
+                                                                    <input type="text" class="form-control" name="libelle" id="libelle" placeholder="Nom de la banque,N° Ordre de virement" />
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label class="col-lg-4 control-label">Description</label>
+                                                                <div class="col-lg-8">
+                                                                    <input type="text" class="form-control" name="description" id="description" placeholder="Titulaire du Chèque" maxlength="17" />
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label class="col-lg-4 control-label">Date Echéance </label>
+                                                                <div class="col-lg-8">
+                                                                    <input type="text" pattern="\d{1,2}/\d{1,2}/\d{4}" class="form-control" name="dateecheance" id="dateecheance" placeholder="Date d'échéance du chèque (format : jj/mm/aaaa)" />
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <hr />
+                                                        <div class="col-md-12 float-e-margins">
+                                                            <div class="form-group">
+                                                                <label class="col-sm-4 control-label">Commentaires</label>
+
+                                                                <div class="col-sm-6">
+                                                                    <textarea class="form-control" name="AC_Notes6" id="AC_Notes6"></textarea>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </fieldset>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-white" data-dismiss="modal">Annuler</button>
+
+                                                <button class="btn btn-primary ladda-button ladda-button-demo" data-style="expand-right"
+                                                        type="submit">
+                                                    Confirmer
+                                                </button>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                            <div class="row">
+
+                                <div class="col-lg-5">
+
+                                    <dl class="dl-horizontal">
+
+                                        <dt>Ajouté par : </dt>
+                                        <dd><strong>@Model.cbCreateur </strong></dd>
+                                        <dd>Agence Création: <strong>@Model.A_IntCreation</strong></dd>
+
+                                    </dl>
+
+                                    <dl class="dl-horizontal">
+                                        <dt>Fréquence de paiement</dt>
+                                        <dd>@Model.Abo_Freq Mois</dd>
+                                    </dl>
+                                    <dl class="dl-horizontal">
+                                        <dt>Date de création </dt>
+                                        <dd>@Model.DO_Date.GetValueOrDefault().ToString("dd/MM/yyyy") </dd>
+                                    </dl>
+
+                                    <dl class="dl-horizontal">
+
+                                        <dt>Service </dt>
+
+                                        <dd>
+
+                                            @if (ViewBag.ArtPACK.Count != 0)
+                                                {
+                                                    foreach (var item in ViewBag.ArtPACK)
+                                                    {
+                                                        if (item.AR_Type == 1)
+                                                        {
+                                                        <h1 class="label text-white" style="background-color:#61C3A5">
+                                                            <i class="fa fa-shopping-cart text-white"></i>
+                                                            @item.AR_Ref : @item.DL_Design
+
+                                                        </h1>
+                                            }
+                                        }
+
+                                            }
+
+                                        </dd>
+
+
+                                    </dl>
+                                    <dl class="dl-horizontal">
+                                        <dt>Remise </dt>
+                                        <dd>
+                                            @String.Format("{0:N2}", ViewBag.ArtPACKService.DL_RemiseValeur) %
+                                        </dd>
+                                    </dl>
+
+                                    <dl class="dl-horizontal">
+                                        <dt>Frais Installation </dt>
+                                        <dd>
+                                            @if (ViewBag.HasFraisInst)
+                                        {
+                                                <div class="font-bold text-success"><i class="fa fa-check"></i> Oui </div>
+                                            }
+                                            else
+                                            {
+                                                <div class="font-bold text-warning"><i class="fa fa-remove"></i> Non  </div>
+                                            }
+                                        </dd>
+                                    </dl>
+
+                                    <dl class="dl-horizontal">
+                                        <dt>Code GPS </dt>
+                                        <dd>
+                                            <div class="font-bold text-purplebee"> @Model.CodeGPS  </div>
+                                            <div class="form-group col-md-4">
+                                                <button type="button" class="btn btn-graybee" data-toggle="modal" data-target="#ChangerCodeGPS">
+                                                    <i class="fa fa-map-marker"></i>
+                                                </button>
+                                            </div>
+                                        </dd>
+                                    </dl>
+
+
+                                </div>
+                                <div class="col-lg-7" id="cluster_info">
+                                    <dl class="dl-horizontal">
+                                        <dt>Agence </dt>
+                                        <dd> <a href=# class="text-navy font-bold">@Model.A_IntituleAcq</a>  </dd>
+                                    </dl>
+                                    <dl class="dl-horizontal">
+
+                                        <dt>Agence Livraison  </dt>
+                                        <dd>
+                                            <form role="form" class="form-inline">
+                                                <div class="form-group col-md-6">
+                                                    @ViewBag.AgenceLivraisonInt
+                                                </div>
+
+
+                                                @if (ViewBag.listeBL == null || ViewBag.listeBL.Count == 0)
+                                        {
+                                                    <div class="form-group col-md-4">
+                                                        <button type="button" class="btn btn-graybee" data-toggle="modal" data-target="#ChangeAgenceLivraison">
+                                                            <i class="fa fa-edit"></i>
+                                                        </button>
+                                                    </div>
+                                                }
+                                                <div class="form-group col-md-2"></div>
+                                            </form>
+
+                                        </dd>
+                                    </dl>
+
+                                    <dl class="dl-horizontal">
+                                        <dt>Date fin engagement </dt>
+                                        <dd>@ViewBag.DateFinEngagement</dd>
+                                    </dl>
+                                    <dl class="dl-horizontal">
+                                        <dt>Période engagement </dt>
+                                        <dd>
+                                            @ViewBag.PeriodeEngage Mois
+
+                                            @if (User.IsInRole("ChangerPeriodeEngage") || User.IsInRole("Admin"))
+                                            {
+                                                <button type="button" class="btn btn-graybee" data-toggle="modal"
+                                                        data-target="#ChangePeriodeEngage">
+                                                    <i class="fa fa-edit"></i>
+                                                </button>
+                                            }
+                                        </dd>
+
+                                    </dl>
+
+                                    <dl class="dl-horizontal">
+                                        <dt>Date de contrat </dt>
+                                        <dd>@ViewBag.DetailsAbo.DO_DateContrat.ToString("dd/MM/yyyy")</dd>
+                                    </dl>
+                                    @if (ViewBag.ConventionClient != null)
+                                        {
+                                        <dl class="dl-horizontal">
+                                            <dt>Convention </dt>
+                                            <dd>
+                                                @if (ViewBag.ConventionClient != null)
+                                        {
+                                            @ViewBag.ConventionClient
+                                                }
+                                            </dd>
+                                            <dt>Société </dt>
+                                            <dd>
+
+                                                @if (ViewBag.IntituleSte != null)
+                                        {
+                                            @ViewBag.IntituleSte
+                                                }
+                                            </dd>
+
+                                        </dl>
+                                    }
+
+                                    @if (ViewBag.EtatStock != null)
+                                        {
+                                        <dl class="dl-horizontal">
+                                            <dt>Etat de stock </dt>
+                                            @foreach (var item in ViewBag.EtatStock)
+                                        {
+                                            if (item.QteDispo == 0)
+                                            {
+                                                    <dd>
+                                                        <label class="text-purplebee">
+                                                            @item.AR_DesignMatriel :
+
+                                                        </label> <i class="text-danger"> non disponible</i>
+                                                    </dd>
+                                                }
+                                                else
+                                                {
+                                                    <dd><label class="text-purplebee"> @item.AR_DesignMatriel :</label> @item.QteDispo disponible(s)  </dd>
+                                                }
+
+                                            }
+                                            @*@String.Format("{0:N3}", item.QteDispo)*@
+                                        </dl>
+                                    }
+                                </div>
+                            </div>
+
+                            <div class="row m-t-sm">
+                                <div class="col-lg-12">
+                                    <div class="panel blank-panel">
+                                        <div class="panel-heading">
+                                            <div class="panel-options">
+                                                <ul class="nav nav-tabs">
+                                                    <li class="active"><a href="#tab-1" data-toggle="tab">Généralité</a></li>
+                                                    <li class=""><a href="#tab-4" data-toggle="tab">Documents</a></li>
+                                                    <li class=""><a href="#tab-5" data-toggle="tab">Commercial</a></li>
+                                                    <li class=""><a href="#ReglementsClient" data-toggle="tab">Reglements</a></li>
+                                                    <li class=""><a href="#ArticlesEnSUS" data-toggle="tab">Articles en SUS</a></li>
+                                                    <li class=""><a href="#ArticlesMateriel" data-toggle="tab">Matériel </a></li>
+                                                    <li class=""><a href="#ServicesInclus" data-toggle="tab">Services inclus </a></li>
+                                                    <li class=""><a href="#tab-remarque" data-toggle="tab">Remarques</a></li>
+                                                    <li class=""><a href="#tab-Suivi" data-toggle="tab">Suivi</a></li>
+
+                                                </ul>
+                                            </div>
+                                        </div>
+
+                                        <div class="panel-body">
+                                            <div class="tab-content">
+                                                <!-- Généralité-->
+                                                <div class="tab-pane active " id="tab-1">
+                                                    <form method="get" class="form-horizontal">
+                                                        <div class="ibox float-e-margins">
+                                                            <div class="ibox-title">
+                                                                <div class="ibox-tools">
+                                                                    <a class="collapse-link">
+                                                                        <i class="fa fa-chevron-up text-navy"></i>
+                                                                    </a>
+                                                                </div>
+                                                            </div>
+                                                            <div class="ibox-content">
+                                                                <div class="row">
+                                                                    <div class="row">
+                                                                        <div class="col-md-6">
+                                                                            <div class="form-group">
+                                                                                <label class="col-sm-4 control-label">Nom et prénom</label>
+                                                                                <div class="col-sm-8">
+                                                                                    <span class="help-block m-b-none">
+                                                                                        @Html.TextBoxFor(model => model.CT_Intitule, new { @class = "form-control", @id = "CT_Intitule", @name = "CT_Intitule" })
+                                                                                    </span>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+
+                                                                        <div class="col-md-6">
+                                                                            <div class="form-group">
+                                                                                <label class="col-sm-4 control-label">Identifiant </label>
+                                                                                <div class="col-sm-8">
+                                                                                    <span class="help-block m-b-none">
+                                                                                        @Html.TextBoxFor(model => model.CT_Identifiant, new { @class = "form-control", @Readonly = "Readonly", @id = "CT_Identifiant", @name = "CT_Identifiant" })
+                                                                                    </span>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <br />
+                                                                    <div class="form-group">
+                                                                        <label class="col-sm-2 control-label">Contact</label>
+                                                                        <div class="col-sm-10">
+                                                                            @Html.TextBoxFor(model => model.CT_Contact, new { @class = "form-control", @name = "CT_Contact", @id = "CT_Contact" })
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="row">
+                                                                        <div class="col-md-6">
+                                                                            <div class="form-group">
+                                                                                <label class="col-sm-4 control-label">Téléphone client</label>
+                                                                                <div class="col-sm-8">
+                                                                                    @*<span class="help-block m-b-none">
+                                                                                            <input class="form-control" id="CT_Telephone" name="CT_Telephone" type="text" value=@Model.CT_Telephone />
+                                                                                        </span>*@
+                                                                                    <select class="form-control chosen-select" id="CT_Telephone" name="CT_Telephone">
+                                                                                      @if (ViewBag.numerostelephone != null)
+                                                                                      {
+                                                                                         foreach (var item in ViewBag.numerostelephone)
+                                                                                        {
+
+                                                                                            if (item.CT_Telephone1 == Model.CT_Telephone)
+                                                                                            {
+                                                                                                <option value=@item.CT_Telephone1 selected>@item.CT_Telephone1</option>
+                                                                                            }
+                                                                                            else
+                                                                                            {
+                                                                                                <option value=@item.CT_Telephone1>@item.CT_Telephone1</option>
+                                                                                            }
+                                                                                        }
+                                                                                      }
+                                                                                         
+                                                                                    </select>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-md-6">
+                                                                            <div class="form-group">
+                                                                                <label class="col-sm-4 control-label">Téléphone de contact</label>
+                                                                                <div class="col-sm-8">
+
+                                                                                    <ul>
+                                                                    @if (ViewBag.numerostelephone != null)
+                                                                    {
+                                                                        foreach (var item in ViewBag.numerostelephone)
+                                                                        {
+
+                                                                            if (item.CT_Telephone1 == Model.CT_GSM)
+                                                                            {
+                                                                                <li class="text-greenbee"><strong>@item.CT_Telephone1</strong></li>
+                                                                            }
+                                                                            else
+                                                                            {
+                                                                                <li class="text-purplebee">@item.CT_Telephone1</li>
+                                                                            }
+                                                                        }
+                                                                    }
+                                                                                    </ul>
+
+
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+
+                                                                    @if (ViewBag.AdressesClient != null)
+                                                                    {
+
+                                                                        foreach (var i in ViewBag.AdressesClient)
+                                                                        {
+
+                                                                        <div class="form-group">
+                                                                            <label class="col-sm-2 control-label">Adresse </label>
+
+                                                                            <div class="col-sm-10">
+                                                                                <select class="form-control chosen-select" id="ID_CTAdresse" name="ID_CTAdresse">
+                                                                                    @foreach (var item in ViewBag.Adresses)
+                                                                                    {
+
+                                                                                        if (item.cbMarq == Model.idAdresseClient)
+                                                                                        {
+                                                                                            <option value=@item.cbMarq selected>@item.LI_Intitule</option>
+                                                                                        }
+                                                                                        else
+                                                                                        {
+                                                                                            <option value=@item.cbMarq>@item.LI_Intitule</option>
+                                                                                        }
+                                                                                    }
+                                                                                </select>
+
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="form-group">
+                                                                            <label class="col-sm-2 control-label">Adresse Installaion</label>
+
+                                                                            <div class="col-sm-10">
+                                                                                <select class="form-control chosen-select" id="CT_AdresseInst" name="CT_AdresseInst">
+                                                                                    @foreach (var item in ViewBag.Adresses)
+                                                                                    {
+
+                                                                                        if (item.cbMarq == Model.CT_AdresseInst)
+                                                                                        {
+                                                                                            <option value=@item.cbMarq selected>@item.LI_Intitule</option>
+                                                                                        }
+                                                                                        else
+                                                                                        {
+                                                                                            <option value=@item.cbMarq>@item.LI_Intitule</option>
+                                                                                        }
+                                                                                    }
+                                                                                </select>
+
+                                                                            </div>
+                                                                        </div>
+                                                                                            <div class="form-group">
+                                                                                                <label class="col-sm-2 control-label">Adresse facturation </label>
+                                                                                                <div class="col-sm-10">
+                                                                                                    <select class="form-control chosen-select" id="CT_AdresseFacture" name="CT_AdresseFacture">
+                                                                                                        @foreach (var item in ViewBag.Adresses)
+                                                                                                        {
+                                                                                                            if (item.cbMarq == Model.CT_AdresseFacture)
+                                                                                                            {
+                                                                                                                <option value=@item.cbMarq selected>@item.LI_Intitule</option>
+                                                                                                            }
+                                                                                                            else
+                                                                                                            {
+                                                                                                                <option value=@item.cbMarq>@item.LI_Intitule</option>
+                                                                                                            }
+                                                                                                        }
+                                                                                                    </select>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                                        <div class="form-group">
+                                                                                                            <label class="col-sm-2 control-label">Complément Adresse </label>
+                                                                                                            <div class="col-sm-10">
+                                                                                                                <span class="help-block m-b-none">
+                                                                                                                    <input class="form-control" id="CT_Complement" name="CT_Complement" value="@i.LI_Complement" maxlength="34" />
+                                                                                                                </span>
+                                                                                                            </div>
+                                                                                                        </div>
+                                                                                                        <div class="row">
+                                                                                                            <div class="col-md-6">
+                                                                                                                <div class="form-group">
+                                                                                                                    <label class="col-sm-4 control-label">Région</label>
+                                                                                                                    <div class="col-sm-8">
+                                                                                                                        @foreach (var item in ViewBag.CodesRegions)
+                                                                                                                        {
+                                                                                                                            if (item.R_CodeRegion == i.LI_CodeRegion)
+                                                                                                                            {
+                                                                                                                                <input class="form-control" id="CT_Gouvernorat" name="CT_Gouvernorat" type="text" value="@item.R_Intitule" Readonly />
+                                                                                                                            }
+                                                                                                                        }
+                                                                                                                    </div>
+                                                                                                                </div>
+                                                                                                            </div>
+                                                                                                            <div class="col-md-6">
+                                                                                                                <div class="form-group">
+                                                                                                                    <label class="col-sm-4 control-label">Gouvernorat</label>
+                                                                                                                    <div class="col-sm-8">
+                                                                                                                        <input class="form-control" id="CT_Gouvernorat" name="CT_Gouvernorat" type="text" value="@i.LI_Gouvernorat" Readonly />
+                                                                                                                    </div>
+                                                                                                                </div>
+                                                                                                            </div>
+                                                                                                        </div>
+                                                                                                        <div class="row">
+                                                                                                            <div class="col-md-6">
+                                                                                                                <div class="form-group">
+                                                                                                                    <label class="col-sm-4 control-label">Ville</label>
+
+                                                                                                                    <div class="col-sm-8">
+                                                                                                                        <span class="help-block m-b-none">
+                                                                                                                            <input class="form-control" id="CT_Ville" name="CT_Ville" type="text" value="@i.LI_Ville" Readonly />
+
+                                                                                                                        </span>
+                                                                                                                    </div>
+                                                                                                                </div>
+                                                                                                            </div>
+                                                                                                            <div class="col-md-6">
+                                                                                                                <div class="form-group">
+                                                                                                                    <label class="col-sm-4 control-label">Cité</label>
+                                                                                                                    <div class="col-sm-8">
+
+                                                                                                                        <input class="form-control" id="CT_Localite" name="CT_Localite" type="text" value="@i.LI_Localite" Readonly />
+
+                                                                                                                    </div>
+                                                                                                                </div>
+                                                                                                            </div>
+                                                                                                        </div>
+                                                                                                        <div class="row">
+                                                                                                            <div class="col-md-6">
+                                                                                                                <div class="form-group">
+                                                                                                                    <label class="col-sm-4 control-label">Code Postal</label>
+                                                                                                                    <div class="col-sm-8">
+                                                                                                                        <span class="help-block m-b-none">
+                                                                                                                            <input class="form-control" id="CT_CodePostal" name="CT_CodePostal" type="text" value="@i.LI_CodePostal" Readonly />
+                                                                                                                        </span>
+                                                                                                                    </div>
+                                                                                                                </div>
+                                                                                                            </div>
+                                                                                                        </div>
+                                                                        }
+
+                                                                    }
+                                                                                                        </div>
+                                                            </div>
+                                                        </div>
+                                                        @if (Model.DO_Etape < 3)
+                                                        {
+
+                                                            <button type="button" class="btn btn-greenbee  pull-right ladda-button" title="Modifier adresse" onClick="EnregistrerAdre(@Model.cbMarq);">
+                                                                <i class="fa fa-pencil">Enregistrer les modifications </i>
+                                                            </button>
+                                                        }
+                                                    </form>
+
+                                                </div>                    <!-- Documents -->
+                                                <div id="tab-4" class="tab-pane">
+                                                    <div class="panel-body">
+                                                        <div class="table-responsive">
+
+
+                                                            <a href=@Url.Action("ImprimerRecuAbonnement/" + @Model.cbMarq, "Abonnement") target="_blank" class="pull-right">
+                                                                Reçu demande abonnement
+                                                            </a>
+
+
+                                                            @if (ViewBag.ListFiles.Count == 0)
+                                                            {
+                                                                <p> Aucun fichier </p>
+                                                            }
+                                                            else
+                                                            {
+                                                                <table class="table table-bordered table-stripped">
+                                                                    <thead>
+                                                                        <tr>
+                                                                            <th></th>
+                                                                            <th>
+                                                                                Intitulé Document
+                                                                            </th>
+                                                                            <th> Description </th>
+
+                                                                        </tr>
+                                                                    </thead>
+                                                                    <tbody>
+
+                                                                        @if (ViewBag.ListFiles.Count == 0)
+                                                                        {
+                                                                            <p>Aucun attachement. </p>
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            foreach (var item in ViewBag.ListFiles)
+                                                                            {
+                                                                                <tr>
+                                                                                    <td>
+                                                                                        <a href="@item.Path" target="_blank"> Voir </a>
+                                                                                    </td>
+                                                                                    <td>
+                                                                                        @item.B_Intitule
+                                                                                    </td>
+                                                                                    <td>
+                                                                                        @item.B_Description
+                                                                                    </td>
+                                                                                </tr>
+                                                                            }
+                                                                        }
+                                                                    </tbody>
+                                                                </table>
+                                                            }
+                                                        </div>
+                                                    </div>
+
+                                                    <button type="button" class="btn btn-warning btn-rounded  pull-right" data-toggle="modal" data-target="#AddDoc">
+                                                        <i class="fa fa-pencil"></i>
+                                                    </button>
+                                                </div>
+                                                <!-- Commercial-->
+                                                <div class="tab-pane" id="tab-5">
+
+                                                    @if (ViewBag.listeFactures == null)
+                                                    {
+                                                        <p>Aucune Facture </p>
+
+                                                    }
+                                                    else
+                                                    {
+                                                        <table class="table table-striped">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th>Type Document</th>
+                                                                    <th>N° Pièce</th>
+                                                                    <th>Date </th>
+                                                                    <th>Référence</th>
+                                                                    <th>Montant HT</th>
+                                                                    <th></th>
+                                                                </tr>
+                                                            </thead>
+
+
+                                                            <tbody>
+                                                                @foreach (var item in ViewBag.listeFactures)
+                                                                {
+
+                                                                    <tr>
+                                                                        <td>
+                                                                            @if (item.DO_Statut == 0)
+                                                                            {
+                                                                                <span class="label label-default"><i class="fa fa-check"></i> En Cours</span>
+                                                                            }
+                                                                            else if (item.DO_Statut == 1)
+                                                                            {
+                                                                                <span class="label label-success"><i class="fa fa-check"></i> Payée</span>
+
+                                                                            }
+                                                                            else if (item.DO_Statut == 2)
+                                                                            {
+                                                                                <span class="label label-info"><i class="fa fa-check"></i> Versée</span>
+                                                                            }
+                                                                            else
+                                                                            {
+                                                                                <span class="label label-danger"><i class="fa fa-check"></i> Validée</span>
+                                                                            }
+
+                                                                        </td>
+                                                                        <td>
+                                                                            @item.DO_Piece
+                                                                        </td>
+                                                                        <td>
+                                                                            @item.DO_Date.ToString("dd/MM/yyyy")
+                                                                        </td>
+                                                                        <td>@item.DO_Ref</td>
+
+                                                                        <td>
+                                                                            @String.Format("{0:N3}", item.DO_totalTTC) TND
+                                                                        </td>
+
+                                                                        <td>
+                                                                            <a class="btn btn-purplebee btn-circle   btn-outline" title="voir la facture"
+                                                                               href="@Url.Action("VisualiserFacture","GestionFactures", new { id = item.cbMarq })" target="_blank">
+                                                                                <i title="Imprimer Facture " class="fa fa-print"></i>
+                                                                            </a>
+                                                                        </td>
+                                                                    </tr>
+
+                                                                }
+                                                            </tbody>
+                                                        </table>
+                                                    }
+
+
+                                                </div>
+                                                <!-- Commercial-->
+                                                <div class="tab-pane" id="ReglementsClient">
+
+                                                    @if (ViewBag.Reglements == null)
+                                                    {
+                                                        <p>Aucune Avance   </p>
+
+                                                    }
+                                                    else
+                                                    {
+                                                        <table class="table table-striped">
+                                                            <thead>
+                                                                <tr>
+
+                                                                    <th>N° Pièce</th>
+                                                                    <th>Montant </th>
+                                                                    <th>Date </th>
+                                                                    <th>Voir reçu </th>
+
+                                                                </tr>
+                                                            </thead>
+
+                                                            <tbody>
+
+
+                                                                @foreach (var item in ViewBag.Reglements)
+                                                                {
+
+                                                                    <tr>
+                                                                        <td>
+                                                                            @item.DO_Piece
+                                                                        </td>
+                                                                        <td>
+                                                                            @String.Format("{0:N3}", (decimal)(item.DO_MontantTTC))
+                                                                        </td>
+                                                                        <td>
+                                                                            @item.DO_Date
+                                                                        </td>
+                                                               
+
+                                                                    </tr>
+                                                                }
+                                                            </tbody>
+                                                        </table>
+                                                    }
+
+
+                                                </div>
+
+                                                <!-- Articles Materiel -->
+                                                <div class="tab-pane" id="ArticlesMateriel">
+                                                    @if (ViewBag.ArtPACK.Count == 0)
+                                                    {
+                                                        <p>Aucun Matériel réservé pour cet abonnement. </p>
+                                                    }
+                                                    else if (Model.Resilie == 1)
+                                                    {
+                                                        <table class="table table-striped">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th>Référence Article</th>
+                                                                    <th>Designation</th>
+                                                                    <th>Numéro Série </th>
+                                                                    <th>Depot Retour </th>
+                                                                    <th>Action</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                @foreach (var item1 in ViewBag.reservationmat)
+                                                                {
+                                                                    if (item1.AR_Type == 0 && (item1.AR_Ref != "FRAIS_INSTALLATION" || item1.AR_Ref != "FRAIS_RACCORDEMENT"))
+                                                                    {
+                                                                        <tr>
+                                                                            <td>
+                                                                                <span class="label label-greenbee">
+                                                                                    <i class="fa fa-shopping-cart"></i> @item1.AR_Ref
+                                                                                </span>
+                                                                            </td>
+                                                                            <td>
+                                                                                @item1.DL_Design
+                                                                            </td>
+
+                                                                            <td>
+                                                                                @item1.LS_NoSerie
+                                                                            </td>
+                                                                            <td>
+                                                                                @if (ViewBag.ListOfAgences != null)
+                                                                                {
+                                                                                    <select class="form-control chosen-select" name="A_CodeLivraison" id="A_CodeLivraison">
+
+                                                                                        @foreach (var item in ViewBag.ListOfAgences)
+                                                                                        {
+                                                                                            if (item.Value == Model.A_CodeLivraison)
+                                                                                            {
+                                                                                                <option value="@item.Value" selected>@item.Text</option>
+                                                                                            }
+                                                                                            else
+                                                                                            {
+                                                                                                <option value="@item.Value">@item.Text</option>
+                                                                                            }
+                                                                                        }
+                                                                                    </select>
+                                                                                }
+
+
+                                                                            </td>
+                                                                            <td>
+                                                                                @if (item1.DL_Someil == 0 && item1.DL_Valorise == 0 && (item1.AR_Ref != "FRAIS_INSTALLATION" || item1.AR_Ref != "FRAIS_RACCORDEMENT"))
+                                                                                {
+                                                                                    <div class="form-group col-md-4">
+                                                                                        <button type="button" class="btn btn-graybee" title="Retour matériels" onClick="BonRetourLigneMateriel(@item1.cbMarq);">
+                                                                                            <i class="fa fa-edit"></i>
+                                                                                        </button>
+                                                                                    </div>
+                                                                                }
+                                                                                else if (ViewBag.bonretour != null)
+                                                                                {
+                                                                                    if (item1.DL_Someil == 0 && item1.DL_Valorise == 1)
+                                                                                    {
+                                                                                        <span>Materiel retourné</span>
+                                                                                    }
+                                                                                }
+                                                                            </td>
+                                                                        </tr>
+                                                                    }
+                                                                }
+                                                            </tbody>
+                                                        </table>
+
+                                                    }
+                                                    else
+                                                    {                                                      
+                                                            <table class="table table-striped" >
+                                                                <thead>
+                                                                    <tr>
+                                                                      
+                                                                        <th>Référence Article</th>
+                                                                        <th>Designation</th>
+                                                                        <th>Numéro Série</th>
+                                                                        <th>Statut </th>
+                                                                       <th><center>Action</center></th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                  
+                                                                    @foreach (var item in ViewBag.ArtPACK)
+                                                                    {
+                                                                        if (item.AR_Type == 0 && (item.AR_Ref != "FRAIS_INSTALLATION" || item.AR_Ref != "FRAIS_RACCORDEMENT"))
+                                                                        {
+                                                                            <tr>
+                                                                                <td>
+                                                                                    <span class="label label-greenbee">
+                                                                                        <i class="fa fa-shopping-cart"></i> @item.AR_Ref
+                                                                                    </span>
+                                                                                </td>
+                                                                                <td>
+                                                                                    @item.DL_Design
+                                                                                </td>
+
+                                                                                <td>@item.LS_NoSerie</td>
+                                                                                <td>
+
+                                                                                    @if (ViewBag.StatutLotSerie != null)
+                                                                                    {
+                                                                                        int i = 0;
+                                                                                        foreach (var item2 in ViewBag.StatutLotSerie)
+                                                                                        {
+                                                                                            if (item.LS_NoSerie == item2.LS_NoSerie && item2.StatutArticle != null && i == 0)
+                                                                                            {
+
+                                                                                                if (ViewBag.ListOfStatutNS != null)
+                                                                                                {
+
+                                                                                            <select class="form-control chosen-select" name="ListOfStatutNS" id="ListOfStatutNS">
+
+                                                                                                @foreach (var item3 in ViewBag.ListOfStatutNS)
+                                                                                                {
+
+                                                                                                    if (item3.Intitule == item2.StatutArticle)
+                                                                                                    {
+                                                                                                        <option value="@item3.cbMarq" selected>@item3.Intitule</option>
+                                                                                                    }
+                                                                                                    else
+                                                                                                    {
+                                                                                                        <option value="@item3.cbMarq">@item3.Intitule</option>
+                                                                                                    }
+                                                                                                }
+                                                                                            </select>
+
+                                                                                                i = i + 1;
+                                                                                            }
+                                                                                        }
+                                                                                    }
+
+                                                                                    if (i == 0)
+                                                                                    {
+                                                                                        if (ViewBag.ListOfStatutNS.Count != 0)
+                                                                                        {
+
+                                                                                            <select class="form-control chosen-select" name="ListOfStatutNS" id="ListOfStatutNS">
+
+                                                                                                @foreach (var item3 in ViewBag.ListOfStatutNS)
+                                                                                                {
+
+                                                                                                    if (item3.isDefaut == true)
+                                                                                                    {
+                                                                                                        <option value="@item3.cbMarq" selected>@item3.Intitule</option>
+                                                                                                    }
+                                                                                                    else
+                                                                                                    {
+                                                                                                        <option value="@item3.cbMarq">@item3.Intitule</option>
+                                                                                                    }
+
+                                                                                                }
+                                                                                            </select>
+                                                                                            }
+                                                                                        }                                                                                   
+                                                                                    }
+
+                                                                                </td>
+                                                                               
+                                                                                <td>
+                                                                                    <center>
+                                                                                      
+                                                                                        <div class="form-group col-md-4">
+                                                                                            <button type="button" class="btn btn-graybee" title="Retour matériels" onClick="Changer(this);">
+                                                                                                <i class="fa fa-edit"></i>
+                                                                                            </button>
+                                                                                        </div>
+                                                                                    </center>
+                                                                                </td>
+                                                                              
+                                                                            </tr>
+                                                                        }
+                                                                    }
+                                                                </tbody>
+                                                            </table>
+                                                            }
+                                                    </div>
+
+
+
+
+                                                <!-- Services en sus -->
+                                                <div class="tab-pane" id="ArticlesEnSUS">
+                                                    <div class="alert alert-warning">
+                                                        Prenez en considération, si vous rajouter des abonnement en SUS sur cet abonnement, un nouvel abonnement SUS sera créer.
+                                                        Seulement si vous rajouter les SUS le même jour que la création de cet abonnement en cours.
+                                                    </div>
+
+
+                                                    <button type="button" class="btn btn-warning btn-rounded  pull-right" data-toggle="modal" data-target="#AjouterAboSus">
+                                                        <i class="fa fa-pencil"></i>
+                                                    </button>
+
+
+                                                    @if (ViewBag.ArticlesSus.Count == 0)
+                                                    {
+                                                        <p>Aucun article en SUS </p>
+                                                    }
+                                                    else
+                                                    {
+                                                        <table class="table table-striped">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th>Référence Article</th>
+                                                                    <th>Designation</th>
+                                                                    <th>Référence TT </th>
+                                                                    <th>Montant TTC</th>
+
+                                                                </tr>
+                                                            </thead>
+
+                                                            <tbody>
+
+
+                                                                @foreach (var item in ViewBag.ArticlesSus)
+                                                                {
+                                                                    <tr>
+                                                                        <td>
+                                                                            <span class="label label-warning"><i class="fa fa-check"></i> @item.AR_Ref</span>
+                                                                        </td>
+                                                                        <td>
+                                                                            @item.DL_Design
+                                                                        </td>
+                                                                        <td>
+                                                                            @item.DO_Ref
+                                                                        </td>
+                                                                        <td>
+                                                                            @item.DL_MontantTTC
+                                                                        </td>
+                                                                        <td>
+                                                                            @*<button class="btn btn-sm" type="button"><i class="fa fa-remove"></i></button>*@
+                                                                        </td>
+                                                                    </tr>
+                                                                }
+
+                                                            </tbody>
+                                                        </table>
+                                                    }
+                                                </div>
+                                                <!-- Services inclus -->
+                                                <div class="tab-pane" id="ServicesInclus">
+                                                    @if (ViewBag.ServicesInclus.Count == 0)
+                                                    {
+                                                        <p>Aucun service inclu </p>
+                                                    }
+                                                    else
+                                                    {
+                                                        <table class="table table-striped">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th>Référence Article</th>
+                                                                    <th>Designation</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                @foreach (var item in ViewBag.ServicesInclus)
+                                                                {
+                                                                    <tr>
+                                                                        <td>
+                                                                            <span class="label label-warning"><i class="fa fa-check"></i> @item.AR_Ref</span>
+                                                                        </td>
+                                                                        <td>
+                                                                            @item.DL_Design
+                                                                        </td>
+                                                                        <td>
+                                                                        <td>
+                                                                            @*<button class="btn btn-sm" type="button"><i class="fa fa-remove"></i></button>*@
+                                                                        </td>
+                                                                    </tr>
+                                                                }
+                                                            </tbody>
+                                                        </table>
+                                                    }
+                                                </div>
+                                                <!-- suivis-->
+                                                <div class="tab-pane" id="tab-Suivi">
+                                                    <div class="row" style="overflow:scroll;height:500px;">
+                                                        <div class="ibox ">
+
+                                                            <div class="ibox-content">
+
+                                                                <div class="activity-stream full-height-scroll">
+                                                                    <table class="table table-striped">
+                                                                        <thead>
+                                                                            <tr>
+                                                                                <th>Statut</th>
+                                                                                <th>Détails</th>
+                                                                                <th>Date </th>
+                                                                                <th>Utilisateur</th>
+
+                                                                                <th>Notes</th>
+                                                                            </tr>
+                                                                        </thead>
+
+                                                                        <tbody>
+
+                                                                            @foreach (var item in ViewBag.ListAction)
+                                                                            {
+                                                                                <tr>
+                                                                                    <td>
+                                                                                        @if (item.AC_Etat == 0)
+                                                                                        {
+                                                                                            <span class="label label-warning-light"><i class="fa fa-history"></i></span>
+
+
+                                                                                        }
+                                                                                        else if (item.AC_Etat == 1)
+                                                                                        {
+
+                                                                                            <span class="label label-primary"><i class="fa fa-history"></i></span>
+
+                                                                                        }
+                                                                                        else if (item.AC_Etat == 2)
+                                                                                        {
+                                                                                            <span class="label label-warning"><i class="fa fa-history"></i></span>
+
+
+                                                                                        }
+                                                                                        else if (item.AC_Etat == 3)
+                                                                                        {
+                                                                                            <span class="label label-success"><i class="fa fa-history"></i></span>
+
+
+                                                                                        }
+                                                                                        else if (item.AC_Etat == 4)
+                                                                                        {
+                                                                                            <span class="label label-danger"><i class="fa fa-history"></i></span>
+
+
+                                                                                        }
+                                                                                        else if (item.AC_Etat == 5)
+                                                                                        {
+                                                                                            <span class="label label-danger"><i class="fa fa-history"></i></span>
+
+
+                                                                                        }
+                                                                                        else
+                                                                                        {
+
+                                                                                            <span class="label label-primary"><i class="fa fa-warning"></i></span>
+
+                                                                                        }
+                                                                                    </td>
+
+                                                                                    <td>@item.AC_Commentaire </td>
+                                                                                    <td>@item.cbModification</td>
+                                                                                    <td>@item.cbCreateur</td>
+
+                                                                                    <td>
+                                                                                        @item.AC_Notes
+                                                                                    </td>
+
+                                                                                </tr>
+
+                                                                            }
+                                                                        </tbody>
+                                                                    </table>
+
+                                                                </div>
+                                                            </div>
+
+                                                        </div>
+                                                    </div>
+
+
+
+                                                </div>
+                                                <!-- Remarques -->
+                                                <div class="tab-pane" id="tab-remarque">
+                                                    <div class="row full-height-scroll" style="overflow:scroll;height:500px;">
+                                                        @if (ViewBag.ListRemarque.Count == 0)
+                                                        {
+                                                            <p> Aucune Remarque </p>
+                                                        }
+                                                        else
+                                                        {
+                                                            <div class="wrapper wrapper-content animated fadeInUp full-height-scroll" style="overflow:scroll;height:500px;">
+                                                                @foreach (var item in ViewBag.ListRemarque)
+                                                                {
+
+
+
+                                                                    <ul class="notes ">
+                                                                        <li>
+
+                                                                            <div style="background:#ffc ">
+                                                                                <small>@item.RQ_Date</small>
+                                                                                <h4>@item.RQ_Sujet</h4>
+                                                                                <p>@item.RQ_Description</p>
+                                                                                <p style="margin-left:60%;margin-top:15%">@item.cbCreateur</p>
+
+                                                                                @if (User.IsInRole("Admin") || User.IsInRole("Supprimer remarque"))
+                                                                                {
+                                                                                    <button type="button" class="btn btn-graybee" title="Supprimer remarque" onClick="SupprimerRemarque(@item.cbMarq);">
+                                                                                        <i class="fa fa-trash"></i>
+                                                                                    </button>
+                                                                                }
+                                                                            </div>
+
+                                                                        </li>
+
+                                                                    </ul>
+
+                                                                }
+                                                            </div>
+                                                        }
+                                                    </div>
+                                                    <button type="button" class="btn btn-warning btn-rounded  pull-right" data-toggle="modal" data-target="#NouvRemarque">
+                                                        <i class="fa fa-pencil"></i>
+                                                    </button>
+                                                </div>
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                }
+            </div>
+        </div>
+        <div class="col-lg-3">
+            @Html.Action("TimelineAbonnement", "Abonnement", new { id = Model.cbMarq })
+        </div>
+    </div>
+ </div>
+@using (Html.BeginForm("ModifierSales", "AbonnementSales", FormMethod.Post, new { id = "popupForm" }))
+{
+    @Html.HiddenFor(model => model.cbMarq)
+    <div class="modal inmodal" id="ModifierAboMiseEnservice" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content animated flipInX">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Ok</span></button>
+                </div>
+                @if (User.IsInRole("AffectationMaterielAbonnement") || User.IsInRole("Admin"))
+                {
+
+                    <div class="modal-body">
+                        <div class="alert alert-success alert-dismissable hidden" id="alertAppro">
+                            <button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>
+                            La demande d'appro. à été envoyé avec succès ! une notification vous sera envoyée dès que l'article est disponible dans votre stock.
+
+                            <br /> Cliquez <a class="alert-link" href="" id="hrefAppro"> ici </a> pour voir la demande d'appro. envoyée.
+                        </div>
+
+                        <fieldset id="SubmitForm" class="form-horizontal bordered-row">
+                            <div class="row">
+
+                                <div class="alert alert-success alert-dismissable hidden" id="alertAppro">
+                                    <button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>
+                                    La demande d'appro. à été envoyé avec succès ! une notification vous sera envoyée dès que l'article est disponible dans votre stock.
+
+                                    <br /> Cliquez <a class="alert-link" href="" id="hrefAppro"> ici </a> pour voir la demande d'appro. envoyée.
+                                </div>
+                                <p class="text-info">
+                                    Cet abonnement sera mis en service TT
+                                    <small class="text-muted"> Un contrat sera généré à partir les informations entrées.  </small>
+                                </p>
+                                <hr />
+
+                                @if (Model.DO_Valide == 1)
+                                {
+                                    <div class="alert alert-warning">
+                                        <p>  Les articles attachés à cet abonnement : </p>
+                                        <br />
+                                        @foreach (var item in ViewBag.ArticlesAttribues)
+                                        {
+                                            <i class="fa fa-shopping-cart"></i> @item.AR_Ref
+                                            <br />
+                                        }
+
+                                    </div>
+                                }
+                                else
+                                {
+                                    if (ViewBag.MaterielLies != null)
+                                    {
+                                        int i = 0;
+                                        <h3 class="text-info float-e-margins m-l-lg"> Réservation matériel pour l'abonnement </h3>
+                                        foreach (var kk in ViewBag.MaterielLies)
+                                        {
+                                            if ((kk.AR_SuiviStock == 3 || kk.AR_SuiviStock == 2))
+                                            {
+                                                <div class="form-group">
+
+                                                    <label class="col-sm-2 control-label">
+                                                        Articles
+                                                    </label>
+                                                    <div class="col-sm-10">
+                                                        <select data-placeholder="Choisir des articles..."
+                                                                id="ReservationMateriel[@i]" name="ReservationMateriel[@i]" class="form-control">
+                                                            @if (ViewBag.MaterielLies != null)
+                                                            {
+
+                                                                <option value="@kk.AR_Ref">@kk.AR_Design</option>
+                                                            }
+                                                            else
+                                                            {
+                                                                <option value="null">Aucun</option>
+                                                            }
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                //  if (ViewBag.LotSerieLies != null)
+                                                //  {
+                                                <div class="form-group">
+
+                                                    <label class="col-sm-2 control-label">N° de série</label>
+
+                                                    <div class="col-sm-10" id="seleckIE">
+
+                                                        <select class="form-control chosen-select" id="LotSerie[@i]" name="LotSerie[@i]" data-placeholder="Choisir les références...">
+
+
+                                                            @if (ViewBag.NumMaterielsReservesLies.Count != 0)
+                                                            {
+                                                                for (var j = 0; j < ViewBag.NumMaterielsReservesLies.Count; j++)
+                                                                {
+                                                                    if (ViewBag.NumMaterielsReservesLies[j].AR_Ref == kk.AR_Ref)
+                                                                    {
+                                                                        <option style="background-color:#4D57A6;" class="text-white form-control" selected="selected" value="@ViewBag.NumMaterielsReservesLies[j].LS_NoSerie">@ViewBag.NumMaterielsReservesLies[j].LS_NoSerie</option>
+
+                                                                    }
+
+                                                                }
+
+                                                            }
+
+                                                            @if (ViewBag.LotSerieDepotLies.Count != 0)
+                                                            {
+
+                                                                <optgroup label="Dépôt Revendeur">
+                                                                    @if (ViewBag.LotSerieDepotLies[i].LS_NoSerie != null)
+                                                                    {
+                                                                        foreach (var item in ViewBag.LotSerieDepotLies[i].LS_NoSerie)
+                                                                        {
+                                                                            if (item.AR_Ref == kk.AR_Ref)
+                                                                            {
+                                                                                if (item.StatutArticle != null)
+                                                                                {
+
+
+                                                                                    <option class="font-bold text-greenbee" value="@item.LS_NoSerie">@item.LS_NoSerie | @item.StatutArticle </option>
+
+                                                                                }
+                                                                                else {
+
+
+                                                                                    <option class="font-bold text-greenbee" value="@item.LS_NoSerie">@item.LS_NoSerie | Aucun Statut</option>
+
+                                                                                }
+
+                                                                            }
+                                                                        }
+                                                                    }
+                                                                </optgroup>
+                                                            }
+
+                                                            @if (ViewBag.LotSerieLies != null)
+                                                            {
+                                                                <optgroup label="Dépôt Siège" class="bg-purplebee-light">
+                                                                    @if (ViewBag.LotSerieLies[i].LS_NoSerie != null)
+                                                                    {
+                                                                        foreach (var aa in ViewBag.LotSerieLies[i].LS_NoSerie)
+                                                                        {
+                                                                            if (aa.StatutArticle != null)
+                                                                            {
+
+                                                                                <option class="font-bold text-purplebee" value="@aa.LS_NoSerie">@aa.LS_NoSerie | @aa.StatutArticle </option>
+
+                                                                            }
+                                                                            else {
+
+
+                                                                                <option class="font-bold text-purplebee" value="@aa.LS_NoSerie">@aa.LS_NoSerie | Aucun Statut</option>
+
+                                                                            }
+
+                                                                        }
+                                                                    }
+                                                                </optgroup>
+                                                            }
+
+                                                        </select>
+
+
+
+
+
+                                                    </div>
+                                                    @*}*@
+                                                </div>
+
+                                                // }
+                                                // else
+                                                // {
+                                                if (ViewBag.MaterielLies == null)
+                                                {
+                                                    <div class="form-group">
+                                                        <label class="col-md-4 control-label">
+                                                            <p class="text-danger">  Cet article est en rupture de stock.</p>
+                                                        </label>
+                                                        <div class="col-md-6">
+                                                            <button type="button" class="btn btn-xs btn-success " id="envoiedemandeAppro" onclick="DemandeApproAutomatique();">Envoyer une demande d'approvisonnement </button>
+                                                        </div>
+                                                    </div>
+                                                }
+                                                // }
+                                            }
+                                            else 
+                                            {
+                                                <div class="form-group">
+                                                    <label class="col-sm-2 control-label">
+                                                        Articles
+                                                    </label>
+                                                    <div class="col-sm-10">
+                                                        <select data-placeholder="Choisir des articles..."
+                                                                id="ReservationMateriel[@i]" name="ReservationMateriel[@i]" class="form-control">
+                                                            @if (ViewBag.MaterielLies != null)
+                                                            {
+
+                                                                <option value="@kk.AR_Ref">@kk.AR_Design</option>
+                                                            }
+                                                            else
+                                                            {
+                                                                <option value="null">Aucun</option>
+                                                            }
+                                                        </select>
+                                                    </div>
+                                                </div>
+
+
+                                                    <label class="col-sm-2 control-label">Quantité Disponible</label>
+                                                    <div class="col-sm-10">
+                                                        <select class="form-control chosen-select" name="LotSerie[@i]">
+
+                                                            @if (ViewBag.QuantiteDisponibleSiege != null)
+                                                            {
+
+                                                                <optgroup label="Dépôt Siège">
+                                                                    @if (ViewBag.QuantiteDisponibleSiege <= 0)
+                                                                    {
+                                                                        <option>Aucun </option>
+
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        <option value="CMUPSiege">Quantité disponible: @ViewBag.QuantiteDisponibleSiege</option>
+                                                                    }
+                                                                </optgroup>
+                                                            }
+
+                                                            @if (ViewBag.QuantiteDisponibleRev != null)
+                                                            {
+                                                                <optgroup label="Dépôt Revendeur">
+                                                                    @if (ViewBag.QuantiteDisponibleRev <= 0)
+                                                                    {
+                                                                        <option>Aucun </option>
+
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        <option value="CMUPRev">Quantité disponible: @ViewBag.QuantiteDisponibleRev</option>
+                                                                    }
+                                                                </optgroup>
+                                                            }
+                                                        </select>
+                                                    </div>
+                                            }
+                                            i = i + 1;
+                                        }
+                                    }
+
+                                }
+
+                            </div>
+
+                            <br />
+                            <br />
+                            <div class="col-md-12 float-e-margins">
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label">Commentaires</label>
+
+                                    <div class="col-sm-6">
+                                        <textarea class="form-control" name="AC_Notes6" id="AC_Notes6"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+
+                                <button type="submit" class="btn btn-greenbee ladda-button ladda-button-demo">
+                                    <i class="fa fa-check"></i>&nbsp;Enregistrer les modifications
+
+                                    <input type="text" hidden value="ModifierStatutAbo" id="choixBt" name="choixBt" />
+                                </button>
+
+                                @*<button type="submit" class="btn btn-greenbee ladda-button ladda-button-demo" name="cmd">
+                                <i class="fa fa-check"></i>&nbsp;Enregistrer les modifications</button>*@
+                            </div>
+
+
+                        </fieldset>
+
+                    </div>
+
+
+                }
+                else
+                {
+
+                    <div class="modal-body">
+                        <div class="alert alert-warning">
+                            Vous ne pouvez pas réserver de matériel.
+                        </div>
+                    </div>
+
+                }
+
+            </div>
+        </div>
+    </div>
+
+
+}
+
+@using (Html.BeginForm("ModifierSales", "AbonnementSales", FormMethod.Post, new { id = "popupForm" }))
+{
+    @Html.HiddenFor(model => model.cbMarq)
+    <div class="modal inmodal" id="ModifierAboChangerDebit" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content animated flipInX">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Ok</span></button>
+                </div>
+                <div class="modal-body">
+
+                    <div class="alert alert-warning">
+                        Vous pouvez changer le débit de cet abonnement.
+                    </div>
+                    <select class="col-md-6 form-control chosen-search " id="DebitAbonnement" name="DebitAbonnement">
+
+                        @if (ViewBag.listeDebitsDispo != null )
+                        {
+                            foreach (var item in ViewBag.listeDebitsDispo)
+                            {
+                                if (ViewBag.ArtPACKService.AR_Ref == item.AR_Ref)
+                                {
+                                    <option class="font-bold" value="@item.AR_Ref" selected="selected"> Débit: @item.D_Debit @item.AR_Ref  @item.AR_Design </option>
+
+                                }
+                                else
+                                {
+                                    <option class="font-bold" value="@item.AR_Ref"> Débit: @item.D_Debit - Article: @item.AR_Ref @item.AR_Design </option>
+                                }
+                            }
+                        }
+                       
+                           
+                       
+                    </select>
+                    Voulez-vous vraiment enregistrer les modifications?
+                    <div class="form-group">
+                        <label class="control-label">Commentaires</label>
+                        <div class="">
+                            <textarea type="text" id="AC_Notes2" name="AC_Notes2" class="form-control col-sm-pull-2"></textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-white" data-dismiss="modal">Annuler</button>
+                    <button type="submit" class="btn btn-greenbee ladda-button ladda-button-demo">
+                        <i class="fa fa-check"></i>&nbsp;Enregistrer les modifications
+                        <input type="text" hidden value="ModifierStatutAbo" id="choixBt" name="choixBt" />
+                    </button>
+                    @*<button type="submit" class="btn btn-primary ladda-button " data-style="expand-right">Enregistrer les modifications </button>*@
+                </div>
+            </div>
+        </div>
+    </div>
+
+}
+@*Resilie Abo*@
+<div class="modal inmodal" id="ResilieAbo" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content animated fadeIn">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title">Choisir motif de résiliation</h4>
+            </div>
+            @using (Html.BeginForm("ResilieAbonnement", "Abonnement", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+            {
+                <div class="modal-body">
+                    @Html.HiddenFor(model => model.cbMarq)
+                    <div class="form-group">
+                        <label class="control-label">Motif</label>
+                        <div class="">
+                            <select class="col-md-6 form-control chosen-select Motif_Annulation" id="Motif_Annulation" name="Motif_Annulation">
+                                <option class="font-bold" value="Aucun motif"> Aucun motif </option>
+                                @if (ViewBag.MotifResiliation != null)
+                                {
+                                    foreach (var item in ViewBag.MotifResiliation)
+                                    {
+                                        <option class="font-bold" value="@item.Motif"> @item.Motif </option>
+                                    }
+                                }
+                            </select>
+
+                        </div>
+                    </div>
+
+
+
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-white" data-dismiss="modal">Non</button>
+                    <button type="submit" class="btn btn-purplebee ladda-button">Oui </button>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<div class="modal inmodal" id="ShowListeReglements" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content animated flipInY">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Fermer</span></button>
+                <h4 class="modal-title">Liste des règlements </h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <form role="form">
+                        <div class="form-group">
+                            @if (ViewBag.ShowListeReglements == null)
+                            {
+                                <p>Aucune Facture </p>
+
+                            }
+                            else
+                            {
+                                <table class="table table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>N° Pièce</th>
+                                            <th>Date </th>
+                                            <th>Référence</th>
+                                            <th>Montant TTC</th>
+                                            <th>Type</th>
+                                            <th>Action</th>
+                                            <th>Voir </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var item in ViewBag.ShowListeReglements)
+                                        {
+
+                                            <tr>
+                                                <td>
+                                                    @if (item.DO_Statut == 0 || item.DO_Statut == 1)
+                                                    {
+                                                        <span class="label label-default"><i class="fa fa-check"></i> Non versé</span>
+                                                    }
+                                                    else
+                                                    {
+                                                        <span class="label label-success"><i class="fa fa-check"></i> Versé</span>
+
+                                                    }
+
+
+                                                </td>
+                                                <td>
+                                                    @item.DO_Date.ToString("dd/MM/yyyy")
+                                                </td>
+                                                <td>
+                                                    @item.DO_Piece
+                                                </td>
+
+                                                <td>
+                                                    @String.Format("{0:N3}", item.DO_MontantTTC) TND
+                                                </td>
+
+                                                <td>
+                                                    @if (item.DO_ModeRegl == 2)
+                                                    {
+                                                        <span class="bg-greenbee">ESPECE </span>
+
+                                                    }
+                                                    else if (item.N_ReglementDO_ModeRegl == 1)
+                                                    {
+                                                        <span class="bg-greenbee">CHEQUE </span>
+                                                    }
+                                                    else if (item.DO_ModeRegl == 9)
+                                                    {
+                                                        <span class="bg-greenbee">CARTE BANCAIRE </span>
+
+                                                    }
+                                                    else if (item.DO_ModeRegl == 4)
+                                                    {
+                                                        <span class="bg-greenbee">VIREMENT BANCAIRE </span>
+
+                                                    }
+                                                    else if (item.DO_ModeRegl == 5)
+                                                    {
+                                                        <span class="bg-greenbee">GARANTIE </span>
+
+                                                    }
+                                                    else
+                                                    {
+                                                        <span class="bg-greenbee"> -  </span>
+
+                                                    }
+                                                </td>
+
+                                                <td>
+                                                    @if (Request.IsAuthenticated && (User.IsInRole("Admin") || User.IsInRole("Generer Contre Recu")))
+                                                    {
+                                                        if (item.DO_PieceContreRecu == null)
+                                                        {
+                                                            <div class="form-group col-md-4">
+                                                                <button type="button" class="btn btn-graybee" title="Générer contre reçu" onClick="ContreRecuParReglement(@item.cbMarq);">
+                                                                    <i class="fa fa-edit"></i>
+                                                                </button>
+                                                            </div>
+                                                        }
+                                                        else
+                                                        {
+                                                            <span class="label label-success">contre reçu générée</span>
+                                                        }
+                                                    }
+                                                </td>
+
+                                                <td>
+                                                    <a class="btn btn-greenbee btn-circle btn-outline" title="voir le reçu de paiement "
+                                                       href="@Url.Action("ImpressionRecu","GestionFactures", new { id = item.cbMarq })" target="_blank">
+                                                        <i title="Imprimer Reçu " class="fa fa-print"></i>
+                                                    </a>
+
+                                                </td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            }
+
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-greenbee" data-dismiss="modal">Fermer</button>
+            </div>
+        </div>
+    </div>
+</div>
+@*ChangePeriodeEngage*@
+<div class="modal inmodal" id="ChangePeriodeEngage" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content animated bounceIn">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Fermer</span></button>
+                <h4 class="modal-title">Changement période de l'engagement</h4>
+            </div>
+            @using (Html.BeginForm("ChangerPeriodeEngage", "Abonnement", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+            {
+                <div class="modal-body">
+                    @Html.HiddenFor(model => model.cbMarq)
+                    <fieldset class="form-horizontal">
+                        <i>Etes vous sur de vouloir changer la période d'engagement pour cet abonnement ?</i>
+                        <div class="form-group ">
+                            <select class="form-control m-b" name="Periode_Engage" id="Periode_Engage">
+                                @if (ViewBag.Periode_Engage == 12)
+                                {
+                                    <option value=12 selected>12 Mois</option>
+                                        <option value=24>24 Mois</option>
+                                }
+                                else
+                                {
+                                    <option value=12>12 Mois</option>
+                                        <option value=24 selected>24 Mois</option>
+                                }
+
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">Remarque </label>
+                            <div class="col-sm-10">
+                                <textarea type="text" class="form-control" id="RemarqueChangement"></textarea>
+                            </div>
+                        </div>
+                    </fieldset>
+                </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-white" data-dismiss="modal">Annuler</button>
+                        <button type="submit" class="btn btn-warning">Oui </button>
+                    </div>
+            }
+        </div>
+    </div>
+</div>
+
+@*Modal Changement date contrat*@
+<div class="modal inmodal" id="Changerdatecontrat" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content animated flipInY">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Fermer</span></button>
+                <h4 class="modal-title"> Changement date contrat  </h4>
+            </div>
+            @using (Html.BeginForm("ChangementDateContrat", "Abonnement", FormMethod.Post, new { @class = "form-horizontal", role = "form", enctype = "multipart/form-data" }))
+            {
+                <div class="modal-body">
+                    @Html.HiddenFor(model => model.cbMarq)
+                    <fieldset class="form-horizontal">
+                        <div class="form-group">
+                            <label class="col-md-4 control-label">Changement date contrat </label>
+                            <div class="col-md-8">
+                                <input type="date" pattern="\d{1,2}/\d{1,2}/\d{4}" class="form-control" name="DO_DebutAbo" id="DO_DebutAbo">
+                            </div>
+                        </div>
+                    </fieldset>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-white" data-dismiss="modal">Annuler</button>
+                    <button type="submit" class="btn btn-purplebee  ladda-button">Valider</button>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+@*AnnulerAbonnement*@
+<div class="modal inmodal" id="AnnulerAbo" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content animated fadeIn">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title">Choisir motif d'annulation</h4>
+            </div>
+            @using (Html.BeginForm("AnnulerAbonnement", "Abonnement", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+            {
+                <div class="modal-body">
+                    @Html.HiddenFor(model => model.cbMarq)
+                    <div class="form-group">
+                        <label class="control-label">Motif</label>
+                        <div class="">
+                            <select class="col-md-6 form-control chosen-select Motif_Annulation" id="Motif_Annulation" name="Motif_Annulation">
+                                <option class="font-bold" value="Aucun motif"> Aucun motif </option>
+
+                                @if (ViewBag.liste != null)
+                                {
+                                    foreach (var item in ViewBag.Motifannulation)
+                                    {
+                                        <option class="font-bold" value="@item.Motif"> @item.Motif </option>
+                                    }
+                                }
+                            </select>
+
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-white" data-dismiss="modal">Non</button>
+                    <button type="submit" class="btn btn-purplebee ladda-button">Oui </button>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+@*ReslieAbonnement*@
+<div class="modal inmodal" id="ResilieAbo" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content animated fadeIn">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title">Choisir motif de résiliation</h4>
+            </div>
+            @using (Html.BeginForm("ResilieAbonnement", "Abonnement", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+            {
+                <div class="modal-body">
+                    @Html.HiddenFor(model => model.cbMarq)
+                    <div class="form-group">
+                        <label class="control-label">Motif</label>
+                        <div class="">
+                            <select class="col-md-6 form-control chosen-select Motif_Annulation" id="Motif_Annulation" name="Motif_Annulation">
+                                <option class="font-bold" value="Aucun motif"> Aucun motif </option>
+                                @if (ViewBag.MotifResiliation != null)
+                                {
+                                    foreach (var item in ViewBag.MotifResiliation)
+                                    {
+                                        <option class="font-bold" value="@item.Motif"> @item.Motif </option>
+                                    }
+                                }
+                            </select>
+
+                        </div>
+                    </div>
+
+
+
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-white" data-dismiss="modal">Non</button>
+                    <button type="submit" class="btn btn-purplebee ladda-button">Oui </button>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+  <!-- ChangeAgenceLivraison -->
+<div class="modal inmodal" id="ChangeAgenceLivraison" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content animated bounceIn">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Fermer</span></button>
+                <h4 class="modal-title">Changement Agence Livraison</h4>
+            </div>
+            @using (Html.BeginForm("ChangerAgenceLivraison", "Abonnement", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+            {
+                <div class="modal-body">
+                    @Html.HiddenFor(model => model.cbMarq)
+                    <fieldset class="form-horizontal">
+                        <i>Etes vous sur de vouloir changer l'agence livraison de cet abonnement  ?</i>
+                        <div class="form-group ">
+                            <select class="form-control chosen-select" name="A_CodeLivraison" id="A_CodeLivraison">
+
+                                @foreach (var item in ViewBag.ListOfAgences)
+                                {
+                                    if (item.Value == Model.A_CodeLivraison)
+                                    {
+                                        <option value="@item.Value" selected>@item.Text</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="@item.Value">@item.Text</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">Remarque </label>
+                            <div class="col-sm-10">
+                                <textarea type="text" class="form-control" id="RemarqueChangement"></textarea>
+                            </div>
+                        </div>
+                    </fieldset>
+                </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-white" data-dismiss="modal">Annuler</button>
+                        <button type="submit" class="btn btn-warning">Oui </button>
+                    </div>
+            }
+        </div>
+    </div>
+</div>
+<!-- Modal changer code gps -->
+<div class="modal inmodal" id="ChangerCodeGPS" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content animated bounceIn">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Fermer</span></button>
+                <h4 class="modal-title">Changement code GPS</h4>
+            </div>
+            @using (Html.BeginForm("ChangerCodeGPS", "Abonnement", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+            {
+                <div class="modal-body">
+                    @Html.HiddenFor(model => model.cbMarq)
+                    <fieldset class="form-horizontal">
+                        <i>Etes vous sur de vouloir changer le code GPS ?</i>
+
+                        <div class="row">
+                            <div class="form-group">
+                                <label class="col-md-4 control-label">Code GPS <sup>*</sup></label>
+                                <div class="col-md-8">
+                                    <div class="input-group">
+                                        <span class="input-group-btn">
+                                            <a href="https://www.tunisietelecom.tn/Fr/R%C3%A9seau/myaddress-code" class="btn btn-purplebee" target="_blank">Me localiser</a>
+                                        </span>
+                                        <input type="text" class="form-control" name="CodeGPS" id="CodeGPS" required value="@Model.CodeGPS">
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </fieldset>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-white" data-dismiss="modal">Annuler</button>
+                    <button type="submit" class="btn btn-warning">Oui </button>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+<!-- Toastr script -->
+<script src="~/js/plugins/toastr/toastr.min.js"></script>
+<script src="~/js/jquery-3.1.1.min.js"></script>
+<!-- Chosen -->
+<script src="~/js/plugins/chosen/chosen.jquery.js"></script>
+<script src="~/js/plugins/datapicker/bootstrap-datepicker.js"></script>
+<!-- Sweet alert -->
+<script src="~/js/plugins/sweetalert/sweetalert.min.js"></script>
+<!-- TouchSpin -->
+<script src="~/js/plugins/touchspin/jquery.bootstrap-touchspin.min.js"></script>
+<!-- Ladda -->
+<script src="~/js/plugins/ladda/spin.min.js"></script>
+<script src="~/js/plugins/ladda/ladda.min.js"></script>
+<script src="~/js/plugins/ladda/ladda.jquery.min.js"></script>
+<script>
+    function Changer(button) {
+        //Determine the reference of the Row using the Button.
+        var row = $(button).closest("tr");
+        var idPiece = $("td", row).eq(0).html();
+        var idNoSerie = $("td", row).eq(2).html();
+
+        var slect = $('select[name^="ListOfStatutNS"]', row).val();
+
+        $.ajax({
+            type: "get",
+            url: '/Abonnement/ModifierStatutNS?AboId=' + @Model.cbMarq + '&&NS=' + idNoSerie +'&&StatutS=' + slect, // we are calling json method
+            dataType: 'json',
+            success: function (msg) {
+                if(msg.msg=="0"){
+                    window.location = "/Abonnement/Modifier/@Model.cbMarq";
+
+                }else{
+                    toastr.error(msg.msg, 'Erreur Abonnement SUS');
+                }
+
+
+            }
+        });
+
+    };
+    $(document).ready(function () {
+        var ckbox = $("input[name='Abo_Freq']");
+        var chkId = '';
+        var userno1=0;
+        userno1 = userno1.toFixed(3);
+        var userno3=0;
+        userno3 = userno3.toFixed(3);
+        var usernoo6=0;
+        usernoo6 = usernoo6.toFixed(3);
+        var usernooo12=0;
+        usernooo12 = usernooo12.toFixed(3);
+        var userno24=0;
+        userno24 = userno24.toFixed(3);
+        if(@ViewBag.AR_RemiseP3!=null)
+        {
+            userno3=@ViewBag.AR_RemiseP3;
+            userno3 = userno3.toFixed(3);
+
+        }
+        if(@ViewBag.AR_RemiseP6!=null)
+        {
+            usernoo6=@ViewBag.AR_RemiseP6;
+            usernoo6 = usernoo6.toFixed(3);
+
+        }
+        if(@ViewBag.AR_RemiseP12!=null)
+        {
+            usernooo12=@ViewBag.AR_RemiseP12;
+            usernooo12 = usernooo12.toFixed(3);
+
+        }
+        $('input').on('click', function() {
+
+            if (ckbox.is(':checked')) {
+                $("input[name='Abo_Freq']:checked").each ( function() {
+                    chkId = $(this).val() + ",";
+                    chkId = chkId.slice(0, -1);
+                    if(chkId==1)
+                    {
+
+                        $("#DL_RemiseValeur").val(userno1.replace(".",","));
+
+                    }
+                    if(chkId==3)
+                    {
+
+                        $("#DL_RemiseValeur").val(userno3.replace(".",","));
+
+                    }
+                    if(chkId==6)
+                    {
+
+                        $("#DL_RemiseValeur").val(usernoo6.replace(".",","));
+                    }
+                    if(chkId==12)
+                    {
+                        $("#DL_RemiseValeur").val(usernooo12.replace(".",","));
+                    }
+                    if(chkId==24)
+                    {
+
+                        $("#DL_RemiseValeur").val(userno24.replace(".",","));
+
+                    }
+                });
+            }
+        });
+        $('.chosen-select').chosen({ width: "100%" });
+        $("#ChangementLotSerie1").trigger("chosen:updated");
+        $("#ChangementLotSerie2").trigger("chosen:updated");
+        // Bind normal buttons
+        Ladda.bind( '.ladda-button',{ timeout: 200000 });
+        // Bind progress buttons and simulate loading progress
+        Ladda.bind( '.progress-demo .ladda-button',{
+            callback: function( instance ){
+                var progress = 0;
+                var interval = setInterval( function(){
+                    progress = Math.min( progress + Math.random() * 0.1, 1 );
+                    instance.setProgress( progress );
+
+                    if( progress === 1 ){
+                        instance.stop();
+                        clearInterval( interval );
+                    }
+                }, 200000 );
+            }
+        });
+
+        var l = Ladda.bind('.ladda-button-demo');
+
+        l.click(function(){
+            // Start loading
+            l.ladda( 'start' );
+
+            // Timeout example
+            // Do something in backend and then stop ladda
+            setTimeout(function(){
+                l.ladda('stop');
+            },1200000)
+        });
+        $('.mycheck').on('change', function() {
+            $('.mycheck').not(this).prop('checked', false);
+        });
+        $('.i-checks').iCheck({
+            radioClass: 'iradio_square-green'
+        });
+        $('.chosen-select').chosen({ width: "100%" });
+        $('.i-checks').iCheck({
+            radioClass: 'iradio_square-green'
+        });
+        $('#DO_Statut').val(@Model.DO_Statut)
+        $('#DO_Statut').trigger("chosen:updated");
+        $("#validerAb").addClass('hidden');
+        var doetapee =@Model.DO_Etape;
+        $('#DO_Etape').val(doetapee)
+        $('#DO_Etape').trigger("chosen:updated");
+
+        if($("#DO_Ref").val().length != 0){
+            $("#DO_Ref").attr('disabled', true);
+        }
+        if($("#aboTel").val().length != 0){
+            $("#aboTel").attr('disabled', true);
+
+        }
+
+        $('.chosen-select').chosen({width: "100%"});
+      
+    });
+    $('#validerAb').click(function () {
+        $('#Valider').val(1);
+        $("#validerAbonement").modal();
+    });
+ 
+
+</script>

@@ -1,0 +1,209 @@
+﻿@model  BeeProj.Models.B_PARAMETRAGERISTOURNE
+
+@{ ViewBag.Title = "DetailsParametrageRistourne";
+    Layout = "~/Views/Shared/_Layout.cshtml"; }
+
+<!-- Toastr style -->
+<link href="~/css/plugins/toastr/toastr.min.css" rel="stylesheet">
+<link href="~/css/plugins/datapicker/datepicker3.css" rel="stylesheet" />
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+<link href="~/css/plugins/chosen/bootstrap-chosen.css" rel="stylesheet">
+<link href="~/css/plugins/awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css" rel="stylesheet">
+<link href="~/css/plugins/iCheck/custom.css" rel="stylesheet">
+<!-- Sweet Alert -->
+<link href="~/css/plugins/sweetalert/sweetalert.css" rel="stylesheet">
+<!-- Ladda style -->
+<link href="~/css/plugins/ladda/ladda-themeless.min.css" rel="stylesheet">
+<link href="~/css/plugins/touchspin/jquery.bootstrap-touchspin.min.css" rel="stylesheet">
+<link href="~/css/plugins/jasny/jasny-bootstrap.min.css" rel="stylesheet">
+<link href="~/css/plugins/dataTables/datatables.min.css" rel="stylesheet">
+
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-lg-10">
+        <h2>Détails Bonus</h2>
+        <ol class="breadcrumb">
+            <li><a href="@Url.Action("ParametrageRistourne","Administration")">Parametrage Bonus</a></li>
+            <li class="active"><strong> Détails parametrage Bonus</strong></li>
+        </ol>
+    </div>
+</div>
+
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-lg-12">
+            @if (TempData["MSG"] != null)
+            {
+<div class="alert alert-warning alert-dismissable">
+    <button type="button" class="close " data-dismiss="alert"> × </button>
+    <p class="text-danger">@TempData["MSG"]</p>
+</div>}
+            <div class="ibox float-e-margins">
+                <div class="ibox-content">
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="ibox">
+                                <div class="ibox-content">
+                                    <form id="ristourneForm">
+                                        @Html.HiddenFor(model => model.cbMarq)
+                                        <div class="row">
+                                            <div class="form-group col-xs-6">
+                                                <label class="col-sm-5 control-label">Choisir la famille </label>
+                                                <div class="col-sm-7">
+                                                    <select class="form-control chosen-search" id="FA_CodeFamille" name="FA_CodeFamille" onchange="updateDebitOptions()" required>
+                                                        @foreach (var item1 in ViewBag.Famille)
+                                                        {
+                                            <option value="@item1.FA_CodeFamille" @(item1.FA_CodeFamille == Model.FA_CodeFamille ? "selected" : "")>
+                                                @item1.FA_CodeFamille
+                                            </option>}
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="form-group col-xs-6">
+                                                <label class="col-sm-5 control-label">Choisir le débit :</label>
+                                                <div class="col-sm-7">
+                                                    <select class="col-md-6 form-control chosen-select" id="C_Debit" name="C_Debit" required>
+                                                        <option value="@Model.C_Debit">@Model.C_Debit </option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="form-group col-xs-6">
+                                                <label class="col-sm-5 control-label">Nbre Min</label>
+                                                <div class="col-sm-7">
+                                                    <input type="number" class="form-control" name="Nb_Min" id="Nb_Min" placeholder="Nbre Min" value="@Model.Nb_Min" required>
+                                                </div>
+                                            </div>
+                                            <div class="form-group col-xs-6">
+                                                <label class="col-sm-5 control-label">Nbre Max</label>
+                                                <div class="col-sm-7">
+                                                    <input type="number" class="form-control" name="Nb_Max" id="Nb_Max" placeholder="Nbre Max" value="@Model.Nb_Max" required>
+                                                </div>
+                                            </div>
+                                            <div class="form-group col-xs-6">
+                                                <label class="col-sm-5 control-label">Montant Commission</label>
+                                                <div class="col-sm-7">
+                                                    <input type="text" pattern="\d*([,\/]?\d+)" class="form-control" name="Montant_Commission"
+                                                           id="Montant_Commission" placeholder="Montant Commission" value="@String.Format("{0:N3}", (decimal)(Model.Montant_Commission ?? 0))" required>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <button class="btn btn-primary ladda-button pull-right" type="submit">
+                                            <i class="fa fa-save"></i> Modifier
+                                        </button>
+
+                                    </form>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Toastr script -->
+<script src="~/js/plugins/toastr/toastr.min.js"></script>
+<script src="~/js/jquery-3.1.1.min.js"></script>
+<!-- Chosen -->
+<script src="~/js/plugins/chosen/chosen.jquery.js"></script>
+<script src="~/js/plugins/datapicker/bootstrap-datepicker.js"></script>
+<!-- Sweet alert -->
+<script src="~/js/plugins/sweetalert/sweetalert.min.js"></script>
+<!-- TouchSpin -->
+<script src="~/js/plugins/touchspin/jquery.bootstrap-touchspin.min.js"></script>
+<!-- Ladda -->
+<script src="~/js/plugins/ladda/spin.min.js"></script>
+<script src="~/js/plugins/ladda/ladda.min.js"></script>
+<script src="~/js/plugins/ladda/ladda.jquery.min.js"></script>
+<script src="~/js/plugins/dataTables/datatables.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $('#listeparamristourne').DataTable({
+            pageLength: 25,
+            responsive: true,
+            dom: '<"html5buttons"B>lTfgitp',
+            buttons: [
+                { extend: 'copy' },
+                { extend: 'csv' },
+                { extend: 'excel', title: 'ExampleFile' },
+                { extend: 'pdf', title: 'ExampleFile' },
+                {
+                    extend: 'print',
+                    customize: function (win) {
+                        $(win.document.body).addClass('white-bg');
+                        $(win.document.body).css('font-size', '10px');
+                        $(win.document.body).find('table').addClass('compact').css('font-size', 'inherit');
+                    }
+                }
+            ]
+        });
+    });
+
+ $('form').on('submit', function(e) {
+    e.preventDefault();
+    $.ajax({
+        type: "POST",
+        url: '@Url.Action("ModifierRistourne", "Administration")',
+        data: $(this).serialize(),
+        success: function (response) {
+            window.location = "/Administration/ParametrageRistourne";
+
+        },
+        error: function (xhr, status, error) {
+            toastr.error(msg.msg, 'Erreur Abonnement SUS');
+        }
+    });
+});
+
+// Function to clear form fields
+function clearForm() {
+    $('#FA_CodeFamille').val('');
+    $('#C_Debit').empty().append("<option value=''>Sélectionnez un Débit</option>");
+    $('#Nb_Min').val('');
+    $('#Nb_Max').val('');
+    $('#Montant_Commission').val('');
+}
+    $('#FA_CodeFamille').change(function () {
+        region = $('select#FA_CodeFamille').find("option:selected").val();
+        updateDebitOptions();
+
+    });
+    function updateDebitOptions() {
+        $.ajax({
+            type: "get",
+            url: '@Url.Action("OnChangeDebit")',
+            dataType: 'json',
+            data: { FA_CodeFamille: $('select#FA_CodeFamille').find("option:selected").val() },
+            success: function (msg) {
+                if (msg.result == 0) {
+                    var len = msg.data.length;
+                    console.log(msg.data);
+                    $("#C_Debit").empty();
+                    for (var i = 0; i < len; i++) {
+                        $("#C_Debit").append("<option value='" + msg.data[i] + "'>" + msg.data[i] + "</option>");
+                    }
+                }
+            }
+        });
+    }
+
+    $('form').on('submit', function (e) {
+        e.preventDefault(); // Prevent default form submission
+
+        $.ajax({
+            type: "POST",
+            url: $(this).attr('action'),
+            data: $(this).serialize(),
+            success: function (response) {
+                toastr.success('Modification réussie !');
+                $('#DetailsParametrageRistourne').modal('hide');
+                // Optionally, refresh the DataTable or update UI here
+            },
+            error: function (xhr, status, error) {
+                toastr.error('Une erreur s\'est produite.');
+            }
+        });
+    });
+
+
+</script>

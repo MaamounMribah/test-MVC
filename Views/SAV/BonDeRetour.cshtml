@@ -1,0 +1,404 @@
+﻿@model BeeProj.Models.B_SAVENTETE
+
+@{
+    ViewBag.Title = "BonDeRetour";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+   .dataTables_filter, .dataTables_info, .dataTables_length, .dataTables_paginate {
+        display: none;
+    }
+</style>
+<div class="row wrapper border-bottom white-bg page-heading">
+
+    <div class="col-lg-8">
+        <br />
+        <strong> <h3>Bon de retour Ref # @ViewBag.Ref</h3></strong>
+        <ol class="breadcrumb">
+            <li>
+                <a href="@Url.Action("index","Home")">Acceuil </a>
+            </li>
+            @*<li>
+                <a href="@Url.Action("ListeResiliation","Resiliation")">Liste des Résiliation </a>
+            </li>*@
+            <li class="active">
+                <strong>Nouveau Bon de Retour</strong>
+            </li>
+        </ol>
+    </div>
+
+
+    <div class="col-md-2">
+
+    </div>
+</div>
+
+<div class="row m-t-md">
+    <form method="get" class="form-horizontal">
+
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="ibox float-e-margins">
+
+                    <div class="ibox-content">
+                        <br />
+                        <div class="form-group float-e-margins center-block">
+
+
+
+                            <div class="col-md-12" id="hideAgMere">
+
+                                <div class="form-group">
+                                    <label class="col-md-5 control-label">Identifiant :</label>
+                                    <div class="col-md-2">
+                                        @Html.TextBoxFor(model => model.CT_Identifiant, new { @id = "CT_Identifiant", @class = "form-control", @placeholder = "Identifiant ..." })
+
+
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+
+
+
+                    </div>
+
+                </div>
+            </div>
+
+
+
+
+        </div>
+
+
+
+
+
+
+
+
+
+        <div class="row hidden" id="test">
+
+            <div class="col-lg-12">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-content">
+
+
+                        <div class="form-group">
+
+
+                            <div class="col-md-4">
+                                <label class="col-md-4 control-label"></label>
+                                <div class="col-md-7">
+                                    @Html.TextBoxFor(model => model.CT_Intitule, new { @id = "CT_Intitule", @class = "form-control font-bold", @readonly = "readonly", @style = ("background-image: linear-gradient(0deg,#d7d7ea,#fff);") })
+
+
+
+
+                                </div>
+
+                            </div>
+
+
+                            <div class="col-md-4">
+                                <label class="col-md-4 control-label"></label>
+                                <div class="col-md-7">
+                                    @Html.TextBoxFor(model => model.CT_Telephone, new { @id = "CT_Telephone", @class = "form-control font-bold", @readonly = "readonly", @style = ("background-image: linear-gradient(0deg,#d7d7ea,#fff);") })
+
+
+
+
+                                </div>
+
+                            </div>
+
+
+
+                            <div class="col-md-4">
+                                <label class="col-md-4 control-label"></label>
+                                <div class="col-md-7">
+                                    @Html.TextBoxFor(model => model.DO_RefTT, new { @id = "DO_RefTT", @class = "form-control font-bold", @readonly = "readonly", @style = ("background-image: linear-gradient(0deg,#d7d7ea,#fff);") })
+
+
+
+
+                                </div>
+
+                            </div>
+
+
+                        </div>
+
+
+
+                    </div>
+
+                    <div class="ibox-content">
+
+
+                        <table class="table  table-bordered  dataTables-example" id="TableListeLignesSAV">
+
+                            <thead>
+                                <tr>
+                                    <th></th>
+                                    <th>Référence Article</th>
+                                    <th>Désignation</th>
+
+                                    <th>Quantité </th>
+                                    <th>N° Série</th>
+
+
+
+
+
+
+                                </tr>
+                            </thead>
+
+                        </table>
+
+
+                    </div>
+
+                    <div class="ibox-content">
+
+                        <div class="list-group">
+                            <button id="retourner" class="btn btn-purplebee  pull-right m-t-n-xs" style="margin-left:10px;" type="button"><strong>Envoyer</strong></button>
+                            <button type="button" class="btn btn-graybee  pull-right m-t-n-xs" onclick="location.href='@Url.Action("NouvelleResiliation","Resiliation")'"><strong>Annuler</strong></button>
+
+
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </form>
+</div>
+
+    <div class="modal inmodal fade" id="ListeAbonnements" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title">Liste des abonnements </h4>
+                </div>
+                <div class="modal-body">
+
+                    <div class="row">
+                        <div class="col-md-10">
+                            <input class="form-control" type="text" id="idC" />
+                        </div>
+                        <div class="col-md-2">
+                            <button class="btn btn-sm btn-rounded" id="retrieveListeAbo">Ok</button>
+                        </div>
+                    </div>
+
+                    <br />
+                    <div class="full-height-scroll">
+                        <div>
+                            <table class="table table-striped table-hover" id="TablelisteAbonnements" style="cursor:pointer;">
+
+                                <thead>
+                                    <tr>
+                                        <th>Référence Abonnement</th>
+                                        <th>Intitulé Client</th>
+                                        <th>Téléphone</th>
+
+                                        <th>Adresse</th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+                    </div>
+
+
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+
+    <script src="~/js/jquery-3.1.1.min.js"></script>
+
+    <script src="~/js/plugins/metisMenu/jquery.metisMenu.js"></script>
+
+    <script src="~/js/plugins/pace/pace.min.js"></script>
+    <script src="~/js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+
+    <script src="~/js/plugins/chosen/chosen.jquery.js"></script>
+
+    <script src="~/js/plugins/dataTables/datatables.min.js"></script>
+
+
+    <script>
+
+
+        $('document').ready(function () {
+
+
+            $('#CT_Identifiant').focus(function () {
+                //open bootsrap modal
+                $('#ListeAbonnements').modal({
+                    show: true
+                });
+                $("#TablelisteAbonnements").DataTable().destroy();
+
+            });
+
+
+
+
+
+            $("#retrieveListeAbo").click(function () {
+                if ($('#idC').val() != "") {
+                    $("#TablelisteAbonnements").DataTable({
+                        "ajax": {
+                            "url": "/Abonnement/listeAbonnementIdentifiant?IdentifiantClient=" + $('#idC').val(),
+                            "type": 'get',
+                            "datatype": "json"
+                        },
+                        "columns": [
+                            { "data": "DO_RefTT" },
+                            { "data": "CT_Intitule" },
+                            { "data": "CT_Telephone" },
+
+                            { "data": "CT_Adresse" },
+
+                        ]
+                    });
+
+
+                    $('#TablelisteAbonnements tbody').on('dblclick', 'tr', function () {
+                        $("#test").removeClass("hidden");
+                        var tr = $(this).closest('tr');
+                        var DO_RefTT = tr.find('td:eq(0)').html();
+                        var CT_Telephone = tr.find('td:eq(2)').html();
+                        var b = tr.find('td:eq(1)').html();
+                        var intitule = tr.find('td:eq(1)').html();
+                        //var adress = tr.find('td:eq(3)').html();
+                        $('#DO_RefTT').val(DO_RefTT);
+                        $('#DO_RefTT').trigger("chosen:updated");
+                        $("#CT_Identifiant").val($('#idC').val());
+                        $("#CT_Telephone").val(CT_Telephone);
+                        $("#CT_Intitule").val(intitule);
+                        //$("#CT_Adresse").val(adress);
+
+                        //$("#infoClient").attr("href", "/Structure/DetailsClient/" + msg.data.cbMarq);
+
+                        $('#ListeAbonnements').modal('hide');
+
+                        $('#TableListeLignesSAV').DataTable({
+                            "ajax": {
+
+                                "url": "/SAV/getAbonnementMateriel?DO_RefTT=" + $('#DO_RefTT').val(),
+                                "type": 'get',
+
+                                "bInfo": false,
+                                "bFilter": false,
+                                "paging": false,
+                                "ordering": false,
+                                "info": false,
+                                "filter": false,
+                                "datatype": "json"
+                            },
+                            "columns": [
+                                { "data": "cbMarq" },
+                                { "data": "AR_Ref" },
+                                { "data": "AR_Desigh" },
+                                { "data": "Qte" },
+                                { "data": "Serie" },
+                                //{ "data": "SuiviStock" },
+
+
+
+
+                            ],
+
+                            "columnDefs": [
+                                {
+                                    targets: [0],
+                                    render: function (data, type, row) {
+
+
+                                        return '<input type=\"checkbox\" value="' + data + '">';
+
+                                    }
+                                }
+                            ]
+                        });
+
+                    });
+
+
+
+
+
+
+                }
+            });
+
+
+
+
+
+
+            var selectCBM = []
+            var selectedREF = [] ;
+            var selectedQTE = [] ;
+            var selectedSERIE = [] ;
+            $('#retourner').click(function () {
+                $('#TableListeLignesSAV').find('input[type="checkbox"]:checked').each(function () {
+                    var tr = $(this).closest('tr');
+                    var cbMarq = tr.find('td:eq(0)').find('input').val();
+                    var reference = tr.find('td:eq(1)').html();
+                    var qt = tr.find('td:eq(3)').html();
+                    var serie = tr.find('td:eq(4)').html();
+
+                    selectCBM.push(cbMarq);
+                    selectedREF.push(reference);
+                    selectedQTE.push(qt);
+                    selectedSERIE.push(serie);
+
+                });
+
+            
+                //**************************
+                $.ajax({
+                    type: "get",
+                    url: "/SAV/RetournerStock?selectedREF=" + selectedREF + "&&selectedQTE=" + selectedQTE + "&&selectedSERIE=" + selectedSERIE + "&&selectCBM=" + selectCBM + "&&DO_RefTT=" + $('#DO_RefTT').val(),
+
+                    @*url: '@Url.Action("RetournerStock")',
+                    data: {id:@Model.cbMarq, selectedREF: selectedREF, selectedQTE: selectedQTE, selectedSERIE: selectedSERIE },*@
+                    dataType: 'json',
+                    success: function (msg) {
+                        window.location = "/SAV/ListeBonDeRetour/";
+
+                    }
+                });
+       
+
+            });
+
+
+
+
+
+
+
+
+
+
+
+
+
+        });
+
+    </script>

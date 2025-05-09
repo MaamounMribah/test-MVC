@@ -1,0 +1,467 @@
+﻿
+@{
+    ViewBag.Title = "DetailsMoisCommission";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<link href="~/css/plugins/sweetalert/sweetalert.css" rel="stylesheet">
+<link href="~/css/plugins/dataTables/datatables.min.css" rel="stylesheet">
+
+<!-- Ladda style -->
+<link href="~/css/plugins/ladda/ladda-themeless.min.css" rel="stylesheet">
+<!-- Toastr style -->
+<link href="~/css/plugins/toastr/toastr.min.css" rel="stylesheet">
+
+
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-lg-10">
+        <h2>Détails mois commission</h2>
+        <ol class="breadcrumb">
+            <li>
+                <a href="#">Acceuil</a>
+            </li>
+            <li>
+                <a href="#">Commission</a>
+            </li>
+            <li class="active">
+                <a href="#"><strong>Liste des facture commissionée</strong></a>
+            </li>
+        </ol>
+    </div>
+
+</div>
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox float-e-margins">
+
+
+
+                @if (ViewBag.DetailsMoisCommission != null)
+                {
+                <div class="form-group">
+                    @if (ViewBag.StatComm != 3)
+                    {
+                        if (ViewBag.StatComm == 0 && ((User.IsInRole("Admin")) || (User.IsInRole("Accepter Facture"))))
+                        {                            
+                                <div class="col-lg-2 pull-right">
+                                    <button class="btn btn-danger  btn-block" type="button" onclick="AccepteCommission()" ><i class="fa fa-dollar"></i> Valider  </button>
+                                </div>
+                            }
+                            else if (ViewBag.StatComm == 1 && ((User.IsInRole("Admin")) || (User.IsInRole("Valider Facture"))))
+                            {
+                                <div class="col-lg-2 pull-right">
+                                    <button class="btn btn-danger  btn-block" type="button" onclick="ValiderProformat()"><i class="fa fa-dollar"></i> Valider  </button>
+                                </div>
+
+                            }
+                            else if (ViewBag.StatComm == 2 && ((User.IsInRole("Admin")) || (User.IsInRole("Payer Facture"))))
+                            {
+                                <div class="col-lg-2 pull-right">
+                                    <button class="btn btn-danger  btn-block" type="button" onclick="PayerProformat()"><i class="fa fa-dollar"></i> Valider  </button>
+                                </div>
+                            }
+                            if ( ((User.IsInRole("Admin")) || (User.IsInRole("Rejeter Facture"))))
+                            {
+                                <div class="col-lg-2 pull-right">
+                                    <button class="btn btn-graybee-light  btn-block" type="button" id="AnnulerCommission"><i class="fa fa-close "></i> Rejeter </button>
+                                </div>
+                            }
+
+                        }
+                    </div>
+
+
+
+                    <div class="ibox-content">
+
+                        <table class="table table-striped table-responsive  listeparmois">
+
+                            <thead>
+                                <tr>
+                                    <th>Annee</th>
+                                    <th>Mois</th>
+                                    <th>N_Facture </th>
+                                    <th>Statut</th>
+                                    <th>H.T Facture </th>
+                                    <th>TTC Facture </th>
+                                    <th>Modele de commission </th>
+                                    <th>Montant commission Acquisition </th>
+                                    <th>Montant commission Standard </th>
+                                    <th>Montant commission Condition</th>
+                                    <th>Total Commission</th>
+
+                                    <th>Bordereau lié </th>
+                                </tr>
+                            </thead>
+
+                            @foreach (var item in ViewBag.DetailsMoisCommission)
+                            {
+                                <tr>
+                                    <td> @item.Annee</td>
+                                    <td> @System.Globalization.CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(item.Mois)</td>
+                                    <td> <a title="voir la facture" target="_blank" href="/GestionFactures/DetailsFacture/@item.cbMarqFacture"> @item.DO_Piece </a></td>
+                                    @if (item.Calcule == 0)
+                                    {
+                                        <td><strong><badge class="text-danger">Non calculé</badge></strong></td>
+                                    }
+                                    else
+                                    {
+                                        <td><strong><badge class="text-danger">Calculé</badge></strong></td>
+                                    }
+
+                                    <td>@String.Format("{0:N3}", item.MontanHT) <small>TND</small></td>
+                                    <td>@String.Format("{0:N3}", item.MontantTTC) <small>TND</small></td>
+
+                                    <td>@item.C_CodeCommission</td>
+                                    <td>@String.Format("{0:N3}", item.DO_Montant_Com_Acquisition) <small>TND</small></td>
+                                    <td>@String.Format("{0:N3}", item.DO_Montant_Com_Standard) <small>TND</small></td>
+                                    <td>@String.Format("{0:N3}", item.DO_Montant_Condition) <small>TND</small></td>
+                                    <td><strong><badge class="text-danger">@String.Format("{0:N3}", item.DO_TotalMontantCom)  </badge></strong><small>TND</small></td>
+                                    <td> @item.V_Piece</td>
+
+                                </tr>
+                            }
+                            <tfoot>
+                                <tr>
+                                    <td><strong>Total</strong></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td><strong><badge class="text-danger">@String.Format("{0:N3}", @ViewBag.TotalCommissionMois)   </badge><small>TND</small></strong></td>
+                                    <td></td>
+                                </tr>
+                            </tfoot>
+
+                        </table>
+
+                    </div>
+                }
+
+            </div>
+        </div>
+    </div>
+    <div class="modal inmodal" id="PaiementCommissionModal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content animated bounceIn">
+                <div class="modal-header">
+                    <div class="pull-right">
+                        <button type="button" id="RefreshListCbmarqCom"><i class="fa fa-close"></i></button>
+                    </div>
+                    <i class="fa fa-money modal-icon"></i>
+                    <h4 class="modal-title">Facturation commission </h4>
+                </div>
+                <div class="modal-body">
+                    <fieldset id="SubmitForm" class="float-e-margins">
+                        <div class="row">
+                            <div class="form-group float-e-margins">
+                                <input id="Valider" name="Valider" value="0" class="hidden" />
+                                <div class="row">
+                                    <div class="ibox float-e-margins">
+                                        <div class="ibox-content">
+                                            <form class="form-horizontal">
+
+                                                <div class="alert alert-danger alert-dismissable">
+                                                    <button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>
+                                                    Attention! Quand vous réclamer votre commission, toute facture payée dans le mois déjà payé ne sera plus pris en considération.
+                                                    Il est mieux de réclamer vos commission lorsque vous avez cloturé le mois.
+                                                </div>                                               
+                                                <div class="form-group">
+                                                    <label class="col-lg-4 control-label">Vous pouvez saisir le n° de votre facture</label>
+                                                    <div class="col-lg-8">
+                                                        <input type="text" class="form-control" disabled name="NFacture" id="NFacture" placeholder="Votre numéro de facture courante " value="@ViewBag.PieceCourante" />
+                                                    </div>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </fieldset>
+                </div>
+                <div class="modal-footer">
+                    <button type="reset" class="btn btn-white" data-dismiss="modal">Annuler</button>
+                    <button type="submit" class="btn btn-purplebee ladda-button" id="PayerFacture" onclick="this.disabled=true"><i class="fa fa-money"></i>Transformer en proformat </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal inmodal" id="PaiementCommissionModal1" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content animated bounceIn">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <i class="fa fa-money modal-icon"></i>
+                    <h4 class="modal-title">Annuler la demande</h4>
+                </div>
+                <div class="modal-body">
+                    <fieldset id="SubmitForm" class="float-e-margins">
+                        <div class="row">
+                            <div class="form-group float-e-margins">
+                                <input id="Valider" name="Valider" value="0" class="hidden" />
+                                <div class="row">
+                                    <div class="ibox float-e-margins">
+                                        <div class="ibox-content">
+                                                <form id="AnnulerForm" class="form-horizontal">
+                                                    <div class="form-group">
+                                                        <label class="col-lg-4 control-label">Commentaire *  </label>
+                                                        <div class="col-lg-8">
+                                                            <textarea class="form-control" name="Commentaire" id="Commentaire" required placeholder="Commentaire"></textarea>
+                                                        </div>
+                                                    </div>
+                                                </form>
+                                                <hr />
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </fieldset>
+                </div>
+                <div class="modal-footer">
+                    <button type="reset" class="btn btn-white" data-dismiss="modal"><i class="fa fa-close"></i> Annuler </button>
+                    <button type="button" class="btn btn-purplebee ladda-button" id="AnnulerFact" disabled><i class="fa fa-check" ></i> Confirmer </button>
+                </div>
+            </div>
+        </div>
+    </div>
+<script src="~/js/jquery-3.1.1.min.js"></script>
+<script src="~/js/plugins/dataTables/datatables.min.js"></script>
+<script src="~/js/plugins/sweetalert/sweetalert.min.js"></script>
+<!-- Ladda -->
+<script src="~/js/plugins/ladda/spin.min.js"></script>
+<script src="~/js/plugins/ladda/ladda.min.js"></script>
+<script src="~/js/plugins/ladda/ladda.jquery.min.js"></script>
+<!-- Toastr script -->
+<script src="~/js/plugins/toastr/toastr.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $('.listeparmois').DataTable({
+            ordering: false,
+            responsive: true,
+            dom: '<"html5buttons"B>lTfgitp',
+            buttons: [
+                { extend: 'copy' },
+                { extend: 'csv' },
+                { extend: 'excel', title: 'ExampleFile' },
+                { extend: 'pdf', title: 'ExampleFile' },
+                {
+                    extend: 'print',
+                    customize: function (win) {
+                        $(win.document.body).addClass('white-bg');
+                        $(win.document.body).css('font-size', '10px');
+
+                        $(win.document.body).find('table')
+                            .addClass('compact')
+                            .css('font-size', 'inherit');
+                    }
+                }
+            ]
+
+        });
+    });
+
+    document.getElementById("AnnulerFact").disabled = true; // Initially disabled
+
+    // Enable button when comment is not empty
+    document.getElementById("Commentaire").addEventListener("input", function () {
+        const commentaire = this.value.trim();
+        document.getElementById("AnnulerFact").disabled = (commentaire === "");
+    });
+
+    // Form validation on click
+    document.getElementById("AnnulerFact").addEventListener("click", function () {
+        const form = document.getElementById("AnnulerForm");
+
+        if (!form.checkValidity()) {
+            form.reportValidity(); // Shows validation messages
+            return;
+        }
+
+        // Proceed if valid
+        console.log("Formulaire valide");
+    });
+
+    @*$("#AccepteCommission").click(function () {
+
+        var cbMarqComm = @ViewBag.CbMarq;
+        var IdRevendeur= @ViewBag.IdRevendeur;
+       // alert(cbMarqComm);
+        $("#PaiementCommissionModal").modal();
+        $("#PayerFacture").click(function () {
+            $.ajax({
+                type: "get",
+                url: '/EspaceRevendeur/ProformatCommission?cbmCommission=' + cbMarqComm + '&&Facture_Revendeur=' + $('#NFacture').val(),
+                dataType: 'json',
+                success: function (msg) {
+                    if (msg.result == "Facture générée")
+                    {
+                        toastr.success('Proformat de facture a été générée avec succès ! ', 'Succes');
+                        window.location = "/InterrogationRevendeur/InterrogerRevendeur/" + IdRevendeur;
+                    }
+                    else
+                    {
+                        toastr.error('Veuillez contacter votre administateur ', 'error');
+                        window.location = "/InterrogationRevendeur/InterrogerRevendeur/" + IdRevendeur;
+                    }
+
+                }
+            });
+        });
+
+    });
+
+    $("#RefreshListCbmarqCom").click(function () {
+
+        cbMarqComm = [];
+        $("#PaiementCommissionModal").modal('hide');
+
+
+    });*@
+
+    $("#AnnulerCommission").click(function () {
+
+        var cbMarqComm = @ViewBag.CbMarq;
+         var IdRevendeur =@ViewBag.IdRevendeur;
+       // alert(cbMarqComm);
+        $("#PaiementCommissionModal1").modal();
+        $("#AnnulerFact").click(function () {
+            $.ajax({
+                type: "get",
+                url: '/InterrogationRevendeur/AnnulerProformat?id=' + cbMarqComm + '&&Commentaire=' + $('#Commentaire').val(),
+                dataType: 'json',
+                success: function (msg) {
+                    if (msg.result == "Facture annulée")
+                    {
+                        toastr.success('Facture annulée avec succès ! ', 'success');
+                        window.location = "/InterrogationRevendeur/InterrogerRevendeur/" + IdRevendeur;
+                    }
+                    else
+                    {
+                        toastr.error('Veuillez contacter votre administateur ', 'error');
+                        window.location = "/InterrogationRevendeur/InterrogerRevendeur/" + IdRevendeur;
+                    }
+
+                }
+            });
+        });
+
+    });
+    function AccepteCommission() {
+        var cbMarqComm = @ViewBag.CbMarq;
+         var IdRevendeur= @ViewBag.IdRevendeur;
+        swal({
+            title: "Accepter cette facture?",
+            text: " ",
+            type: "warning",
+            showCancelButton: true,
+            cancelButtonText: 'Annuler',
+            confirmButtonColor: "#DD6B55",
+            confirmButtonText: "Oui.",
+            closeOnConfirm: false
+        }, function () {
+            $.ajax({
+                type: "get",
+                url: "/GestionFactures/AccepteCommission?id=" + cbMarqComm, // valider facturation des commissions
+                dataType: 'json',
+                //data: { id: data },
+                success: function (msg) {
+                    if (msg.msg == 0) {
+                        swal("Accepté", msg.result, "success");
+                        window.location = "/InterrogationRevendeur/InterrogerRevendeur/" + IdRevendeur;
+                    }
+                    else {
+                        swal({
+                            title: "Echec!",
+                            text: "Un problème est survenu",
+                            type: "danger"
+                        });
+                        window.location = "/InterrogationRevendeur/InterrogerRevendeur/" + IdRevendeur;
+                    }
+                }
+            });
+        });
+    };
+    function ValiderProformat() {
+        var cbMarqComm = @ViewBag.CbMarq;
+         var IdRevendeur= @ViewBag.IdRevendeur;
+        swal({
+            title: "Valider cette facture?",
+            text: " ",
+            type: "warning",
+            showCancelButton: true,
+            cancelButtonText: 'Annuler',
+            confirmButtonColor: "#DD6B55",
+            confirmButtonText: "Oui.",
+            closeOnConfirm: false
+        }, function () {
+            $.ajax({
+                type: "get",
+                url: "/GestionFactures/ValiderProformat?id=" + cbMarqComm, // valider facturation des commissions
+                dataType: 'json',
+                //data: { id: data },
+                success: function (msg) {
+                    if (msg.msg == 0) {
+                        swal("Validé", msg.result, "success");
+                        window.location = "/InterrogationRevendeur/InterrogerRevendeur/" + IdRevendeur;
+                    }
+                    else {
+                        swal({
+                            title: "Echec!",
+                            text: "Un problème est survenu",
+                            type: "danger"
+                        });
+                        window.location = "/InterrogationRevendeur/InterrogerRevendeur/" + IdRevendeur;
+                    }
+                }
+            });
+        });
+    };
+
+
+    function PayerProformat() {
+        var cbMarqComm = @ViewBag.CbMarq;
+         var IdRevendeur =@ViewBag.IdRevendeur;
+        swal({
+            title: "Payer cette facture?",
+            text: " ",
+            type: "warning",
+            showCancelButton: true,
+            cancelButtonText: 'Annuler',
+            confirmButtonColor: "#DD6B55",
+            confirmButtonText: "Oui.",
+            closeOnConfirm: false
+        }, function () {
+            $.ajax({
+                type: "get",
+                url: "/GestionFactures/PayerProformat?id=" + cbMarqComm, // valider facturation des commissions
+                dataType: 'json',
+                //data: { id: data },
+                success: function (msg) {
+                    if (msg.msg == 0) {
+                        swal("Payé", msg.result, "success");
+                        window.location = "/InterrogationRevendeur/InterrogerRevendeur/" + IdRevendeur;
+                    }
+                    else {
+                        swal({
+                            title: "Echec!",
+                            text: "Un problème est survenu",
+                            type: "danger"
+                        });
+                        window.location = "/InterrogationRevendeur/InterrogerRevendeur/" + IdRevendeur;
+                    }
+                }
+            });
+        });
+    };
+
+</script>

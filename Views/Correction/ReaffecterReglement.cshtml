@@ -1,0 +1,293 @@
+﻿
+@{
+    ViewBag.Title = "Reaffecter Règlement";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<!-- Sweet Alert -->
+<!----<link href="~/css/plugins/sweetalert/sweetalert.css" rel="stylesheet">-->
+<!-- Toastr style -->
+<link href="~/css/plugins/toastr/toastr.min.css" rel="stylesheet">
+<link href="~/css/plugins/chosen/bootstrap-chosen.css" rel="stylesheet">
+<link href="~/css/plugins/jasny/jasny-bootstrap.min.css" rel="stylesheet">
+
+<link href="~/css/plugins/datatables/datatables.min.css" rel="stylesheet" />
+
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-lg-8">
+        <h2>Réaffecter règlement</h2>
+        <ol class="breadcrumb">
+            <li>
+                <a>Acceuil</a>
+            </li>
+            <li>
+                <a>Réaffecter un règlement </a>
+            </li>
+
+        </ol>
+    </div>
+    <div class="col-lg-2">
+    </div>
+</div>
+
+
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="ibox float-e-margins">
+            <div class="row">
+                @if (ViewBag.Clnotexiste!=null )
+                   {
+                    <div class="ibox float-e-margins">
+                        <div class="ibox-title" style="height:100px;">
+                            <div class="alert alert-danger">
+                                <strong>Attention!</strong>
+                                <h4>Ce client n'existe plus </h4>
+                            </div>
+                        </div>
+                    </div>
+                     }
+            </div>
+            <div class="row">
+                @if (ViewBag.message != null && ViewBag.reglement == null)
+                {
+
+                    <div class="ibox float-e-margins">
+                        <div class="ibox-title" style="height:100px;">
+                            <div class="alert alert-danger">
+                                <strong>Attention!</strong>
+                                <h4> @ViewBag.message </h4>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+            <div class="row">
+                @if (ViewBag.msg != null)
+                {
+                    <div class="ibox float-e-margins">
+                        <div class="ibox-title" style="height:100px;">
+                            <div class="alert alert-danger">
+                                <strong>Attention!</strong>
+                                @for (int t = 0; t < ViewBag.msg.Length; t++)
+                                 {
+                                    <h4><b> @ViewBag.msg[t]</b>  ,cette abonnement posséde déjà un contre reçu</h4>
+                                 }
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+            <div class="ibox-title" style="height:100px;">
+
+                @using (Html.BeginForm("ReaffecterReglement", "Correction", FormMethod.Post))
+                {
+                    <label class="control-label">Recherche par identifiant ou bien code abonnement</label>
+                    <div class="input-group">
+
+                        <input type="text" class="form-control" id="identifiant" name="identifiant" value="@ViewBag.Rech" />
+
+                        <span class="input-group-btn">
+                            <button type="submit" class="btn btn-purplebee ladda-button" onClick="Vide()"> Rechercher </button>
+                            @*<button type="submit" class="btn btn-purplebee btn-rounded btn-outline" onClick="Vide()">Rechercher</button>*@
+                        </span>
+                    </div>
+                }
+
+            </div>
+            <div class="ibox-content">
+                <div class="row">
+                    @if (ViewBag.reglement != null && ViewBag.Rech !=null)
+                       {
+                        <table class="table table-striped table-bordered table-hover dataTables-example full-width" id="EtatEchangeTable">
+                            <thead>
+                                <tr>
+                                    <th>Réglement</th>
+                                    <th>Description</th>
+                                    <th>Intitule</th>
+                                    <th>Abonnement</th>
+                                    <th>Montant réglement</th>
+                                    <th>Date</th>
+                                    <th>Statut</th>
+                                    <th>Versement</th>
+                                    <th>Créateur</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in ViewBag.reglement)
+                                {
+                                    <tr class="gradeX">
+                                        <td>@item.DO_Piece</td>
+                                            @*<a href="@Url.Action("ImpressionRecu","GestionFactures", new { id = item.cbmarq })" target="_blank">
+                                                @item.DO_Piece
+                                            </a>*@  @*</td>*@
+                                        <td>@item.AB_Piece</td>
+                                        <td>@item.CT_Intitule</td>
+                                        @*<td><a href=@Url.Action("Details/" + item.cbmarqabo, "Abonnement") target="_blank"> @item.AB_Abonnement </a></td>*@
+                                        <td>@item.AB_Abonnement</td>
+                                        <td>@item.DO_MontantTTC</td>
+                                        <td>@item.do_date.ToString("dd/MM/yyyy")</td>
+                                        @if (item.do_statut == 1)
+                                           {
+                                            <td>payée</td>
+                                           }
+                                          else if (item.do_statut == 2 || item.do_statut == 3)
+                                           {
+                                            <td>versé</td>
+                                            }
+                                        @if (item.do_statut == 1)
+                                           {
+                                            <td>n'est pas versé</td>
+                                        }
+                                        else if (item.do_statut == 2 || item.do_statut == 3)
+                                        {
+                                            if (item.cbmarqbord != "")
+                                            {
+                                                <td><a href="@Url.Action("DetailsVersement/" + @item.cbmarqbord, "GestionFactures")">@item.do_pieceversement</a></td>
+                                            }
+                                            else
+                                            {
+                                                <td>@item.do_pieceversement</td>
+                                            }
+                                        }
+                                        <td>@item.cbcreateur</td>
+                                        <td><center><button type="button" class="btn btn-purplebee ladda-button" onclick="Reaffecter(this)"><span class="glyphicon glyphicon-transfer"></span>  Réaffecter </button></center></td>
+
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+        @if (ViewBag.abonnemonet != null)
+        {
+            <div class="modal inmodal" id="PaiementCommissionModal" tabindex="-1" role="dialog" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content animated bounceIn">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                            <i class="fa fa-money modal-icon"></i>
+                            <h4 class="modal-title">Réaffecter réglement</h4>
+                        </div>
+                        <div class="modal-body">
+                            <fieldset id="SubmitForm" class="float-e-margins">
+                                <div class="row">
+                                    <div class="row">
+                                        <div class="ibox-content">
+                                            <form class="form-horizontal">
+                                                <div class="form-group">
+                                                    <label class="col-lg-4 control-label">Vous Voulez réaffecter ce réglement à l'abonnement*</label>
+                                                    <div class="col-lg-8">
+                                                        <select class="col-lg-8 form-control chosen-search " id="cbindice" name="cbindice" required>
+                                                            @foreach (var item in ViewBag.abonnemonet)
+                                                                        {
+                                                                        <option class="font-bold" value="@item.DO_Piece"> @item.DO_Piece </option>
+                                                                        }
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="col-lg-4 control-label">Commentaire</label>
+                                                    <div class="col-lg-8">
+                                                        @*<input type="text" name="Commentaire" id="Commentaire" placeholder="Commentaire" required />*@
+                                                        <textarea class="form-control" name="Commentaire" id="Commentaire" maxlength="34" required></textarea>
+                                                    </div>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </fieldset>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="reset" class="btn btn-white" data-dismiss="modal"><i class="fa fa-close"></i> Annuler </button>
+                            <button type="button" class="btn btn-purplebee" id="PayerFacture"><i class="fa fa-check-circle"></i> Confirmer </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+
+
+ </div>
+
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+<script src="~/js/plugins/dataTables/datatables.min.js"></script>
+<script src="~/js/jquery-3.1.1.min.js"></script>
+<script src="~/js/accounting.js"></script>
+<script src="~/js/accounting.min.js"></script>
+<!-- Chosen -->
+<script src="~/js/plugins/chosen/chosen.jquery.js"></script>
+<!-- Toastr script -->
+<script src="~/js/plugins/toastr/toastr.min.js"></script>
+@*<script src="~/js/plugins/metisMenu/jquery.metisMenu.js"></script>
+    <script src="~/js/plugins/slimscroll/jquery.slimscroll.min.js"></script>*@
+<script src="~/js/plugins/dataTables/datatables.min.js"></script>
+<!-- Sweet alert -->
+<!----<script src="~/js/plugins/sweetalert/sweetalert.min.js"></script>-->
+
+
+<script>
+
+    $(document).ready(function () {
+
+        $('.dataTables-example').DataTable({
+            pageLength: 25,
+            responsive: true,
+            dom: '<"html5buttons"B>lTfgitp',
+        });
+    });
+
+                    $('.chosen-select').chosen({ width: "100%" });
+            
+                    function Vide() {
+
+                        $('form input[type= text]').each(function () {
+                            //If the field's empty
+                            if ($(this).val() == '') {
+                                toastr.error('Veuillez tapez un identifiant !', 'error');
+                            }
+                        });
+
+                    }
+
+                    function Reaffecter(button) {
+                        $("#PaiementCommissionModal").modal();
+                        var row = $(button).closest("tr");
+                        var piecereglement = $("td", row).eq(0).html();
+                        var aboInRow = $("td", row).eq(3).html();
+                        //var AbonnementChoisi= $('select[name^="cbindice"]', row).val();
+                        var AbonnementChoisi = $('select#cbindice').find("option:selected").val();
+                        //var Commentaire = $("textarea#Commentaire").val();
+                        $('#cbindice').change(function () {
+
+                            AbonnementChoisi = $('select#cbindice').find("option:selected").val();
+
+                        });
+                    
+                        $("#PayerFacture").click(function () {
+                            $.ajax({
+                                type: "get",
+                                url: '/Correction/Reaffecter_Reglement?piecereglement=' + piecereglement + '&&AbonnementChoisi=' + AbonnementChoisi + '&&aboInRow=' + aboInRow + '&&Commentaire=' + $("textarea#Commentaire").val(),
+                                dataType: 'json',
+                                success: function (msg) {
+                                    if (msg.result == "success") {
+                                        toastr.success('Réaffectation ce fait avec succès ! ', 'success');
+                                        location.reload();
+                                    }
+                                    else {
+                                        toastr.error('Vous ne peut pas réaffecter aux méme abonnement! ', 'error');
+                                        location.reload();
+                                    }
+
+                                }
+                            });
+                        });
+                    };
+
+
+                </script>

@@ -1,0 +1,210 @@
+﻿@{
+    ViewBag.Title = "Liste des abonnements Web";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<link href="~/css/plugins/dataTables/datatables.min.css" rel="stylesheet">
+<!-- Sweet Alert -->
+<link href="~/css/plugins/sweetalert/sweetalert.css" rel="stylesheet">
+
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-lg-10">
+        <h2>Liste des abonnements web</h2>
+        <ol class="breadcrumb">
+            <li>
+                <a href="#">Acceuil</a>
+            </li>
+            <li>
+                <a href="@Url.Action("Index", "ListeAbonnementsWeb")">Gestion des abonnements</a>
+            </li>
+            <li class="active">
+                <a href="@Url.Action("Index", "ListeAbonnementsWeb")"><strong>Liste des abonnements web</strong></a>
+            </li>
+        </ol>
+    </div>
+
+</div>
+
+@if (ViewBag.listeabonnements != null)
+{
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <h5>Informations sur les abonnements</h5>
+                        @if (Request.IsAuthenticated && (User.IsInRole("Admin") || User.IsInRole("Exporter Abonnements")))
+                        {
+                            <a class="btn  btn-xs btn-purplebee pull-right" href=@Url.Action("ExportListeAbonnements", "Export", new { type = 4 })><i class="fa fa-file-excel-o"> </i> Exporter la liste des abonnements</a>
+                            <a class="btn  btn-xs btn-greenbee pull-right" href=@Url.Action("ExportListeAbonnementsBEE", "Export", new { type = 4 })><i class="fa fa-file-excel-o"> </i> Exporter la liste des abonnements BEE</a>
+                        }
+                    </div>
+                    <div class="ibox-content">
+                        <div class="table-responsive">
+
+                            <table class="table table-striped table-bordered table-responsive table-hover dataTables-example" id="listeAbo">
+                                <thead>
+                                    <tr>
+                                        <th>Statut</th>
+                                        <th>Etape</th>
+                                        <th>Code Abonnement</th>
+                                        <th>Réference TT </th>
+                                        <th>Téléphone</th>
+                                        <th>Client</th>
+                                        <th>Identifiant</th>
+                                        <th>GSM </th>
+                                        <th>Agence</th>
+                                        <th>Ville</th>
+                                        <th>Gouvernorat</th>
+                                        <th>Avancement</th>
+                                        <th>Type Agence</th>
+                                        <th>Date de création</th>
+                                        <th></th>
+
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in ViewBag.listeabonnements)
+                                    {
+                                    <tr class="gradeX">
+                                        <td>@item.Statut</td>
+                                        @if (@item.Etape == 0)
+                                        {
+                                            <td><span class="text-graybee">Etude éligibilité</span></td>
+                                        }
+                                        else if (@item.Etape == 1)
+                                        {
+                                            <td><span class="text-graybee"></span>Réservation TT</td>
+                                        }
+                                        else if (@item.Etape == 2)
+                                        {
+                                            <td><span class="text-greenbee">Tirage jarretière</span></td>
+                                        }
+                                        else if (@item.Etape == 3)
+                                        {
+                                            <td><span class="text-purplebee">Migration offre fixe</span></td>
+                                        }
+                                        else if (@item.Etape == 4)
+                                        {
+                                            <td><span class="text-success">Réservation Matériel</span></td>
+                                        }
+                                        else if (@item.Etape == 5)
+                                        {
+                                            <td><span class="text-success">Paiement et livraison</span></td>
+                                        }
+                                        else if (@item.Etape == 6)
+                                        {
+                                            <td><span class="text-success">Facturation</span></td>
+                                        }
+                                        else if (@item.Etape == 7)
+                                        {
+                                            <td><span class="text-greenbee"><i class="fa fa-check"></i> Validé</span> </td>
+                                        }
+                                        else if (@item.Etape == 8)
+                                        {
+                                            <td><span class="text-danger"><i class="fa fa-remove"></i> Annulé</span> </td>
+                                        }
+                                        else
+                                        {
+                                            <td><span class="text-success">indéfini</span></td>
+                                        }
+                                        <td>@item.CodeAbonnement</td>
+                                        <td>@item.ReferenceTT</td>
+                                        <td>@item.NumeFixe</td>
+                                        <td>@item.Client</td>
+                                        <td>@item.Identifiant</td>
+                                        <td>@item.Téléphone</td>
+                                        <td>@item.IntituleAgence</td>
+                                        <td>@item.Ville</td>
+                                        <td>@item.CT_Gouvernorat</td>
+                                        <td>
+                                            <small>Pourcentage: @item.Avancement %</small>
+                                            <div class="progress progress-mini"><div style="width:@item.Avancement%;" class="progress-bar"></div></div>
+                                        </td>
+
+                                        <td>@item.TypeAgence</td>
+                                        <td>@item.DateCreation.ToString("dd/MM/yyyy")</td>
+                                        <td class="project-completion">
+                                            <a href=@Url.Action("Details/" + @item.Cbmarq, "Abonnement") class="btn btn-sm btn-outline btn-purplebee ">
+                                                <i class="fa fa-eye "></i> Détails
+                                            </a>
+
+                                        </td>
+
+
+
+
+
+                                    </tr>
+                                    }
+                                </tbody>
+                            </table>
+                            </div>
+                        </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+else
+{
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <div class="row">
+
+
+            @if (ViewBag.Error != null)
+            {
+                <div class="alert alert-warning alert-dismissable">
+
+                    <p>Aucun abonnement web a été crée</p>
+                </div>
+            }
+
+
+        </div>
+    </div>
+}
+
+
+<script src="~/js/jquery-3.1.1.min.js"></script>
+<script src="~/js/plugins/metisMenu/jquery.metisMenu.js"></script>
+<script src="~/js/plugins/pace/pace.min.js"></script>
+<script src="~/js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+<script src="~/js/plugins/chosen/chosen.jquery.js"></script>
+<script src="~/js/plugins/dataTables/datatables.min.js"></script>
+<!-- Sweet alert -->
+<script src="~/js/plugins/sweetalert/sweetalert.min.js"></script>
+
+<script>
+    $(document).ready(function () {
+
+        $('#listeAbo').DataTable({
+            //pageLength: 15,
+          //  "order": [[6, "desc"]],
+            responsive: true,
+			ordering: false,
+            dom: '<"html5buttons"B>lTfgitp',
+            buttons: [
+                { extend: 'copy' },
+                { extend: 'csv' },
+                { extend: 'excel', title: 'ExampleFile' },
+                { extend: 'pdf', title: 'ExampleFile' },
+                {
+                    extend: 'print',
+                    customize: function (win) {
+                        $(win.document.body).addClass('white-bg');
+                        $(win.document.body).css('font-size', '10px');
+
+                        $(win.document.body).find('table')
+                                .addClass('compact')
+                                .css('font-size', 'inherit');
+                    }
+                }
+            ]
+
+        });
+		});
+
+
+
+</script>

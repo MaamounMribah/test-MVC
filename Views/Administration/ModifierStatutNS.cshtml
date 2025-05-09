@@ -1,0 +1,193 @@
+﻿@model BeeProj.Models.P_ARTSTATUTS
+@{
+    ViewBag.Title = "ModifierStatutNS";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@*<h2>ModifierStatutNS</h2>*@
+
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-lg-10">
+        <h2>Administration</h2>
+        <ol class="breadcrumb">
+            <li>
+                <a href="@Url.Action("StatutNS","Administration")">Liste Motifs</a>
+            </li>
+            <li class="active">
+                <a href="@Url.Action("ModifierStatutNS","Administration")"><strong>Modifier</strong></a>
+            </li>
+
+
+        </ol>
+    </div>
+    <div class="col-lg-2">
+
+    </div>
+</div>
+<div class="row wrapper wrapper-content ">
+
+    <div class="col-lg-12">
+        <div class="ibox-content">
+            <div class="row">
+
+
+
+                <div class="col-lg-12">
+
+
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="ibox float-e-margins">
+                                <div class="ibox-title">
+
+                                    <div class="pull-left">
+                                        <h5 class="text-purplebee"> Modifier Statut </h5>
+                                    </div>
+
+                                </div>
+                                <div class="ibox-content">
+                           @using (Html.BeginForm("ModifierStatutNS", "Administration", FormMethod.Post, new { id = "popupForm" }))
+                           {
+                                @Html.HiddenFor(model => model.cbMarq)
+                                        <div class="row">
+
+                                            <div class="row">
+                                                <br />
+
+                                                <div class="row form-group col-md-6">
+                                                    <div class="col-md-12">
+
+                                                        <label>Intitule <sup>*</sup></label>
+
+                                                        <div class="input-group">
+                                                            <span class="input-group-addon"><i class="fa fa-file"></i></span>
+                                                            <input type="text" class="form-control" id="Intitule" name="Intitule" value="@Model.Intitule">
+                                                        </div>
+
+                                                    </div>
+                                                </div>
+                                                <div class="row form-group col-md-6">
+
+                                                    <div class="col-md-12">
+                                                        <label>Etat <sup>*</sup> </label>
+
+
+                                                        <div class="input-group">
+                                                            <span class="input-group-addon"><i class="fa fa-cogs"></i></span>
+                                                            <select class="form-control chosen-select" name="Actif">
+                                                                @if (Model.Actif == 0)
+                                                                {
+                                                                    <option class="font-bold" name="Actif" value="0" selected>Actif </option>
+                                                                    <option class="font-bold" name="Actif" value="1">Masquer </option>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <option class="font-bold" name="Actif" value="0">Actif </option>
+                                                                    <option class="font-bold" name="Actif" value="1" selected>Masquer </option>
+                                                                }
+
+                                                            </select>
+                                                        </div>
+
+
+                                                    </div>
+
+                                                </div>
+
+                                                <div class="row form-group col-md-6">
+                                                    <div class="col-md-12">
+
+                                                        <label>Statut par defaut:<sup>*</sup></label>
+
+                                                        <div class="input-group">
+                                                            <span class="input-group-addon"><i class="fa fa-bookmark-o"></i></span>
+                                                            <select class="form-control chosen-select" name="isDefaut">
+                                                                @if (Model.isDefaut == true)
+                                                                {
+                                                                    <option class="font-bold" name="isDefaut" value=true selected>Oui </option>
+                                                                    <option class="font-bold" name="isDefaut" value=false>Non </option>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <option class="font-bold" name="isDefaut" value=true>Oui </option>
+                                                                    <option class="font-bold" name="isDefaut" value=false selected>Non </option>
+                                                                }
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <br />
+
+
+
+                                            </div>
+                                            <br />
+                                            <div class="modal-footer">
+                                                <button type="submit" class="btn btn-greenbee ladda-button ladda-button-demo"  ><i class="fa fa-edit"></i>&nbsp;Modifier</button>
+                                                
+                                            </div>
+                                        </div>
+
+
+                                    }
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+
+
+
+            </div>
+        </div>
+
+    </div>
+
+
+</div>
+
+
+<!-- Ladda -->
+<script src="~/js/plugins/ladda/spin.min.js"></script>
+<script src="~/js/plugins/ladda/ladda.min.js"></script>
+<script src="~/js/plugins/ladda/ladda.jquery.min.js"></script>
+<script>
+    // Bind normal buttons
+    Ladda.bind('.ladda-button', { timeout: 100000 });
+    // Bind progress buttons and simulate loading progress
+    Ladda.bind('.progress-demo .ladda-button', {
+        callback: function (instance) {
+            var progress = 0;
+            var interval = setInterval(function () {
+                progress = Math.min(progress + Math.random() * 0.1, 1);
+                instance.setProgress(progress);
+
+                if (progress === 1) {
+                    instance.stop();
+                    clearInterval(interval);
+                }
+            }, 100000);
+        }
+    });
+
+    var l = Ladda.bind('.ladda-button-demo');
+
+    l.click(function () {
+        // Start loading
+        l.ladda('start');
+
+        // Timeout example
+        // Do something in backend and then stop ladda
+        setTimeout(function () {
+            l.ladda('stop');
+        }, 1000000)
+    });
+</script>
+
+
+
+

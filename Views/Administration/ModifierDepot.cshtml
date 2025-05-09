@@ -1,0 +1,132 @@
+﻿@model BeeProj.Models.D_DEPOT
+
+@{
+    ViewBag.Title = "ModifierDepot";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-lg-8">
+        <h2>Dépôt </h2>
+        <ol class="breadcrumb">
+            <li>
+                <a>Administration</a>
+            </li>
+            <li>
+                <a>Liste dépôts</a>
+            </li>
+            <li class="active">
+                <strong>Modifier Dépôt</strong>
+            </li>
+        </ol>
+    </div>
+    <div class="col-lg-2">
+
+    </div>
+</div>
+
+<div class="wrapper wrapper-content animated fadeInRight">
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-content">
+                    <div class="form-horizontal">
+                        @using (Html.BeginForm("ModifDepot", "Administration", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+                        {
+
+                            <div class="wrapper wrapper-content animated fadeInRight">
+                                <div class="row">
+
+                                    <div class="ibox float-e-margins">
+                                   
+                                        @Html.HiddenFor(model => model.cbMarq)
+                                        <div class="ibox-content">
+                                            <div class="row">
+                                                <fieldset id="myForm">
+
+                                                    <div class="col-sm-10 b-r">
+
+                                                        <form role="form">
+
+                                                            <div class="form-group">
+                                                                <label class="col-md-4 control-label">Intitulé</label>
+                                                                <div class="col-md-8">
+                                                                    <input id="DE_Intitule" name="DE_Intitule" class="form-control"  value="@Model.DE_Intitule"/>
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label class="col-md-4 control-label">Adresse</label>
+                                                                <div class="col-md-8">
+                                                                    <input id="DE_Adresse" name="DE_Adresse" class="form-control" value="@Model.DE_Adresse" />
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label class="col-md-4 control-label">Ville</label>
+                                                                <div class="col-md-8">
+                                                                    <input id="DE_Ville" name="DE_Ville" class="form-control"  value="@Model.DE_Ville"/>
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label class="col-md-4 control-label">Code Region</label>
+                                                                <div class="col-md-8">
+                                                                    <input id="DE_Region" name="DE_Region" class="form-control" value="@Model.DE_Region" />
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label class="col-md-4 control-label">Email</label>
+                                                                <div class="col-md-8">
+                                                                    <input id="DE_Mail" name="DE_Mail" class="form-control"  value="@Model.DE_EMail"/>
+                                                                </div>
+                                                            </div>
+
+                                                          
+
+                                                            <div class="form-group">
+                                                                <label class="col-md-4 control-label">Telephone</label>
+                                                                <div class="col-md-8">
+                                                                    <input id="DE_Telephone" name="DE_Telephone" class="form-control" value="@Model.DE_Telephone" />
+                                                                </div>
+                                                            </div>
+
+
+                                                            <div class="form-group">
+                                                                <label class="col-md-4 control-label">Telecopie</label>
+                                                                <div class="col-md-8">
+                                                                    <input id="DE_Telecopie" name="DE_Telecopie" class="form-control"  value="@Model.DE_Telecopie"/>
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label class="col-md-4 control-label">Contact </label>
+                                                                <div class="col-md-8">
+                                                                    <input id="DE_Contact" name="DE_Contact" class="form-control"  value="@Model.DE_Contact"/>
+                                                                </div>
+                                                            </div>
+                                                        </form>
+
+                                                    </div>
+                                                </fieldset>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <button class="btn btn-primary pull-right" type="submit">Enregistrer les modifications</button>
+
+
+
+                            </div>
+
+
+
+                        }
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="~/js/jquery-3.1.1.min.js"></script>
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+

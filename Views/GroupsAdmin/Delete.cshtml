@@ -1,0 +1,66 @@
+﻿@model IdentitySample.Models.ApplicationGroup
+@{
+    ViewBag.Title = "Supprimer le Groupe";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-lg-10">
+        <h2>Profile</h2>
+        <ol class="breadcrumb">
+            <li>
+                <a>Acceuil </a>
+            </li>
+            <li>
+                <a href="@Url.Action("index","Administration")">Administration</a>
+            </li>
+            <li class="active">
+                <strong>Suppression rôle utilisateur</strong>
+            </li>
+        </ol>
+    </div>
+    <div class="col-lg-2">
+
+    </div>
+</div>
+
+<div class="wrapper wrapper-content">
+    <div class="row animated fadeInRight">
+
+
+
+
+        <div class="ibox">
+            <div class="ibox-content">
+                @using (Html.BeginForm())
+                {
+                    @Html.AntiForgeryToken()
+
+
+                    <div>
+                        <div class="col-md-6">
+                            <div class="content-box">
+                                <h3 class="content-box-header bg-black">
+                                    <i class="glyph-icon icon-group"></i>Groupe:  @Html.DisplayFor(model => model.Name)
+                                </h3><div class="content-box-wrapper">
+                                    <h4> Description:  @Html.DisplayFor(model => model.Description) </h4>
+                                </div>
+                            </div>
+                            <input type="submit" value="Supprimer" class="btn btn-primary pull-right" />
+
+                            @Html.ActionLink("Retourner", "Index", null, new { @class = "btn btn-default pull-right" })
+
+
+                        </div>
+
+
+
+                    </div>
+                }
+            </div>
+        </div>
+    
+
+</div>
+</div>
+
+<script src="~/js/jquery-3.1.1.min.js"></script>

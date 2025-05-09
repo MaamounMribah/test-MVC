@@ -1,0 +1,1411 @@
+﻿@model BeeProj.Models.NouvelAbonnementModel
+@{
+    ViewBag.Title = "NouvelAbonnement";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<!-- Toastr style -->
+<link href="~/css/plugins/toastr/toastr.min.css" rel="stylesheet">
+<link href="~/css/plugins/datapicker/datepicker3.css" rel="stylesheet" />
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+<link href="~/css/plugins/chosen/bootstrap-chosen.css" rel="stylesheet">
+<link href="~/css/plugins/awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css" rel="stylesheet">
+<link href="~/css/plugins/iCheck/custom.css" rel="stylesheet">
+<!-- Sweet Alert -->
+<link href="~/css/plugins/sweetalert/sweetalert.css" rel="stylesheet">
+<!-- Ladda style -->
+<link href="~/css/plugins/ladda/ladda-themeless.min.css" rel="stylesheet">
+<link href="~/css/plugins/touchspin/jquery.bootstrap-touchspin.min.css" rel="stylesheet">
+<link href="~/css/plugins/jasny/jasny-bootstrap.min.css" rel="stylesheet">
+<link href="~/css/plugins/dataTables/datatables.min.css" rel="stylesheet">
+<style>
+    #ui-datepicker-div {
+        font-size: 12px;
+    }
+</style>
+@if (ViewBag.AgenceUser != null)
+{
+
+
+    <div class="row wrapper border-bottom white-bg page-heading">
+        <div class="col-lg-8">
+            <h2>Nouvel Abonnement</h2>
+            <ol class="breadcrumb">
+                <li>
+                    <a>Acceuil</a>
+                </li>
+                <li>
+                    <a>Gestion des Abonnements</a>
+                </li>
+                <li class="active">
+                    <strong>Nouvel Abonnement</strong>
+                </li>
+            </ol>
+        </div>
+        <div class="col-lg-2">
+
+        </div>
+    </div>
+
+
+    if (ViewBag.RecuAbonnement != null)
+    {
+        <a href="/Abonnement/ImprimerRecuAbonnement/@ViewBag.RecuAbonnement" target="_blank"> Cliquer  </a>
+
+
+    }
+    else
+    {
+
+        using (Html.BeginForm("NouvelAbonnement2", "Abonnement", FormMethod.Post, new { @class = "form-horizontal", @name = "myForm", role = "form", enctype = "multipart/form-data" }))
+        {
+
+            if (ViewData.ModelState[""] != null && ViewData.ModelState[""].Errors.Count > 0)
+            {
+                <div class="alert alert-danger alert-dismissable">
+                    <button type="button" class="close " data-dismiss="alert"> × </button>
+                    @Html.ValidationSummary("", new { @class = "text-danger" })
+
+                </div>
+            }
+            <div class="wrapper wrapper-content animated fadeInRight">
+                <input type="text" id="DO_Type" name="DO_Type" value="@ViewBag.TypeAbonnement" class="hidden">
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="ibox float-e-margins">
+                            <div class="ibox-title">
+                                <h5>Produit - @ViewBag.IntitTypeAbonnement </h5>
+                            </div>
+                            <div class="ibox-content">
+                                <form method="get" class="form-horizontal">
+                                    Réf: #@ViewBag.ReferenceEngagement
+                                    <div class="hr-line-dashed"></div>
+                                    <div class="row">
+                                        <div class="col-lg-9">
+                                            <div class="form-group">
+                                                <div class="col-md-5">
+                                                    <div class="form-group">
+                                                        <label class="col-md-4 control-label">Type pièce identité</label>
+
+                                                        <div class="col-md-8">
+                                                            <select class="form-control" name="CT_TypeIdentifiant" id="CT_TypeIdentifiant">
+                                                                <option value=0>CIN</option>
+                                                                <option value=1>Passeport</option>
+                                                                <option value=2>RC</option>
+
+                                                            </select>
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+                                                <div class="col-md-5">
+
+                                                    <div class="form-group">
+                                                        <label class="col-md-4 control-label">N° pièce identité *</label>
+
+                                                        <div class="col-md-8">
+                                                            @Html.TextBoxFor(m => m.CT_Identifiant, new { @class = "form-control col-sm-pull-2", id = "CT_Identifiant" })
+                                                            @Html.ValidationMessageFor(model => model.CT_Identifiant, "", new { @class = "text-danger" })
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-2">
+                                                    <a href="#showClientInfos" class="btn btn-greenbee btn-outline " id="searchClient">
+                                                        <i class="fa fa-chevron-right"></i><i class="fa fa-chevron-right"></i>
+                                                    </a>
+                                                </div>
+
+
+                                            </div>
+                                            @*--------------------------------------------------------------------------------------------31/07/2019 manel --------------------------------------------------------------------------------------*@
+                                            <div class="row hidden" id="showClientInfos">
+                                                <div class="form-group">
+                                                    <div class="col-lg-12">
+                                                        <div class="ibox float-e-margins">
+                                                            <div class="ibox-title">
+                                                                <h4> Informations client </h4>
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <div class="row">
+                                                                <div class="form-group col-xs-6">
+                                                                    <label class="col-sm-5 control-label">Civilité</label>
+                                                                    <div class="col-sm-7">
+                                                                        <select class="form-control" name="CT_Civilite" id="CT_Civilite">
+                                                                            <option value=0>Mr.</option>
+                                                                            <option value=1>Mme</option>
+                                                                        </select>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group col-xs-6">
+                                                                    <label class="col-sm-5 control-label">Nom et prénom</label>
+                                                                    <div class="col-sm-7">
+                                                                        @Html.TextBoxFor(model => model.CT_Intitule, new { @class = "form-control", @id = "CT_Intitule", @name = "CT_Intitule", @maxlength = "34" })
+                                                                        @Html.ValidationMessageFor(model => model.CT_Intitule, "", new { @class = "text-danger" })
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="row">
+                                                                <div class="form-group col-xs-6">
+                                                                    <label class="col-sm-5 control-label">Personne physique</label>
+
+                                                                    <div class="col-sm-7">
+
+                                                                        <label class="checkbox-inline i-checks">
+                                                                            <input type="radio" checked="" value=0 id="CT_MORAL" name="CT_MORAL"> Oui
+                                                                        </label>
+
+                                                                        <label class="checkbox-inline i-checks">
+                                                                            <input type="radio" value=1 id="CT_MORAL" name="CT_MORAL"> Non
+                                                                        </label>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group col-xs-6" id="data_1">
+                                                                    <label class="col-sm-5 control-label">Date de naissance</label>
+                                                                    <div class="col-sm-7">
+                                                                        <input class="form-control" pattern="\d{1,2}/\d{1,2}/\d{4}" type="text" id="CT_DateNaiss" name="CT_DateNaiss" placeholder="jj/mm/aaaa" required /> <br />
+
+
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            @if ((User.IsInRole("Admin")) || (User.IsInRole("Abonnement Convention")))
+                                                            {
+                                                                <div class="row">
+                                                                    <div class="form-group col-xs-6">
+                                                                        <label class="col-sm-5 control-label">Convention client </label>
+                                                                        <div class="col-sm-7">
+                                                                            <div class=""><label> <input type="checkbox" value="oui" name="isconvention" id="isconvention"> <i></i> OUI </label></div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div id="toshoww" class="hide">
+                                                                    <div class="row">
+
+                                                                        <div class="form-group col-xs-6">
+                                                                            <label class="col-sm-5 control-label">Société </label>
+                                                                            <div class="col-sm-7">
+                                                                                <select data-placeholder="Choisir..." class="form-control chosen-select"
+                                                                                        tabindex="4" id="PersonneMorale" name="PersonneMorale">
+                                                                                    <option value=0>--choisir--</option>
+                                                                                    @foreach (var item in ViewBag.ListePersonneMorale)
+                                                                                    {
+                                                                                        <option value=@item.cbMarq>@item.CT_Intitule</option>
+                                                                                    }
+                                                                                </select>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="form-group col-xs-6">
+                                                                            <label class="col-sm-5 control-label">Matricule société </label>
+                                                                            <div class="col-sm-7">
+                                                                                <input type="text" class="form-control" name="MatriculeSociete" id="MatriculeSociete" />
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            }
+                                                            <div class="row">
+                                                                <div class="form-group col-xs-6">
+                                                                    <label class="col-sm-5 control-label">Nationalité</label>
+
+                                                                    <div class="col-sm-7">
+
+                                                                        @Html.TextBoxFor(model => model.CT_Nationnalité, new { @class = "form-control", @id = "CT_Nationnalité", @name = "CT_Nationnalité", @Value = "Tunisienne" })
+
+                                                                    </div>
+                                                                </div>
+
+
+                                                                <div class="form-group col-xs-6">
+                                                                    <label class="col-sm-5 control-label">Tél de contact</label>
+                                                                    <div class="col-sm-7">
+                                                                        @Html.TextBoxFor(model => model.CT_Telephone, new { @class = "form-control", data_mask = "99999999", @id = "CT_Telephone", @name = "CT_Telephone", @placeholder = "" })
+                                                                        @Html.ValidationMessageFor(model => model.CT_Telephone, "", new { @class = "text-danger" })
+                                                                    </div>
+                                                                </div>
+
+                                                            </div>
+                                                            <div class="row">
+
+                                                                <div class="form-group col-xs-6">
+                                                                    <label class="col-sm-5 control-label">Adresse <sup>*</sup></label>
+                                                                    <div class="col-sm-7">
+                                                                        <textarea class="form-control" name="LI_Adresse" id="LI_Adresse" maxlength="34" required></textarea>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group col-xs-6">
+                                                                    <label class="col-sm-5 control-label">Complement Adresse</label>
+
+                                                                    <div class="col-sm-7">
+                                                                        @*<textarea class="form-control" name="CT_AdresseComplement" id="CT_AdresseComplement" maxlength="34">  </textarea>*@
+                                                                        @Html.TextAreaFor(m => m.CT_AdresseComplement, new { @class = "form-control", id = "CT_AdresseComplement", name = "CT_AdresseComplement" })
+                                                                        @Html.ValidationMessageFor(model => model.CT_AdresseComplement, "", new { @class = "text-danger" })
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="form-group col-xs-6">
+                                                                    <label class="col-sm-5 control-label">Pays</label>
+
+                                                                    <div class="col-sm-7">
+                                                                        <input type="text" class="form-control" name="CT_Pays" id="CT_Pays" value="Tunisie" required>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group col-xs-6">
+                                                                    <label class="col-sm-5 control-label" required>Gouvernorat</label>
+                                                                    <div class="col-sm-7">
+                                                                        <select class="form-control" id="search" name="CT_Gouvernorat" required>
+                                                                            <option selected="selected">-- Choisir --</option>
+                                                                            @foreach (var item in ViewBag.Gouvernoratt)
+                                                                            {
+                                                                                <option value="@item.Gouvernorat">@item.Gouvernorat</option>
+                                                                            }
+                                                                        </select>
+                                                                    </div>
+                                                                </div>
+                                                                @*-----------------------------------------------------------------------------02/08/2019 manel ---------------------------------------------------------------------------*@
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="form-group col-xs-6">
+                                                                    <label class="col-sm-5 control-label">Ville</label>
+
+                                                                    <div class="col-sm-7">
+                                                                        <select class="form-control" name="CT_Ville" id="CT_Ville" required></select>
+                                                                    </div>
+                                                                </div>
+                                                                @*----------------------------------------------------- 20/08/2019 manel-----------------------------------------------------------*@
+
+                                                                <div class="form-group col-xs-6">
+                                                                    <label class="col-sm-5 control-label">Cité</label>
+
+                                                                    <div class="col-sm-7">
+                                                                        <select class="form-control" name="CT_Localite" id="Localite" required></select>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="form-group col-xs-6">
+                                                                    <label class="col-sm-5 control-label">Code postal</label>
+                                                                    <div class="col-sm-7">
+                                                                        <input type="text" class="form-control" name="CT_CodePostal" id="CT_CodePostal" required>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group col-xs-6">
+                                                                    <label class="col-sm-5 control-label">My adress code *</label>
+                                                                    <div class="col-sm-7">
+                                                                        <input type="text" class="form-control" name="CodeGPS" id="CodeGPS" required>
+                                                                        <small>Merci de créer votre adresse code à partir de ce lien <a href="https://www.tunisietelecom.tn/Fr/R%C3%A9seau/myaddress-code"> https://www.tunisietelecom.tn/myaddress-code </a>   , puis copier le code généré dans ce champ</small>
+                                                                        @*<small><a href="https://www.tunisietelecom.tn/Fr/R%C3%A9seau/myaddress-code">Cliquez ici , </a>pour créer votre adresse code, puis copier le code généré dans ce champ </small>*@
+                                                                    </div>
+                                                                </div>
+                                                                @*<div class="col-md-6 col-xs-6">
+                                                                        <div class="form-group">
+                                                                            <label class="col-sm-4 control-label">code Région</label>
+                                                                            <div class="col-sm-8">
+                                                                                <select class="form-control" name="CT_CodeRegion" id="CT_CodeRegion" required>
+                                                                                    @foreach (var item in ViewBag.CodesRegions)
+                                                                                    {
+                                                                                        if (item.R_CodeRegion == ViewBag.RegionAgence)
+                                                                                        {
+                                                                                            <option selected="selected" value="@item.R_CodeRegion">@item.R_CodeRegion @item.R_Intitule </option>
+
+                                                                                        }
+                                                                                        else
+                                                                                        {
+                                                                                            <option value="@item.R_CodeRegion">@item.R_CodeRegion @item.R_Intitule</option>
+
+                                                                                        }
+                                                                                    }
+                                                                                </select>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>*@
+                                                            </div>
+                                                            <div class="row" style="margin-left:50px;">
+                                                                <div class="col-lg-12">
+                                                                    <div class="panel panel-default">
+                                                                        <div class="panel-body">
+                                                                            <div class="row">
+                                                                                <div class="col-md-6">
+                                                                                    <label class="col-md-4 control-label">Latitude</label>
+                                                                                    <div class="col-md-8">
+                                                                                        <input id="AB_Latitude" name="AB_Latitude" @*value="35.7255146"*@ class="MapLat form-control" type="text" placeholder="Latitude">
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div class="col-md-6">
+                                                                                    <label class="col-md-4 control-label">Longitude</label>
+                                                                                    <div class="col-md-8">
+                                                                                        <input id="AB_Longitude" name="AB_Longitude" @*value="10.5471317"*@ class="MapLon form-control" type="text" placeholder="Longitude">
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div id="map_canvas" style="height: 400px;width:inherit;margin: 0.6em;"></div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div> 
+                                                        </div>
+                                                        <a href="#AddClientFirst" class="btn btn-block btn-greenbee" data-dismiss="modal" id="okModal">Suivant <i class="fa fa-chevron-right"></i><i class="fa fa-chevron-right"></i></a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            @*-----------------------------------------------------------------------31/07/2019 manel --------------------------------------------------------------------------------------*@
+                                            <div id="AddClientFirst" class="hidden">
+
+                                                <div class="alert alert-warning">
+                                                    N.B: Le frais TT d'installation (20TND) est requis.
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <label class="col-sm-3 control-label">Téléphone abonnement <stroong>tél fixe </stroong> </label>
+
+                                                    <div class="col-sm-9">
+                                                        <div class="input-group">
+                                                            <span class="input-group-addon">+216</span>
+                                                            <input type="text"
+                                                                   placeholder="Si le client ne possède pas de ligne, une demande sera envoyée au service TT. "
+                                                                   class="form-control"
+                                                                   id="aboTel" name="aboTel" data_mask="71111111" maxlength="8" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="col-sm-3 control-label">Résident</label>
+
+                                                    <div class="col-sm-9">
+
+                                                        <label class="checkbox-inline i-checks">
+                                                            <input type="radio" checked="" value="residentType" id="residentType" name="optionsRadios"> Locataire
+                                                        </label>
+
+                                                        <label class="checkbox-inline i-checks">
+                                                            <input type="radio" value="residentType" id="residentType" name="optionsRadios"> Propriètaire
+                                                        </label>
+                                                    </div>
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <label class="col-sm-3 control-label">Adresse Facturation</label>
+                                                    <div class="col-sm-9">
+                                                        <textarea class="form-control" name="CT_Adresse" id="CT_Adresse" maxlength="34"></textarea>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="col-sm-3 control-label">Adresse Installation</label>
+                                                    <div class="col-sm-9">
+                                                        <textarea class="form-control" name="AB_AdresseI" id="AB_AdresseI" maxlength="34"></textarea>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="col-sm-3 control-label">Complement Adresse</label>
+                                                    <div class="col-sm-9">
+                                                        <textarea class="form-control" name="CT_AdresseComplement" id="CT_AdresseComplement" maxlength="34"></textarea>
+                                                    </div>
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <label class="col-sm-3 control-label">Contact *</label>
+
+                                                    <div class="col-sm-9">
+                                                        @Html.TextBoxFor(m => m.CT_Contact, new { @class = "form-control", id = "CT_Contact" })
+                                                        @Html.ValidationMessageFor(model => model.CT_Contact, "", new { @class = "text-danger" })
+                                                        @*<input class="form-control" id="CT_Contact" name="CT_Contact" maxlength="34">*@
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="col-sm-3 control-label">GSM Contact *</label>
+
+                                                    <div class="col-sm-9">
+                                                        @Html.TextBoxFor(m => m.CT_GSM, new { @class = "form-control", id = "CT_GSM" })
+                                                        @Html.ValidationMessageFor(model => model.CT_GSM, "", new { @class = "text-danger" })
+
+
+                                                        @*<input class="form-control" id="CT_GSM" name="CT_GSM" required>*@
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="col-sm-3 control-label">Email </label>
+                                                    <div class="col-sm-9">
+                                                        <input class="form-control" type="email" id="CT_EMail" name="CT_EMail">
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="col-sm-3 control-label">CIN Recto <sup>on accept only .jpeg .png</sup></label>
+
+                                                    <div class="col-sm-9">
+                                                        <div class="fileinput fileinput-new input-group" data-provides="fileinput">
+                                                            <div class="form-control" data-trigger="fileinput">
+                                                                <i class="glyphicon glyphicon-file fileinput-exists"></i>
+                                                                <span class="fileinput-filename"></span>
+                                                            </div>
+                                                            <span class="input-group-addon btn btn-default btn-file">
+                                                                <span class="fileinput-new">Selectionner</span>
+                                                                <span class="fileinput-exists">Changer</span>
+                                                                <input type="file" name="CINRecto" accept="image/png, image/jpeg" />
+                                                            </span>
+                                                            <a href="#" class="input-group-addon btn btn-default fileinput-exists" data-dismiss="fileinput">Supprimer</a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="col-sm-3 control-label">CIN Verso <sup>on accept only .jpeg .png</sup></label>
+                                                    <div class="col-sm-9">
+                                                        <div class="fileinput fileinput-new input-group" data-provides="fileinput">
+                                                            <div class="form-control" data-trigger="fileinput">
+                                                                <i class="glyphicon glyphicon-file fileinput-exists"></i>
+                                                                <span class="fileinput-filename"></span>
+                                                            </div>
+                                                            <span class="input-group-addon btn btn-default btn-file">
+                                                                <span class="fileinput-new">Selectionner</span>
+                                                                <span class="fileinput-exists">Changer</span>
+                                                                <input type="file" name="CINVerso" accept="image/png, image/jpeg" />
+                                                            </span>
+                                                            <a href="#" class="input-group-addon btn btn-default fileinput-exists" data-dismiss="fileinput">Supprimer</a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <label class="col-sm-3 control-label">Date établissement </label>
+                                                    <div class="col-sm-3">
+                                                        <input class="form-control" pattern="\d{1,2}/\d{1,2}/\d{4}" name="CT_IdDateEtab" id="CT_IdDateEtab" placeholder="jj/mm/aaaa" required /> <br />
+                                                    </div>
+
+                                                    <label class="col-sm-3 control-label">Lieu établissement </label>
+                                                    <div class="col-sm-3">
+                                                        <input type="text" id="CT_idLieuEtab" name="CT_idLieuEtab" class="form-control col-sm-pull-2">
+                                                    </div>
+                                                </div>
+                                                <div class="hr-line-dashed"></div>
+                                                <div class="form-group">
+                                                    <label class="col-sm-3 control-label">
+                                                        Fréquence de paiement <br />
+                                                    </label>
+
+                                                    <div class="col-sm-9">
+
+                                                        <div>
+                                                            <label>
+                                                                <input class="checkbox-inline i-checks" type="radio" checked="" value="1" id="Abo_Freq" name="Abo_Freq"> 1 mois
+                                                            </label>
+
+                                                            <label>
+                                                                <input class="checkbox-inline i-checks" type="radio" value="3" id="Abo_Freq" name="Abo_Freq"> 3 mois
+                                                            </label>
+
+                                                            <label>
+                                                                <input class="checkbox-inline i-checks" type="radio" value="6" id="Abo_Freq" name="Abo_Freq"> 6 mois
+                                                            </label>
+
+                                                            <label>
+                                                                <input class="checkbox-inline i-checks" type="radio" value="12" id="Abo_Freq" name="Abo_Freq"> 12 mois
+                                                            </label>
+                                                            <label>
+                                                                <input class="checkbox-inline i-checks" type="radio" value="24" id="Abo_Freq" name="Abo_Freq"> 24 mois
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <br />
+                                                <hr />
+                                                <div class="ibox border-bottom">
+                                                    <a class="collapse-link text-primary font-bold text-primary">
+                                                        <div class="ibox-title">
+                                                            <div class="ibox-tools">
+                                                                <h5 class="text-primary font-bold"> Ajouter des articles en SUS</h5>
+                                                                <i class="fa fa-chevron-down text-primary font-bold"></i>
+                                                            </div>
+                                                        </div>
+                                                    </a>
+                                                    <div class="ibox-content" style="display: none;">
+                                                        <div class="form-group">
+                                                            <label class="control-label col-sm-3">Liste des services en SUS </label>
+                                                            <span class="col-sm-9">
+                                                                <select data-placeholder="Choisir des articles liés..." class="chosen-select" multiple style="width:350px;" tabindex="4" id="ArticleSUSList" name="ArticleSUSList">
+                                                                    @foreach (var item in ViewBag.ListeArticleSUS)
+                                                                    {
+                                                                        <option name="ArticleSUSList" id="ArticleSUSList" value="@item.AR_Ref">@item.AR_Design</option>
+                                                                    }
+                                                                </select>
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="hr-line-dashed"></div>
+                                                <div class="ibox border-bottom">
+                                                    <a class="collapse-link text-primary font-bold text-primary">
+                                                        <div class="ibox-title">
+                                                            <div class="ibox-tools">
+                                                                @*@if (ViewBag.liste != null || ViewBag.liste.Count != 0)
+                                                                    {*@
+                                                                <h5 class="text-primary font-bold"> Ajouter des matériels en SUS</h5>
+                                                                <i class="fa fa-chevron-down text-primary font-bold"></i>
+                                                                @*}*@
+                                                            </div>
+                                                        </div>
+                                                    </a>
+                                                    <div class="ibox-content" style="display: none;">
+                                                        <div class="form-group">
+                                                            <span class="btn-google pull-right" data-toggle="buttons">
+                                                                <button data-toggle="modal" data-target="#selectArticle" title="Ajouter Produit" class="btn btn-success btn-circle" type="button">
+                                                                    <i class="fa fa-plus"></i>
+                                                                </button>
+                                                                @*<button data-toggle="modal" data-target="#TransfererArticles" class="btn btn-info btn-circle" title="Transférer" type="button">
+                                                                        <i class="fa fa-save"></i>
+                                                                    </button>*@
+
+                                                            </span>
+
+                                                            <table class="table">
+                                                                <thead>
+                                                                    <tr>
+                                                                        @*<th>Référence Article</th>*@
+                                                                        <th>Désignation</th>
+                                                                        <th>Prix</th>
+                                                                        <th>Quantité</th>
+                                                                        <th> </th>
+                                                                    </tr>
+                                                                </thead>
+                                                            </table>
+                                                            <table id="TableListeLignesProduit" class="table TableListeLignesProduit">
+                                                                <tbody>
+                                                                    @*<tr class="row">*@
+                                                                    <tr class="row" hidden>
+                                                                        @*<td></td>*@
+                                                                        <td></td>
+                                                                        <td></td>
+                                                                        <td></td>
+                                                                        <td></td>
+
+                                                                    </tr>
+                                                                </tbody>
+
+
+                                                            </table>
+
+                                                        </div>
+                                                    </div>
+
+
+                                                    @*<div class="ibox-content" style="display: none;">
+                                                            <div class="form-group">
+                                                                <label class="control-label col-sm-3">Liste ajouter des matriéls en SUS </label>
+                                                                <span class="col-sm-9">
+                                                                    <select data-placeholder="Choisir des matriéls liés..." class="chosen-select" multiple style="width:350px;" tabindex="4" id="MatrielsSUSList" name="MatrielsSUSList">
+                                                                        @foreach (var item in ViewBag.ListeMatriels)
+                                                                        {
+                                                                            <option name="MatrielsSUSList" id="MatrielsSUSList" value="@item.AR_Ref">@item.AR_Design</option>
+                                                                        }
+                                                                    </select>
+                                                                </span>
+                                                                <div class="col-lg-3">
+                                                                    @if (ViewBag.liste != "" )
+                                                                    {
+
+                                                                        <ul class="folder-list m-b-md" style="padding: 0">
+
+                                                                            @foreach (var item in ViewBag.liste)
+                                                                            {
+
+                                                                                <li class="list-group-item"> <small>@item.AR_PrixAch // @item.AR_Design </small></li>
+                                                                            }
+                                                                        </ul>
+                                                                    }
+                                                                </div>
+
+                                                            </div>
+
+                                                        </div>*@
+
+                                                </div>
+                                                <div class="hr-line-dashed"></div>
+                                                <div class="form-group" hidden>
+                                                    <span class="col-sm-9">
+                                                        <select class="form-control" name="MatrielsSUSList" id="MatrielsSUSList" multiple></select>
+                                                    </span>
+                                                </div>
+                                                <div class="hr-line-dashed"></div>
+
+                                                <div class="form-group">
+                                                    <div class="col-sm-4 col-sm-offset-8">
+                                                        <button class="btn btn-outline btn-purplebee" type="button" id="SubmitAbonnement" value="submit">Valider</button>
+                                                        <button class="btn btn-outline btn-purplebee hidden" type="submit" id="submitForm" value="submit">Valider</button>
+                                                        @*<button class="btn btn-outline btn-purplebee hidden" type="submit" id="TransfererArticles" value="TransfererArticles">Valider</button>*@
+
+                                                    </div>
+                                                </div>
+                                                <div class="hr-line-dashed"></div>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-3">
+                                            @if (ViewBag.ServicesInclus != null || ViewBag.ServicesInclus.Count != 0)
+                                            {
+                                                <h2>Services inclus </h2>
+                                                <small>Liste des services inclus avec "@ViewBag.IntitTypeAbonnement"</small>
+                                                <ul class="folder-list m-b-md" style="padding: 0">
+                                                    @foreach (var item in ViewBag.ServicesInclus)
+                                                    {
+                                                        <li><a href="#"> <i class="fa fa-shopping-cart "></i> @item.AR_Design  </a></li>
+                                                    }
+                                                </ul>
+                                            }
+                                        </div>
+                                        @*<div class="col-lg-3">
+                                                @if (ViewBag.liste != "")
+                                                {
+
+                                                    <ul class="folder-list m-b-md" style="padding: 0">
+
+                                                        @foreach (var item in ViewBag.liste)
+                                                        {
+
+                                                            <li class="list-group-item"> <small>@item.AR_PrixAch // @item.AR_Design </small></li>
+                                                        }
+                                                    </ul>
+                                                }
+                                            </div>*@
+
+
+
+
+
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!----/form---->
+
+
+            <!-- Modal liste article  -->
+        }
+        <script src="~/js/jquery-3.1.1.min.js"></script>
+        //new map
+        <script src="~/Scripts/jquery-1.10.2.min.js"></script>
+
+        <script src="~/js/plugins/datapicker/bootstrap-datepicker.js"></script>
+        <script src="~/js/plugins/chosen/chosen.jquery.js"></script>
+
+         <!-- Jasny -->
+        <script src="~/js/plugins/jasny/jasny-bootstrap.min.js"></script>
+        <!-- DROPZONE -->
+        <script src="~/js/plugins/dropzone/dropzone.js"></script>
+        <!-- CodeMirror -->
+        <script src="~/js/plugins/codemirror/codemirror.js"></script>
+        <script src="~/js/plugins/codemirror/mode/xml/xml.js"></script>
+        <script src="~/js/plugins/jasny/jasny-bootstrap.min.js"></script>
+        <!-- iCheck -->
+        <script src="~/js/plugins/iCheck/icheck.min.js"></script>
+        <script src="~/js/plugins/dataTables/datatables.min.js"></script>
+
+        <script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+        <script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
+
+        <!-- Toastr script -->
+        <script src="~/js/plugins/toastr/toastr.min.js"></script>
+        //new map
+        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDy7qIfS8rIJ8szm6LJYvFPktLlwYJXeSk&libraries=places&callback=initAutocomplete&region=tn&language=fr&sensor=true"></script>
+        <!-- JSKnob -->
+        <script src="~/js/plugins/jsKnob/jquery.knob.js"></script>
+
+
+     <!-- Input Mask-->
+
+        <script src="~/js/plugins/jasny/jasny-bootstrap.min.js"></script>
+
+
+        <script>
+         var x = document.getElementById("map_canvas");
+function getLocation() {
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(showPosition);
+  } else {
+    x.innerHTML = "Geolocation is not supported by this browser.";
+  }
+}
+
+function showPosition(position) {
+  x.innerHTML = "Latitude: " + position.coords.latitude +
+  "<br>Longitude: " + position.coords.longitude;
+}
+            $(function () {
+                $('.chosen-select').chosen({ width: "100%" });
+                        var icone = {
+                    url: "/img/Marker1.png", // url
+                    scaledSize: new google.maps.Size(50, 50), // scaled size
+                    origin: new google.maps.Point(100, 0), // origin
+                    anchor: new google.maps.Point(20, 50) // anchor
+                };
+                    var icone2 = {
+                    url: "/img/Marker2.png", // url
+                    scaledSize: new google.maps.Size(50, 50), // scaled size
+                    origin: new google.maps.Point(0, 0), // origin
+                    anchor: new google.maps.Point(0, 0) // anchor
+                };
+                    var lngg = $('#AB_Longitude').val().replace(",", ".");
+                    var latt = $('#AB_Latitude').val().replace(",", ".");
+                var lat = latt,
+                    lng = lngg,
+                    latlng = new google.maps.LatLng(lat, lng);
+                //   icon = icon;
+                //zoomControl: true,
+                //zoomControlOptions: google.maps.ZoomControlStyle.LARGE,
+
+                var mapOptions = {
+                    center: new google.maps.LatLng(lat, lng),
+                    zoom: 3,
+                    mapTypeId: google.maps.MapTypeId.ROADMAP,
+                    panControl: true,
+                    panControlOptions: {
+                    position: google.maps.ControlPosition.TOP_RIGHT
+                    },
+                    zoomControl: true,
+                    zoomControlOptions: {
+                    style: google.maps.ZoomControlStyle.LARGE,
+                        position: google.maps.ControlPosition.TOP_left
+                    }
+                },
+
+                map = new google.maps.Map(document.getElementById('map_canvas'), mapOptions),
+                    marker = new google.maps.Marker({
+                        position: latlng,
+                        map: map,
+                        draggable: true,
+                        icon: icone2
+                    });
+                // add a resize listener to make sure that the map occupies the whole container
+                window.addEventListener('resize', () => map.getViewPort().resize());
+
+            var input = document.getElementById('searchTextField');
+            var autocomplete = new google.maps.places.Autocomplete(input, {
+                    types: ["geocode"]
+    });
+
+                autocomplete.bindTo('bounds', map);
+                var infowindow = new google.maps.InfoWindow();
+
+    google.maps.event.addListener(autocomplete, 'place_changed', function (event) {
+        infowindow.close();
+        var place = autocomplete.getPlace();
+        if (place.geometry.viewport) {
+            map.fitBounds(place.geometry.viewport);
+        } else {
+            map.setCenter(place.geometry.location);
+            map.setZoom(17);
+        }
+
+        moveMarker(place.name, place.geometry.location);
+
+                    $('.MapLat').val(place.geometry.location.lat());
+                    $('.MapLon').val(place.geometry.location.lng());
+    });
+    google.maps.event.addListener(map, 'click', function (event) {
+
+
+                    $('.MapLat').val((event.latLng.lat().toFixed(6)).replace('.', ','));
+                    $('.MapLon').val((event.latLng.lng().toFixed(6)).replace('.', ','));
+        infowindow.close();
+        var geocoder = new google.maps.Geocoder();
+        geocoder.geocode({
+            "latLng": event.latLng
+                    }, function (results, status) {
+            console.log(results, status);
+            if (status == google.maps.GeocoderStatus.OK) {
+                console.log(results);
+                var lat = results[0].geometry.location.lat(),
+                    lng = results[0].geometry.location.lng(),
+                    placeName = results[0].address_components[0].long_name,
+                    latlng = new google.maps.LatLng(lat, lng);
+
+                moveMarker(placeName, latlng);
+                            $("#searchTextField").val(results[0].formatted_address);
+            }
+        });
+    });
+
+    function moveMarker(placeName, latlng) {
+        marker.setIcon(image);
+        marker.setPosition(latlng);
+        infowindow.setContent(placeName);
+        alert(placeName);
+        infowindow.open(map, marker);
+    }
+    google.maps.event.addListener(marker, 'dragend', function (event) {
+                    //$('.MapLat').val(event.latLng.lat());
+                    //$('.MapLon').val(event.latLng.lng());
+
+                    $('.MapLat').val((event.latLng.lat().toFixed(6)).replace('.', ','));
+                    $('.MapLon').val((event.latLng.lng().toFixed(6)).replace('.', ','));
+    });
+
+    google.maps.event.addListener(map, 'click', function (event) {
+
+                    $('.MapLat').val((event.latLng.lat().toFixed(6)).replace('.', ','));
+                    $('.MapLon').val((event.latLng.lng().toFixed(6)).replace('.', ','));
+
+
+        //$('.MapLat').val(event.latLng.lat());
+        //$('.MapLon').val(event.latLng.lng());
+        marker.setPosition(event.latLng);
+        // Center the map on the marker
+        map.setZoom(8);
+        //     map.panTo(marker.position);
+    });
+
+    });
+
+            $('#CT_DateNaiss').datepicker({
+        changeMonth: true,
+                changeYear: true,
+                showButtonPanel: true,
+                dateFormat: "m/d/yy"
+            });
+
+            $('#CT_IdDateEtab').datepicker({
+        changeMonth: true,
+                changeYear: true,
+                showButtonPanel: true,
+                dateFormat: "m/d/yy"
+            });
+
+
+
+            $(document).ready(function () {
+
+        $('.i-checks').iCheck({
+            checkboxClass: 'icheckbox_square-green',
+            radioClass: 'iradio_square-green'
+        });
+        $(".todo-list").sortable({
+            placeholder: "sort-highlight",
+            handle: ".handle",
+            forcePlaceholderSize: true,
+            Index: 999999
+        }).disableSelection();
+
+        $('.classDate').datepicker();
+
+
+        $("select#MatrielsList").on("change", function () {
+
+            var ii = $('select#MatrielsList').val()
+            listedesArticlesTable($('select#MatrielsList').val());
+
+            //  var table = $('#listeArticles').DataTable();
+
+
+        });
+
+
+        var Serie2 = [];
+
+        function listedesArticlesTable(arref) {
+            //$(".chosen-select").chosen();
+            // $('#listeArticles').DataTable().ajax.reload();
+            $("#listeArticles").dataTable().fnDestroy();
+            $('.chosen-select').chosen({ width: "100%" });
+
+            var oTable = $('#listeArticles').DataTable({
+                "ajax": {
+                    "url": "/Abonnement/GetStockUser?Article=" + arref,
+                    "type": "get",
+                    "datatype": "json",
+                    "autoWidth": false
+
+                },
+                "columns": [
+
+                        { "data": "AR_Ref" },
+                        { "data": "AR_Design" },
+                        { "data": "AS_QteSto" },
+                        { "data": "prix" },
+                        { "data": "depot" }
+
+
+                ]
+
+            });
+
+
+
+            $('#listeArticles tbody').on('dblclick', 'tr', function () {
+    var tr = $(this).closest('tr');
+    var value = tr.find('td:eq(0)').html();
+    var qtyDispo = tr.find('td:eq(2)').html();
+
+    var nserie = tr.find('td:eq(4)').html();
+
+    var depot = tr.find('td:eq(4)').html();
+    //var value2 = tr.find('td:eq(1)').html();
+
+    var qtt = $('#qtyEntree').val();
+
+    if (parseInt(qtt) > parseInt(qtyDispo)) {
+        toastr.error('Quantité demandée indisponible !', 'Erreur');
+    }
+    else {
+        if (Serie2.indexOf(nserie + value) != -1) {
+            toastr.error('Vous avez déjà sélectionné cet article pour le meme depot! !', 'Erreur');
+        }
+        else {
+                        $('#selectArticle').modal('hide');
+            AddLineTrsf(value, nserie, depot, qtt);
+            Serie2.push(nserie + value);
+        }
+    }
+    //
+
+    //     location.reload();
+
+});
+
+
+
+        };
+
+        function AddLineTrsf(arref, nserie, depot, qtt) {
+
+            $.ajax({
+        type: "GET",
+                url: "/Abonnement/getInfoMateriels2?Arref=" + arref,
+                success: function (res) {
+
+            var counter = 0;
+            counter++;
+            //var newRow = $("<tr class='row'>");
+            var newRow = $("<tr class='row'>");
+            var cols = "";
+
+            //cols += '<td ><input type="text" id="ArticleID" name="Référence Article' + counter + '" value="' + res.infoArticle.AR_Ref + '"class="form-control ref-ids"  disabled></td>';
+            cols += '<td ><input type="text" id="Désignation" name="Désignation' + counter + '" value="' + res.infoArticle.AR_Design + '"class="form-control articles-ids"  disabled/></td>';
+
+            cols += '<td><input type="text" id="Prix" type="number" name="Prix' + counter + '" value="' + res.infoArticle.AR_PrixVen + '"class="form-control qt-ids"  disabled/></td>';
+
+            //cols += '<td><input type="text" id="serie" type="number" value="' + nserie + '" name="series' + counter + '"class="form-control serie-ids" disabled /></td>';
+            //cols += '<td><input type="text" id="Dépôt" type="number" value="' + depot + '" name="Dépôt' + counter + '"class="form-control depot-ids"  disabled/></td>';
+            cols += '<td><input type="text" id="qtt" type="number" value="' + qtt + '" name="qtt' + counter + '"class="form-control qtt-ids"  disabled/></td>';
+
+            cols += '<td><a class="deleteRowGamme btn btn-xs btn-round btn-azure"> <div class="form-control"><i class="fa fa-trash"></i></div> </a></td>';
+
+            newRow.append(cols);
+
+                    $(".TableListeLignesProduit").append(newRow);
+
+
+                    // $("#MatrielsSUSList").empty();
+
+                    $("#MatrielsSUSList").append("<option value='" + res.infoArticle.AR_Ref + "' selected>" + res.infoArticle.AR_Design + "</option>");
+
+            //for (var i = 0; i < counter; i++) {
+
+            //    $("#MatrielsSUSList").append("<option value='" + res.infoArticle.AR_Ref + "' selected>" + res.infoArticle.AR_Design + "</option>");                                //$("#CT_CodePostal").append("<input type='" + text + "class='" + form - control + "name='" + CT_CodePostal + "id='" + CT_CodePostal + "value='" + msg.cpostal[i] + "'>");
+
+            //}
+
+
+        }
+
+    });
+
+
+
+
+}
+
+
+        $("table.TableListeLignesProduit").on("click", "a.deleteRowGamme", function (event) {
+            $(this).closest("tr").remove();
+    var value1;
+    var value2;
+            $(this).closest('tr').find('input[name="Prix1"]').each(function () {
+        value1 = this.value;
+    });
+
+            $(this).closest('tr').find('input[name="qtt1"]').each(function () {
+        value2 = this.value;
+    });
+
+
+    var removeItem = value2 + value1;
+    Serie2 = Serie2.filter(function (item) {
+        return item !== removeItem;
+    });
+
+});
+
+        $("#DeleteAllLines").click(function () {
+
+    if (confirm("Supprimer tout ? ")) {
+                $('#TableListeLignesProduit tr').find('td .articles-ids').each(function () {
+                    $(this).closest("tr").remove();
+
+        })
+            }
+});
+
+
+
+
+            });
+            //$('select').change(function () {
+            //    if ($("#CT_TypeIdentifiant").val() == 0) {
+            //        $('#CT_Identifiant').inputmask({
+            //            mask: "99999999"
+            //        });
+            //        $('#CT_Identifiant').attr("placeholder", "99999999");
+            //    }
+            //   else if ($("#CT_TypeIdentifiant").val() == 1) {
+            //        $('#CT_Identifiant').inputmask({
+            //            mask: "A999999"
+            //        });
+            //        $('#CT_Identifiant').attr("placeholder", "A999999");
+            //    }
+            //   else if ($("#CT_TypeIdentifiant").val() == 2) {
+            //        $('#CT_Identifiant').inputmask({
+            //            mask: "A999999999"
+            //        });
+            //        $('#CT_Identifiant').attr("placeholder", "A999999999");
+            //    }
+            //    //$("#CT_Identifiant").inputmask("mask", { "mask": "99999-999" });
+            //});
+
+            $('.chosen-select').chosen({ width: "100%" });
+
+            $("#CT_Identifiant").change(function () {
+
+    if ($("#CT_Identifiant").val() == null) {
+                    $("#searchClient").prop('disabled', true);
+    }
+            else{
+                    $("#searchClient").prop('disabled', false);
+    }
+});
+            $("#searchClient").click(function () {
+
+                $("#showClientInfos").removeClass("hidden");
+
+
+
+    var RegNumber = new RegExp('^\\d+$');
+    var RegChar = new RegExp('[0-9a-zA-Z]');
+    var RegString = new RegExp('[a-zA-Z]');
+    var TypeIdentite = document.getElementById("CT_TypeIdentifiant");
+
+    var inputValue = $('#CT_Identifiant').val();
+    var IdentiteValue = TypeIdentite.options[TypeIdentite.selectedIndex].value;
+
+    if(inputValue.length < 8 )
+    {
+                    $('#CT_Identifiant').after('<span class="error">Le champ N° pièce identité ne peut contenir que 7 Charactère</span>');
+        window.location = "";
+    }
+
+    if (IdentiteValue == 0) {
+        if (inputValue.match(RegNumber) && inputValue.length == 8) {
+                        $(".error").remove();
+            getInformationClient();
+
+                        $('#Clients').show();
+        } else {
+                        $(".error").remove();
+                        $('#CT_Identifiant').after('<span class="error">Le champ N° pièce identité ne peut contenir que 8 chiffre</span>');
+            window.location = "";
+
+        }
+    }
+    if (IdentiteValue == 1) {
+        if (inputValue.match(RegChar) && inputValue.length == 7) {
+                        $(".error").remove();
+            getInformationClient();
+                        $('#Clients').show();
+        }
+        else {
+                        $(".error").remove();
+                        $('#CT_Identifiant').after('<span class="error">Le champ N° pièce identité ne peut contenir que 7 Charactère</span>');
+            window.location = "";
+
+        }
+    }
+    if (IdentiteValue == 2) {
+        if (inputValue.match(RegChar)) {
+                        $(".error").remove();
+            getInformationClient();
+                        $('#Clients').show();
+        }
+        else {
+                        $(".error").remove();
+                        $('#CT_Identifiant').after('<span class="error">Le champ N° pièce identité ne peut contenir que Charactère</span>');
+            window.location = "";
+
+        }
+    }
+});
+            function getInformationClient() {
+
+                $.ajax({
+        type: "get",
+                    url: '@Url.Action("isClientExists")', // we are calling json method
+                    dataType: 'json',
+                    data: { identifiant: $("#CT_Identifiant").val() },
+                    success: function (msg) {
+            if (msg.result == 0) {
+                            //   alert(msg.data.CT_Intitule);
+                            $("#CT_Intitule").val(msg.data.CT_Intitule);
+                            $("#CT_CodePostal").val(msg.data.CT_CodePostal);
+                            $("#CT_Telephone").val(msg.data.CT_Telephone);
+                            $("#CT_Contact").val(msg.data.CT_Intitule);
+                            $("textarea#CT_Adresse").val(msg.data.CT_Adresse);
+                            $("textarea#CT_AdresseAbo").val(msg.data.CT_Adresse);
+                            $("#CT_DateNaiss").val(msg.dateNaissance);
+                            $("#CT_IdDateEtab").val(msg.DateEtab);
+
+                            $("#MatriculeSociete").val(msg.data.CT_MatriculeSociete);
+                            $("#PersonneMorale").val(msg.data.ID_Moral)
+                            // $('#PersonneMorale option[value="' + data. + '"]').prop('selected', true);
+
+
+                            document.getElementById("CT_Civilite").selectedIndex = msg.data.CT_Civilite;
+                var select = $('#CT_Ville');
+                select.append('<option value="' + msg.data.CT_Ville + '" selected="selected">' + msg.data.CT_Ville + '</option>');
+                var selectLocalite = $('#Localite');
+                selectLocalite.append('<option value="' + msg.data.CT_Localite + '" selected="selected">' + msg.data.CT_Localite + '</option>');
+                var selectCT_Gouvernorat = $('#search');
+                selectCT_Gouvernorat.append('<option value="' + msg.data.CT_Gouvernorat + '" selected="selected">' + msg.data.CT_Gouvernorat + '</option>');
+
+
+
+                            $('#PersonneMorale').addClass('chosen-select');
+                            $('#PersonneMorale').trigger("chosen:updated");
+                            $('.chosen-select').chosen({ width: "100%" });
+
+            }
+        }
+    });
+}
+
+            $('#isconvention').click(function () {
+    if ($(this).is(':checked')) {
+        var elementtoShoww = document.getElementById('toshoww');
+        elementtoShoww.className = 'show';
+        document.getElementsByTagName('body')[0].className = 'on';
+
+    } else {
+        var elementtoShoww = document.getElementById('toshoww');
+        elementtoShoww.className = 'hide';
+        document.getElementsByTagName('body')[0].className = 'off';
+
+    }
+
+});
+
+
+
+
+
+    $("#okModal").click(function () {
+        $("textarea#CT_Adresse").val($("textarea#LI_Adresse").val());
+        $("textarea#AB_AdresseI").val($("textarea#LI_Adresse").val());
+
+        $("#CT_idLieuEtab").val($("#CT_Ville").val());
+        $("#CT_Contact").val($("#CT_Intitule").val());
+        $("#CT_GSM").val($("#CT_Telephone").val());
+        $("#CT_Complement").val($("#CT_AdresseComplement").val());
+        $("#AddClientFirst").removeClass("hidden");
+});
+
+
+    function isValidDate(s) {
+    var bits = s.split('/');
+    var d = new Date(bits[2] + '/' + bits[1] + '/' + bits[0]);
+    return !!(d && (d.getMonth() + 1) == bits[1] && d.getDate() == Number(bits[0]));
+}
+
+
+    $('#SubmitAbonnement').click(function () {
+    var CT_DateNaiss = document.getElementById('CT_DateNaiss').value;
+    var CT_IdDateEtab = document.getElementById('CT_IdDateEtab').value;
+        // check date and print message
+        //if (isValidDate(CT_DateNaiss) && isValidDate(CT_IdDateEtab)) {
+            //document.getElementById("myform").submit();
+            //$('#myform').submit();
+            $('#submitForm').click();
+    //     }
+    //else {
+    //    $("#SubmitAbonnement").attr('disabled', false);
+    //    toastr.error('Vérifiez les dates saisies ! ', 'Erreur');
+    //}
+});
+            @*---------------------------------------------------- 19/08/2019 manel ---------------------------------------------------------------*@
+            $('#search').change(function () {
+                //  $('#selectCP').addClass('chosen-select');
+                region = $('select#search').find("option:selected").val();
+                getRegion();
+                // alert(region);
+
+            });
+            function getRegion() {
+
+                $.ajax({
+                    type: "get",
+                    url: '@Url.Action("isRegionExists")', // we are calling json method
+                    dataType: 'json',
+                    data: { identifiant: $('select#search').find("option:selected").val() },
+                    success: function (msg) {
+                        if (msg.result == 0) {
+
+                            var len = msg.data.length;
+
+                            $("#CT_Ville").empty();
+                            $("#CT_Ville").append("<option>-- Choisir --</option>");
+
+                            for (var i = 0; i < len; i++) {
+
+                                $("#CT_Ville").append("<option value='" + msg.data[i].trim() + "'>" + msg.data[i].trim() + "</option>");                                //$("#CT_CodePostal").append("<input type='" + text + "class='" + form - control + "name='" + CT_CodePostal + "id='" + CT_CodePostal + "value='" + msg.cpostal[i] + "'>");
+
+                            }
+
+                        }
+                    }
+                });
+            }
+            @*---------------------------------------------------- 19/08/2019 manel ---------------------------------------------------------------*@
+            $('#CT_Ville').change(function () {
+                //  $('#selectCP').addClass('chosen-select');
+                ville = $('select#CT_Ville').val();
+                getCitee();
+               // alert(ville);
+
+            });
+            function getCitee() {
+
+                $.ajax({
+                    type: "get",
+                    url: '@Url.Action("isCiteeExists")', // we are calling json method
+                    dataType: 'json',
+                    data: { identifiant: $('select#CT_Ville').find("option:selected").val() },
+                    success: function (msg) {
+                        if (msg.result == 0) {
+
+                            var len = msg.data.length;
+                            $("#Localite").empty();
+                            $("#Localite").append("<option>-- Choisir --</option>");
+
+                            for (var i = 0; i < len; i++) {
+
+                                $("#Localite").append("<option value='" + msg.data[i].trim() + "'>" + msg.data[i].trim() + "</option>");
+
+                            }
+
+                        }
+                    }
+                });
+            }
+
+            $('#Localite').change(function () {
+                //  $('#selectCP').addClass('chosen-select');
+                citee = $('select#Localite').val();
+                getCodepostal();
+                // alert(ville);
+
+            });
+            function getCodepostal() {
+
+                $.ajax({
+                    type: "get",
+                    url: '@Url.Action("isCodePostalExists")', // we are calling json method
+                    dataType: 'json',
+                    data: { identifiant: $('select#Localite').find("option:selected").val() },
+                    success: function (msg) {
+                        if (msg.result == 0) {
+                            $("#CT_CodePostal").val(msg.data);
+                        }
+                    }
+                });
+            }
+                        @*---------------------------------------------------- 19/08/2019 manel ---------------------------------------------------------------*@
+
+
+        </script>
+        @*----------------------------------------------------------------------------01/08/2019 manel function to move to the next field for "type piéce identité" textbox---------------------------------------------------------------*@
+        <script type="text/javascript">
+              function movetoNext(current, nextFieldID) {
+
+                  if (current.value.length == 1 ) {
+                      //document.getElementById(nextFieldID).focus();
+                      $('#CT_Identifiant').after('<span class="error">Le champ N° pièce identité ne peut contenir que 8 Charactère</span>');
+                  }
+                  else {
+                      document.getElementById(nextFieldID).click();
+
+                      $(".error").remove();
+
+                  }
+
+              }
+
+        </script>
+        @*----------------------------------------------------------------------------01/08/2019 manel ---------------------------------------------------------------*@
+
+
+        @* --------------( DO_RefTT = CT_CodeRegion ) ----  ( ListeAbo = RegionAgence ) ---------- ( nom région = R_intitule ) ----  *@
+        @*<script>
+
+               $(document).ready(function () {
+
+                   $('.chosen-select').chosen({ width: "100%" });
+
+                   $('.i-checks').iCheck({
+                       radioClass: 'iradio_square-green'
+                   });
+                   $('#CT_CodeRegion ').on("change", function (event) {
+
+                       $.ajax({
+                          type: "get",
+                          url: '@Url.Action("GetInfoClientAbonnementSUS")',
+                       dataType: 'json',
+                       data: { tel: null, RefTT: $("#CT_CodeRegion").val() },
+                       success: function (msg) {
+                       if (msg.result == 0) {
+                       $("#aboTel").val((msg.abonnementClient.CT_Telephone));
+                       $("#CT_Identifiant").val((msg.data.CT_Identifiant));
+                       $("#infoClient").attr("href", "/Structure/DetailsClient/" + msg.data.cbMarq);
+
+                       }
+                       else {
+                       alert("le client n existe pas");
+                       $('#DO_RefTT').val("");
+                       $('#DO_RefTT').trigger("chosen:updated");
+
+                       $('#DO_Statut').val("");
+                       $("#infoClient").attr("href", "#");
+
+
+
+                       }
+                       }
+                       });
+
+                       });
+
+
+
+            });
+                   </script>*@
+        @*----------------------------------------------------------------------------02/08/2019 manel ---------------------------------------------------------------*@
+    }
+}
+else
+{
+
+    <div class="alert alert-danger">
+        Vous devez avoir une agence !
+    </div>
+    <script src="~/js/jquery-3.1.1.min.js"></script>
+
+
+}
+

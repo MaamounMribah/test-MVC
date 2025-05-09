@@ -1,0 +1,696 @@
+﻿@model BeeProj.Models.B_SAVENTETE
+
+@{
+    ViewBag.Title = "BonDeSortie";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<link href="~/css/plugins/chosen/bootstrap-chosen.css" rel="stylesheet">
+ <!-- Toastr style -->
+<link href="~/css/plugins/toastr/toastr.min.css" rel="stylesheet">
+<style>
+    .sel {
+        -webkit-appearance: none;
+        -moz-appearance: none;
+    }
+</style>
+<style>
+    .dataTables_filter, .dataTables_info, .dataTables_length, .dataTables_paginate {
+        display: none;
+    }
+</style>
+<div class="row wrapper border-bottom white-bg page-heading">
+
+    <div class="col-lg-8">
+        <br />
+         <h3><strong>Bon de Sortie</strong></h3>
+        <ol class="breadcrumb">
+            <li>
+                <a href="@Url.Action("index","Home")">Acceuil </a>
+            </li>
+            @*<li>
+                    <a href="@Url.Action("ListeResiliation","Resiliation")">Liste des Résiliation </a>
+                </li>*@
+            <li class="active">
+                <strong>Nouveau Bon de Sortie</strong>
+            </li>
+        </ol>
+    </div>
+
+
+    <div class="col-md-2">
+
+    </div>
+</div>
+
+<div class="row m-t-md">
+    <form method="get" class="form-horizontal">
+
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="ibox float-e-margins">
+
+                    <div class="ibox-content">
+                        <br />
+                        <div class="form-group float-e-margins center-block">
+
+
+
+                            <div class="col-md-12" id="hideAgMere">
+
+                                <div class="form-group">
+                                    <label class="col-md-5 control-label">Identifiant :</label>
+                                    <div class="col-md-2">
+                                        @Html.TextBoxFor(model => model.CT_Identifiant, new { @id = "CT_Identifiant", @class = "form-control", @placeholder = "Identifiant ..." })
+
+
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+
+
+
+                    </div>
+
+                </div>
+            </div>
+
+
+
+
+        </div>
+
+
+
+
+
+
+
+
+
+        <div class="row hidden" id="test">
+
+            <div class="col-lg-12">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-content">
+
+
+                        <div class="form-group">
+
+
+                            <div class="col-md-4">
+                                <label class="col-md-4 control-label"></label>
+                                <div class="col-md-7">
+                                    @Html.TextBoxFor(model => model.CT_Intitule, new { @id = "CT_Intitule", @class = "form-control font-bold", @readonly = "readonly", @style = ("background-image: linear-gradient(0deg,#d7d7ea,#fff);") })
+
+
+
+
+                                </div>
+
+                            </div>
+
+
+                            <div class="col-md-4">
+                                <label class="col-md-4 control-label"></label>
+                                <div class="col-md-7">
+                                    @Html.TextBoxFor(model => model.CT_Telephone, new { @id = "CT_Telephone", @class = "form-control font-bold", @readonly = "readonly", @style = ("background-image: linear-gradient(0deg,#d7d7ea,#fff);") })
+
+
+
+
+                                </div>
+
+                            </div>
+
+
+
+                            <div class="col-md-4">
+                                <label class="col-md-4 control-label"></label>
+                                <div class="col-md-7">
+                                    @Html.TextBoxFor(model => model.DO_RefTT, new { @id = "DO_RefTT", @class = "form-control font-bold", @readonly = "readonly", @style = ("background-image: linear-gradient(0deg,#d7d7ea,#fff);") })
+
+
+
+
+                                </div>
+
+                            </div>
+
+
+                        </div>
+
+
+
+                    </div>
+
+                    <br />
+                    <h3 class="content-box-header clearfix">
+                        <small id="numcourant"> </small>
+
+                        <span class="btn-google pull-right" data-toggle="buttons">
+                            <button data-toggle="modal" data-target="#selectArticle" title="Ajouter Produit" class="btn btn-success btn-circle" type="button">
+                                <i class="fa fa-plus"></i>
+                            </button>
+
+
+                            @*<button data-toggle="modal" data-target="#TransfererModal" class="btn btn-info btn-circle" title="Transférer" type="button">
+                                <i class="fa fa-save"></i>
+                            </button>*@
+
+                            <button class="btn btn-danger btn-circle" id="DeleteAllLines" title="Supprimer tout" type="button">
+                                <i class="fa fa-trash"></i>
+                            </button>
+
+
+
+
+                        </span>
+
+
+                    </h3>
+
+                    <div class="content-box-wrapper bg-white">
+
+
+
+                        <div class="ibox-content">
+
+                            <table class="table">
+
+                                <thead>
+                                    <tr>
+                                        <th>Code Article</th>
+                                        <th>Désignation</th>
+                                        <th>Quantité</th>
+                                        @*<th>N° Serie</th>*@
+                                        <th>Dépôt</th>
+                                        <th></th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+
+
+
+
+                            </table>
+
+
+
+
+                            <table id="TableListeLignesProduit" class="table table-striped  TableListeLignesProduit">
+
+                                
+
+                                <tbody>
+                                    <tr class="row">
+
+                                        <td></td>
+                                        <td></td>
+
+                                        @*<td></td>*@
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+
+                                    </tr>
+                                </tbody>
+
+
+                            </table>
+
+                        </div>
+
+                    </div>
+
+                    @*<div class="ibox-content">
+
+
+                        <table class="table  table-bordered  dataTables-example" id="TableListeLignesSAV">
+
+                            <thead>
+                                <tr>
+                                    <th></th>
+                                    <th>Référence Article</th>
+                                    <th>Désignation</th>
+
+                                    <th>Quantité </th>
+                                    <th>N° Série</th>
+
+
+
+
+
+
+                                </tr>
+                            </thead>
+
+                        </table>
+
+
+                    </div>*@
+
+                    <div class="ibox-content">
+
+                        <div class="list-group">
+                            <button class="btn btn-purplebee  pull-right m-t-n-xs" style="margin-left:10px;" type="button" id="EnvoyerSortie"><strong>Envoyer</strong></button>
+                            @*<button type="button" class="btn btn-graybee  pull-right m-t-n-xs" onclick="location.href='@Url.Action("NouvelleResiliation","Resiliation")'"><strong>Annuler</strong></button>*@
+
+                            <button type="button" class="btn btn-graybee  pull-right m-t-n-xs"><strong>Annuler</strong></button>
+
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </form>
+</div>
+
+<div class="modal inmodal fade" id="ListeAbonnements" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title">Liste des abonnements </h4>
+            </div>
+            <div class="modal-body">
+
+                <div class="row">
+                    <div class="col-md-10">
+                        <input class="form-control" type="text" id="idC" />
+                    </div>
+                    <div class="col-md-2">
+                        <button class="btn btn-sm btn-rounded" id="retrieveListeAbo">Ok</button>
+                    </div>
+                </div>
+
+                <br />
+                <div class="full-height-scroll">
+                    <div>
+                        <table class="table table-striped table-hover" id="TablelisteAbonnements" style="cursor:pointer;">
+
+                            <thead>
+                                <tr>
+                                    <th>Référence Abonnement</th>
+                                    <th>Intitulé Client</th>
+                                    <th>Téléphone</th>
+
+                                    <th>Adresse</th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+
+
+            </div>
+
+
+        </div>
+    </div>
+</div>
+
+
+
+<!-- Modal liste article en stock  -->
+
+
+<div class="modal inmodal fade" id="selectArticle" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title">Liste des articles en stock</h4>
+                <small class="font-bold">Double click pour séléctionner l'article de votre demande et préciser la quantité désirée.</small>
+
+                <br />
+                <hr />
+
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">Quantité Demander</label>
+
+                    <div class="col-sm-10">
+                        <div class="input-group m-b">
+                            <span class="input-group-addon">
+                                <i class="fa fa-star"></i>
+                            </span> <input type="number" class="form-control" placeholder="Quantité" id="qtyEntree" value="1">
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">Article sélectionné</label>
+                    <div class="col-sm-9">
+                        <select class="form-control chosen-select" id="Article">
+                            <option value=""></option>
+                            @foreach (var item in ViewBag.ListeArticle)
+                            {
+                                <option value="@item.AR_Ref">@item.AR_Design</option>
+                            }
+                        </select>
+
+                    </div>
+
+
+                </div>
+            </div>
+
+
+
+            <div class="modal-body">
+
+
+                <div>
+
+                    <table id="listeArticles"   class="table table-striped table-bordered table-hover dataTables-example full-width" style="cursor:pointer;">
+                        <thead>
+                            <tr>
+
+
+
+                                <th>
+                                    Référence Article
+                                </th>
+                                <th>
+                                    Désignation
+                                </th>
+                                <th>Quantité Disponible </th>
+
+                                <th>
+                                    Quantité Réservée
+                                </th>
+
+                                <th> Dépôt </th>
+
+
+
+                            </tr>
+                        </thead>
+
+
+
+                    </table>
+
+                </div>
+
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-white" data-dismiss="modal">Fermer</button>
+                @*<button type="button" class="btn btn-primary">Save changes</button>*@
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+<script src="~/js/jquery-3.1.1.min.js"></script>
+
+<script src="~/js/plugins/metisMenu/jquery.metisMenu.js"></script>
+
+<script src="~/js/plugins/pace/pace.min.js"></script>
+<script src="~/js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+
+<script src="~/js/plugins/chosen/chosen.jquery.js"></script>
+
+<script src="~/js/plugins/dataTables/datatables.min.js"></script>
+
+<!-- Toastr script -->
+<script src="~/js/plugins/toastr/toastr.min.js"></script>
+<script>
+
+
+        $('document').ready(function () {
+            $('.chosen-select').chosen({ width: "100%" });
+
+            $("select#Article").on("change", function () {
+                var ref = $('select#Article').val();
+                listedesArticlesTable($('select#Article').val());
+            });
+
+            var $table = $('#listeArticles').DataTable();
+
+            $table.on('dblclick', 'tr', function () {
+                   
+           
+                var tr = $(this).closest('tr');
+                var value = tr.find('td:eq(0)').html();
+                var qtyDispo = tr.find('td:eq(2)').html();
+
+                var nserie = tr.find('td:eq(4)').html();
+
+                var depot = tr.find('td:eq(4)').html();
+                //var value2 = tr.find('td:eq(1)').html();
+
+                var qtt = $('#qtyEntree').val();
+
+                if (parseInt(qtt) > parseInt(qtyDispo)) {
+                    toastr.error('Quantité demandé indisponible !', 'Erreur');
+
+                }
+                else {
+                    $('#selectArticle').modal('hide');
+                    AddLineTrsf(value, nserie, depot);
+                }
+
+            });
+           
+            
+            function listedesArticlesTable(arref) {
+                //$(".chosen-select").chosen();
+                // $('#listeArticles').DataTable().ajax.reload();
+                $("#listeArticles").dataTable().fnDestroy();
+                $('.chosen-select').chosen({ width: "100%" });
+
+                var oTable = $('#listeArticles').DataTable({
+                    "ajax": {
+                        "url": "/SAV/GetStockDepotUser?Article=" + arref,
+                        "type": "get",
+                        "datatype": "json",
+                        "autoWidth": false
+                    },
+                    "columns": [
+
+                            { "data": "AR_Ref" },
+                            { "data": "AR_Design" },
+                            { "data": "AS_QteSto" },
+
+                            { "data": "AS_QteStoRes" },
+                            { "data": "DE_Intitule" }
+
+                    ]
+
+                });
+               
+
+             
+            }
+
+
+
+            
+
+             
+
+
+            $('#CT_Identifiant').focus(function () {
+                //open bootsrap modal
+                $('#ListeAbonnements').modal({
+                    show: true
+                });
+                $("#TablelisteAbonnements").DataTable().destroy();
+
+            });
+
+
+            function AddLineTrsf(arref, nserie, depot) {
+               
+                $.ajax({
+                    type: "GET",
+                    url: "/SAV/getInfoArticle2?Arref=" + arref,
+                    success: function (res) {
+                       
+                        var qtt = $('#qtyEntree').val();
+
+                        var mylistSerieDepot = '<select class="form-control" id="myselSerieDepot" >';
+                        mylistSerieDepot = mylistSerieDepot + '<option value="1">Aucun</option>'
+                      
+                        for (var i = 0; i < res.data.length; i++) {
+                            var counter = res.data[i];
+                            mylistSerieDepot = mylistSerieDepot + '<option value="'+ counter +'">'+ counter + '</option>' ;
+                       
+                        }
+                        mylistSerieDepot = mylistSerieDepot +'</select>' ;
+
+                        var test = $(mylistSerieDepot).html();
+                        
+                       
+                        $(".chosen-select").chosen();
+                        var counter = 0;
+                        if (res.infoArticle.AR_SuiviStock == 2)
+                        {
+                        counter++;
+                        var newRow = $("<tr class='row'>");
+                        var cols = "";
+
+                        cols += '<td ><input type="text" id="ArticleID" name="ArticleID' + counter + '" value="' + res.infoArticle.AR_Ref + '"class="form-control ref-ids" disabled/></td>';
+                        cols += '<td ><input type="text" id="ArticleDesign" name="ArticleDesign' + counter + '" value="' + res.infoArticle.AR_Design + '"class="form-control articles-ids" disabled/></td>';
+
+                        cols += '<td><input type="text" id="quantite" type="number" name="quantite' + counter + '" value="' + $('#qtyEntree').val() + '"class="form-control qt-ids disabled" /></td>';
+                        //cols += '<td><input type="text" id="serie" type="number" value="' + nserie + '" name="series' + counter + '"class="form-control serie-ids" disabled /></td>';
+                        cols += '<td><input type="text" id="depot" type="number" value="' + depot + '" name="depot' + counter + '"class="form-control depot-ids" disabled /></td>';
+                        cols += '<td> <select class="form-control sel serie-ids" disabled>'+ test +'</select></td>';
+                        cols += '<td><a class="deleteRowGamme btn btn-xs btn-round btn-azure"> <div class="form-control"><i class="fa fa-trash"></i></div> </a></td>';
+
+                        newRow.append(cols);
+
+                        $(".TableListeLignesProduit").append(newRow);
+                        }
+                        else if (res.infoArticle.AR_SuiviStock == 1) {
+
+                            for (i = 0; i < qtt; i++) {
+                                var newRow = $("<tr class='row'>");
+                                var cols = "";
+
+                                cols += '<td ><input type="text" id="ArticleID" name="ArticleID' + counter + '" value="' + res.infoArticle.AR_Ref + '"class="form-control ref-ids" disabled/></td>';
+                                cols += '<td ><input type="text" id="ArticleDesign" name="ArticleDesign' + counter + '" value="' + res.infoArticle.AR_Design + '"class="form-control articles-ids" disabled/></td>';
+
+                                cols += '<td><input type="text" id="quantite" type="number" name="quantite' + counter + '" value="1" class="form-control qt-ids disabled" /></td>';
+                                //cols += '<td><input type="text" id="serie" type="number" value="' + nserie + '" name="series' + counter + '"class="form-control serie-ids" disabled /></td>';
+                                cols += '<td><input type="text" id="depot" type="number" value="' + depot + '" name="depot' + counter + '"class="form-control depot-ids" disabled /></td>';
+                                cols += '<td> <select class="form-control serie-ids">'+ test +'</select></td>';
+                                cols += '<td><a class="deleteRowGamme btn btn-xs btn-round btn-azure"> <div class="form-control"><i class="fa fa-trash"></i></div> </a></td>';
+
+                                newRow.append(cols);
+                                $(".TableListeLignesProduit").append(newRow);
+
+                            }
+                        }
+                    }
+
+                });
+
+
+
+
+            }
+
+
+            $("#retrieveListeAbo").click(function () {
+                if ($('#idC').val() != "") {
+                    $("#TablelisteAbonnements").DataTable({
+                        "ajax": {
+                            "url": "/Abonnement/listeAbonnementIdentifiant?IdentifiantClient=" + $('#idC').val(),
+                            "type": 'get',
+                            "datatype": "json"
+                        },
+                        "columns": [
+                            { "data": "DO_RefTT" },
+                            { "data": "CT_Intitule" },
+                            { "data": "CT_Telephone" },
+
+                            { "data": "CT_Adresse" },
+
+                        ]
+                    });
+
+
+                    $('#TablelisteAbonnements tbody').on('dblclick', 'tr', function () {
+                        $("#test").removeClass("hidden");
+                        var tr = $(this).closest('tr');
+                        var DO_RefTT = tr.find('td:eq(0)').html();
+                        var CT_Telephone = tr.find('td:eq(2)').html();
+                        var b = tr.find('td:eq(1)').html();
+                        var intitule = tr.find('td:eq(1)').html();
+                        //var adress = tr.find('td:eq(3)').html();
+                        $('#DO_RefTT').val(DO_RefTT);
+                        $('#DO_RefTT').trigger("chosen:updated");
+                        $("#CT_Identifiant").val($('#idC').val());
+                        $("#CT_Telephone").val(CT_Telephone);
+                        $("#CT_Intitule").val(intitule);
+                       
+                        $('#ListeAbonnements').modal('hide');
+
+                
+
+                    });
+
+
+
+
+
+
+                }
+            });
+
+
+            $('#EnvoyerSortie').click(function () {
+
+
+                var ArticleID = [];
+                var Qtys = [];
+                //var Serie = [];
+                var Serie = [];
+
+                //var rowCount = $('table.order-list tr').length - 2;
+                $('#TableListeLignesProduit tr').find('td .ref-ids').each(function () {
+                    ArticleID.push(($(this).val()));
+                });
+
+                $('#TableListeLignesProduit tr').find('td .qt-ids').each(function () {
+                    Qtys.push(($(this).val()));
+                });
+                //$('#TableListeLignesProduit tr').find('td .serie-ids').each(function () {
+                //    Serie.push(($(this).val()));
+                //});
+
+                $('#TableListeLignesProduit tr').find('td .serie-ids').each(function () {
+                    Serie.push(($(this).val()));
+                });
+
+                if (ArticleID.length == 0) {
+                    toastr.error('Veuillez selectionner les articles que vous voulez transférer ! ', 'Erreur');
+                }
+                else {
+
+                    var url = "/SAV/EnvoiSerie?arref=" + ArticleID
+                    + "&&Qtys=" + Qtys + "&&Serie=" + Serie + "&&DO_RefTT=" + $('#DO_RefTT').val();
+
+                    $.ajax({
+                        type: "Post",
+                        url: url,
+
+                        success: function (data) {
+
+                            window.location = "/SAV/ListeBonDeSortie/";
+
+                        }
+
+                    })
+
+
+
+                    //      saveLineStock(ArticleID[i], Design[i], Qtys[i], Serie[i]);
+
+                }
+
+
+
+            });
+
+
+
+        });
+
+</script>

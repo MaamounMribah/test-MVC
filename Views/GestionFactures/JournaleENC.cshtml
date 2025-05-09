@@ -1,0 +1,167 @@
+﻿@model IEnumerable<BeeProj.Models.JournalENC>
+
+@{
+    ViewBag.Title = "JournalENC";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+
+<link href="~/css/plugins/dataTables/datatables.min.css" rel="stylesheet">
+
+
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-lg-10">
+        <h2>Journal ENC</h2>
+        <ol class="breadcrumb">
+            <li>
+                <a href=@Url.Action("Index", "Home")>Acceuil</a>
+            </li>
+            <li>
+                <a href=@Url.Action("JournaleENC", "GestionFactures")>Gestion des Factures</a>
+            </li>
+            <li class="active">
+                <strong>Journal ENC</strong>
+            </li>
+        </ol>
+    </div>
+    <div class="col-lg-2">
+    </div>
+</div>
+@{
+int counter = 1;
+    }
+<div class="wrapper wrapper-content animated fadeInRight">
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="wrapper wrapper-content animated fadeInUp">
+                <div class="ibox">
+                    <div class="ibox-content">
+
+                        <div class="table-responsive">
+                            <table class="table  table-bordered table-hover dataTables-example" id="dataTables-example">
+                                <thead>
+                                    <tr>
+                                        <th>N:°</th>
+                                        <th>Date</th>
+                                        <th>N° Reglement</th>
+                                        <th>Compte Générale</th>
+                                        <th>Libellé de l'opération </th>
+                                        <th>Code Tiers</th>
+                                        <th>Débit</th>
+                                        <th>Crédit</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+
+                                    @foreach (var item in Model)
+                                {
+
+                                        <tr>
+                                            <td>@counter</td>
+                                            <td>@item.DATE_REGLEMENT.GetValueOrDefault().ToString("dd/MM/yyyy")</td>
+                                            <td>
+                                                <a title="voir le reçu de paiement "
+                                                   href="@Url.Action("ImpressionRecu","GestionFactures", new { id = item.cbMarq })" target="_blank">
+                                                    @item.NUM_REGLEMENT
+                                                </a>
+                                            </td>
+                                            <td>
+                                                @item.CompteGenerale
+                                            </td>
+                                            <td>@item.INTITULEClient</td>
+                                            <td> @item.CODE_CLIENT </td>
+
+
+                                            <td class="project-actions">
+                                                <h4><span class="text-purplebee"> @String.Format("{0:N3}", item.MONTANT_REGLEMENT)</span></h4>
+                                            </td>
+                                            <td></td>
+                                        </tr>
+                                        <tr>
+                                            <td>@counter</td>
+                                            <td>@item.DATE_REGLEMENT.GetValueOrDefault().ToString("dd/MM/yyyy")</td>
+                                            <td>
+                                                <a title="voir le reçu de paiement "
+                                                   href="@Url.Action("ImpressionRecu","GestionFactures", new { id = item.cbMarq })" target="_blank">
+                                                    @item.NUM_REGLEMENT
+                                                </a>
+                                            </td>
+                                            <td>
+                                                @item.CompteGenraleAg
+                                            </td>
+                                            <td>@item.INTITULEAgenceReglement</td>
+                                            <td> @item.CT_NumAgence </td>
+
+
+                                            <td></td>
+
+                                            <td class="project-actions">
+                                                <h4><span class="text-purplebee"> @String.Format("{0:N3}", item.MONTANT_REGLEMENT)</span></h4>
+                                            </td>
+                                        </tr>
+
+
+                                    counter++;
+                                }
+                                    <tr>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td><b>Total</b></td>
+                                        <td class="project-actions">
+                                            <h4><span class="text-graybee">@String.Format("{0:N3}", Model.Sum(x=>x.MONTANT_REGLEMENT??0))</span>   </h4>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+
+
+
+<script src="~/js/jquery-3.1.1.min.js"></script>
+<script src="~/js/plugins/dataTables/datatables.min.js"></script>
+<script src="~/js/ChoiceBordereau.js"></script>
+<script>
+    $(document).ready(function () {
+        $('.dataTables-example').DataTable({
+			ordering: false,
+          //  "order": [[6, "desc"]],
+            responsive: true,
+            dom: '<"html5buttons"B>lTfgitp',
+            buttons: [
+                { extend: 'copy' },
+                { extend: 'csv' },
+                { extend: 'excel', title: 'ExampleFile' },
+                { extend: 'pdf', title: 'ExampleFile' },
+                {
+                    extend: 'print',
+                    customize: function (win) {
+                        $(win.document.body).addClass('white-bg');
+                        $(win.document.body).css('font-size', '10px');
+
+                        $(win.document.body).find('table')
+                                .addClass('compact')
+                                .css('font-size', 'inherit');
+                    }
+                }
+            ]
+
+        });
+    });
+</script>
+
+

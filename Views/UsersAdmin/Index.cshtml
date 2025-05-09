@@ -1,0 +1,210 @@
+﻿@model IEnumerable<IdentitySample.Models.ListeUsersWithGroupes>
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+}
+<link href="~/css/plugins/dataTables/datatables.min.css" rel="stylesheet">
+<link href="~/css/plugins/sweetalert/sweetalert.css" rel="stylesheet">
+<!-- Toastr style -->
+<link href="~/css/plugins/toastr/toastr.min.css" rel="stylesheet">
+
+
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-lg-10">
+        <br />
+        <ol class="breadcrumb">
+            <li>
+                <a href="@Url.Action("index","Home")">Acceuil</a>
+            </li>
+            <li>
+                <a href="@Url.Action("index","Administration")">Administration</a>
+            </li>
+            <li class="active">
+                <a href="@Url.Action("index","UsersAdmin")"><strong>Liste des utilisateurs</strong></a>
+            </li>
+        </ol>
+    </div>
+
+</div>
+
+<div class="wrapper wrapper-content">
+  
+    <div class="row animated fadeInRight">
+        <div class="ibox">
+            <div class="ibox-title">
+                <h5>  </h5>
+                <div class="ibox-tools">
+                    @if (Request.IsAuthenticated && (User.IsInRole("Admin") || User.IsInRole("Create Utilisateur")))
+                    {
+                        @Html.ActionLink("Nouvel utilisateur", "Create", null, new { @class = "btn btn-xs btn-primary pull-right" })
+                    }
+                </div>
+            </div>
+            <div class="ibox-content">
+
+                <table class="table table-striped table-bordered table-hover listeUtilisateurs" id="listeUtilisateurs">
+
+                    <thead>
+                        <tr>
+                            <th>Utilisateur</th>
+                            <th>Nom et Prénom</th>
+                            <th>Intitule Agence</th>
+                            <th>Email</th>
+                            <th>Dernière connexion</th>
+                            <th>Dernière déconnexion</th>
+                            <th>Etat</th>
+                            <th>Groupes</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>@Html.DisplayFor(modelItem => item.UserName)</td>
+                                <td>@Html.DisplayFor(modelItem => item.LastName) @Html.DisplayFor(modelItem => item.FirstName)</td>
+                                <td>@Html.DisplayFor(modelItem => item.A_Agence)</td>
+                                <td>@Html.DisplayFor(modelItem => item.Email)</td>
+                                <td>@Html.DisplayFor(modelItem => item.LastLoginDate)</td>
+                                <td>@Html.DisplayFor(modelItem => item.LastLogOffDate)</td>
+                                <td>
+                                    @if (item.LockoutEndDateUtc == null)
+                                    {
+                                        <span class="badge-greenbee">Actif</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge-warning">Désactivé</span>
+                                    }
+                                </td>
+                                <td>
+                                    <ul>
+                                        @foreach (var groups in item.ListeGroupeUser)
+                                        {
+                                            <li>@groups</li>
+                                        }
+                                    </ul>
+
+                                </td>
+                                <td>
+                                    @if (Request.IsAuthenticated && (User.IsInRole("Admin") || User.IsInRole("Modifier Utilisateur")))
+                                    {
+                                        <a class="btn btn-outline btn-success dim" href=@Url.Action("Edit", "UsersAdmin", new { id = item.Id })><i class="fa fa-pencil"></i></a>
+                                    }
+                                    @if (Request.IsAuthenticated && (User.IsInRole("Admin") || User.IsInRole("Détails Utilisateur")))
+                                    {
+                                        <a class="btn btn-outline btn-success dim" href=@Url.Action("Details", "UsersAdmin", new { id = item.Id })><i class="fa fa-eye"></i></a>
+                                    }
+                                    @if (Request.IsAuthenticated && (User.IsInRole("Admin") || User.IsInRole("Renvoyer Email")))
+                                    {
+                                        <button class="btn btn-outline btn-success" onclick="ResendEmail('@item.Email','@item.FirstName','@item.LastName','@item.UserName','@item.PasswordHash','@item.Id');"><i class="fa fa-undo"></i></button>
+                                    }
+                                        @if (Request.IsAuthenticated && (User.IsInRole("Admin") || User.IsInRole("Supprimer Utilisateur")))
+                                        {
+                                            <a class="btn btn-outline btn-success dim" href=@Url.Action("Delete", "UsersAdmin", new { id = item.Id })><i class="fa fa-trash"></i></a>
+                                        }
+
+
+                                        </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+
+            </div>
+        </div>
+    </div>
+</div>
+<script src="~/js/jquery-3.1.1.min.js"></script>
+<script src="~/js/plugins/dataTables/datatables.min.js"></script>
+<script src="~/js/plugins/sweetalert/sweetalert.min.js"></script>
+<script src="~/js/plugins/metisMenu/jquery.metisMenu.js"></script>
+<script src="~/js/plugins/pace/pace.min.js"></script>
+<script src="~/js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+<script src="~/js/plugins/chosen/chosen.jquery.js"></script>
+<!-- Toastr script -->
+<script src="~/js/plugins/toastr/toastr.min.js"></script>
+
+
+<script>
+
+    function ResendEmail(email, firstname, lastname, username, password, id)
+
+    {
+        var data = JSON.stringify({
+            "email": email,
+            "firstname": firstname,
+            "id": id,
+            "lastname":lastname,
+            "username":username,
+            "password":password
+
+        });
+        swal({
+            title: "Renvoyer email de confirmation ?",
+            text: " ",
+            type: "warning",
+            showCancelButton: true,
+            cancelButtonText: 'Annuler',
+            confirmButtonColor: "#DD6B55",
+            confirmButtonText: "Oui, envoyer.",
+            closeOnConfirm: false
+        }, function () {
+            $.ajax({
+                type: "Post",
+                url: '@Url.Action("ReSendEmail", "UsersAdmin")',
+                data: data,
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (data) {
+                    swal("Envoyé!", "Email envoyé avec succès ! ", "success");
+                    //alert();
+                    swal({
+                        title: JSON.stringify(data.data),
+                        text: " ",
+                        type: "warning",
+                        showCancelButton: true,
+                        cancelButtonText: 'Fermer',
+                        confirmButtonColor: "#DD6B55"
+
+
+                    });
+                },
+                error: function (xhr) {
+
+                    toastr.error('Une erreur s est produite lors du renvoie de l email. Réessayez. !', 'Erreur');
+                }
+            });
+
+        });
+        }
+
+
+    $(function () {
+        $('#listeUtilisateurs').DataTable({
+            pageLength: 25,
+            responsive: true,
+            dom: '<"html5buttons"B>lTfgitp',
+            buttons: [
+                { extend: 'copy' },
+                { extend: 'csv' },
+                { extend: 'excel', title: 'ExampleFile' },
+                { extend: 'pdf', title: 'ExampleFile' },
+                {
+                    extend: 'print',
+                    customize: function (win) {
+                        $(win.document.body).addClass('white-bg');
+                        $(win.document.body).css('font-size', '10px');
+                        $(win.document.body).find('table')
+                            .addClass('compact')
+                            .css('font-size', 'inherit');
+                    }
+                }
+            ]
+
+        });
+
+
+    });
+</script>

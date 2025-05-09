@@ -1,0 +1,595 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<link href="~/css/plugins/chosen/bootstrap-chosen.css" rel="stylesheet">
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-lg-10">
+        <h2><strong>Interroger Stock </strong></h2>
+    </div>
+
+</div>
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-lg-12">
+         
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+
+                        <label class="custom-control-label" for="RechSerie">
+                            Recherche par numéro de série
+                        </label>
+
+                        <div >
+                            @using (Html.BeginForm("Index", "InterrogerStock", FormMethod.Post))
+                            {
+                                <div class="input-group">
+                                    <input type="text" class="form-control" id="MaterielsList" name="MaterielsList" value=@ViewBag.MaterielsList required>
+                                    <span class="input-group-btn">
+
+                                        <button type="submit" title="Recherche" class="btn btn-greenbee pull-right  m-l-sm ladda-button">
+                                            Rechercher
+                                        </button>
+                                    </span>
+                                </div>
+                            }
+                        </div>
+                </div>
+            </div>
+    </div>
+       
+</div>
+ 
+    </div>
+
+@if (ViewBag.lastDepot != null)
+{
+<div class="row">
+    <div class="col-lg-12">
+        <div class="ibox float-e-margins">
+            <div class="ibox-title">
+                <h4>Informations</h4>
+            </div>
+            <div class="ibox-content">
+              
+                <div class="row">
+                    <div class="col-lg-6">
+                        <dl class="dl-horizontal">
+                            <dt style="color:blue;">Depot </dt>
+                            <dd><strong>@ViewBag.lastDepot.DE_Intitule </strong>  </dd>
+                            <dt style="color:blue;">Adresse </dt>
+                            <dd><strong> @ViewBag.lastDepot.DE_Adresse</strong> </dd>
+                                @if (ViewBag.ReservationMats != null)
+                                {
+                                    <dt style="color:blue;">Article</dt>
+                                    <dd>
+                                    <strong> @ViewBag.ReservationMats.DL_Design</strong>
+                                    </dd>                          
+                                    <dt style="color:blue;" >Numero Serie</dt>
+                                    <dd><strong>@ViewBag.ReservationMats.LS_NoSerie </strong></dd>     
+                               }
+                        </dl>
+                    </div>
+                    <div class="col-lg-6" id="cluster_info">
+                        <dl class="dl-horizontal">
+                            @if (ViewBag.mvtVentes != null)
+                            {
+                                <dt style="color:blue;">Numero BL </dt>
+                                <dd> 
+                                 <strong>
+                                    <a href="@Url.Action("ImprimerBL", "DocumentsVente", new { id = ViewBag.mvtVentes.cbmarq })">@ViewBag.mvtVentes.Piece</a>
+                                    </strong>
+                                 </dd>                          
+                                <dt style="color:blue;" >Date de BL </dt>
+                                <dd>
+                                    <strong> @ViewBag.mvtVentes.Date.ToString("dd/MM/yyyy")</strong>
+                                </dd> 
+                            }
+                            @if (ViewBag.aboentete != null)
+                            {
+                                <dt style="color:blue;"> Abonnenement</dt>
+                                <dd>
+                                    <strong>
+                                    <a href="@Url.Action("Details", "Abonnement", new { id = ViewBag.aboentete.cbMarq })">@ViewBag.aboentete.DO_Piece</a>
+                                    </strong>
+                                </dd>
+                            }
+                        </dl>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+}
+                <!--Stock-->
+                @if (ViewBag.stock != null)
+                {
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="ibox float-e-margins">
+                                <div class="ibox-title">
+                                    <h4 class="text-purplebee">Liste Stock</h4>
+                                </div>
+                                <div class="ibox-content">
+                                    <input type="text" class="form-control input-sm m-b-xs" id="filter"
+                                           placeholder="Chercher">
+                                    <table class="footable table table-stripped" data-page-size="25" data-filter=#filter>
+                                        <thead>
+                                            <tr>
+                                                <th>Sérialsé</th>
+                                                <th>Dépot</th>
+                                                <th>Référence Article</th>
+                                                <th>Désignation Article</th>
+                                                <th>Quantité De Stock</th>
+                                                <th>Quantité Reservée</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+
+                                            @if (ViewBag.stock != null)
+                                            {
+                                                foreach (var item in ViewBag.stock)
+                                                {
+                                                    <tr class="gradeX">
+                                                        <td>@item.Serialise</td>
+                                                        <td>@item.DE_Intitule</td>
+                                                        <td>@item.Aref</td>
+                                                        <td>@item.Designation</td>
+                                                        <td>@String.Format("{0:N0}", @item.StockPermanant)</td>
+                                                        <td>@String.Format("{0:N0}", @item.StockReserve)</td>
+                                                    </tr>
+                                                }
+                                            }
+
+                                        </tbody>
+                                        <tfoot>
+                                            <tr>
+                                                <td colspan="10">
+                                                    <ul class="pagination pull-right"></ul>
+                                                </td>
+                                            </tr>
+                                        </tfoot>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+                  <!--StockDepot-->
+@if (ViewBag.ArticleDepot != null)
+{
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h4 class="text-purplebee">Liste numero série </h4>
+                </div>
+                <div class="ibox-content">
+                    <input type="text" class="form-control input-sm m-b-xs" id="StockDepot"
+                           placeholder="Chercher">
+                    <table class="footable table table-stripped" data-page-size="25" data-filter=#StockDepot>
+                        <thead>
+                            <tr>
+                                <th>Dépot</th>
+                                <th>Référence Article</th>
+                                <th>Désignation Article</th>
+                                <th>Numero série</th>
+
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                            @if (ViewBag.ArticleDepot != null)
+                            {
+                                foreach (var Art in ViewBag.ArticleDepot)
+                                {
+                                    <tr class="gradeX">                                       
+                                        <td>@Art.DE_Intitule</td>
+                                        <td>@Art.Aref</td>
+                                        <td>@Art.Designation</td>
+                                        <td>@Art.Ls_NoSerie</td>
+                                    </tr>
+                                }
+                            }
+
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <td colspan="10">
+                                    <ul class="pagination pull-right"></ul>
+                                </td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+                <!--Mouvement Vente-->
+                @if (ViewBag.mvtVente != null)
+                {
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="ibox float-e-margins">
+                                <div class="ibox-title">
+                                    <h4 class="text-purplebee">Mouvement Vente</h4>
+                                </div>
+                                <div class="ibox-content">
+                                    <input type="text" class="form-control input-sm m-b-xs" id="mvtVente"
+                                           placeholder="Chercher">
+                                    <table class="footable table table-stripped" data-page-size="25" data-filter=#mvtVente>
+                                        <thead>
+                                            <tr>
+                                                <th>Type Document</th>
+                                                <th>Piece</th>
+                                                <th>Date</th>
+                                                <th>Depot</th>
+                                                <th>Abonnement</th>
+                                                <th>Client</th>
+                                                @*<th>Numéro série</th>*@
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @if (ViewBag.mvtVente != null)
+                                {
+                                    foreach (var item1 in ViewBag.mvtVente)
+                                    {
+                                <tr>
+                                    <td> @item1.TypeDocument</td>
+                                    <td> <a href="@Url.Action("ImprimerBL", "DocumentsVente", new { id = item1.cbmarq })">@item1.Piece</a></td>
+                                    <td> @item1.Date.ToString("dd/MM/yyyy") </td>
+                                    <td>@item1.DepotName </td>
+                                    <td>@item1.RéferenceAbonnement  </td>
+                                    <td> @item1.ClientName </td>
+                                    @*<td>
+                                        @if (item1.NumSeries != null)
+                                        {
+                                            foreach (var items in item1.NumSeries)
+                                            {
+                                            @items
+                                        }
+                                        }
+                                      
+                                    </td>*@
+                                </tr>
+                                    }
+                                }
+                                        </tbody>
+                                        <tfoot>
+                                            <tr>
+                                                <td colspan="10">
+                                                    <ul class="pagination pull-right"></ul>
+                                                </td>
+                                            </tr>
+                                        </tfoot>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+                <!--bon de retour-->
+                @if (ViewBag.BonDeRetour != null)
+                {
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="ibox float-e-margins">
+                                <div class="ibox-title">
+                                    <h4 class="text-purplebee">Bon De Retour</h4>
+                                </div>
+                                <div class="ibox-content">
+                                    <input type="text" class="form-control input-sm m-b-xs" id="BonDeRetour"
+                                           placeholder="Chercher">
+                                    <table class="footable table table-stripped" data-page-size="25" data-filter=#BonDeRetour>
+                                        <thead>
+                                            <tr>
+                                                <th>Type Document</th>
+                                                <th>Piece</th>
+                                                <th>Date</th>
+                                                <th>Depot</th>
+                                                <th>Numéro série</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @if (ViewBag.BonDeRetour != null)
+                            {
+                                foreach (var BonDeRetour in ViewBag.BonDeRetour)
+                                {
+                            <tr>
+                                <td> @BonDeRetour.DocumentType</td>
+                                <td> @BonDeRetour.Piece</td>
+                                <td> @BonDeRetour.Date.ToString("dd/MM/yyyy") </td>
+                                <td>@BonDeRetour.DepotName </td>
+                                <td>@BonDeRetour.NumSeries</td>
+
+                            </tr>
+                                }
+                            }
+                                        </tbody>
+                                        <tfoot>
+                                            <tr>
+                                                <td colspan="10">
+                                                    <ul class="pagination pull-right"></ul>
+                                                </td>
+                                            </tr>
+                                        </tfoot>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+                <!--Mouvement Achat-->
+                @if (ViewBag.mvtAchat != null)
+                {
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="ibox float-e-margins">
+                                <div class="ibox-title">
+                                    <h4 class="text-purplebee">Mouvement Achat</h4>
+                                </div>
+                                <div class="ibox-content">
+                                    <input type="text" class="form-control input-sm m-b-xs" id="mvtAchat"
+                                           placeholder="Chercher">
+                                    <table class="footable table table-stripped" data-page-size="25" data-filter=#mvtAchat>
+                                        <thead>
+                                            <tr>
+                                                <th>Type Document</th>
+                                                <th>Piece</th>
+                                                <th>Date</th>
+                                                <th>Depot</th>
+                                                <th>Abonnement</th>
+                                                <th>Client</th>
+                                                <th>Quantité</th>
+                                                <th>Numéro série</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @if (ViewBag.mvtAchat != null)
+                                {
+                                    foreach (var achat in ViewBag.mvtAchat)
+                                    {
+                                <tr>
+                                    <td> @achat.TypeDocument</td>
+                                    <td>@achat.Piece</td>
+                                    <td>@achat.Date</td>
+                                    <td>@achat.DepotName</td>
+                                    <td>@achat.RéferenceAbonnement</td>
+                                    <td>@achat.ClientName       </td>
+                                    <td>@String.Format("{0:N0}",@achat.Quantite )</td>
+                                    <td>
+                                        @foreach (var items in achat.NumSeries)
+                                                {
+                                                @items
+                                                }
+                                    </td>
+                                </tr>
+                                    }
+                                }
+                                        </tbody>
+                                        <tfoot>
+                                            <tr>
+                                                <td colspan="10">
+                                                    <ul class="pagination pull-right"></ul>
+                                                </td>
+                                            </tr>
+                                        </tfoot>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+                <!--Mouvement transfert-->
+                @if (ViewBag.mvtTransfert != null)
+                {
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="ibox float-e-margins">
+                                <div class="ibox-title">
+                                    <h4 class="text-purplebee">Mouvement Stock</h4>
+                                </div>
+                                <div class="ibox-content">
+                                    <input type="text" class="form-control input-sm m-b-xs" id="mvtTransfert"
+                                           placeholder="Chercher">
+                                    <table class="footable table table-stripped" data-page-size="25" data-filter=#mvtTransfert>
+                                        <thead>
+                                            <tr>
+                                                <th>Type Document</th>
+                                                <th>Piéce</th>
+                                                <th>Date</th>
+                                                <th>Agence</th>
+                                                <th>Quantité</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @if (ViewBag.mvtTransfert != null)
+                                {
+                                    foreach (var transfert in ViewBag.mvtTransfert)
+                                    {
+                                <tr>
+                                    <td> @transfert.DocumentType</td>
+                                    <td> @transfert.Piece</td>
+                                    <td>  @transfert.Date.ToString("dd/MM/yyyy")</td>
+                                    <td>  @transfert.DepotName</td>
+                                    <td> @String.Format("{0:N0}",@transfert.Quantite) </td>
+                                </tr>
+                                    }
+                                }
+                                        </tbody>
+                                        <tfoot>
+                                            <tr>
+                                                <td colspan="10">
+                                                    <ul class="pagination pull-right"></ul>
+                                                </td>
+                                            </tr>
+                                        </tfoot>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+                <!--RESERVATION MATERIEL -->
+                @if (ViewBag.ReservationMat != null)
+                {
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="ibox float-e-margins">
+                                <div class="ibox-title">
+                                    <h4 class="text-purplebee">Réservation Matériel</h4>
+                                </div>
+                                <div class="ibox-content">
+                                    <input type="text" class="form-control input-sm m-b-xs" id="ReservationMat"
+                                           placeholder="Chercher">
+                                    <table class="footable table table-stripped" data-page-size="25" data-filter=#ReservationMat>
+                                        <thead>
+                                            <tr>
+                                                <th>Abonnement</th>
+                                                <th>Référence TT </th>
+                                                <th>Depot</th>
+                                                <th>Client</th>
+                                                <th>Numéro série</th>
+                                                <th>Reservée</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                               @if (ViewBag.ReservationMat != null)
+                                {
+                                  foreach (var mat in ViewBag.ReservationMat)
+                                  {
+                                <tr>
+                                    <td> <a href="@Url.Action("Details", "Abonnement", new { id = mat.cbmarq })">@mat.Abonnement</a></td>
+                                    <td>@mat.ReferenceTT </td>
+                                    <td>@mat.Depot</td>
+                                    <td>@mat.Client</td>
+                                    <td>@mat.NumSeries</td>
+                                    <td>@mat.TypeDocument</td>
+                                </tr>
+                                    }
+                                }
+                                        </tbody>
+                                        <tfoot>
+                                            <tr>
+                                                <td colspan="10">
+                                                    <ul class="pagination pull-right"></ul>
+                                                </td>
+                                            </tr>
+                                        </tfoot>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+                <script src="~/js/plugins/dataTables/datatables.min.js"></script>
+                <script src="http://cdn.datatables.net/plug-ins/1.10.15/dataRender/datetime.js"></script>
+                <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
+                <script src="~/js/InterogeStock.js"></script>
+                <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+                <!-- Toastr script -->
+                <script src="~/js/plugins/toastr/toastr.min.js"></script>
+                <script src="~/js/jquery-3.1.1.min.js"></script>
+                <script src="~/js/plugins/metisMenu/jquery.metisMenu.js"></script>
+                <script src="~/js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+                <script src="~/js/accounting.js"></script>
+                <script src="~/js/accounting.min.js"></script>
+                <!-- Chosen -->
+                <script src="~/js/plugins/chosen/chosen.jquery.js"></script>
+                <!-- Sweet alert -->
+                <script src="~/js/plugins/sweetalert/sweetalert.min.js"></script>
+                <!-- Ladda -->
+                <script src="~/js/plugins/ladda/spin.min.js"></script>
+                <script src="~/js/plugins/ladda/ladda.min.js"></script>
+                <script src="~/js/plugins/ladda/ladda.jquery.min.js"></script>
+                <!-- FooTable -->
+                <script src="~/js/plugins/footable/footable.all.min.js"></script>
+
+                <!-- Custom and plugin javascript -->
+                <script src="~/js/inspinia.js"></script>
+                <script src="~/js/plugins/pace/pace.min.js"></script>
+                <script>
+                  
+                    $(document).ready(function () {
+                        $("select#ListArticle").on("change", function () {
+                            ii = $('select#ListArticle').val();
+                          
+                            listedesArticlesTable($('select#ListArticle').val());
+                            function listedesArticlesTable() {
+                                $.ajax({
+                                    type: "get",
+                                    url: '@Url.Action("Materiels")', // we are calling json method
+                                    dataType: 'json',
+                                    data: { Article: $('select#ListArticle').find("option:selected").val() },
+                                    success: function (msg) {
+                                        if (msg.result == 0) {
+                                            var len = msg.data.length;
+                                            $("#MaterielsList1").empty();
+                                            $("#MaterielsList1").append("<option>-- Choisir --</option>");
+                                            for (var i = 0; i < len; i++) {                                         
+                                                $("#MaterielsList1").append("<option value='" + msg.data[i] + "'>" + msg.data[i] + "</option>");                                              
+                                            }
+                                            $('#MaterielsList1').addClass('chosen-select');
+                                            $('#MaterielsList1').trigger("chosen:updated");
+                                            $('.chosen-select').chosen({ width: "100%" });
+                                        }
+                                    }
+                                });
+                            };
+                        });
+                    });
+                    $(document).ready(function () {
+                        $("select#MaterielsList1").on("change", function () {
+                            ii = $('select#MaterielsList1').val();
+                            listedesArticlesTable($('select#MaterielsList1').val());
+                            function listedesArticlesTable() {
+                                $.ajax({
+                                    type: "get",
+                                    url: '@Url.Action("Retour")', // we are calling json method
+                                    dataType: 'json',
+                                    data: { numserie: $('select#MaterielsList1').find("option:selected").val() },
+                                    success: function (msg) {
+                                        if (msg.result == 0) {
+                                            var len = msg.data.length;
+                                            $("#NumBL1").empty();
+                                            $("#NumBL1").append("<option>-- Choisir --</option>");
+                                            for (var i = 0; i < len; i++) {                                           
+                                                $("#NumBL1").append("<option value='" + msg.data[i].DO_Piece + "'>" + msg.data[i].DO_Piece + "</option>");                                              
+                                            }
+                                            $('#NumBL1').addClass('chosen-select');
+                                            $('#NumBL1').trigger("chosen:updated");
+                                            $('.chosen-select').chosen({ width: "100%" });
+                                        }
+                                    }
+                                });
+                            };
+                        });
+                    });
+                    var ckboxx = $('#RechArticle');
+                    $('input:radio').on('click', function () {
+                        if (ckboxx.is(':checked')) {
+                            var elementtoShoww = document.getElementById('toshoww');
+                            var elementtoS = document.getElementById('to-show');
+                            var elementtoSS = document.getElementById('to-showw');
+                            if (elementtoShoww.className === 'hide') {
+                                elementtoShoww.className = 'show';
+                                document.getElementsByTagName('body')[0].className = 'on';
+                                elementtoS.className = 'hide';
+                                elementtoSS.className = 'hide';
+                            } else {
+                                elementtoShoww.className = 'hide';
+                                document.getElementsByTagName('body')[0].className = 'off';
+                            }
+                        }
+                    });
+
+                    $(document).ready(function () {
+
+                        $('.footable').footable();
+                        $('.footable2').footable();
+                    });
+                </script>
+

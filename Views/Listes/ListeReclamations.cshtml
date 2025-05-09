@@ -1,0 +1,140 @@
+﻿@model BeeProj.Models.C_RECLAMATION 
+@{
+    ViewBag.Title = "ListeReclamation";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-lg-10">
+        <h2>Profile</h2>
+        <ol class="breadcrumb">
+            <li>
+                <a href="@Url.Action("index","Home")">Acceuil </a>
+            </li>
+            <li class="active">
+                <a href="@Url.Action("index","Administration")">Administration</a>
+            </li>
+            <li class="active">
+                <a href="@Url.Action("ListeReclamations","Listes")">Liste des types Réclamations</a>
+            </li>
+
+        </ol>
+    </div>
+    <div class="col-lg-2">
+
+    </div>
+</div>
+
+<link href="~/css/plugins/dataTables/datatables.min.css" rel="stylesheet">
+
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>Liste des types réclamations</h5>
+                    <div class="project-actions">
+                        <a href=@Url.Action("NewReclamation","Listes") class="btn btn-sm btn-rounded bg-info ">
+                            <i class="fa "></i> Ajouter un type de réclamation
+                        </a>
+                    </div>
+                </div>
+                <div class="ibox-content">
+                    <div class="table-responsive">
+                        <table class="table table-striped table-bordered table-hover dataTables-example" id="Services">
+                            <thead>
+                                <tr>
+                                    <th>Type Réclamation</th>
+                                    <th>Edit</th>
+                                    <th>Supprimer</th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="~/js/plugins/dataTables/datatables.min.js"></script>
+<script src="~/js/jquery-3.1.1.min.js"></script>
+<script src="~/js/plugins/metisMenu/jquery.metisMenu.js"></script>
+<script src="~/js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+
+<script src="~/js/plugins/dataTables/datatables.min.js"></script>
+
+<!-- Custom and plugin javascript -->
+<script src="~/js/inspinia.js"></script>
+<script src="~/js/plugins/pace/pace.min.js"></script>
+
+
+<script>
+    $(document).ready(function () {
+
+        var table = $("#Services").DataTable({
+            "ajax": {
+
+                "url": "/Listes/getListeReclamation",
+                "type": 'get',
+                "datatype": "json"
+            },
+            "columns": [
+                 { "data": "RE_Titre" },
+            { "data": "cbMarq" }
+
+            ],
+            "columnDefs": [
+            {
+
+              targets: [1],
+                      render: function (data, type, row) {
+
+                          return ' <a href="/Listes/EditReclamation/' + row.cbMarq + '" class="btn btn-sm btn-rounded bg-info "><i class="fa "> Modifier </i>';
+
+                      }
+            },
+            {
+                targets: [2],
+                render: function (data, type, row) {
+
+                    return ' <a href="/Listes/DeleteReclamation/' + row.cbMarq + '" class="btn btn-danger btn-rounded " value="Delete"><i class="fa "> Supprimer </i>';
+
+                }
+
+            }
+
+            ]
+        });
+
+        $("#Reclamations").dataTable().destroy();
+
+            $('.dataTables-example').DataTable({
+                pageLength: 25,
+                responsive: true,
+                dom: '<"html5buttons"B>lTfgitp',
+                buttons: [
+                    { extend: 'copy'},
+                    {extend: 'csv'},
+                    {extend: 'excel', title: 'ExampleFile'},
+                    {extend: 'pdf', title: 'ExampleFile'},
+
+                    {extend: 'print',
+                     customize: function (win){
+                            $(win.document.body).addClass('white-bg');
+                            $(win.document.body).css('font-size', '10px');
+
+                            $(win.document.body).find('table')
+                                    .addClass('compact')
+                                    .css('font-size', 'inherit');
+                    }
+                    }
+                ]
+
+            });
+
+        });
+
+</script>
+
+

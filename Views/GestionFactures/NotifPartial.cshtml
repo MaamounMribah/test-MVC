@@ -1,0 +1,65 @@
+﻿@using BeeProj.Models;
+
+<a class="dropdown-toggle count-info" data-toggle="dropdown" href="#">
+    <i class="fa fa-bell"></i>
+    
+    @if (ViewBag.NotificationVersement == null)
+    {
+        
+
+
+    }
+    else
+    {
+        <span class="label label-primary">@ViewBag.Number</span>
+
+
+    }
+</a>
+
+
+
+    <ul class="dropdown-menu dropdown-alerts">
+        
+        @if (ViewBag.NotificationVersement == null)
+        {
+            <li>
+                <a href="#">
+                    <div>
+                        <i class="fa fa-envelope fa-fw"></i> Aucune notification de Versement 
+
+                    </div>
+                </a>
+            </li>
+        }
+        else
+        {
+            foreach (var item in ViewBag.NotificationVersement)
+            {
+
+                <a href="@Url.Action("DetailsVersement","GestionFactures", new { id = @item.cbMarq })" >
+                    <div>
+                        <i class="fa fa-bell fa-fw"></i> @item.V_Piece 
+                        @*<span class="pull-right text-muted small">12 minutes ago</span>*@
+                    </div>
+                </a>
+
+                <li class="divider"></li>
+            }
+
+
+        }
+
+
+
+    </ul>
+
+
+
+
+
+
+
+
+ 
+

@@ -1,0 +1,242 @@
+﻿@{
+    ViewBag.Title = "Synchronisation";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+    <!-- Sweet Alert -->
+<link href="~/css/plugins/sweetalert/sweetalert.css" rel="stylesheet">
+
+<div class="col-lg-12">
+    <div class="ibox float-e-margins">
+        <div class="ibox-title">
+            <h5>Synchronisation de SAGE </h5>
+            <div class="ibox-tools">
+                <a class="collapse-link">
+                    <i class="fa fa-chevron-up"></i>
+                </a>
+            </div>
+        </div>
+        <div class="ibox-content">
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="widget bg-purplebee p-lg text-center">
+                        <div class="m-b-md">
+                            <i class="fa fa-gift fa-4x"></i>
+                            <h1 class="m-xs" id="countFam">@ViewBag.CountFamille</h1>
+                            <h3 class="font-bold no-margins">
+                                Synchroniser les Familles
+                            </h3>
+                            <br />
+                            <button class="btn btn-xs btn-warning syncFamilles" type="button"><i class="fa fa-refresh"></i></button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="widget bg-purplebee p-lg text-center">
+                        <div class="m-b-md">
+                            <i class="fa fa-home fa-4x"></i>
+                            <h1 class="m-xs" id="countArt">@ViewBag.CountArticle</h1>
+                            <h3 class="font-bold no-margins">
+                                Synchroniser les Articles
+                            </h3>
+                            <br />
+                            <button class="btn btn-xs btn-warning syncArticles" type="button"><i class="fa fa-refresh"></i></button>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="widget bg-purplebee p-lg text-center">
+                        <div class="m-b-md">
+                            <i class="fa fa-map-marker fa-4x"></i>
+                            <h1 class="m-xs"  id="countDep">@ViewBag.CountDepot</h1>
+                            <h3 class="font-bold no-margins">
+                                Synchroniser les Dépôts
+                            </h3>
+                            <br />
+                            <button class="btn btn-xs btn-warning syncDepots" type="button"><i class="fa fa-refresh"></i></button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="widget bg-purplebee p-lg text-center">
+                        <div class="m-b-md">
+                            <i class="fa fa-cart-plus fa-4x"></i>
+                            <h1 class="m-xs" id=""> </h1>
+                            <h3 class="font-bold no-margins">
+                                Synchronisation Documents Achat
+                            </h3>
+                            <br />
+                            <a class="btn btn-xs btn-warning" href="@Url.Action("SyncLotdeSerie", "Synchronisation")"><i class="fa fa-refresh"></i></a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="widget bg-purplebee p-lg text-center">
+                        <div class="m-b-md">
+                            <i class="fa fa-money fa-4x"></i>
+                            <h1 class="m-xs" id=""> </h1>
+                            <h3 class="font-bold no-margins">
+                                Synchronisation des modes de paiement
+                            </h3>
+                            <br />
+                            <a class="btn btn-xs btn-warning" href="@Url.Action("ListeReglement", "Administration")"><i class="fa fa-refresh"></i></a>
+
+                        </div>
+                    </div>
+                </div>
+
+
+
+            </div>
+          
+        </div>
+    </div>
+</div>
+<script src="~/js/jquery-3.1.1.min.js"></script>
+    <!-- Sweet alert -->
+<script src="~/js/plugins/sweetalert/sweetalert.min.js"></script>
+
+<script>
+    $('.syncFamilles').click(function () {
+
+        swal({
+            title: "Etes vous sûr?",
+            text: "Synchroniser tous les familles ?",
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#DD6B55",
+            confirmButtonText: "Oui, Sync ! ",
+            closeOnConfirm: false
+        }, function () {
+
+            $.ajax({
+                type: "get",
+                url: '@Url.Action("syncFamilles")', // we are calling json method
+                dataType: 'json',
+                data: { URL: "http://172.20.0.102/api2/Famille/getSAGEfamilles.php" },
+                success: function (msg) {
+                    swal("Synchronisés!", "Familles synchronisés avec succès.", "success");
+                    $("#countFam").text("0");
+
+                }
+            });
+
+        });
+    });
+
+
+
+    $('.syncArticles').click(function () {
+        swal({
+            title: "Etes vous sûr?",
+            text: "Synchroniser tous les articles ?",
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#DD6B55",
+            confirmButtonText: "Oui, Sync ! ",
+            closeOnConfirm: false
+        }, function () {
+
+            $.ajax({
+                type: "get",
+                url: '@Url.Action("syncArticles")', 
+                dataType: 'json',
+                data: { URL: "http://172.20.0.102/api2/Article/getSAGEarticles.php", urlNomencla: "http://172.20.0.102/api2/Article/getSAGEnomenclatures.php" },
+                success: function (msg) {
+                    swal("Synchronisés!", "Articles synchronisés avec succès.", "success");
+                    $("#countArt").text("0");
+
+                }
+            });
+        });
+    });
+
+
+
+    $('.syncDepots').click(function () {
+        swal({
+            title: "Etes vous sûr?",
+            text: "Synchroniser tous les dépôts ?",
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#DD6B55",
+            confirmButtonText: "Oui, Sync ! ",
+            closeOnConfirm: false
+        }, function () {
+
+            $.ajax({
+                type: "get",
+                url: '@Url.Action("syncDepots")',
+                dataType: 'json',
+                data: {
+                    URL: "http://172.20.0.102/api2/Depot/getSAGEdepots.php",
+                    success: function (msg) {
+                        swal("Synchronisés!", "Dépôts synchronisés avec succès.", "success");
+                        $("#countDep").text("0");
+
+                    }
+                }
+            });
+        });
+    });
+
+
+
+
+
+
+    //*****************************
+    $('.syncArtStock').click(function () {
+        swal({
+            title: "Etes vous sûr?",
+            text: "Synchroniser tous les articles ?",
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#DD6B55",
+            confirmButtonText: "Oui, Sync ! ",
+            closeOnConfirm: false
+        }, function () {
+
+            $.ajax({
+                type: "get",
+                url: '@Url.Action("syncArtStock")',
+                dataType: 'json',
+                data: { URL: "http://172.20.0.102/api2/Stock/getSAGEartstocks.php", URLLotSerie: "http://172.20.0.102/api2/Stock/getSAGElotseries.php" },
+                success: function (msg) {
+                    swal("Synchronisés!", "Articles synchronisés avec succès.", "success");
+                    $("#countArtSto").text("0");
+                    $("#countArtLot").text("0");
+                }
+            });
+        });
+    });
+    //*****************************
+    @*$('.syncLotSerie').click(function () {
+        swal({
+            title: "Etes vous sûr?",
+            text: "Synchroniser tous les articles ?",
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#DD6B55",
+            confirmButtonText: "Oui, Sync ! ",
+            closeOnConfirm: false
+        }, function () {
+
+            $.ajax({
+                type: "get",
+                url: '@Url.Action("syncLotSerie")',
+                dataType: 'json',
+                data: { URL: "http://172.20.0.102/api2/Stock/getSAGElotseries.php" },
+                success: function (msg) {
+                    swal("Synchronisés!", "Articles synchronisés avec succès.", "success");
+                    $("#countArtLot").text("0");
+
+                }
+            });
+        });
+    });*@
+</script>
+
+
+

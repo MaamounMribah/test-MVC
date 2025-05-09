@@ -1,0 +1,132 @@
+﻿@model BeeProj.Models.P_MOTIF
+@{
+    ViewBag.Title = "Modifier_Motif";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-lg-10">
+        <h2>Motif</h2>
+        <ol class="breadcrumb">
+            <li>
+                <a href="@Url.Action("Motif","motif")">Liste Motifs</a>
+            </li>
+            <li class="active">
+                <a href="@Url.Action("Modifier_Motif","motif")"><strong>Modifier</strong></a>
+            </li>
+
+
+        </ol>
+    </div>
+    <div class="col-lg-2">
+
+    </div>
+</div>
+@using (Html.BeginForm("Modifier_Motif", "motif", FormMethod.Post, new { id = "popupForm" }))
+{
+    @Html.HiddenFor(model => model.cbMarq)
+    <div class="row">
+        <div class="ibox">
+            <div class="ibox-content">
+                @*<div class="row">
+                        <form class="form-horizontal">
+                            <div class="form-group">
+
+                                <div class="input-group">
+                                    <input type="text" class="form-control" id="Motif" name="Motif" value="@Model.Motif">
+                                    <div class="form-group">
+                                        <input type="checkbox" class="form-control" id="Actif" name="Actif" value="@Model.Actif">
+                                    </div>
+                                    <span class="input-group-btn">
+
+                                        <button type="submit" class="btn btn-greenbee ladda-button ladda-button-demo"><i class="fa fa-edit"></i>Modifier</button>
+                                    </span>
+                                </div>
+                            </div>
+
+                        </form>
+
+                    </div>*@
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">Désignation motif</label>
+                            <div class="col-sm-10">
+                                <span class="help-block m-b-none">
+                                    @Html.TextBoxFor(model => model.Motif, new { @class = "form-control", @id = "Motif", @name = "Motif" })
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+                    <br />
+                    <br />
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label class="col-sm-1 control-label">Desactiver Motif </label>
+                            <div class="col-sm-1">
+                                <label>
+                                    @if (Model.Actif)
+                                    {
+                                        <input class="checkbox-inline i-checks" type="radio" checked value=true id="Actif" name="Actif"> <span>Oui </span>
+                                        <input class="checkbox-inline i-checks" type="radio" value=false id="Actif" name="Actif"> <span> Non </span>
+
+                                    }
+                                    else
+                                    {
+                                        <input class="checkbox-inline i-checks" type="radio" value=true id="Actif" name="Actif"> <span>Oui </span>
+                                        <input class="checkbox-inline i-checks" type="radio" value=false checked id="Actif" name="Actif"> <span> Non </span>
+                                    }
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <span class="input-group-btn">
+
+                        <button type="submit" class="btn btn-greenbee ladda-button ladda-button-demo pull-right"><i class="fa fa-edit"></i>Modifier</button>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+}  
+<!-- Ladda -->
+<script src="~/js/plugins/ladda/spin.min.js"></script>
+<script src="~/js/plugins/ladda/ladda.min.js"></script>
+<script src="~/js/plugins/ladda/ladda.jquery.min.js"></script>
+<script>
+    // Bind normal buttons
+    Ladda.bind('.ladda-button', { timeout: 100000 });
+    // Bind progress buttons and simulate loading progress
+    Ladda.bind('.progress-demo .ladda-button', {
+        callback: function (instance) {
+            var progress = 0;
+            var interval = setInterval(function () {
+                progress = Math.min(progress + Math.random() * 0.1, 1);
+                instance.setProgress(progress);
+
+                if (progress === 1) {
+                    instance.stop();
+                    clearInterval(interval);
+                }
+            }, 100000);
+        }
+    });
+
+    var l = Ladda.bind('.ladda-button-demo');
+
+    l.click(function () {
+        // Start loading
+        l.ladda('start');
+
+        // Timeout example
+        // Do something in backend and then stop ladda
+        setTimeout(function () {
+            l.ladda('stop');
+        }, 1000000)
+    });
+</script>
+
+
+
+

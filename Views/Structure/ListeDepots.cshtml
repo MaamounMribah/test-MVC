@@ -1,0 +1,160 @@
+﻿
+@{
+    ViewBag.Title = "ListeDepots";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+
+<style>
+    .dataTables_filter, .dataTables_info, .dataTables_length {
+        display: none;
+    }
+
+
+
+</style>
+
+<link href="~/css/bootstrap.min.css" rel="stylesheet">
+<link href="~/font-awesome/css/font-awesome.css" rel="stylesheet">
+
+<!-- Toastr style -->
+<link href="~/css/plugins/toastr/toastr.min.css" rel="stylesheet">
+
+<link href="~/css/animate.css" rel="stylesheet">
+<link href="~/css/style.css" rel="stylesheet">
+
+<link href="~/css/plugins/dataTables/datatables.min.css" rel="stylesheet">
+
+
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-lg-10">
+        <h2>Liste des Dépots</h2>
+        <ol class="breadcrumb">
+            <li>
+                <a href="@Url.Action("index","Home")">Acceuil </a>
+            </li>
+            <li class="active">
+                <strong> <a href="@Url.Action("ListeDepots","Structure")">Liste des Dépots </a></strong>
+            </li>
+        </ol>
+    </div>
+    <div class="col-lg-2">
+
+    </div>
+</div>
+
+
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-content">
+                   
+                    <p>
+                        Les dépôts qui vous appartiennent.
+                    </p>
+                    <div class="input-group">
+                        <input type="text" onkeyup="myFunction()" placeholder="Chercher Dépôt " class="input form-control" id="search">
+                        <span class="input-group-btn">
+                            <button type="button" class="btn btn btn-info"> <i class="fa fa-search"></i> Chercher</button>
+                        </span>
+                    </div>
+                    <br />
+                </div>
+                <div class="ibox-content">
+
+
+                    <div >
+                        <table class="table table-striped table-bordered table-hover dataTables-example" id="depotJson">
+                            <thead>
+                                <tr>
+                                    <th>Intitulé Dépôt</th>
+                                    <th>Adresse</th>
+                                    <th>Code Région</th>
+                                    <th>Contact</th>
+                                    <th>Téléphone</th>
+                                    
+
+
+
+
+
+
+                                </tr>
+                            </thead>
+
+
+                        </table>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script src="~/js/plugins/metisMenu/jquery.metisMenu.js"></script>
+
+
+<script src="~/js/plugins/dataTables/datatables.min.js"></script>
+<script src="~/js/jquery-3.1.1.min.js"></script>
+
+<script src="~/js/plugins/metisMenu/jquery.metisMenu.js"></script>
+<script src="~/js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+
+<script src="~/js/plugins/dataTables/datatables.min.js"></script>
+
+<!-- Custom and plugin javascript -->
+<script src="~/js/inspinia.js"></script>
+<script src="~/js/plugins/pace/pace.min.js"></script>
+
+
+<script>
+    $(document).ready(function () {
+
+        var table = $("#depotJson").DataTable({
+            "ajax": {
+
+                "url": "/Structure/ListeDepotUser",
+                "type": 'get',
+                "datatype": "json"
+            },
+            "columns": [
+                 { "data": "DE_Intitule" },
+                  { "data": "DE_Adresse" },
+                { "data": "DE_CodeRegion" },
+                { "data": "DE_Contact" },
+                { "data": "DE_Telephone" }
+
+            ]
+           
+
+
+        });
+    });
+</script>
+
+<script>
+                    function myFunction() {
+                      // Declare variables
+                      var input, filter, table, tr, td, i;
+                      input = document.getElementById("search");
+                      filter = input.value.toUpperCase();
+                      table = document.getElementById("depotJson");
+                      tr = table.getElementsByTagName("tr");
+
+                      // Loop through all table rows, and hide those who don't match the search query
+                      for (i = 0; i < tr.length; i++) {
+                        td = tr[i].getElementsByTagName("td")[0];
+                        if (td) {
+                          if (td.innerHTML.toUpperCase().indexOf(filter) > -1) {
+                            tr[i].style.display = "";
+                          } else {
+                            tr[i].style.display = "none";
+                          }
+                        }
+                      }
+                    }
+</script>

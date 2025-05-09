@@ -1,0 +1,178 @@
+﻿@model BeeProj.Models.D_FAMILLE
+@{
+    ViewBag.Title = "NouvelleFamille";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-sm-4">
+        <h2>Nouvelle Famille</h2>
+        <ol class="breadcrumb">
+
+            <li>
+                <a>Structue </a>
+            </li>
+            <li>
+                <a>Liste des familles</a>
+            </li>
+
+            <li class="active">
+                <strong>Nouvelle Famille</strong>
+            </li>
+        </ol>
+    </div>
+</div>
+
+
+
+
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row ">
+
+
+
+        <div class="panel">
+            <div class="panel-body">
+                <div class="ibox">
+                    <h3>Saisir les caractéristiques de la nouvelle famille </h3>
+                </div>
+                </br>
+                </br>
+                <div class="row ">
+
+
+                    <div class="content-box" style="padding:20px;">
+
+
+
+                        @using (Html.BeginForm("SaveFamille", "Structure", FormMethod.Post, new { @class = "form-horizontal", role = "form", enctype = "multipart/form-data" }))
+                        {
+                            <div class="content-box-wrapper" id="entetelck">
+
+
+                                <fieldset id="SubmitForm">
+
+                                    <div class="col-sm-12">
+                                        <div class="row">
+                                            <div class="col-md-1"></div>
+                                                <div class="col-md-5">
+                                                    <label>Code Famille </label>
+
+                                                    <div class="input-prepend ">
+                                                        <input id="FA_CodeFamille" name="FA_CodeFamille" class="form-control" />
+
+
+                                                    </div>
+
+                                                    <label>Code Interne</label>
+                                                    <div class="input-prepend ">
+                                                        <input id="FA_CodeERP" name="FA_CodeERP" class="form-control" />
+
+                                                    </div>
+
+                                                    <label>Description</label>
+                                                    <span class="help-block m-b-none">
+                                                        @*<textarea class="form-control" id="FA_Description" name="FA_Description" form="usrform"></textarea>*@
+                                                        @Html.TextAreaFor(m => m.FA_Description, new { id = "FA_Description", @placeholder = "Description...", @class = "form-control" })
+                                                    </span>
+
+                                                </div>
+
+
+
+
+                                                <div class="col-md-5">
+
+                                                    <label>Intitulé Famille </label>
+                                                    <div class="input-prepend">
+                                                        <input id="FA_Intitule" name="FA_Intitule" class="form-control" />
+
+
+
+                                                    </div>
+
+
+
+
+
+
+                                                    <label>Suivi En Stock</label>
+                                                    <div class="input-prepend">
+
+
+                                                        @Html.DropDownListFor(m => m.FA_Type, new List<SelectListItem>()
+                                                        {
+                                                            new SelectListItem(){ Text= "Service", Value = "1"},
+                                                            new SelectListItem(){ Text= "Matériel", Value = "0"},
+                                                            
+                                                         }, new { @id = "FA_Type", @class = "form-control chosen-select" })
+
+
+
+                                                    </div>
+
+
+
+                                                    <label>Attacher une Image</label>
+
+                                                    <div><input type="file" class="form-control" id="Path" name="Path"></div>
+
+
+                                                </div>
+
+
+                                            <div class="col-md-1"></div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                            </div>
+                                    </div>
+                                </fieldset>
+
+
+                                <br />
+
+
+                            </div>
+
+
+
+
+
+                           
+
+                            <div class="btn-group pull-right">
+                                <br />
+                                <br />
+                                <br />
+                                <button class="btn btn-primary  pull-right m-t-n-xs" style="margin-left:10px;" type="submit"><strong>Envoyer</strong></button>
+                                <button type="reset" class="btn btn-white  pull-right m-t-n-xs"><strong>Annuler</strong></button>
+
+
+                            </div>
+                        
+                        }
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script src="~/js/plugins/metisMenu/jquery.metisMenu.js"></script>
+
+<script src="~/js/jquery-3.1.1.min.js"></script>
+<!-- Input Mask-->
+<script src="~/js/plugins/jasny/jasny-bootstrap.min.js"></script>

@@ -1,0 +1,71 @@
+﻿@model BeeProj.Models.P_PARAMETRAGE
+@{
+    ViewBag.Title = "Parametrage";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<link href="~/css/plugins/touchspin/jquery.bootstrap-touchspin.min.css" rel="stylesheet">
+
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-lg-8">
+        <h2>Paramétrage</h2>
+        <ol class="breadcrumb">
+            <li>
+                <a>Administration</a>
+            </li>
+            <li>
+                <a>Paramétrage Divers</a>
+            </li>
+            <li class="active">
+                <strong>Paramétrage Divers</strong>
+            </li>
+        </ol>
+    </div>
+    <div class="col-lg-2">
+
+    </div>
+</div>
+
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+
+        @using (Html.BeginForm("Parametrage", "Administration", FormMethod.Post, new { @class = "form-horizontal", role = "form", enctype = "multipart/form-data" }))
+        {
+            @Html.HiddenFor(model => model.cbMarq)
+                <div class="ibox float-e-margins ">
+                    <div class="ibox-title">
+                        <h5>Paramétrage <small>Paramétrer votre application</small></h5>
+                    </div>
+                    <div class="ibox-content">
+                        <div class="row">
+                            <form role="form">
+                                <div class="col-sm-12 m-l-lg ">
+                                    <div class="input-group bootstrap-touchspin">
+                                        <div class="form-group">
+                                            <label>Marge de facturation </label>
+                                            <input class="touchspin1" type="text" value="@Model.P_MargeFacture" name="P_MargeFacture">
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <button class="btn btn-sm btn-primary pull-right m-t-n-xs" type="submit">Enregistrer les modifications</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+        } 
+    </div>
+</div>
+
+<!-- TouchSpin -->
+<script src="~/js/plugins/touchspin/jquery.bootstrap-touchspin.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $(".touchspin1").TouchSpin({
+           min:0,
+           max:10,
+            buttondown_class: 'btn btn-white',
+            buttonup_class: 'btn btn-white'
+        });
+    });
+</script>

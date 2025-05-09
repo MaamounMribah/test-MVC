@@ -1,0 +1,197 @@
+﻿@model BeeProj.Models.B_MODELECOMMISSION
+
+@{
+    ViewBag.Title = "DetailsModele";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-lg-8">
+        <h2>Modele de commission</h2>
+        <ol class="breadcrumb">
+            <li>
+                <a>Administration</a>
+            </li>
+            <li>
+                <a>Modele de commission</a>
+            </li>
+            <li class="active">
+                <strong>Détails</strong>
+            </li>
+        </ol>
+    </div>
+    <div class="col-lg-2">
+
+    </div>
+</div>
+
+
+
+<div class="row">
+    <div class="col-lg-12">
+        <div class="wrapper wrapper-content animated fadeInUp">
+            <div class="ibox float-e-margins">
+                <div class="ibox-content">
+                    <div class="project-actions">
+                        <a href=@Url.Action("ModifierModele/" + Model.cbMarq, "Administration") class="btn btn-sm btn-rounded bg-primary ">
+                            <i class="fa fa-pencil "></i> Modifier ce modèle
+                        </a>
+                    </div>
+                </div>
+
+                <div class="ibox-content">
+
+                  
+                        <fieldset id="myForm">
+
+                            <form role="form" class="form-horizontal">
+
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label">Intitulé</label>
+
+                                    <div class="col-md-8">
+                                        <input class="form-control" id="C_Intitule" name="C_Intitule" value="@Model.MC_Intitule" disabled />
+                                    </div>
+                                </div>
+
+
+                                <div class="hr-line-dashed"></div>
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label">Commission de base %</label>
+                                    <div class="col-md-8">
+                                        <input id="C_Standard" name="C_Standard" class="form-control" value="@Model.MC_Standard" disabled />
+                                    </div>
+                                </div>
+                                <div class="hr-line-dashed"></div>
+
+
+
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label">Description</label>
+                                    <div class="col-md-8">
+                                        <span class="help-block m-b-none">
+                                            @Html.TextAreaFor(model => model.MC_Description, new { @class = "form-control", @Readonly = "Readonly" })
+                                        </span>
+                                    </div>
+                                </div>
+
+
+                                <div class="hr-line-dashed"></div>
+
+                                <div class="form-group">
+                                    <div class="row">
+                                        <label class="col-md-4 control-label">Commission d'acquissions % </label>
+                                        <div class="col-md-8">
+                                            <div class="col-md-4">
+
+                                                <h5>Famille Article</h5>
+
+                                            </div>
+
+                                            <div class="col-md-4">
+
+                                                <h5>Débit </h5>
+
+                                            </div>
+
+
+                                            <div class="col-md-4">
+                                                <h5>% commission</h5>
+                                            </div>
+
+
+                                            <div class="hr-line-dashed"></div>
+                                            @*<input id="C_PremFact" name="C_PremFact" class="form-control" />*@
+                                            @foreach (var item in ViewBag.DebitCommi)
+                                            {
+
+                                                <div class="col-md-4 ">
+
+                                                    <input id="Fa_Famille" name="Fa_Famille" value="@item.FA_CodeFamille" class="form-control" disabled />
+
+                                                </div>
+                                                <div class="col-md-4">
+
+                                                    <input id="D_Debit" name="D_Debit" value="@item.Debit" class="form-control" disabled />
+
+                                                </div>
+                                                <div class="col-md-4  has-warning">
+                                                    <input id="tauxPremFact" name="tauxPremFact" class="form-control" value="@item.Com_Acq" disabled />
+
+                                                </div>
+
+                                                <hr />
+
+                                            }
+
+                                            @*<div class="col-md-4  has-warning">
+                                   @foreach (var item2 in ViewBag.DebitCommi)
+                                   {
+                                <input id="tauxPremFact" name="tauxPremFact" class="form-control" value=@item2.Com_Acq />
+                                   }</div>*@
+
+                                        </div>
+
+                                    </div>
+
+
+
+                                </div>
+                                <br />
+
+                            </form>
+
+
+                        </fieldset>
+                    </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="~/js/jquery-3.1.1.min.js"></script>
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+
+<script>
+
+    $("#EnregistrerClassement").click(function () {
+        var tauxDebClass = [];
+        var DebClass = [];
+        var Famille = [];
+
+        $('#myForm').find('input[name^="tauxPremFact"]').each(function () {
+
+            tauxDebClass.push(($(this).val()));
+
+        });
+
+        $('#myForm').find('input[name^="D_Debit"]').each(function () {
+
+            DebClass.push(($(this).val()));
+
+        });
+
+        $('#myForm').find('input[name^="Fa_Famille"]').each(function () {
+
+            Famille.push(($(this).val()));
+
+        });
+        enregistrerCls(tauxDebClass, DebClass, Famille);
+    });
+
+    function enregistrerCls(t,d, f){
+
+        $.ajax({
+            type: "POST",
+            url: '/Administration/SaveModeCommission?MC_Intitule=' + $('#C_Intitule').val() + '&&MC_Description=' + $('#C_Description').val() + '&&MC_Standard=' +
+                $('#C_Standard').val() + '&&tauxAcq=' + t + '&&DebClass=' + d + '&&DebFamille='+ f ,
+            dataType: 'json',
+            success: function (msg) {
+
+
+            }
+        });
+    }
+
+
+</script>

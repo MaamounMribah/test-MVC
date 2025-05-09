@@ -1,0 +1,60 @@
+﻿
+@{
+    ViewBag.Title = "GroupeConventionnels";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-lg-8">
+        <h2>Liste des packs d'abonnement conventionnel</h2>
+        <ol class="breadcrumb">
+            <li>
+                <a>Acceuil</a>
+            </li>
+            <li>
+                <a>Gestion des Abonnements conventionnel</a>
+            </li>
+            <li>
+                <a>Type Abonnement</a>
+            </li>
+        </ol>
+    </div>
+    <div class="col-lg-2">
+
+    </div>
+</div>
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        @foreach (var item in ViewBag.ListeConvention)
+        {
+            <div class="col-md-3">
+                <div class="ibox">
+                    <div class="ibox-content product-box">
+                        <div class="">
+                            <a href="@Url.Action("ArticlesConventionnels","Abonnement", new { id= @item.C_Code })" class="">
+                                <img src="@Url.Action("PhotoGroupeConventionnel", "Structure" , new { id= item.cbMarq })" class="img-preview img-responsive" onError="this.onerror=null;this.src='/img/DefaultImage.png';" />
+                            </a>
+                        </div>
+                        <div class="product-desc">
+                                <span class="product-price fa-3x  bg-warning">
+                                    OFFRE CONVENTIONNELLE
+                                </span>
+                            <small class="text-muted">@item.C_Code</small>
+                            <a href="@Url.Action("ArticlesConventionnels","Abonnement", new { id= @item.C_Code })" class="product-name"> @item.C_Intitule  </a>
+                            <div class="small m-t-xs">
+                                @item.C_Description
+                            </div>
+                            <div class="m-t text-righ">
+                                <a href="@Url.Action("ArticlesConventionnels","Abonnement", new { id= @item.C_Code })" class="btn btn-xs btn-outline btn-primary">Nouvel abonnement <i class="fa fa-long-arrow-right"></i> </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+<script src="~/js/jquery-3.1.1.min.js"></script>
+
+

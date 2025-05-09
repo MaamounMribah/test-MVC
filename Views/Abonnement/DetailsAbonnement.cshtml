@@ -1,0 +1,771 @@
+﻿
+@{
+    ViewBag.Title = "DetailsAbonnement";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-sm-4">
+        <h2>Détails Abonnement</h2>
+        <ol class="breadcrumb">
+
+            <li>
+                <a>Acceuil </a>
+            </li>
+            <li>
+                <a >Gestion des abonnement</a>
+            </li>
+           
+            <li class="active">
+                <strong>Détails abonnement </strong>
+            </li>
+        </ol>
+    </div>
+</div>
+
+
+
+
+<div class="wrapper wrapper-content animated fadeInRight">
+
+    <div class="row">
+
+
+        @*<div class="row">
+            <div class="ibox">
+                <div class="ibox-content">
+
+                    <button type="button" class="btn btn-outline btn-default">Création</button>
+                    <button type="button" class="btn btn-outline btn-primary">Enregistrement TT</button>
+                    <button type="button" class="btn btn-outline btn-success">Etude TT </button>
+                    <button type="button" class="btn btn-outline btn-info">Confirmation Client</button>
+                    <button type="button" class="btn btn-outline btn-warning">Traveaux TT </button>
+                    <button type="button" class="btn btn-outline btn-danger">Mise en Service TT </button>
+                    <button type="button" class="btn btn-outline btn-danger">Cloturé </button>
+
+                </div>
+            </div>
+        </div>*@
+  
+
+            
+
+
+        <div class="col-lg-9">
+            <div class="wrapper wrapper-content animated fadeInUp">
+                <div class="ibox">
+                    <div class="ibox-content">
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <div class="m-b-md">
+
+
+
+                                    
+                                    <a href=# class="btn lazur-bg pull-right btn-rounded">Modifier </a>
+                                  
+
+
+                                    <h3>Description de l'agence</h3>
+
+
+                                </div>
+                                <dl class="dl-horizontal">
+                                    <dt>Statut:</dt>
+                                    <dd><span class="label label-primary">Activé</span></dd>
+                                </dl>
+                            </div>
+                        </div>
+                        <div class="row">
+
+                            <div class="col-lg-5">
+
+                                <dl class="dl-horizontal">
+
+                                    <dt>Ajouté par : </dt>
+                                    <dd>Ali Ali</dd>
+
+
+
+                                    <dt>Téléphone:</dt>
+                                    <dd>784545</dd>
+                                    <dd></dd>
+
+
+                                    <dt>Email:</dt>
+                                    <dd>hjkkkkyaho.com </dd>
+
+
+
+
+
+                                </dl>
+
+                            </div>
+                            <div class="col-lg-7" id="cluster_info">
+                                <dl class="dl-horizontal">
+
+
+
+
+                                    <dt>Agence </dt>
+                                    <dd> <a href=/EasyCRM/Customer class="text-navy font-bold"> BEEMasaken </a>  </dd>
+
+
+
+
+                                    <dt>Date d'ouverture </dt>
+                                    <dd> 09/07/2018</dd>
+
+
+
+
+
+
+                                    <dt>Priorité </dt>
+                                    <dd> <span><i class="fa fa-circle text-warning"></i> Haut</span></dd>
+
+
+                                </dl>
+
+                            </div>
+                        </div>
+
+                        <div class="row m-t-sm">
+                            <div class="col-lg-12">
+                                <div class="panel blank-panel">
+                                    <div class="panel-heading">
+                                        <div class="panel-options">
+                                            <ul class="nav nav-tabs">
+                                                <li class="active"><a href="#tab-1" data-toggle="tab">Généralité</a></li>
+
+                                                <li class=""><a href="#tab-4" data-toggle="tab">Documents</a></li>
+                                                <li class=""><a href="#tab-5" data-toggle="tab">Payement</a></li>
+
+
+                                            </ul>
+                                        </div>
+                                    </div>
+
+                                    <div class="panel-body">
+
+                                        <div class="tab-content">
+                                            <!-- Généralité-->
+
+                                            <div class="tab-pane active " id="tab-1">
+                                                <form method="get" class="form-horizontal">
+                                                    <div class="row">
+
+                                                        <div class="ibox float-e-margins">
+                                                            <div class="ibox-title">
+                                                                <h5> Gnénéralités Client</h5>
+                                                                <div class="ibox-tools">
+                                                                    <a class="collapse-link">
+                                                                        <i class="fa fa-chevron-up text-navy"></i>
+                                                                    </a>
+
+
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="ibox-content">
+                                                                <div class="row">
+                                                                    <div class="form-group">
+                                                                        <label class="col-sm-2 control-label">Nom et Prénom</label>
+                                                                        <div class="col-sm-10">
+                                                                            <span class="help-block m-b-none">
+                                                                                <input Readonly="Readonly" class="form-control" id="OP_Description" name="OP_Description" type="text" value="Saleh ben Saleh" />
+                                                                            </span>
+                                                                        </div>
+                                                                    </div>
+
+
+
+                                                                    <div class="hr-line-dashed"></div>
+
+                                                                    <div class="form-group">
+                                                                        <label class="col-sm-2 control-label">Date Naissance</label>
+
+                                                                        <div class="col-sm-10">
+                                                                            <span class="help-block m-b-none">
+                                                                                <input Readonly="Readonly" class="form-control" id="S_Intitule" name="S_Intitule" type="text" value="02/03/1987" />
+                                                                            </span>
+                                                                        </div>
+                                                                    </div>
+
+
+                                                                    <div class="form-group">
+
+                                                                        <label class="col-sm-2 control-label">Adresse</label>
+                                                                        <div class="col-sm-10">
+                                                                            <span class="help-block m-b-none">
+                                                                                <textarea Readonly="Readonly" class="form-control" cols="20" id="OP_Detail" name="OP_Detail" rows="2">
+                                                                                    30 Rue de la République
+                                                                                </textarea>
+                                                                            </span>
+                                                                        </div>
+                                                                    </div>
+
+
+
+
+
+
+                                                                    <div class="form-group">
+                                                                        <label class="col-sm-2 control-label">Ville</label>
+
+                                                                        <div class="col-sm-10">
+                                                                            <span class="help-block m-b-none">
+                                                                                <input Readonly="Readonly" class="form-control" id="TypeIntitule" name="TypeIntitule" type="text" value="M'Saken'" />
+
+
+                                                                            </span>
+                                                                        </div>
+                                                                    </div>
+
+
+                                                                    <div class="form-group">
+                                                                        <label class="col-sm-2 control-label">Code Postal</label>
+
+                                                                        <div class="col-sm-10">
+                                                                            <span class="help-block m-b-none">
+                                                                                <input Readonly="Readonly" class="form-control" id="TypeIntitule" name="TypeIntitule" type="text" value="4070" />
+
+
+                                                                            </span>
+                                                                        </div>
+                                                                    </div>
+
+                                                                    <div class="form-group">
+                                                                        <label class="col-sm-2 control-label">Gouvernorat</label>
+
+                                                                        <div class="col-sm-10">
+                                                                            <span class="help-block m-b-none">
+                                                                                <input Readonly="Readonly" class="form-control" id="Marking" name="Marking" type="text" value="Sousse" />
+                                                                            </span>
+                                                                        </div>
+                                                                    </div>
+
+                                                                    <div class="form-group">
+                                                                        <label class="col-sm-2 control-label">Téléphone de contact</label>
+
+                                                                        <div class="col-sm-10">
+                                                                            <span class="help-block m-b-none">
+                                                                                <input Readonly="Readonly" class="form-control" id="Secteur" name="Secteur" type="text" value="22784512" />
+                                                                            </span>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+
+
+
+
+
+                                                    </div>
+                                                </form>
+
+                                            </div>
+
+
+
+
+
+
+
+
+                                            <!-- Documents -->
+                                            <div id="tab-4" class="tab-pane">
+                                                <div class="panel-body full-height-scroll" style="overflow:scroll;height:inherit;width:inherit">
+
+                                                    <div class="table-responsive">
+                                                        <table class="table table-bordered table-stripped">
+                                                            <thead>
+
+
+
+                                                                <tr>
+                                                                    <th></th>
+                                                                    <th>
+                                                                        Intitulé Document
+                                                                    </th>
+
+
+                                                                    <th> Description </th>
+                                                                    <th>
+                                                                        Ajouté par
+                                                                    </th>
+                                                                    <th>
+                                                                        Date
+                                                                    </th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+
+
+                                                                <tr>
+                                                                    <td>
+                                                                        <a target="_blank"> Voir </a>
+                                                                    </td>
+                                                                    <td>
+                                                                        CIN Recto
+                                                                    </td>
+                                                                    <td>
+                                                                        CIN Recto
+
+                                                                    </td>
+                                                                    <td> CSQL</td>
+                                                                    <td> 11/03/2018</td>
+
+                                                                </tr>
+                                                                <tr>
+                                                                    <td>
+                                                                        <a href=/DocumentsOpportunite/Devis .png target="_blank"> Voir </a>
+                                                                    </td>
+                                                                    <td>
+                                                                        CIN Verso
+                                                                    </td>
+                                                                    <td>
+                                                                        CIN Verso
+
+                                                                    </td>
+                                                                    <td> Admin</td>
+                                                                    <td> 13/03/2018</td>
+
+                                                                </tr>
+
+                                                                <tr>
+                                                                    <td>
+                                                                        <a href=/DocumentsOpportunite/Devis .png target="_blank"> Voir </a>
+                                                                    </td>
+                                                                    <td>
+                                                                        Contrat Abonnement
+                                                                    </td>
+                                                                    <td>
+                                                                        Contrat Abonnement
+
+                                                                    </td>
+                                                                    <td> Admin</td>
+                                                                    <td> 11/03/2018</td>
+
+                                                                </tr>
+
+
+
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+
+
+
+                                                </div>
+                                            </div>
+
+
+
+
+                                            <!-- Commercial-->
+
+                                            <div class="tab-pane" id="tab-5">
+
+                                                <table class="table table-striped">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Type Document</th>
+                                                            <th>N° Pièce</th>
+                                                            <th>Date </th>
+                                                            <th>Référence</th>
+                                                            <th>Montant HT</th>
+                                                        </tr>
+                                                    </thead>
+
+                                                    <tbody>
+
+
+
+                                                        <tr>
+                                                            <td>
+                                                                <span class="label label-primary"><i class="fa fa-check"></i> Bon de commande</span>
+                                                            </td>
+                                                            <td>
+                                                                BC00028
+                                                            </td>
+                                                            <td>
+                                                                04/03/2015
+                                                            </td>
+                                                            <td>
+                                                                LOC 03/2015
+                                                            </td>
+                                                            <td>
+                                                                435,000000
+                                                            </td>
+
+                                                        </tr>
+                                                        <tr>
+                                                            <td>
+                                                                <span class="label label-primary"><i class="fa fa-check"></i> Bon de commande</span>
+                                                            </td>
+                                                            <td>
+                                                                BC00005
+                                                            </td>
+                                                            <td>
+                                                                05/01/2015
+                                                            </td>
+                                                            <td>
+                                                                CDE77/LIV 02/2015
+                                                            </td>
+                                                            <td>
+                                                                3100,000000
+                                                            </td>
+
+                                                        </tr>
+                                                        <tr>
+                                                            <td>
+                                                                <span class="label label-primary"><i class="fa fa-check"></i> Bon de commande</span>
+                                                            </td>
+                                                            <td>
+                                                                BC00006
+                                                            </td>
+                                                            <td>
+                                                                10/01/2015
+                                                            </td>
+                                                            <td></td>
+                                                            <td>
+                                                                4351,000000
+                                                            </td>
+
+                                                        </tr>
+                                                        <tr>
+                                                            <td>
+                                                                <span class="label label-primary"><i class="fa fa-check"></i> Bon de commande</span>
+                                                            </td>
+                                                            <td>
+                                                                BC00022
+                                                            </td>
+                                                            <td>
+                                                                12/01/2015
+                                                            </td>
+                                                            <td></td>
+                                                            <td>
+                                                                4195,200000
+                                                            </td>
+
+                                                        </tr>
+                                                        <tr>
+                                                            <td>
+                                                                <span class="label label-primary"><i class="fa fa-check"></i> Bon de commande</span>
+                                                            </td>
+                                                            <td>
+                                                                BC00007
+                                                            </td>
+                                                            <td>
+                                                                12/01/2015
+                                                            </td>
+                                                            <td>
+                                                                df152
+                                                            </td>
+                                                            <td>
+                                                                2208,000000
+                                                            </td>
+
+                                                        </tr>
+                                                        <tr>
+                                                            <td>
+                                                                <span class="label label-primary"><i class="fa fa-check"></i> Bon de commande</span>
+                                                            </td>
+                                                            <td>
+                                                                BC00016
+                                                            </td>
+                                                            <td>
+                                                                01/02/2015
+                                                            </td>
+                                                            <td></td>
+                                                            <td>
+                                                                1000,000000
+                                                            </td>
+
+                                                        </tr>
+                                                        <tr>
+                                                            <td>
+                                                                <span class="label label-primary"><i class="fa fa-check"></i> Bon de commande</span>
+                                                            </td>
+                                                            <td>
+                                                                BC00031
+                                                            </td>
+                                                            <td>
+                                                                05/03/2015
+                                                            </td>
+                                                            <td>
+                                                                FOR 03/2015
+                                                            </td>
+                                                            <td>
+                                                                3848,000000
+                                                            </td>
+
+                                                        </tr>
+                                                        <tr>
+                                                            <td>
+                                                                <span class="label label-warning"><i class="fa fa-check"></i> Devis</span>
+                                                            </td>
+                                                            <td>
+                                                                DV180001
+                                                            </td>
+                                                            <td>
+                                                                16/03/2018
+                                                            </td>
+                                                            <td></td>
+                                                            <td>
+                                                                0
+                                                            </td>
+
+                                                        </tr>
+                                                        <tr>
+                                                            <td>
+                                                                <span class="label label-warning"><i class="fa fa-check"></i> Devis</span>
+                                                            </td>
+                                                            <td>
+                                                                DV180002
+                                                            </td>
+                                                            <td>
+                                                                16/03/2018
+                                                            </td>
+                                                            <td></td>
+                                                            <td>
+                                                                0
+                                                            </td>
+
+                                                        </tr>
+                                                        <tr>
+                                                            <td>
+                                                                <span class="label label-warning"><i class="fa fa-check"></i> Devis</span>
+                                                            </td>
+                                                            <td>
+                                                                DV180003
+                                                            </td>
+                                                            <td>
+                                                                16/03/2018
+                                                            </td>
+                                                            <td></td>
+                                                            <td>
+                                                                0
+                                                            </td>
+
+                                                        </tr>
+                                                        <tr>
+                                                            <td>
+                                                                <span class="label label-warning"><i class="fa fa-check"></i> Devis</span>
+                                                            </td>
+                                                            <td>
+                                                                DV180004
+                                                            </td>
+                                                            <td>
+                                                                16/03/2018
+                                                            </td>
+                                                            <td></td>
+                                                            <td>
+                                                                72372,824000
+                                                            </td>
+
+                                                        </tr>
+                                                        <tr>
+                                                            <td>
+                                                                <span class="label label-warning"><i class="fa fa-check"></i> Devis</span>
+                                                            </td>
+                                                            <td>
+                                                                DV180005
+                                                            </td>
+                                                            <td>
+                                                                16/03/2018
+                                                            </td>
+                                                            <td></td>
+                                                            <td>
+                                                                0
+                                                            </td>
+
+                                                        </tr>
+                                                        <tr>
+                                                            <td>
+                                                                <span class="label label-warning"><i class="fa fa-check"></i> Devis</span>
+                                                            </td>
+                                                            <td>
+                                                                DV180006
+                                                            </td>
+                                                            <td>
+                                                                16/03/2018
+                                                            </td>
+                                                            <td></td>
+                                                            <td>
+                                                                10992,000000
+                                                            </td>
+
+                                                        </tr>
+
+
+
+                                                    </tbody>
+                                                </table>
+
+                                            </div>
+
+
+
+                                        </div>
+
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+        <!-- Modal Liste des Concurrents  -->
+
+        <div class="modal inmodal" id="ListeConcurr" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content animated flipInX">
+
+                    <div class="modal-body">
+                        <ul class="category-list " style="padding: 0">
+                            <li><a> <i class="fa fa-circle text-navy"></i> Aucun </a></li>
+
+
+                        </ul>
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" data-dismiss="modal">Fermer</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+
+        <div class="col-lg-3">
+
+            <div class="ibox">
+                <div class="ibox-content">
+                    <!-- ETATAPE_OP ET_DESCRIPION cbmarq OPPORTUNITY-->
+
+                    <div id="vertical-timeline" class="vertical-container">
+
+
+
+                        <div class="vertical-timeline-block  ">
+
+
+                            <div class="vertical-timeline-icon white-bg">
+                                <i class="fa fa-level-down"></i>
+                            </div>
+
+
+                            <div class="vertical-timeline-content ">
+                                <h2>Création</h2>
+                            </div>
+                        </div>
+                        <div class="vertical-timeline-block  ">
+
+                            <div class="vertical-timeline-icon white-bg">
+                                <i class="fa fa-level-down"></i>
+                            </div>
+
+
+                            <div class="vertical-timeline-content ">
+                                <h2>Enrtegistrement TT </h2>
+                            </div>
+                        </div>
+                        <div class="vertical-timeline-block  ">
+
+                            <div class="vertical-timeline-icon white-bg">
+                                <i class="fa fa-level-down"></i>
+                            </div>
+
+
+                            <div class="vertical-timeline-content ">
+                                <h2>Etude TT</h2>
+                            </div>
+                        </div>
+                        <div class="vertical-timeline-block  ">
+
+                            <div class="vertical-timeline-icon white-bg">
+                                <i class="fa fa-level-down"></i>
+                            </div>
+
+
+                            <div class="vertical-timeline-content ">
+                                <h2>Confirmation Client </h2>
+                            </div>
+                        </div>
+                        <div class="vertical-timeline-block  ">
+
+                            <div class="vertical-timeline-icon white-bg">
+                                <i class="fa fa-level-down"></i>
+                            </div>
+
+
+                            <div class="vertical-timeline-content ">
+                                <h2>Traveaux TT </h2>
+                            </div>
+                        </div>
+                        <div class="vertical-timeline-block  ">
+
+                            <div class="vertical-timeline-icon white-bg">
+                                <i class="fa fa-level-down"></i>
+                            </div>
+
+
+                            <div class="vertical-timeline-content ">
+                                <h2>Mise en service TT </h2>
+                            </div>
+                        </div>
+
+                        <div class="vertical-timeline-block  ">
+
+                            <div class="vertical-timeline-icon white-bg">
+                                <i class="fa fa-level-down"></i>
+                            </div>
+
+
+                            <div class="vertical-timeline-content ">
+                                <h2>Annulée</h2>
+                            </div>
+                        </div>
+                        <div class="vertical-timeline-block ">
+
+                            <div class="vertical-timeline-icon lazur-bg">
+                                <i class="fa fa-check"></i>
+                            </div>
+
+
+                            <div class="vertical-timeline-content ">
+                                <h2>Cloturé</h2>
+                            </div>
+                        </div>
+
+
+
+
+
+                    </div>
+                </div>
+            </div>
+         
+        </div>
+
+
+    </div>
+
+
+
+    </div>
+<script src="~/js/jquery-3.1.1.min.js"></script>
+

@@ -1,0 +1,175 @@
+﻿@model BeeProj.Models.B_PROMOTION
+
+@{
+    ViewBag.Title = "ModifierPromotion";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<link href="~/css/plugins/blueimp/css/blueimp-gallery.min.css" rel="stylesheet">
+<link href="~/css/plugins/chosen/bootstrap-chosen.css" rel="stylesheet">
+<link href="~/css/plugins/dropzone/basic.css" rel="stylesheet">
+<link href="~/css/plugins/dropzone/dropzone.css" rel="stylesheet">
+<link href="~/css/plugins/jasny/jasny-bootstrap.min.css" rel="stylesheet">
+<link href="~/css/plugins/codemirror/codemirror.css" rel="stylesheet">
+
+<link href="~/css/plugins/datapicker/datepicker3.css" rel="stylesheet">
+
+<link href="~/css/plugins/ionRangeSlider/ion.rangeSlider.css" rel="stylesheet">
+<link href="~/css/plugins/ionRangeSlider/ion.rangeSlider.skinFlat.css" rel="stylesheet">
+
+<link href="~/css/plugins/awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css" rel="stylesheet">
+
+<link href="css/plugins/clockpicker/clockpicker.css" rel="stylesheet">
+
+<link href="~/css/plugins/daterangepicker/daterangepicker-bs3.css" rel="stylesheet">
+
+<link href="~/css/plugins/select2/select2.min.css" rel="stylesheet">
+
+<link href="~/css/plugins/touchspin/jquery.bootstrap-touchspin.min.css" rel="stylesheet">
+
+<link href="~/css/plugins/dualListbox/bootstrap-duallistbox.min.css" rel="stylesheet">
+
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-lg-8">
+        <h2>Nouvelle promotion</h2>
+        <ol class="breadcrumb">
+            <li>
+                <a>Liste Promotion</a>
+            </li>
+            <li>
+                <a>Promotion</a>
+            </li>
+            <li class="active">
+                <strong>Nouvelle Promotion</strong>
+            </li>
+        </ol>
+    </div>
+    <div class="col-lg-2">
+
+    </div>
+</div>
+@using (Html.BeginForm("ModifierPromotion", "Structure", FormMethod.Post, new { @class = "form-horizontal", role = "form", enctype = "multipart/form-data" }))
+{
+    if (ViewData.ModelState[""] != null && ViewData.ModelState[""].Errors.Count > 0)
+    {
+        <div class="alert alert-danger alert-dismissable">
+            <button type="button" class="close " data-dismiss="alert"> × </button>
+            @Html.ValidationSummary("", new { @class = "text-danger" })
+        </div>
+    }
+    @Html.AntiForgeryToken()
+    <div class="row">
+        <div class="col-lg-12">
+            @Html.HiddenFor(model => model.cbMarq)
+            <div class="ibox product-detail">
+                <div class="ibox-content">
+
+
+                    <div class="ibox float-e-margins">
+                        <div class="ibox-content">
+                            <div class="form-group float-e-margins">
+
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label">Article en promotion </label>
+                                    <div class="col-md-8">
+
+
+                                        <h3>@Model.AR_Ref</h3>
+                                        @*<select name="AR_Ref" class="chosen-select form-control" id="AR_Ref">
+                                @foreach (var item in ViewBag.listeArticleService)
+                                {
+                                    <option value="@item.AR_Ref">@item.AR_Design</option>
+                                }
+                            </select>*@
+                                    </div>
+
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label">Intitulé</label>
+                                    <div class="col-md-8">
+                                        <input class="form-control" id="P_Intitule" name="P_Intitule" value="@Model.P_Intitule" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label">Description </label>
+                                    <div class="col-md-8">
+                                        <textarea class="form-control" id="P_Description" name="P_Description"> @Model.P_Description </textarea>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label">Date de début de la promotion</label>
+                                    <div class="col-md-8">
+                                        <input type="text" class="form-control" id="P_RemiseDebut" name="P_RemiseDebut" value="@Model.P_RemiseDebut" />
+                                    </div>
+
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label">Date de fin de la promotion</label>
+                                    <div class="col-md-8">
+                                        <input type="text" class="form-control" id="P_RemiseFin" name="P_RemiseFin" value="@Model.P_RemiseFin" />
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label">Durée de la promotion en mois </label>
+                                    <div class="col-md-8">
+                                        <input class="form-control" type="number" id="P_Duree" name="P_Duree" value="@Model.P_Duree" />
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label">Remise  </label>
+                                    <div class="col-md-8">
+                                        <div class="input-group m-b">
+                                            <input class="form-control" type="text" id="Remise" name="Remise" value="@Model.Remise">
+                                            <span class="input-group-addon">%</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+
+                                    <label class="col-md-4 control-label">Photo </label>
+                                    <div class="col-md-8">
+                                        <div class="input-group m-b">
+                                            <input type="file" id="file1" name="image" accept="image/*" capture style="display:none" />
+                                            <img src="@Url.Action("PhotoArticle", "Structure" , new { id= ViewBag.lienPhotArticle })" class="img-preview img-responsive" onError="this.onerror=null;this.src='/img/DefaultImage.png';" />
+
+                                        </div>
+                                    </div>
+
+
+
+
+                                </div>
+                                <button type="submit" class="btn btn-primary pull-right"> Modifier</button>
+                            </div>
+                        </div>
+                    </div>
+
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+}
+
+<script src="~/js/plugins/chosen/chosen.jquery.js"></script>
+<!-- Jasny -->
+<script src="~/js/plugins/jasny/jasny-bootstrap.min.js"></script>
+<!-- DROPZONE -->
+<script src="~/js/plugins/dropzone/dropzone.js"></script>
+<!-- CodeMirror -->
+<script src="~/js/plugins/codemirror/codemirror.js"></script>
+<script src="~/js/plugins/codemirror/mode/xml/xml.js"></script>
+<script>
+
+    $(document).ready(function () {
+        $('.chosen-select').chosen({ width: "100%" });
+        $("#upfile1").click(function () {
+            $("#file1").trigger('click');
+        });
+        $('#data_1 .input-group.date').datepicker();
+
+    });
+</script>

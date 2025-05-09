@@ -1,0 +1,81 @@
+﻿@model IdentitySample.Models.ApplicationGroup
+@{
+    ViewBag.Title = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+}
+<script src="~/js/jquery-3.1.1.min.js"></script>
+
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-lg-10">
+        <h2>Profile</h2>
+        <ol class="breadcrumb">
+            <li>
+                <a>Acceuil </a>
+            </li>
+            <li>
+                <a href="@Url.Action("index","Administration")">Administration</a>
+            </li>
+            <li class="active">
+                <strong>Détails rôle utilisateur</strong>
+            </li>
+        </ol>
+    </div>
+    <div class="col-lg-2">
+
+    </div>
+</div>
+
+<div class="wrapper wrapper-content">
+    <div class="row animated fadeInRight">
+
+
+
+        <div class="ibox">
+            <div class="ibox-content">
+
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="content-box">
+                            <h3 class="content-box-header bg-black">
+                                <i class="glyph-icon icon-group"></i>Groupe:  @Html.DisplayFor(model => model.Name)
+                            </h3><div class="content-box-wrapper">
+                                <h4> Description:  @Html.DisplayFor(model => model.Description) </h4>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="col-md-8">
+
+
+
+                        <h4>Liste des Roles attribué à ce groupe</h4>
+                        @if (ViewBag.PermissionsCount == 0)
+                        {
+                            <hr />
+                            <p>Aucun Utilisateur pour ce rôle</p>
+                        }
+                        <table class="table table-hover">
+                            @foreach (var item in ViewBag.RolesList)
+                            {
+                                <tr>
+                                    <td>
+                                        @item
+                                    </td>
+                                </tr>
+                            }
+                        </table>
+                        <p>
+                            @Html.ActionLink("Retourner", "Index", null, new { @class = "btn btn-primary pull-right" })
+                        </p>
+
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+    </div>

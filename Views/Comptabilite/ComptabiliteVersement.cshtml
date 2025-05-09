@@ -1,0 +1,149 @@
+﻿@{
+    ViewBag.Title = "ComptabiliteVersement";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+
+<link href="~/css/plugins/dataTables/datatables.min.css" rel="stylesheet" />
+
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-lg-10">
+        <h2>Comptabilite</h2>
+        <ol class="breadcrumb">
+            <li>
+                <a href="@Url.Action("Index")">Comptabilité</a>
+            </li>
+            <li class="active">
+                <strong>Comptabilité versement </strong>
+            </li>
+        </ol>
+    </div>
+
+</div>
+<br />
+@if (TempData["MSGAn"] != null)
+{
+    <div class="alert alert-warning alert-dismissable">
+        <button type="button" class="close " data-dismiss="alert"> × </button>
+        <p class="text-danger">@TempData["MSGAn"]</p>
+    </div>
+
+}
+<div class="ibox float-e-margins">
+
+    <div class="ibox-title" style="height:80px;">
+
+        @using (Html.BeginForm("ComptabiliteVersement", "Comptabilite", FormMethod.Post, new { @class = "form-horizontal", role = "form", enctype = "multipart/form-data" }))
+        {
+            <div class="row">
+                <div class="col-md-5">
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">Date Debut </label>
+                        <div class="col-sm-9">
+                            <span class="help-block m-b-none">
+                                <input class="form-control" type="date" name="DateDebutVersement" id="currentDate1">
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-5">
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">Date Fin </label>
+                        <div class="col-sm-9">
+                            <span class="help-block m-b-none">
+                                <input class="form-control" type="date" name="DateFinVersement" id="currentDate2">
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label"> </label>
+                        <div class="col-sm-9">
+                            <span class="help-block m-b-none">
+                                <button type="submit" class="btn btn-purplebee">Valider </button>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+
+    </div>
+</div>
+@if (ViewBag.ListeNonCompta != null)
+{
+
+    <div class="table-responsive">
+        <table class="table  table-bordered table-hover dataTables-example" id="dataTables-example">
+            <thead>
+                <tr>
+                    <th>N:°</th>
+                    <th>Code Client</th>
+                    <th>Date début</th>
+                    <th>Date Fin</th>
+                    <th>Raison</th>
+                    <th>Date modification</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in ViewBag.ListeNonCompta)
+                {
+                    <tr>
+                        <td>@item.RG_Piece</td>
+                        <td>@item.CT_Num</td>
+                        <td>@item.DateFin.ToString("dd/MM/yyyy")</td>
+                        <td>@item.DateDebut.ToString("dd/MM/yyyy")</td>
+                        <td>@item.Cause</td>
+                        <td>@item.cbModification</td>
+                    </tr>
+
+                }
+            </tbody>
+        </table>
+    </div>
+
+}
+else
+{
+    if (TempData["Retour"] != null)
+    {
+        <div class="alert alert-success alert-dismissable">
+            <button type="button" class="close " data-dismiss="alert"> × </button>
+            <p class="text-success">@TempData["Retour"]</p>
+        </div>
+    }
+}
+<script src="~/js/jquery-3.1.1.min.js"></script>
+<script src="~/js/plugins/metisMenu/jquery.metisMenu.js"></script>
+<script src="~/js/plugins/pace/pace.min.js"></script>
+<script src="~/js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+<script src="~/js/plugins/chosen/chosen.jquery.js"></script>
+<script src="~/js/plugins/dataTables/datatables.min.js"></script>
+<!-- Sweet alert -->
+<script src="~/js/plugins/sweetalert/sweetalert.min.js"></script>
+<!-- Chosen -->
+<script src="~/js/plugins/chosen/chosen.jquery.js"></script>
+<link href="~/css/plugins/ladda/ladda-themeless.min.css" rel="stylesheet">
+<!-- Ladda -->
+<script src="~/js/plugins/ladda/spin.min.js"></script>
+<script src="~/js/plugins/ladda/ladda.min.js"></script>
+<script src="~/js/plugins/ladda/ladda.jquery.min.js"></script>
+<script>
+    var date = new Date();
+    var currentDate1 = date.toISOString().slice(0, 10);
+    document.getElementById('currentDate1').value = currentDate1;
+
+
+    var currentDate2 = date.toISOString().slice(0, 10);
+    document.getElementById('currentDate2').value = currentDate2;
+
+    var date1 = DateDebutFacture;
+    var date2 = DateFinFacture;
+    if (currentDate1 > currentDate2) {
+        document.write('Date Debut Facture est supérieur à Date Fin Facture');
+    }
+    else
+        document.write('Date Debut Facture est inférieur à date2');
+</script>

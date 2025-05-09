@@ -1,0 +1,189 @@
+﻿@model BeeProj.Models.C_ABONNEMENT
+@{
+    ViewBag.Title = "NewAbonnement";
+}
+
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-lg-10">
+        <h2>Profile</h2>
+        <ol class="breadcrumb">
+            <li>
+                <a href="@Url.Action("index","Home")">Acceuil </a>
+            </li>
+            <li class="active">
+                <a href="@Url.Action("index","Administration")">Administration</a>
+            </li>
+            <li class="active">
+                <a href="@Url.Action("ListeAbonnements","Listes")">Ajouter un type d'abonnement</a>
+            </li>
+
+        </ol>
+    </div>
+    <div class="col-lg-2">
+
+    </div>
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox float-e-margins">
+                <br />
+                @using (Html.BeginForm("EnvoyerAbonnement", "Listes", FormMethod.Post, new { @class = "form-horizontal", role = "form", enctype = "multipart/form-data" }))
+                {
+
+                    <div class="ibox-content">
+                        <form method="get" class="form-horizontal">
+
+
+                            
+                                <div class="form-group">
+                                    <br />
+                                    <label class="col-sm-4 control-label">Intitulé</label>
+
+                                    <div class="col-sm-8">
+
+                                        @Html.TextBoxFor(model => model.A_Type, new { @class = "form-control", @placeholder = "intitulé..." })
+
+                                    </div>
+                                </div>
+                            
+                            <div class="form-group">
+                                <label class="col-sm-4 control-label">Prix unitaire</label>
+
+                                <div class="col-sm-8">
+                                    @Html.TextBoxFor(model => model.A_PU, new { @class = "form-control", @placeholder = "Prix..." })
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-sm-4 control-label">Description</label>
+                                <div class="col-sm-8">
+                                    <span class="help-block m-b-none">
+                                        @Html.TextAreaFor(model => model.A_Description, new { @class = "form-control", @placeholder = "Description..." })
+                                    </span>
+                                </div>
+                            </div>
+                            @*<div class="form-group">
+                                <label class="col-sm-4 control-label">Attacher un fichier</label>
+
+                                <div class="col-sm-6"><input type="file" class="form-control"></div>
+                            </div>*@
+
+
+                            <div class="form-group">
+                                <label class="col-sm-4 control-label">Lettre l'image de l'article</label>
+
+                                <div class="col-sm-6">
+                                    <div class="fileinput fileinput-new input-group" data-provides="fileinput">
+                                        
+                                        <span class="input-group-addon btn btn-default btn-file">
+                                           
+                                            <input type="file" name="LettreEngagement" />
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div>
+                                <button class="btn  btn-primary pull-right " type="submit"><strong>Envoyer</strong></button>
+
+                            </div>
+                            <div>
+                                <button class="btn btn-default pull-right" type="reset"><strong>Annuler</strong></button>
+
+                            </div>
+                        </form>
+                    </div>
+
+                }
+            </div>
+        </div>
+    </div>
+</div>
+<link href="~/css/plugins/dataTables/datatables.min.css" rel="stylesheet">
+<script src="~/js/plugins/dataTables/datatables.min.js"></script>
+<script src="~/js/jquery-3.1.1.min.js"></script>
+<script src="~/js/bootstrap.min.js"></script>
+<script src="~/js/plugins/metisMenu/jquery.metisMenu.js"></script>
+<script src="~/js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+
+<script src="~/js/plugins/dataTables/datatables.min.js"></script>
+
+<!-- Custom and plugin javascript -->
+<script src="~/js/inspinia.js"></script>
+<script src="~/js/plugins/pace/pace.min.js"></script>
+
+<script>
+    function SaveDocuments(cbm) {
+        /**************/
+        var fileUpload = $("#FileUpload1").get(0);
+        var files = fileUpload.files;
+
+        // Create FormData object
+        var fileData = new FormData();
+
+        // Looping over all files and add it to FormData object
+        for (var i = 0; i < files.length; i++) {
+            fileData.append(files[i].name, files[i]);
+        }
+
+        // Adding one more key to FormData object
+        fileData.append('Bee', 'EasySales');
+
+
+        $.ajax({
+            type: "Post",
+            url: "/Listes/SaveDocuments?OpId=" + cbm + "&&titreDoc=" + $("#titreDoc").val() + "&&DescDoc=" + $("#DescDoc").val(),
+            contentType: false, // Not to set any content header
+            processData: false, // Not to process data
+            data: fileData,
+            success: function (result) {
+
+
+}
+        });
+    }
+    $(document).ready(function () {
+
+        var table = $("#Abonnements").DataTable({
+            "ajax": {
+
+                "url": "/Listes/getListeAbonnements",
+                "type": 'get',
+                "datatype": "json"
+            },
+            "columns": [
+                 { "data": "A_Type" },
+                 { "data": "A_PU" },
+                 { "data": "A_Description" },
+                 { "data": "cbMarq" }
+
+            ],
+         });
+
+        $("#Abonnements").dataTable().destroy();
+
+            $('.dataTables-example').DataTable({
+                pageLength: 25,
+                responsive: true,
+                dom: '<"html5buttons"B>lTfgitp',
+                buttons: [
+                    { extend: 'copy'},
+                    {extend: 'csv'},
+                    {extend: 'excel', title: 'ExampleFile'},
+                    {extend: 'pdf', title: 'ExampleFile'},
+
+                    {extend: 'print',
+                     customize: function (win){
+                            $(win.document.body).addClass('white-bg');
+                            $(win.document.body).css('font-size', '10px');
+
+                            $(win.document.body).find('table')
+                                    .addClass('compact')
+                                    .css('font-size', 'inherit');
+                    }
+                    }
+                ]
+
+            });
+
+        });
+
+</script>

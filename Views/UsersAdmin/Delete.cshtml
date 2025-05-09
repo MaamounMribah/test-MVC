@@ -1,0 +1,51 @@
+﻿@model IdentitySample.Models.ApplicationUser
+@{
+    ViewBag.Title = "Supprimer utilisateur";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<script src="~/js/jquery-3.1.1.min.js"></script>
+
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-lg-10">
+        <h2>Profile</h2>
+        <ol class="breadcrumb">
+            <li>
+                <a>Acceuil </a>
+            </li>
+            <li>
+                <a href="@Url.Action("index","Administration")">Administration</a>
+            </li>
+            <li class="active">
+                <strong>Supprimer utilisateur </strong>
+            </li>
+        </ol>
+    </div>
+    <div class="col-lg-2">
+
+    </div>
+</div>
+
+<div class="wrapper wrapper-content">
+    <div class="row animated fadeInRight">
+
+
+        <div class="ibox">
+            <div class="ibox-content">
+                <h4>Voulez-vous vraiment supprimer l'utilisateur <i class="font-red">  @Model.UserName</i> ?</h4>
+
+                @using (Html.BeginForm())
+                {
+                    @Html.AntiForgeryToken()
+
+                    <div class="form-actions no-color">
+                        <input type="submit" value="Oui" class="btn btn-default" /> |
+                        @Html.ActionLink("Annuler", "Index")
+                    </div>
+                }
+            </div>
+        </div>
+
+
+    </div>
+
+</div>

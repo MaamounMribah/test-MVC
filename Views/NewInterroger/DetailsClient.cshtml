@@ -1,0 +1,1128 @@
+﻿@model BeeProj.Models.D_COMPTET
+@{
+    ViewBag.Title = "DetailsClient";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<!-- FooTable -->
+<link href="~/css/plugins/footable/footable.core.css" rel="stylesheet">
+<!-- Sweet Alert -->
+<link href="~/css/plugins/sweetalert/sweetalert.css" rel="stylesheet">
+<link href="~/css/plugins/jasny/jasny-bootstrap.min.css" rel="stylesheet">
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+<link href="~/css/plugins/dataTables/datatables.min.css" rel="stylesheet" />
+<!-- Ladda style -->
+<link href="~/css/plugins/ladda/ladda-themeless.min.css" rel="stylesheet">
+
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-lg-10">
+        <br />
+        <ol class="breadcrumb">
+            <li>
+                <a href="@Url.Action("index","Home")">Acceuil</a>
+            </li>
+            <li>
+                <a href="@Url.Action("Index","InterrogerClient")">Interrogation client </a>
+            </li>
+            <li class="active">
+                <strong>Détails</strong>
+            </li>
+        </ol>
+    </div>
+</div>
+
+
+<div class="row">
+    <div class="col-lg-9">
+        <div class="col-lg-12">
+
+            @if (ViewBag.ClientNotFound != null)
+            {
+                <div class="alert alert-danger alert-dismissable">
+                    <button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>
+                    Aucun client existe avec les information saisies !
+                </div>
+            }
+            @if (TempData["MSG"] != null)
+            {
+                <div class="alert alert-danger alert-dismissable">
+                    <button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>
+                    TempData["MSG"]!
+                </div>
+            }
+
+            <div class="ibox float-e-margins">
+
+            </div>
+        </div>
+
+
+        <div class="wrapper wrapper-content animated fadeInUp">
+            <div class="ibox">
+                <div class="ibox-content">
+                    <div class="row m-t-sm">
+                        <div class="panel blank-panel">
+                            <div class="panel-body">
+                                <div class="row">
+                                    <div class="ibox float-e-margins">
+                                        <div class="ibox-title" style="height:80px;">
+
+                                            @using (Html.BeginForm("Index", "InterrogeClient", FormMethod.Post))
+                                            {
+
+
+                                                <label class="control-label">Recherche par CIN client,code client et téléphone  </label>
+                                                <div class="input-group m-b">
+                                                    <input type="text" class="form-control" id="ct_identifiant" name="ct_identifiant" value="@ViewBag.ClientNotFound" />
+                                                    <span class="input-group-btn">
+                                                        <button type="submit" class="btn btn-purplebee ">Rechercher</button>
+                                                    </span>
+                                                </div>
+
+                                            }
+                                            <div class="ibox-tools">
+                                                <a class="collapse-link">
+                                                    <i class="fa fa-chevron-up"></i>
+                                                </a>
+                                                <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                                                    <i class="fa fa-wrench"></i>
+                                                </a>
+                                                <ul class="dropdown-menu dropdown-user">
+                                                    <li>
+                                                        <a href="@Url.Action("PaiementClient","InterrogeClient", new { id = ViewBag.IdAbo })">Régulariser </a>
+                                                    </li>
+                                                </ul>
+
+                                            </div>
+
+                                        </div>
+                                        <div class="m-5 p-5" style="text-align: center">
+                                            <div id="wait" style="display:none">
+
+                                                <div class="spinner-border text-purplebee" role="status">
+                                                    <i class="fa fa-spinner fa-spin" style="font-size:50px"></i>
+                                                    <br />
+                                                    <h3>Merci de  patienter...</h3>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                        <div class="ibox-content">
+
+                                            @if (ViewBag.ListeFactures.Count != 0)
+                                            {
+                                                <input type="text" class="form-control input-sm m-b-xs " id="filter"
+                                                       placeholder="Rechercher...">
+                                                <table class="footable table table-stripped toggle-arrow-tiny" data-page-size="12" data-filter=#filter>
+                                                    <thead>
+                                                        <tr>
+                                                            <th data-toggle="true">N° Facture</th>
+                                                            <th data-hide="all">Factures Avoir</th>
+                                                            <th data-hide="all"></th>
+                                                            <th data-hide="all"></th>
+                                                            <th data-hide="all"></th>
+                                                            <th>Date Facture </th>
+                                                            <th>Statut </th>
+                                                            <th>Periode Facture </th>
+                                                            <th>Code Abonnement </th>
+                                                            <th data-toggle="true">Numero fixe</th>
+                                                            <th>T.T.C</th>
+                                                            <th data-toggle="true">Details</th>
+                                                            <th>Action</th>
+                                                            <th data-hide="all">Règlements</th>
+                                                            <th data-hide="all"></th>
+                                                            <th data-hide="all"></th>
+                                                            <th data-hide="all"></th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+
+                                                        @foreach (var item in ViewBag.ListeFactures)
+                                                        {
+                                                            if (item.TypeFacture == 80 && (User.IsInRole("Visibilite proformat ")) || User.IsInRole("Admin"))
+                                                            {
+                                                                <tr>
+                                                                    <td>
+                                                                        @if (item.HasAvoir == true)
+                                                                        {
+                                                                            <i class="fa fa-plus-circle text-warning"></i>
+                                                                        }
+                                                                        @if (item.TypeAbonnement == 6)
+                                                                        {
+                                                                            <a href="/VenteLibre/VisualiserFacture/@item.FactureId" target="_blank"> @item.FacturePiece</a>
+
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <a href="/GestionFactures/DetailsFacture/@item.FactureId" target="_blank"> @item.FacturePiece</a>
+
+                                                                        }
+                                                                    </td>
+                                                                    @if (item.ListeAvoir.Count == 0)
+                                                                    {
+                                                                        <td>Aucune facture avoir attaché</td>
+                                                                        <td></td>
+                                                                        <td></td>
+                                                                        <td></td>
+
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        <td></td>
+                                                                        <td></td>
+                                                                        <td></td>
+                                                                        <td>
+                                                                            <div class="row">
+                                                                                <table class="table ">
+                                                                                    <thead>
+                                                                                        <tr>
+
+                                                                                            <th>#Avoir</th>
+                                                                                            <th>Facture</th>
+                                                                                            <th>Designation</th>
+                                                                                            <th>Montant HT</th>
+                                                                                            <th>Montant TTC</th>
+                                                                                        </tr>
+                                                                                    </thead>
+                                                                                    <tbody>
+                                                                                        @foreach (var avoirsss in item.ListeAvoir)
+                                                                                        {
+                                                                                            <tr>
+                                                                                                <td>@avoirsss.DO_Piece</td>
+                                                                                                <td>@avoirsss.DO_Ref</td>
+                                                                                                <td>@avoirsss.DL_Design</td>
+                                                                                                <td>@avoirsss.DL_MontantHT</td>
+                                                                                                <td>@String.Format("{0:N3}", avoirsss.DL_MontantTTC) </td>
+                                                                                            </tr>
+                                                                                        }
+                                                                                    </tbody>
+                                                                                </table>
+                                                                            </div>
+                                                                        </td>
+
+
+                                                                    }
+
+                                                                    <td> @item.DateFacture.ToString("dd/MM/yyyy")</td>
+                                                                    <td>
+
+                                                                        @if (item.Statut == 0)
+                                                                        {
+                                                                            <span class="label label-warning-light">Non payée</span>
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <span class="label label-success">Payée</span>
+                                                                        }
+                                                                    </td>
+
+
+                                                                    <td>du @item.DO_DebutPeriod.ToString("dd/MM/yyyy") au @item.DO_FinPeriod.ToString("dd/MM/yyyy")</td>
+
+                                                                    <td>
+                                                                        @if (item.TypeAbonnement == 1)
+                                                                        {
+                                                                            <a href="/Abonnement/DetailsSUS/@item.IdAbonnement" target="_blank"> @item.CodeAbonnement</a>
+                                                                        }
+                                                                        else if (item.TypeAbonnement == 6)
+                                                                        {
+                                                                            <a href="/VenteLibre/Details/@item.IdAbonnement" target="_blank"> @item.CodeAbonnement</a>
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <a href="/Abonnement/details/@item.IdAbonnement" target="_blank"> @item.CodeAbonnement</a>
+                                                                        }
+                                                                        @if (item.isAbonnementResilie)
+                                                                        {
+                                                                            <i class="fa fa-remove text-danger" title="Abonnement résilié"></i>
+                                                                        }
+                                                                        else if (item.isAbonnementSuspendu)
+                                                                        {
+                                                                            <i class="fa fa-clock-o text-warning" title="Abonnement suspendu"></i>
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <i class="fa fa-circle text-greenbee" title="Abonnement en Cours"></i>
+                                                                        }
+                                                                    </td>
+                                                                    <td>@item.NumFixe</td>
+                                                                    <td class="text-navy"> <i class="fa fa-money"></i> <strong>@String.Format("{0:N3}", item.FactureTotalTTC) TND  </strong></td>
+                                                                    <td><i class="fa fa-info-circle text-navy"></i></td>
+
+                                                                    <td>
+                                                                        @if (item.TypeFacture == 8 && (User.IsInRole("Annuler Proformat") || User.IsInRole("Transformer Proformat") || User.IsInRole("Admin")))
+                                                                        {
+                                                                            if (User.IsInRole("Transformer Proformat") || User.IsInRole("Admin"))
+                                                                            {
+                                                                                <button type="button" title="Transformer le proformat en facture" class="btn btn-xs btn-greenbee btn-rounded"
+                                                                                        onClick='TransformerProformat(@item.FactureId);'>
+                                                                                    <i class="fa fa-check"></i>
+                                                                                </button>
+                                                                            }
+                                                                            if (User.IsInRole("Annuler Proformat") || User.IsInRole("Admin"))
+                                                                            {
+                                                                                <button type="button" title="AnnulationProFormat" class="btn btn-xs btn-danger btn-rounded"
+                                                                                        onClick="AnnulationProFormat('@item.FactureId');">
+                                                                                    <i class="fa fa-remove"></i>
+                                                                                </button>
+                                                                            }
+                                                                        }
+                                                                        else if (item.TypeFacture == 80 && (User.IsInRole("Retablir Proformat") || User.IsInRole("Admin")))
+                                                                        {
+                                                                            <button type="button" title="Rétablir le proformat" class="btn btn-xs btn-purplebee btn-rounded"
+                                                                                    onClick='RetablirProformat(@item.FactureId);'>
+                                                                                <i class="fa fa-refresh"></i>
+                                                                            </button>
+                                                                        }
+
+                                                                    </td>
+
+
+
+                                                                    @if (item.ListeReglements.Count == 0 || item.ListeReglements.Count == null)
+                                                                    {
+                                                                        <td>Aucun règlement imputé sur cette facture </td>
+                                                                        <td></td>
+                                                                        <td></td>
+                                                                        <td></td>
+
+
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        /**/
+                                                                        <td></td>
+                                                                        <td></td>
+                                                                        <td></td>
+                                                                        <td>
+                                                                            <div class="row">
+                                                                                <table class="table">
+                                                                                    <thead class="text-greenbee">
+                                                                                        <tr>
+                                                                                            <th>N°Reglement </th>
+                                                                                            <th>Date</th>
+                                                                                            <th>Montant Réglement</th>
+                                                                                            <th>Montant Imputé</th>
+                                                                                            <th>Date imputation</th>
+                                                                                            <th>Piece Versement</th>
+                                                                                            <th>Voir </th>
+                                                                                        </tr>
+                                                                                    </thead>
+                                                                                    <tbody>
+                                                                                        @foreach (var regl in item.ListeReglements)
+                                                                                        {
+                                                                                            <tr>
+                                                                                                <td>
+                                                                                                    @regl.RG_Piece
+                                                                                                </td>
+                                                                                                <td>
+                                                                                                    @regl.RG_Date
+                                                                                                </td>
+                                                                                                <td>
+                                                                                                    @String.Format("{0:N3}", regl.RG_Montant) TND
+                                                                                                </td>
+                                                                                                <td>
+                                                                                                    @String.Format("{0:N3}", regl.RC_Montant) TND
+                                                                                                </td>
+                                                                                                <td>@regl.dateImputation</td>
+                                                                                                <td>@regl.DO_PieceVersement</td>
+                                                                                                <td>
+                                                                                                    <a class="btn btn-greenbee btn-circle btn-outline" title="voir le reçu de paiement "
+                                                                                                       href="@Url.Action("ImpressionRecu", "GestionFactures", new { id = regl.RG_Cbmarq })" target="_blank">
+                                                                                                        <i title="Imprimer Reçu " class="fa fa-print"></i>
+                                                                                                    </a>
+
+                                                                                                </td>
+                                                                                            </tr>
+                                                                                        }
+                                                                                    </tbody>
+                                                                                </table>
+                                                                            </div>
+                                                                        </td>
+
+                                                                    }
+
+                                                                </tr>
+                                                            }
+                                                            else if ((item.TypeFacture != 80))
+                                                            {
+                                                                <tr>
+                                                                    <td>
+                                                                        @if (item.HasAvoir == true)
+                                                                        {
+                                                                            <i class="fa fa-plus-circle text-warning"></i>
+                                                                        }
+                                                                        @if (item.TypeAbonnement == 6)
+                                                                        {
+                                                                            <a href="/VenteLibre/VisualiserFacture/@item.FactureId" target="_blank"> @item.FacturePiece</a>
+
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <a href="/GestionFactures/DetailsFacture/@item.FactureId" target="_blank"> @item.FacturePiece</a>
+
+                                                                        }
+                                                                    </td>
+                                                                    @if (item.ListeAvoir.Count == 0)
+                                                                    {
+                                                                        <td>Aucune facture avoir attaché</td>
+                                                                        <td></td>
+                                                                        <td></td>
+                                                                        <td></td>
+
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        <td></td>
+                                                                        <td></td>
+                                                                        <td></td>
+                                                                        <td>
+                                                                            <div class="row">
+                                                                                <table class="table ">
+                                                                                    <thead>
+                                                                                        <tr>
+
+                                                                                            <th>#Avoir</th>
+                                                                                            <th>Facture</th>
+                                                                                            <th>Designation</th>
+                                                                                            <th>Montant HT</th>
+                                                                                            <th>Montant TTC</th>
+                                                                                        </tr>
+                                                                                    </thead>
+                                                                                    <tbody>
+                                                                                        @foreach (var avoirsss in item.ListeAvoir)
+                                                                                        {
+                                                                                            <tr>
+                                                                                                <td>@avoirsss.DO_Piece</td>
+                                                                                                <td>@avoirsss.DO_Ref</td>
+                                                                                                <td>@avoirsss.DL_Design</td>
+                                                                                                <td>@avoirsss.DL_MontantHT</td>
+                                                                                                <td>@String.Format("{0:N3}", avoirsss.DL_MontantTTC) </td>
+                                                                                            </tr>
+                                                                                        }
+                                                                                    </tbody>
+                                                                                </table>
+                                                                            </div>
+                                                                        </td>
+
+
+                                                                    }
+
+                                                                    <td> @item.DateFacture.ToString("dd/MM/yyyy")</td>
+                                                                    <td>
+
+                                                                        @if (item.Statut == 0)
+                                                                        {
+                                                                            <span class="label label-warning-light">Non payée</span>
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <span class="label label-success">Payée</span>
+                                                                        }
+                                                                    </td>
+
+
+                                                                    <td>du @item.DO_DebutPeriod.ToString("dd/MM/yyyy") au @item.DO_FinPeriod.ToString("dd/MM/yyyy")</td>
+
+                                                                    <td>
+                                                                        @if (item.TypeAbonnement == 1)
+                                                                        {
+                                                                            <a href="/Abonnement/DetailsSUS/@item.IdAbonnement" target="_blank"> @item.CodeAbonnement</a>
+                                                                        }
+                                                                        else if (item.TypeAbonnement == 6)
+                                                                        {
+                                                                            <a href="/VenteLibre/Details/@item.IdAbonnement" target="_blank"> @item.CodeAbonnement</a>
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <a href="/Abonnement/details/@item.IdAbonnement" target="_blank"> @item.CodeAbonnement</a>
+                                                                        }
+                                                                        @if (item.isAbonnementResilie)
+                                                                        {
+                                                                            <i class="fa fa-remove text-danger" title="Abonnement résilié"></i>
+                                                                        }
+                                                                        else if (item.isAbonnementSuspendu)
+                                                                        {
+                                                                            <i class="fa fa-clock-o text-warning" title="Abonnement suspendu"></i>
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <i class="fa fa-circle text-greenbee" title="Abonnement en Cours"></i>
+                                                                        }
+                                                                    </td>
+                                                                    <td>@item.NumFixe</td>
+                                                                    <td class="text-navy"> <i class="fa fa-money"></i> <strong>@String.Format("{0:N3}", item.FactureTotalTTC) TND  </strong></td>
+                                                                    <td><i class="fa fa-info-circle text-navy"></i></td>
+
+                                                                    <td>
+                                                                        @if (item.TypeFacture == 8 && (User.IsInRole("Annuler Proformat") || User.IsInRole("Transformer Proformat") || User.IsInRole("Admin")))
+                                                                        {
+                                                                            if (User.IsInRole("Transformer Proformat") || User.IsInRole("Admin"))
+                                                                            {
+                                                                                <button type="button" title="Transformer le proformat en facture" class="btn btn-xs btn-greenbee btn-rounded"
+                                                                                        onClick='TransformerProformat(@item.FactureId);'>
+                                                                                    <i class="fa fa-check"></i>
+                                                                                </button>
+                                                                            }
+                                                                            if (User.IsInRole("Annuler Proformat") || User.IsInRole("Admin"))
+                                                                            {
+                                                                                <button type="button" title="Annuler le proformat" class="btn btn-xs btn-danger btn-rounded"
+                                                                                        onClick="AnnulationProFormat('@item.FactureId');">
+                                                                                    <i class="fa fa-remove"></i>
+                                                                                </button>
+                                                                            }
+                                                                        }
+                                                                        else if (item.TypeFacture == 80 && (User.IsInRole("Retablir Proformat") || User.IsInRole("Admin")))
+                                                                        {
+                                                                            <button type="button" title="Rétablir le proformat" class="btn btn-xs btn-purplebee btn-rounded"
+                                                                                    onClick='RetablirProformat(@item.FactureId);'>
+                                                                                <i class="fa fa-refresh"></i>
+                                                                            </button>
+                                                                        }
+
+                                                                    </td>
+
+
+
+                                                                    @if (item.ListeReglements.Count == 0 || item.ListeReglements.Count == null)
+                                                                    {
+                                                                        <td>Aucun règlement imputé sur cette facture </td>
+                                                                        <td></td>
+                                                                        <td></td>
+                                                                        <td></td>
+
+
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        /**/
+                                                                        <td></td>
+                                                                        <td></td>
+                                                                        <td></td>
+                                                                        <td>
+                                                                            <div class="row">
+                                                                                <table class="table">
+                                                                                    <thead class="text-greenbee">
+                                                                                        <tr>
+                                                                                            <th>N°Reglement </th>
+                                                                                            <th>Date</th>
+                                                                                            <th>Montant Réglement</th>
+                                                                                            <th>Montant Imputé</th>
+                                                                                            <th>Date imputation</th>
+                                                                                            <th>Piece Versement</th>
+                                                                                            <th>Voir </th>
+                                                                                        </tr>
+                                                                                    </thead>
+                                                                                    <tbody>
+                                                                                        @foreach (var regl in item.ListeReglements)
+                                                                                        {
+                                                                                            <tr>
+                                                                                                <td>
+                                                                                                    @regl.RG_Piece
+                                                                                                </td>
+                                                                                                <td>
+                                                                                                    @regl.RG_Date
+                                                                                                </td>
+                                                                                                <td>
+                                                                                                    @String.Format("{0:N3}", regl.RG_Montant) TND
+                                                                                                </td>
+                                                                                                <td>
+                                                                                                    @String.Format("{0:N3}", regl.RC_Montant) TND
+                                                                                                </td>
+                                                                                                <td>@regl.dateImputation</td>
+                                                                                                <td>@regl.DO_PieceVersement</td>
+                                                                                                <td>
+                                                                                                    <a class="btn btn-greenbee btn-circle btn-outline" title="voir le reçu de paiement "
+                                                                                                       href="@Url.Action("ImpressionRecu", "GestionFactures", new { id = regl.RG_Cbmarq })" target="_blank">
+                                                                                                        <i title="Imprimer Reçu " class="fa fa-print"></i>
+                                                                                                    </a>
+
+                                                                                                </td>
+                                                                                            </tr>
+                                                                                        }
+                                                                                    </tbody>
+                                                                                </table>
+                                                                            </div>
+                                                                        </td>
+
+                                                                    }
+
+                                                                </tr>
+                                                            }
+                                                        }
+
+                                                    </tbody>
+
+
+                                                    <tfoot>
+                                                        <tr>
+                                                            <td colspan="7">
+                                                                <ul class="pagination pull-right"></ul>
+                                                            </td>
+                                                        </tr>
+                                                    </tfoot>
+
+                                                </table>
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-3">
+        <div class="wrapper wrapper-content project-manager">
+            <div class="payment-card">
+                <a href="@Url.Action("PaiementClient","InterrogeClient", new { id = Model.cbMarq })">
+                    <i class="fa fa-user payment-icon-big text-success"></i>
+                </a>
+
+                <h3 class="pull-right">
+                    Solde: <strong>@String.Format("{0:N3}", ViewBag.SoldeClient)  </strong> TND
+
+                </h3>
+                <div class="row">
+                    <p class="small font-bold">
+                        @if (ViewBag.SoldeClient != 0)
+                        {
+                            @*<span><a href="@Url.Action("PaiementClient","InterrogeClient", new { id = Model.cbMarq })" target="_blank"> <i class="fa fa-circle text-danger"></i> Règler </a></span>*@
+                        <p class="small font-bold">
+                            <a href="@Url.Action("DetailsClient","Structure", new { id = Model.cbMarq })"> <i class="fa fa-circle text-danger"></i> Détails @Model.CT_Intitule  </a>
+                        </p><br />
+                    }
+                    else
+                    {
+                        <span><i class="fa fa-circle text-success"></i> solvable </span>
+
+                    }
+
+                        <div style="font-size:1.4em">
+                            <small>
+                                <strong>Client:</strong> @Model.CT_Intitule
+                            </small><br />
+                            <small>
+                                <strong>Identifiant:</strong> @Model.CT_Identifiant
+                            </small><br />
+                            <small>
+                                <strong>Code Client:</strong> @Model.CT_Num
+                            </small>
+                        </div>
+                    </div>
+
+                    <h5 class="pull-right">
+                        Total Facturé: <strong>@String.Format("{0:N3}", ViewBag.Totalfacturee)  </strong> TND
+                        <br />
+                        Non facturé: <strong>@String.Format("{0:N3}", ViewBag.Proformats)  </strong> TND
+
+                    </h5>
+                    <hr />
+                    <div style="font-size:1.3em">
+                        <div class="row">
+                            <ul class="category-list" style="padding: 0">
+                                <li><a> <i class="fa fa-circle text-navy"></i> C.A :<strong>@String.Format("{0:N3}", ViewBag.CA)  </strong> <small>TND</small> </a></li>
+                                <li><a> <i class="fa fa-circle text-warning"></i> Total Montant Avoir: <strong>@String.Format("{0:N3}", ViewBag.TotalAvoir)  </strong> <small>TND</small> </a></li>
+                                <li><a data-toggle="modal" data-target="#ShowListeReglements"> <i class="fa fa-circle text-primary"></i> Total Règlements : <strong>@String.Format("{0:N3}", ViewBag.TotalReglement)  </strong> <small>TND</small> </a></li>
+                                <li><a> <i class="fa fa-circle text-primary"></i> Avance : <strong>@String.Format("{0:N3}", ViewBag.TotalAvance)  </strong> <small>TND</small> </a></li>
+                                <li><a data-toggle="modal" data-target="#ShowListeReglementsGarantie"> <i class="fa fa-circle text-danger"></i> Chéque de garantie : <strong>@String.Format("{0:N3}", ViewBag.ChequeGarantie)  </strong> <small>TND</small> </a></li>
+                                <li><a> <i class="fa fa-circle text-purplebee"></i> Total Proformats :<strong>@String.Format("{0:N3}", ViewBag.Proformats)  </strong> <small>TND</small> </a></li>
+
+                            </ul>
+                        </div>
+                    </div>
+                    <hr />
+                    <div class="row">
+                        <center>
+                            @if (User.IsInRole("Paiement Client") || User.IsInRole("Admin"))
+                            {
+
+                                <a class="btn btn-greenbee " title="Paiement facture" href="@Url.Action("PaiementClient","InterrogeClient", new { id = ViewBag.IdAbo  })">
+                                    <i title="Paiement facture " class="fa fa-dollar"></i> Régler
+                                </a>
+                            }
+                        </center>
+
+                    </div>
+                </div>
+
+
+            </div>
+
+
+
+
+        </div>
+    </div>
+
+    <div class="modal inmodal" id="ShowListeReglements" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content animated flipInY">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Fermer</span></button>
+                    <h4 class="modal-title">Liste des règlements </h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <form role="form">
+                            <div class="form-group">
+                                @if (ViewBag.ShowListeReglements == null)
+                                {
+                                    <p>Aucune Facture </p>
+
+                                }
+                                else
+                                {
+                                    <table class="table table-striped">
+                                        <thead>
+                                            <tr>
+                                                <th>N° Pièce</th>
+                                                <th>Date </th>
+                                                <th>Montant TTC</th>
+                                                <th>Type</th>
+                                                <th>Abonnement </th>
+                                                <th>Voir </th>
+                                            </tr>
+                                        </thead>
+
+                                        <tbody>
+                                            @foreach (var item in ViewBag.ShowListeReglements)
+                                            {
+
+                                                <tr>
+                                                    <td>
+                                                        @item.DO_Piece
+                                                    </td>
+                                                    <td>
+                                                        @item.DO_Date
+                                                    </td>
+                                                    <td>
+                                                        @String.Format("{0:N3}", item.DO_MontantTTC) TND
+                                                    </td>
+                                                    <td>
+                                                        @if (item.DO_ModeRegl == 2)
+                                                        {
+                                                            <span class="bg-greenbee">ESPECE </span>
+
+                                                        }
+                                                        else if (item.DO_ModeRegl == 1)
+                                                        {
+                                                            <span class="bg-greenbee">CHEQUE </span>
+                                                        }
+                                                        else if (item.DO_ModeRegl == 9)
+                                                        {
+                                                            <span class="bg-greenbee">CARTE BANCAIRE </span>
+
+                                                        }
+                                                        else if (item.DO_ModeRegl == 4)
+                                                        {
+                                                            <span class="bg-greenbee">VIREMENT BANCAIRE </span>
+
+                                                        }
+                                                        else if (item.DO_ModeRegl == 5)
+                                                        {
+                                                            <span class="bg-greenbee">GARANTIE </span>
+
+                                                        }
+                                                        else
+                                                        {
+                                                            <span class="bg-greenbee"> -  </span>
+
+                                                        }
+                                                    </td>
+                                                    <th>@item.AB_Abonnement</th>
+                                                    <td>
+                                                        <a class="btn btn-greenbee btn-circle btn-outline" title="voir le reçu de paiement "
+                                                           href="@Url.Action("ImpressionRecu","GestionFactures", new { id = item.cbMarq })" target="_blank">
+                                                            <i title="Imprimer Reçu " class="fa fa-print"></i>
+                                                        </a>
+
+                                                    </td>
+                                                </tr>
+                                            }
+                                        </tbody>
+                                    </table>
+                                }
+
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-greenbee" data-dismiss="modal">Fermer</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+    <!-- Annulation ProFormat   -->
+    <div class="modal inmodal" id="AnnulationProFormat" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Fermer</span></button>
+                    <h4 class="modal-title">Annulation Proformat </h4>
+
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+
+
+                        <div class="form-group">
+                            <label class="col-lg-4 control-label">Motif : </label>
+                            <div class="col-lg-8">
+                                <select class="form-control chosen-select" id="Motif" name="Motif">
+
+                                    @if (ViewBag.ListMotif != null)
+                                    {
+                                        foreach (string item in ViewBag.ListMotif)
+                                        {
+                                            <option class="font-bold" value="@item"> @item </option>
+                                        }
+                                    }
+                                </select>
+                            </div>
+
+                        </div>
+                        </br>
+                        </br>
+                        <div class="form-group">
+                            <label class="col-lg-4 control-label">Commentaire : </label>
+                            <div class="col-lg-8">
+                                <textarea type="text" class="form-control" name="commentaire" id="commentaire"> </textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-white" data-dismiss="modal">Fermer</button>
+                    <button class="btn btn-primary ladda-button" type="submit" id="ValiderAnnulation" onclick="">
+                        <i class="fa fa-save"></i> Valider
+                    </button>
+
+                </div>
+
+                @*}*@
+            </div>
+        </div>
+    </div>
+
+
+
+    @*telephone*@
+    <div class="modal inmodal fade" id="ListeAbonnementsParTeleph" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title">Liste des abonnements </h4>
+                </div>
+                <div class="modal-body">
+
+                    <div class="row">
+                        <div class="col-md-10">
+                            <input class="form-control" type="text" id="Ident" />
+
+                        </div>
+                        <div class="col-md-2">
+                            <button class="btn btn-sm btn-rounded" id="retrieveListeAbonnement">Ok</button>
+                        </div>
+                    </div>
+                    <div style=" color: red; text-align: center;"> Merci de faire un double clic pour selectionner l'abonnement à payer.</div>
+                    <br />
+                    <div class="full-height-scroll">
+                        <div class="table-responsive">
+                            <table class="table table-striped table-hover" id="TablelisteAbonnementss" style="cursor:pointer;">
+                                <thead>
+                                    <tr>
+                                        <th>Référence Abonnement</th>
+                                        <th>Intitulé Client</th>
+                                        <th>Identifiant</th>
+                                        <th>Télephone</th>
+                                        <th>Réference article</th>
+                                        <th>Désignation</th>
+                                        <th>Code Abonnement</th>
+                                        <th>Statut </th>
+                                        <th class="hidden"> idAbo</th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="~/js/jquery-3.1.1.min.js"></script>
+
+    <!-- FooTable -->
+    <script src="~/js/plugins/footable/footable.all.min.js"></script>
+    <!-- Sweet alert -->
+    <script src="~/js/plugins/sweetalert/sweetalert.min.js"></script>
+    <script src="~/js/plugins/dataTables/datatables.min.js"></script>
+    <!-- Ladda -->
+    <script src="~/js/plugins/ladda/spin.min.js"></script>
+    <script src="~/js/plugins/ladda/ladda.min.js"></script>
+    <script src="~/js/plugins/ladda/ladda.jquery.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+
+            $('.footable').footable();
+            $('.footable2').footable();
+
+        });
+
+
+        function AnnulationProFormat(cbm) {
+
+
+            $("#AnnulationProFormat").modal();
+
+            $("#ValiderAnnulation").click(function () {
+
+                //$.ajax({
+                //    type: "get",
+                //    url: '/GestionFactures/AnnulerProformat?cbmFacture=' + cbm + '&&Motif=' + $('select#Motif').find("option:selected").val(), // we are calling json method
+                //    dataType: 'json',
+                //    success: function (result) {
+                //        if (result != -1) {
+                //            swal("Succès!","Proformat annulée avec succès! ", "success");
+                //            location.reload();
+                //        }
+
+                //    }
+                //});
+                $.ajax({
+                    type: "get",
+                    url: '/GestionFactures/AnnulerProformatNew?cbmFacture=' + cbm + '&&Motif=' + $('select#Motif').find("option:selected").val() + '&&commentaire=' + $('#commentaire').val() ,
+                    dataType: 'json',
+                    success: function (msg) {
+                        if (msg.result == 0) {
+                            swal({
+                                title: "Ok",
+                                text: "Proformat annulée avec succès!",
+                                type: "success"
+                            });
+                            window.location = "/InterrogeClient/DetailsClient?Abo=" + msg.data;
+                        }
+                        else {
+
+                            alert("erreur");
+                        }
+                    }
+                });
+            });
+        }
+
+
+        function RetablirProformat(cbmarq) {
+            swal({
+                title: "Rétablir le proformat ?",
+                text: " ",
+                type: "warning",
+                showCancelButton: true,
+                cancelButtonText: 'Annuler',
+                confirmButtonColor: "#DD6B55",
+                confirmButtonText: "Oui.",
+                closeOnConfirm: false
+            }, function () {
+                $.ajax({
+                    type: "get",
+                    url: '/GestionFactures/RetablirProformatNew?cbmFacture=' + cbmarq, // we are calling json method
+                    dataType: 'json',
+                    success: function (msg) {
+                        if (msg.result == 0) {
+                            swal({
+                                title: "Ok",
+                                text: "Proformat rétabli",
+                                type: "success"
+                            });
+                            window.location = "/InterrogeClient/DetailsClient?Abo=" + msg.data;
+                        }
+                        else {
+
+                            alert("tes");
+                        }
+                    }
+                });
+                //$.ajax({
+                //    type: "get",
+                //    url: '/GestionFactures/RetablirProformatNew?cbmFacture=' + cbmarq, // we are calling json method
+                //    dataType: 'json',
+                //    success: function (result) {
+                //        swal({
+                //            title: "Ok",
+                //            text: "Proformat rétabli",
+                //            type: "success"
+                //        });
+                //        location.reload();
+
+                //    }
+                //});
+            });
+        }
+
+        function TransformerProformat(cbmarq) {
+            swal({
+                title: "Transformer en facture ?",
+                text: " ",
+                type: "warning",
+                showCancelButton: true,
+                cancelButtonText: 'Annuler',
+                confirmButtonColor: "#DD6B55",
+                confirmButtonText: "Oui.",
+                closeOnConfirm: false
+            }, function () {
+                //$.ajax({
+                //    type: "get",
+                //    url: '/GestionFactures/Transformer_PreFacture?cbmFacture=' + cbmarq, // we are calling json method
+                //    dataType: 'json',
+                //    success: function (result) {
+                //        swal({
+                //            title: "Ok",
+                //            text: "Proformat transformé en facture.",
+                //            type: "success"
+                //        });
+                //        location.reload();
+
+                //    }
+                //});
+                      $.ajax({
+                                type: "get",
+                          url: '/GestionFactures/Transformer_PreFactureNew?cbmFacture=' + cbmarq, // we are calling json method
+                                dataType: 'json',
+                                success: function (msg) {
+                                    if (msg.result == 0) {
+                                        swal({
+                                            title: "Ok",
+                                            text: "Proformat transformé en facture.",
+                                            type: "success"
+                                        });
+                                        window.location = "/InterrogeClient/DetailsClient?Abo="+msg.data;
+                                    }
+                                    else {
+
+                                        alert("tes");
+                                    }
+                                }
+                            });
+            });
+        }
+
+
+//new
+
+         $('#ct_identifiant').focus(function () {
+                    $('#ListeAbonnementsParTeleph').modal({
+                        show: true
+                    });
+   });
+
+                $("#retrieveListeAbonnement").click(function () {
+                    //$("#TablelisteAbonnementss").DataTable().destroy();
+                    if ($('#teleph').val() != "") {
+                        $("#TablelisteAbonnementss").DataTable({
+                            "ajax": {
+                                "url": "/InterrogeClient/listeAbonnementTele?TelephClient=" + $('#Ident').val(),
+                                "type": 'get',
+                                "datatype": "json"
+                            },
+                            "bDestroy": true,
+                            "columns": [
+                                { "data": "DO_RefTT" },
+                                { "data": "CT_Intitule" },
+                                { "data": "CT_Identifiant" },
+                                { "data": "Fixe" },
+                                { "data": "AR_ref" },
+                                { "data": "designation" },
+                                { "data": "Code_Abonnement" },
+                                { "data": "Statut" },
+                                { "data": "id", className:"hidden" }
+
+                            ]
+
+                        });
+                        $('#TablelisteAbonnementss tbody').on('dblclick', 'tr', function () {
+                            $('#ListeAbonnementsParTeleph').modal('hide');
+                            var tr = $(this).closest('tr');
+                            var DO_RefTT = tr.find('td:eq(0)').html();
+                            var intitule = tr.find('td:eq(1)').html();
+                           // var CT_Identifiant = tr.find('td:eq(2)').html();
+                            var Fixe = tr.find('td:eq(3)').html();
+                            var AR_Ref = tr.find('td:eq(4)').html();
+                            var designation = tr.find('td:eq(5)').html();
+                            var Code_Abonnement = tr.find('td:eq(6)').html();
+                            var Statut = tr.find('td:eq(7)').html();
+                            var id = tr.find('td:eq(8)').html();
+                          //  var idab = $("#id").val(id);
+                            $('#DO_RefTT').val(DO_RefTT);
+                            $("#CT_Intitule").val(intitule);
+                            $("#CT_Identifiant").val($('#Ident').val());
+                            $("#Fixe").val(Fixe);
+                            $("#AR_ref").val(AR_Ref);
+                            $("#designation").val(designation);
+                            $("#Code_Abonnement").val(Code_Abonnement);
+                            $("#Statut").val(Statut);
+                            $("#id").val(id);
+                           // alert(id);
+                            $.ajax({
+                                type: "get",
+                                url: '@Url.Action("GetClient")',
+                                dataType: 'json',
+                                data: { Abo: id },
+                                success: function (msg) {
+                                    if (msg.result == 0) {
+                                        $("#wait").css("display", "block");
+                                        window.location = "/InterrogeClient/DetailsClient?Abo="+msg.data;
+
+                                    }
+                                    else {
+                                        toastr.error(msg.msg, 'le client n existe pas');
+                                    }
+                                }
+                            });
+
+                        });
+                    }
+                });
+
+
+        Ladda.bind('.ladda-button', { timeout: 200000 });
+        // Bind progress buttons and simulate loading progress
+        Ladda.bind('.progress-demo .ladda-button', {
+            callback: function (instance) {
+                var progress = 0;
+                var interval = setInterval(function () {
+                    progress = Math.min(progress + Math.random() * 0.1, 1);
+                    instance.setProgress(progress);
+
+                    if (progress === 1) {
+                        instance.stop();
+                        clearInterval(interval);
+                    }
+                }, 200000);
+            }
+        });
+
+        var l = Ladda.bind('.ladda-button-demo');
+
+        l.click(function () {
+            // Start loading
+            l.ladda('start');
+
+            // Timeout example
+            // Do something in backend and then stop ladda
+            setTimeout(function () {
+                l.ladda('stop');
+            }, 1200000)
+        });
+    </script>

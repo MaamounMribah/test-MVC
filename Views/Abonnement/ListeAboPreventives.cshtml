@@ -1,0 +1,167 @@
+﻿
+@{
+    ViewBag.Title = "ListeAboPreventives";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<link href="~/css/plugins/dataTables/datatables.min.css" rel="stylesheet">
+<!-- Sweet Alert -->
+<link href="~/css/plugins/sweetalert/sweetalert.css" rel="stylesheet">
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-lg-10">
+        <h2>Liste Abonnements Preventives</h2>
+        <ol class="breadcrumb">
+            <li>
+                <a href="@Url.Action("GestionFactures")">Gestion des Factures</a>
+            </li>
+            <li class="active">
+                <strong>Liste Abonnements Preventives </strong>
+            </li>
+        </ol>
+    </div>
+
+</div>
+<br />
+<div class="ibox float-e-margins">
+    <div class="ibox-title" style="height:80px;">
+
+        @using (Html.BeginForm("ListeAboPreventives", "Abonnement", FormMethod.Post, new { @class = "form-horizontal", role = "form", enctype = "multipart/form-data" }))
+            {
+            <label class="control-label">Choisir Date </label>
+            <div class="input-group m-b">
+                <input class="form-control" type="date" name="dateFin" id="dateFin" value="@ViewBag.date">
+                <span class="input-group-btn">
+                    <button type="submit" class="btn btn-purplebee">Valider </button>
+                </span>
+            </div>
+        }
+    </div>
+</div>
+@if (ViewBag.ListeAboPreventives != null)
+{
+    <div class="row">
+        <div class="wrapper wrapper-content animated fadeInRight">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="ibox float-e-margins">
+                        <div class="ibox-title">
+                            <h5>Liste des factures impayées </h5>
+                        </div>
+                        <div class="ibox-content">
+                            <div class="table-responsive">
+
+                                <table class="table table-striped table-bordered table-hover dataTables-example" id="listefacturesPrev">
+                                    <thead>
+                                        <tr>
+                                            <th> Client </th>
+                                            <th> Téléphone Fixe </th>
+                                            <th> Réference TT </th>
+                                            <th> Téléphone </th>
+                                            <th> Numéro dernière facture  </th>
+                                            <th> Identifiant </th>
+                                            <th> Freq </th>
+                                            <th> Date début prochaine facture  </th>
+                                            <th> Montant prochaine facture</th>
+                                            <th>Code abonnement</th>
+                                            <th>Etat dernière facture</th>
+                                            <th>Numéro nouvelle facture </th>
+                                        </tr>
+                                    <tbody>
+
+                                        @foreach (var item in ViewBag.ListeAboPreventives)
+                                        {
+                                            <tr>
+                                                <td>@item.Client</td>
+                                                <td>@item.NumeFixe</td>
+                                                <td>@item.ReferenceTT</td>
+                                                <td>@item.Téléphone</td>
+                                                <td>
+                                                    <a href="/GestionFactures/VisualiserFacture/@item.CbmarqFact" target="_blank">
+                                                        @item.NumeroDernierFacture
+                                                    </a>
+                                                </td>
+                                                <td>@item.Identifiant</td>
+                                                <td>@item.Periodicite</td>
+                                                <td>@item.DateDebutNextFacture.ToString("dd/MM/yyyy")</td>
+                                                <td>@item.MontantNextFacture</td>
+                                                <td>
+                                                    <a href="/Abonnement/details/@item.CbmarqAbo" target="_blank">
+                                                        @item.DO_Piece
+                                                    </a>
+                                                </td>
+                                                <td>
+                                                    @if (item.EtatDernierFacture == 0)
+                                                    {
+                                                        <span>Non payée</span>
+                                                    }
+                                                    else
+                                                    {
+                                                        <span>Payée</span>
+                                                    }
+                                                </td>
+                                                <td>
+                                                    @if (item.nextFacture == null)
+                                                    {
+                                                        <span>Aucunne</span>
+                                                    }
+                                                    else
+                                                    {
+                                                        @item.nextFacture
+                                                    }
+                                                </td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+<script src="~/js/jquery-3.1.1.min.js"></script>
+<script src="~/js/plugins/metisMenu/jquery.metisMenu.js"></script>
+<script src="~/js/plugins/pace/pace.min.js"></script>
+<script src="~/js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+<script src="~/js/plugins/chosen/chosen.jquery.js"></script>
+<script src="~/js/plugins/dataTables/datatables.min.js"></script>
+<!-- Sweet alert -->
+<script src="~/js/plugins/sweetalert/sweetalert.min.js"></script>
+<!-- Chosen -->
+<script src="~/js/plugins/chosen/chosen.jquery.js"></script>
+<link href="~/css/plugins/ladda/ladda-themeless.min.css" rel="stylesheet">
+<!-- Ladda -->
+<script src="~/js/plugins/ladda/spin.min.js"></script>
+<script src="~/js/plugins/ladda/ladda.min.js"></script>
+<script src="~/js/plugins/ladda/ladda.jquery.min.js"></script>
+<script>
+
+    $(function () {
+        $('#listefacturesPrev').DataTable({
+            
+            responsive: true,
+            dom: '<"html5buttons"B>lTfgitp',
+            buttons: [
+                { extend: 'copy' },
+                { extend: 'csv' },
+                { extend: 'excel', title: 'ExampleFile' },
+                { extend: 'pdf', title: 'ExampleFile' },
+                {
+                    extend: 'print',
+                    customize: function (win) {
+                        $(win.document.body).addClass('white-bg');
+                        $(win.document.body).css('font-size', '10px');
+
+                        $(win.document.body).find('table')
+                                .addClass('compact')
+                                .css('font-size', 'inherit');
+                    }
+                }
+            ]
+
+        });
+    });
+</script>

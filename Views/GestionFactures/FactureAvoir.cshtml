@@ -1,0 +1,475 @@
+﻿@{
+    ViewBag.Title = "FactureAvoir";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<link href="~/css/plugins/chosen/bootstrap-chosen.css" rel="stylesheet">
+<!-- Sweet Alert -->
+<link href="~/css/plugins/sweetalert/sweetalert.css" rel="stylesheet">
+<!-- Toastr style -->
+<link href="~/css/plugins/toastr/toastr.min.css" rel="stylesheet">
+<link href="~/css/plugins/dualListbox/bootstrap-duallistbox.min.css" rel="stylesheet">
+<link href="~/css/plugins/iCheck/custom.css" rel="stylesheet">
+
+<link href="~/css/plugins/chosen/bootstrap-chosen.css" rel="stylesheet">
+
+<link href="~/css/plugins/bootstrap-tagsinput/bootstrap-tagsinput.css" rel="stylesheet">
+
+<link href="~/css/plugins/colorpicker/bootstrap-colorpicker.min.css" rel="stylesheet">
+
+<link href="~/css/plugins/cropper/cropper.min.css" rel="stylesheet">
+
+<link href="~/css/plugins/switchery/switchery.css" rel="stylesheet">
+
+<link href="~/css/plugins/jasny/jasny-bootstrap.min.css" rel="stylesheet">
+
+<link href="~/css/plugins/nouslider/jquery.nouislider.css" rel="stylesheet">
+<link href="~/css/plugins/datapicker/datepicker3.css" rel="stylesheet">
+
+<link href="~/css/plugins/ionRangeSlider/ion.rangeSlider.css" rel="stylesheet">
+<link href="~/css/plugins/ionRangeSlider/ion.rangeSlider.skinFlat.css" rel="stylesheet">
+
+<link href="~/css/plugins/awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css" rel="stylesheet">
+
+<link href="~/css/plugins/clockpicker/clockpicker.css" rel="stylesheet">
+
+<link href="~/css/plugins/daterangepicker/daterangepicker-bs3.css" rel="stylesheet">
+
+<link href="~/css/plugins/select2/select2.min.css" rel="stylesheet">
+
+<link href="~/css/plugins/touchspin/jquery.bootstrap-touchspin.min.css" rel="stylesheet">
+
+<link href="~/css/plugins/dualListbox/bootstrap-duallistbox.min.css" rel="stylesheet">
+
+
+
+
+
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-lg-10">
+        <h2>Facture Avoir</h2>
+        <ol class="breadcrumb">
+            <li>
+                <a href="#">Acceuil</a>
+            </li>
+            <li>
+                <a>Générer une facture avoir </a>
+            </li>
+            <li class="active">
+                <strong>Facture avoir </strong>
+            </li>
+        </ol>
+    </div>
+    <div class="col-lg-2">
+
+    </div>
+</div>
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+
+        @if (ViewBag.Error != null)
+        {
+            <div class="alert alert-danger alert-dismissable">
+                <button type="button" class="close " data-dismiss="alert">×</button>
+                <p>@ViewBag.Error</p>
+            </div>
+
+
+
+        }
+
+        @if (ViewBag.msg != null)
+        {
+
+            <div class="alert alert-danger alert-dismissable">
+                @*<button type="button" class="close " data-dismiss="alert">×</button>*@
+                @ViewBag.msg
+            </div>
+        }
+
+
+        <div class="col-lg-12">
+            <div class="ibox float-e-margins">
+
+                <div class="ibox-content">
+                    <div class="widget-box">
+                        <div class="widget-content nopadding ">
+                            <br />
+
+                            @using (Html.BeginForm("FactureAvoir", "GestionFactures", FormMethod.Post))
+                            {
+                                <label class="control-label">Recherche par CIN client,code client et téléphone  </label>
+                                <div class="input-group m-b">
+                                    <input type="text" class="form-control" id="DO_Tiers" name="DO_Tiers" value="@ViewBag.ClientNotFound" />
+                                    <span class="input-group-btn">
+                                        <button type="submit" class="btn btn-purplebee " name="value" value="1">Rechercher</button>
+                                    </span>
+
+                                </div>
+                            }                           
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        @if (ViewBag.ListeFacture != null)
+        {
+            <div class="col-lg-12">
+                <div class="ibox float-e-margins">
+
+                    <div class="ibox-content">
+                        <div class="wrapper wrapper-content animated fadeInRight">
+                            <div class="row">
+                                <div class="ibox float-e-margins">
+                                    <div class="ibox-title">
+                                        <h5>Liste de factures</h5>
+                                    </div>
+                                    <div class="ibox-content">
+                                        <div class="row">
+                                            @using (Html.BeginForm("GenererAvoir", "GestionFactures", FormMethod.Post))
+                                            {
+                                                @model BeeProj.Models.NoueauAvoirModel
+
+
+                                                <form id="form" action="#" class="wizard-big">
+                                                    @foreach (var item in ViewBag.ListeFact)
+                                                    {
+                                                        <div class="row" id="@item.cbMarq">
+                                                            <div class="form-group col-sm-3">
+                                                                <label class="control-label">
+                                                                    Facture :
+                                                                    <span>@item.Periode  <strong>@item.NbJours jours.</strong></span>
+                                                                    @if (item.DO_Statut == 0)
+                                                                    {
+                                                                        <i class="fa fa-remove text-warning"> </i>
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        <i class="fa fa-check-circle text-greenbee"> </i>
+                                                                    }
+                                                                </label>
+                                                                <div class="input-group m-b">
+                                                                    <span class="input-group-addon">
+                                                                        <i class="fa fa-remove" onclick="hide(@item.cbMarq)"></i>
+                                                                    </span>
+                                                                    <input value="@item.DO_Piece" readonly="readonly" class="form-control" name="selected_Factures" id="selected_Factures" />
+
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="form-group col-sm-3">
+                                                                <label class="control-label">Article</label>
+                                                                <select class="form-control" name="selected_Articles" id="selected_Articles">
+                                                                    @*@foreach (var articl in ViewBag.listeArticle)
+                                                                        {*@
+                                                                    <option value="@item.AR_Ref">@item.AR_Design</option>
+                                                                    @*}*@
+
+                                                                </select>
+                                                            </div>
+
+                                                            <div class="form-group col-sm-3">
+                                                                <label class="control-label">Date début  </label>
+                                                                <input type="date" pattern="\d{1,2}/\d{1,2}/\d{4}" class="form-control" required name="selected_DatesDebut" id="selected_DatesDebut" />
+                                                            </div>
+
+                                                            <div class="form-group col-sm-3 ">
+                                                                <label class="control-label">sur (nb. jours) </label>
+                                                                <input class="form-control " required id="selected_nbJours" pattern="\d*([,\/]?\d+)" name="selected_nbJours" placeholder="0,000" />
+                                                            </div>
+
+                                                        </div>
+
+                                                    }
+                                                    <hr />
+                                                    <div class="row">
+                                                        <div class="col-sm-6">
+                                                            <div class="form-group">
+                                                                <label class="control-label">Commentaires</label>
+
+                                                                @Html.TextAreaFor(model => model.DO_Commentaires, new { @class = "form-control", @maxlength = "400" })
+
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-sm-6">
+                                                            <div class="form-group">
+                                                                <label class="control-label">Débours  </label>
+                                                                <input class="form-control" required id="Debours" pattern="\d*([,\/]?\d+)" name="Debours" value=0 placeholder="0,000" />
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <button class="btn  btn-purplebee btn-outline" type="submit" title="Générer facture avoir">
+                                                                    Générer facture avoir
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </form>
+
+                                            }
+
+
+                                        </div>
+
+                                        <br />
+                                        <br />
+                                        <table class="table table-striped table-bordered table-hover dataTables-example full-width" id="factclient">
+                                            <thead>
+                                                <tr>
+                                                    <th>Etat</th>
+                                                    <th>N° Facture</th>
+                                                    <th>Date </th>
+                                                    <th>Montant HT</th>
+                                                    <th>Montant TTC</th>
+                                                    <th>Période </th>
+                                                    <th>Nombre de jours</th>
+                                                    <th>Visualiser</th>
+                                                </tr>
+                                            </thead>
+
+
+                                            @foreach (var item in ViewBag.ListeFacture)
+                                            {
+
+                                                <tr>
+                                                    <td>
+                                                        @if (item.DO_Statut == 0)
+                                                        {
+                                                            <i class="label bg-purplebee ">Non payée</i>
+                                                        }
+                                                        else
+                                                        {
+                                                            <i class="label bg-greenbee ">Payée</i>
+                                                        }
+                                                    </td>
+                                                    <td>
+                                                        @item.DO_Piece
+                                                    </td>
+                                                    <td>
+                                                        @item.DO_Date.ToString("dd/MM/yyyy")
+                                                    </td>
+
+
+                                                    <td>
+                                                        @String.Format("{0:N3}", (decimal)(item.DO_TotalHT))
+                                                    </td>
+                                                    <td>
+                                                        @String.Format("{0:N3}", (decimal)(item.DO_totalTTC))
+                                                    </td>
+                                                    <td>
+                                                        du @item.DO_DebutPeriod.ToString("dd/MM/yyyy")  au @item.DO_FinPeriod.ToString("dd/MM/yyyy")
+                                                    </td>
+
+                                                    <td>
+                                                        sur :
+                                                        @(string.Format("{0}", Math.Round(Math.Abs(((@item.DO_FinPeriod - Convert.ToDateTime(@item.DO_DebutPeriod)).TotalDays + 1))).ToString()))
+                                                        jours .
+                                                    </td>
+                                                    <td>
+                                                        <a href="/GestionFactures/VisualiserFacture/@item.cbMarq" target="_blank"
+                                                           class="btn btn-outline btn-greenbee">
+                                                            <i class="fa fa-eye"> Visualiser </i>
+                                                        </a>
+                                                    </td>
+                                                </tr>
+                                            }
+
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+
+
+                </div>
+            </div>
+
+        }
+
+
+    </div>
+</div>
+
+@*telephone*@
+<div class="modal inmodal fade" id="ListeAbonnementsParTeleph" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title">Liste des abonnements </h4>
+            </div>
+            <div class="modal-body">
+
+                <div class="row">
+                    <div class="col-md-10">
+                        <input class="form-control" type="text" id="Ident" />
+
+                    </div>
+                    <div class="col-md-2">
+                        <button class="btn btn-sm btn-rounded" id="retrieveListeAbonnement">Ok</button>
+                    </div>
+                </div>
+
+                <br />
+                <div class="full-height-scroll">
+                    <div class="table-responsive">
+                        <table class="table table-striped table-hover" id="TablelisteAbonnementss" style="cursor:pointer;">
+                            <thead>
+                                <tr>
+                                    <th>Référence Abonnement</th>
+                                    <th>Intitulé Client</th>
+                                    <th>Identifiant</th>
+                                    <th>Télephone</th>
+                                    <th>Réference article</th>
+                                    <th>Désignation</th>
+                                    <th class="hidden"> idAbo</th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Dual Listbox -->
+<script src="~/js/plugins/dualListbox/jquery.bootstrap-duallistbox.js"></script>
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+<!-- Toastr script -->
+<script src="~/js/plugins/toastr/toastr.min.js"></script>
+<script src="~/js/plugins/dataTables/datatables.min.js"></script>
+<script src="~/js/jquery-3.1.1.min.js"></script>
+<script src="~/js/plugins/metisMenu/jquery.metisMenu.js"></script>
+<script src="~/js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+<script src="~/js/plugins/dataTables/datatables.min.js"></script>
+<script src="~/js/accounting.js"></script>
+<script src="~/js/accounting.min.js"></script>
+<!-- Chosen -->
+<script src="~/js/plugins/chosen/chosen.jquery.js"></script>
+<!-- JSKnob -->
+<script src="~/js/plugins/jsKnob/jquery.knob.js"></script>
+<!-- Input Mask-->
+<script src="~/js/plugins/jasny/jasny-bootstrap.min.js"></script>
+<!-- Data picker -->
+<script src="~/js/plugins/datapicker/bootstrap-datepicker.js"></script>
+<!-- NouSlider -->
+<script src="~/js/plugins/nouslider/jquery.nouislider.min.js"></script>
+<!-- Switchery -->
+<script src="~/js/plugins/switchery/switchery.js"></script>
+<!-- IonRangeSlider -->
+<script src="~/js/plugins/ionRangeSlider/ion.rangeSlider.min.js"></script>
+<!-- iCheck -->
+<script src="~/js/plugins/iCheck/icheck.min.js"></script>
+<!-- MENU -->
+<script src="~/js/plugins/metisMenu/jquery.metisMenu.js"></script>
+<!-- Color picker -->
+<script src="~/js/plugins/colorpicker/bootstrap-colorpicker.min.js"></script>
+<!-- Clock picker -->
+<script src="~/js/plugins/clockpicker/clockpicker.js"></script>
+<!-- Image cropper -->
+<script src="~/js/plugins/cropper/cropper.min.js"></script>
+<!-- Date range use moment.js same as full calendar plugin -->
+<script src="~/js/plugins/fullcalendar/moment.min.js"></script>
+<!-- Date range picker -->
+<script src="~/js/plugins/daterangepicker/daterangepicker.js"></script>
+<!-- Select2 -->
+<script src="~/js/plugins/select2/select2.full.min.js"></script>
+<!-- TouchSpin -->
+<script src="~/js/plugins/touchspin/jquery.bootstrap-touchspin.min.js"></script>
+<!-- Tags Input -->
+<script src="~/js/plugins/bootstrap-tagsinput/bootstrap-tagsinput.js"></script>
+<!-- Dual Listbox -->
+<script src="~/js/plugins/dualListbox/jquery.bootstrap-duallistbox.js"></script>
+<!-- Chosen -->
+<script src="~/js/plugins/chosen/chosen.jquery.js"></script>
+<!-- Sweet alert -->
+<script src="~/js/plugins/sweetalert/sweetalert.min.js"></script>
+
+<script>
+    function hide(target) {
+        //       document.getElementById(target).style.display = 'none';
+        var element = document.getElementById(target);
+        element.parentNode.removeChild(element);
+
+    }
+    $(document).ready(function () {
+        $('.chosen-select').chosen();
+
+    });
+
+
+
+    $('#DO_Tiers').focus(function () {
+                    $('#ListeAbonnementsParTeleph').modal({
+                        show: true
+                    });
+   });
+
+                $("#retrieveListeAbonnement").click(function () {
+                    //$("#TablelisteAbonnementss").DataTable().destroy();
+                    if ($('#teleph').val() != "") {
+                        $("#TablelisteAbonnementss").DataTable({
+                            "ajax": {
+                                "url": "/InterrogeClient/listeAbonnementTele?TelephClient=" + $('#Ident').val(),
+                                "type": 'get',
+                                "datatype": "json"
+                            },
+                            "bDestroy": true,
+                            "columns": [
+                                { "data": "DO_RefTT" },
+                                { "data": "CT_Intitule" },
+                                { "data": "CT_Identifiant" },
+                                { "data": "Fixe" },
+                                { "data": "AR_ref" },
+                                { "data": "designation" },
+                                { "data": "id", className:"hidden" }
+
+                            ]
+
+                        });
+                        $('#TablelisteAbonnementss tbody').on('dblclick', 'tr', function () {
+                            $('#ListeAbonnementsParTeleph').modal('hide');
+                            var tr = $(this).closest('tr');
+                            var DO_RefTT = tr.find('td:eq(0)').html();
+                            var intitule = tr.find('td:eq(1)').html();
+                           // var CT_Identifiant = tr.find('td:eq(2)').html();
+                            var Fixe = tr.find('td:eq(3)').html();
+                            var AR_Ref = tr.find('td:eq(4)').html();
+                            var designation = tr.find('td:eq(5)').html();
+                            var id = tr.find('td:eq(6)').html();
+                          //  var idab = $("#id").val(id);
+                            $('#DO_RefTT').val(DO_RefTT);
+                            $("#CT_Intitule").val(intitule);
+                            $("#CT_Identifiant").val($('#Ident').val());
+                            $("#Fixe").val(Fixe);
+                            $("#AR_ref").val(AR_Ref);
+                            $("#designation").val(designation);
+                            $("#id").val(id);
+                           // alert(id);
+                            $.ajax({
+                                type: "get",
+                                url: '@Url.Action("GetClient")',
+                                dataType: 'json',
+                                data: { Abo: id },
+                                success: function (msg) {
+                                 //   alert(msg.data);
+
+                                    if (msg.result == 0) {
+                                        window.location ="/GestionFactures/GenererFactureAvoir?abo=" + msg.data;
+                                       // alert(window.location.);
+                                    }
+                                    else {
+                                        toastr.error(msg.msg, 'le client n existe pas');
+                                    }
+                                }
+                            });
+
+                        });
+                    }
+                });
+</script>

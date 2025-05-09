@@ -1,0 +1,106 @@
+﻿
+
+@*<div class="form-group">
+    <label class="col-lg-4 control-label">Choisir votre mode de paiement </label>
+    <div class="col-lg-8">
+        @Html.DropDownListFor(m => m.cbindice, ViewBag.ModeReglementAgence as SelectList, new { @name = "cbindice", @id = "cbindice", @class = "form-control chosen-select" })
+    </div>
+</div>
+
+
+<div id="ifospayement" style="display:none">
+    <div class="form-group">
+        <label class="col-lg-4 control-label">Identifiant *</label>
+        <div class="col-lg-8">
+            <input type="text" class="form-control" name="identifiantpay" id="identifiantpay" placeholder="N° Chèque,Référence de paiement TPE , N° Compte du client," />
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-lg-4 control-label">Libellé</label>
+        <div class="col-lg-8">
+            <input type="text" class="form-control" name="libelle" id="libelle" placeholder="Nom de la banque,N° Ordre de virement" />
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-lg-4 control-label">Description</label>
+        <div class="col-lg-8">
+            <input type="text" class="form-control" name="description" id="description" placeholder="Titulaire du Chèque" maxlength="17" />
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-lg-4 control-label">Date Echéance </label>
+        <div class="col-lg-8">
+            <input type="text" pattern="\d{1,2}/\d{1,2}/\d{4}" class="form-control" name="dateecheance" id="dateecheance" placeholder="Date d'échéance du chèque (format : jj/mm/aaaa)" />
+        </div>
+    </div>
+</div>
+<hr />
+
+<div class="form-group">
+    <label class="col-lg-4 control-label">Attachement scan contrat</label>
+    <div class="col-lg-8">
+        <div class="fileinput fileinput-new input-group" data-provides="fileinput">
+            <div class="form-control" data-trigger="fileinput">
+                <i class="glyphicon glyphicon-file fileinput-exists"></i>
+                <span class="fileinput-filename"></span>
+            </div>
+            <span class="input-group-addon btn btn-default btn-file">
+                <span class="fileinput-new">Selectionner</span>
+                <span class="fileinput-exists">Changer</span>
+                <input type="file" name="FileContact" id="FileContact" accept="image/png, image/jpeg" />
+            </span>
+            <a href="#" class="input-group-addon btn btn-default fileinput-exists" data-dismiss="fileinput">Supprimer</a>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="form-group">
+    <label class="col-lg-4 control-label">Commentaires</label>
+    <div class="col-lg-8">
+        <textarea type="text" id="AC_Notes5" name="AC_Notes5" class="form-control col-sm-pull-2"></textarea>
+    </div>
+</div>
+
+
+
+<div class="form-group has-warning">
+    <label class="col-md-4 control-label">Total Facture </label>
+
+    <div class="col-md-8">
+        <input type="text" class="form-control" disabled value="@ViewBag.TotalFacture TND">
+    </div>
+</div>
+
+
+<div class="form-group has-success">
+    <label class="col-md-4 control-label">Total Règlements </label>
+    <div class="col-md-8">
+        @if (ViewBag.Reglements == null)
+        {
+            <p> 0 TDN </p>
+        }
+        else
+        {
+            <input type="text" class="form-control" disabled value="@String.Format("{0:N3}", (decimal)(ViewBag.ReglementsTotal)) TND">
+        }
+    </div>
+</div>   
+
+<br /><strong>Net à payer : </strong>
+<h3 class="label label-warning">@ViewBag.Facture TND </h3>
+
+
+
+<script>
+    $('#cbindice').change(function () {
+
+        if ($('#cbindice').val() != 1) {
+            document.getElementById("ifospayement").style.display = "block";
+        }
+        else {
+            document.getElementById("ifospayement").style.display = "none";
+        }
+    });
+</script>*@

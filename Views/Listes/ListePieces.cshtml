@@ -1,0 +1,140 @@
+﻿
+@{
+    ViewBag.Title = "ListePieces";
+}
+
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-lg-10">
+        <h2>Profile</h2>
+        <ol class="breadcrumb">
+            <li>
+                <a href="@Url.Action("index","Home")">Acceuil </a>
+            </li>
+            <li class="active">
+                <a href="@Url.Action("index","Administration")">Administration</a>
+            </li>
+            <li class="active">
+                <a href="@Url.Action("ListePieces","Listes")">Liste types des Pièces</a>
+            </li>
+
+        </ol>
+    </div>
+    <div class="col-lg-2">
+
+    </div>
+</div>
+
+
+<link href="~/css/plugins/dataTables/datatables.min.css" rel="stylesheet">
+
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>Liste des Services</h5>
+                    <div class="project-actions">
+                        <a href=@Url.Action("NewPiece","Listes") class="btn btn-sm btn-rounded bg-info ">
+                            <i class="fa "></i> Ajouter un type de pièce
+                        </a>
+                    </div>
+                </div>
+                <div class="ibox-content">
+                    <div class="table-responsive">
+                        <table class="table table-striped table-bordered table-hover dataTables-example" id="Pieces">
+                            <thead>
+                                <tr>
+                                    <th>Type Pièce</th>
+                                    <th>Longueur Pièce</th>
+                                    <th>Edit</th>
+                                    <th>Supprimer</th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="~/js/plugins/dataTables/datatables.min.js"></script>
+<script src="~/js/jquery-3.1.1.min.js"></script>
+<script src="~/js/plugins/metisMenu/jquery.metisMenu.js"></script>
+<script src="~/js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+
+<script src="~/js/plugins/dataTables/datatables.min.js"></script>
+
+<!-- Custom and plugin javascript -->
+<script src="~/js/inspinia.js"></script>
+<script src="~/js/plugins/pace/pace.min.js"></script>
+
+
+<script>
+    $(document).ready(function () {
+
+        var table = $("#Pieces").DataTable({
+            "ajax": {
+
+                "url": "/Listes/getListePieces",
+                "type": 'get',
+                "datatype": "json"
+            },
+            "columns": [
+                 { "data": "type" },
+                 { "data": "longueur" },
+                 { "data": "cbMarq" },
+                 { "data": "cbMarq" },
+
+            ],
+            "columnDefs": [
+            {
+                targets: [2],
+                      render: function (data, type, row) {
+
+                          return ' <a href="/Listes/EditPiece/' + data+ '" class="btn btn-sm btn-rounded bg-info "><i class="fa "> Modifier </i>';
+
+                      }
+            },
+            {
+                targets: [3],
+                render: function (data, type, row) {
+
+                    return ' <a href="/Listes/DeletePiece/?id=' + data + '"class="btn btn-danger btn-rounded " value="Delete"><i class="fa "> Supprimer </i>';
+
+                }
+
+            }
+
+            ]
+
+        });
+
+        $("#Pieces").dataTable().destroy();
+
+            $('.dataTables-example').DataTable({
+                pageLength: 25,
+                responsive: true,
+                dom: '<"html5buttons"B>lTfgitp',
+                buttons: [
+                    { extend: 'copy'},
+                    {extend: 'csv'},
+                    {extend: 'excel', title: 'ExampleFile'},
+                    {extend: 'pdf', title: 'ExampleFile'},
+                    {extend: 'print',
+                     customize: function (win){
+                            $(win.document.body).addClass('white-bg');
+                            $(win.document.body).css('font-size', '10px');
+
+                            $(win.document.body).find('table')
+                                    .addClass('compact')
+                                    .css('font-size', 'inherit');
+                    }
+                    }
+                ]
+
+            });
+
+        });
+
+</script>

@@ -1,0 +1,610 @@
+﻿@model BeeProj.Models.B_TRANSFERTENTETE
+
+@{
+    ViewBag.Title = "Details Transfert";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style>
+    .dataTables_filter, .dataTables_info, .dataTables_length {
+        display: none;
+    }
+</style>
+<style>
+    .sel {
+        -webkit-appearance: none;
+        -moz-appearance: none;
+    }
+</style>
+<link href="~/css/plugins/dataTables/datatables.min.css" rel="stylesheet">
+<link href="~/css/plugins/chosen/bootstrap-chosen.css" rel="stylesheet">
+<!-- Toastr style -->
+<link href="~/css/plugins/toastr/toastr.min.css" rel="stylesheet">
+<!-- Ladda style -->
+<link href="css/plugins/ladda/ladda-themeless.min.css" rel="stylesheet">
+<!-- Sweet Alert -->
+<link href="~/css/plugins/sweetalert/sweetalert.css" rel="stylesheet">
+
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-lg-10">
+        <br />
+        <h3>Document de transfert : REF# @Model.TR_Piece</h3>
+        <ol class="breadcrumb">
+            <li>
+                <a href="@Url.Action("index","Home")">Acceuil</a>
+            </li>
+            <li>
+                <a href="@Url.Action("ListeDemandesTransfert","Interne")">Liste des bordoreaux de transfert</a>
+            </li>
+            <li class="active">
+                <strong>Détails</strong>
+            </li>
+        </ol>
+    </div>
+    <div class="col-lg-2">
+
+    </div>
+</div>
+
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="wrapper wrapper-content animated fadeInUp">
+
+                    <div class="ibox">
+                        <div class="ibox-title">
+
+                            <div class="ibox-tools">
+                                <!-- if connected is BEE Agency -->
+
+                                @if (Model.TR_Statut == 0)
+                                {
+
+                                    <button class="pull-right btn btn-info btn-xs" id="validerBord" type="button"><strong>Valider</strong> </button>
+                                    <br />
+                                }
+
+                                @if (Model.TR_Statut == 1)
+                                {
+
+                                    <button class="pull-right btn btn-info btn-xs ConfirmerTrans" id="ConfirmerTrans" type="button"><strong>Confirmer</strong> </button>
+                                    <br />
+                                }
+                                @if (Model.TR_Statut ==0 || Model.TR_Statut == 1)
+                                {
+
+                                    <button class="pull-right btn btn-info btn-xs AnnulerTrans" id="AnnulerTrans" type="button"><strong>Annuler</strong> </button>
+                                    <br />
+                                }
+                                <br />
+
+
+                            </div>
+                        </div>
+                        <div class="ibox-content">
+                            <div class="project-list">
+                                @if (Model.TR_Statut == 0)
+                                {
+                                    <table class="table table-hover dataTables-example" id="ListeTransfert" data-page-length="3000">
+                                        <thead>
+
+                                            <tr>
+
+                                                <th class="project-status">
+                                                    Statut
+                                                </th>
+
+                                                <th>
+
+                                                    Référence
+                                                </th>
+
+                                                <th>
+
+                                                    Désignation
+                                                </th>
+
+                                                <th>
+                                                    Dépôt de Sortie
+                                                </th>
+                                                <th>
+                                                    Dépôt d'Entrée
+                                                </th>
+
+                                              
+                                                <th>
+                                                    Quantité Disponible
+                                                </th>
+
+                                                <th>
+                                                    Quantité Demandée
+                                                </th>
+
+                                                <th>
+
+                                                    N°Série
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                    </table>
+                                }
+                                else
+                                {
+
+                                    <table class="table table-hover dataTables-example" id="ListeTransfert2" data-page-length="3000">
+                                        <thead>
+                                            <tr>
+
+                                                <th class="project-status">
+                                                    Statut
+                                                </th>
+
+                                                <th>
+
+                                                    Référence
+                                                </th>
+
+                                                <th>
+
+                                                    Désignation
+                                                </th>
+
+                                                <th>
+                                                    Depot de Sortie
+                                                </th>
+                                                <th>
+                                                    Depot d'Entrée
+                                                </th>
+
+                                                <th>
+                                                    Quantité Disponible
+                                                </th>
+
+                                                <th>
+                                                    Quantité Envoyée
+                                                </th>
+
+                                                <th>
+
+                                                    N°Série
+                                                </th>
+                                            </tr>
+                                        </thead>
+
+                                    </table>
+
+                                }
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal inmodal" id="validerBordereau" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content animated bounceInRight">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Fermer</span></button>
+                <i class="fa fa-truck modal-icon"></i>
+                <h4 class="modal-title">Transfert des articles </h4>
+                <small class="font-bold">Confirmer votre transfert </small>
+            </div>
+            <div class="modal-body">
+                <p>
+                    Transférer les articles séléctionnés du dépôt <strong> @ViewBag.depotEmetteur </strong>  au dépôt <strong>  @ViewBag.depotRecepteur </strong>
+                </p>
+                <div class="form-group"> <textarea placeholder="Commentaires " class="form-control" id="CommentairesTransfert"></textarea></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-white" data-dismiss="modal">Fermer</button>
+                <button type="submit" class="btn btn-purplebee ladda-button" onclick="ValiderTransfert()">Valider </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal inmodal" id="AnnulerTransfert" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content animated flipInX">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Ok</span></button>
+            </div>
+            <div class="modal-body">
+                <div class="modal-body">
+                    <div class="row">
+                        <h3 class="text-danger">Voulez-vous annluer le transfert des articles ? </h3>
+                        <br />
+                        <div class="form-group float-e-margins">
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-white" data-dismiss="modal">Non</button>
+                                <button type="submit" class="btn btn-primary" id="NoTransfert">Oui </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</div>
+<div class="modal inmodal" id="confirmerTransfert" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content animated fadeIn">
+            <div class="modal-header">
+                <h2>Valider la réception de ce transfert</h2>
+            </div>
+            <div class="modal-body">
+
+                <p style="text-align:center;font-size:25px;">Vous validez la réception des articles listés</p>
+            </div>
+            <br />
+            <div class="m-5 p-5" style="text-align: center">
+                <div id="wait">
+
+                    <div class="spinner-border text-purplebee" role="status">
+                        <i class="fa fa-spinner fa-spin" style="font-size:50px"></i>
+                        <br />
+                        <h3>Merci de  patienter...</h3>
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-white  m-0" data-dismiss="modal">Annuler</button>
+                <button type="button" class="btn btn-purplebee ladda-button confirmation"  onclick="this.disabled=true">Oui, je confirme </button>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="~/js/jquery-3.1.1.min.js"></script>
+<script src="~/js/plugins/metisMenu/jquery.metisMenu.js"></script>
+<script src="~/js/plugins/pace/pace.min.js"></script>
+<script src="~/js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+<script src="~/js/plugins/chosen/chosen.jquery.js"></script>
+<script src="~/js/plugins/dataTables/datatables.min.js"></script>
+<!-- Toastr script -->
+<script src="~/js/plugins/toastr/toastr.min.js"></script>
+<!-- Ladda -->
+<script src="~/js/plugins/ladda/spin.min.js"></script>
+<script src="~/js/plugins/ladda/ladda.min.js"></script>
+<script src="~/js/plugins/ladda/ladda.jquery.min.js"></script>
+<!-- Sweet alert -->
+<script src="~/js/plugins/sweetalert/sweetalert.min.js"></script>
+
+<script>
+    $(document).ready(function () {
+
+        // Bind normal buttons
+        Ladda.bind( '.ladda-button',{ timeout: 2000 });
+        // Bind progress buttons and simulate loading progress
+        Ladda.bind( '.progress-demo .ladda-button',{
+            callback: function( instance ){
+                var progress = 0;
+                var interval = setInterval( function(){
+                    progress = Math.min( progress + Math.random() * 0.1, 1 );
+                    instance.setProgress( progress );
+
+                    if( progress === 1 ){
+                        instance.stop();
+                        clearInterval( interval );
+                    }
+                }, 2000 );
+            }
+        });
+        @*$('#demo4').click(function () {
+            swal({
+                title: "Valider la réception de ce transfert",
+                text: "Vous validez la réception des articles listés ",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#DD6B55",
+                confirmButtonText: "Oui, je confirme",
+                cancelButtonText: "Annuler",
+                closeOnConfirm: false,
+                closeOnCancel: false },
+                    function (isConfirm) {
+                        if (isConfirm) {
+                            $.ajax({
+                                type: "Post",
+                                url: "/Interne/ConfirmerTransfert?cbmarq=" + @Model.cbMarq,
+                                success: function (isConfirm) {
+                                    swal("Reçus!", "Confirmation des articles reçus ", "success");
+                                    window.location = "/Interne/ListeDemandesTransfert/";
+                                }
+                            });
+
+                        } else {
+                            swal("Aucun changement", "Si vous n'avez pas encore reçu ces articles, consultez votre supérieur", "error");
+                        }
+
+                });
+
+
+        });*@
+        $(".chosen-select").chosen();
+        var table = $('#ListeTransfert').DataTable({
+            "ajax": {
+                "url": '/Interne/getlisteLigneTR?cbMarq=' + @Model.cbMarq,
+                "type": "get",
+                "datatype": "json",
+                "autoWidth": false
+            },
+            "columns": [
+                    { "data": "statut" },
+                    { "data": "AR_Ref" },
+                    { "data": "AR_Design"},
+                    { "data": "sortie" },
+                    { "data": "entree" },
+                    { "data": "qtDispo" },
+                    { "data": "qtD" },
+                    { "data": "cbMarq" },
+
+            ],
+            "columnDefs": [
+                    {
+                        targets: [0],
+                        render: function (data, type, row) {
+                            if (data == 0) {
+                                return '<i class="label text-purplebee" style="background-color: #e5e5f5;">En cours</i>';
+                            }
+                            else if (data == 1) {
+                                return '<i class="label style1 bg-greenbee">Validé</i>';
+                            }
+                            else if (data == 2 ){
+                                return '<i class="label bg-purplebee ">Confirmé</i>';
+                            }
+                            else {
+                                return '<i class="label bg-graybee">Annulé</i>';
+                            }
+                        }
+                    }
+                    ,
+                    {
+                        targets: [7],
+                        render: function (data, type, row) {
+                            var url= "/Interne/LoadSerie3?Ref="+ data,
+                            getservice= function(url){
+                                var res= $.ajax({
+                                    type: "POST",
+                                    url: url,
+                                    dataType: "json",
+                                    async: false,
+                                    success: function(data){
+                                    }
+                                }).responseText;
+
+                                return res;
+                            }
+                            var ListeSeries = getservice(url) ;
+                            var d = JSON.parse(ListeSeries);
+                            var mylist = '<select  class="chosen-select form-control mysel" id="mysel" >';
+                            mylist = mylist + '<option value="'+ data +'">Aucun</option>'
+                            for (var i = 0; i < d.data.length; i++) {
+                                var counter = d.data[i];
+                                mylist = mylist + '<option value="'+ data +'">'+ counter + '</option>' ;
+                            }
+                            mylist = mylist +'</select>' ;
+                            $(".chosen-select").chosen();
+                            $('#mysel').click(function(e){
+                                $('#mysel option:selected').prop('selected', false);
+                            });
+                            if (d.count == 0)
+                            {
+                                return '<select class="form-control sel disabled" disabled><option value="'+ data +'">'+ d.data + '</option></select>';
+                            }
+                            else {
+                                return mylist;
+                            }
+                        }
+                    }
+            ]
+
+        });
+
+
+
+
+        var table2 = $('#ListeTransfert2').DataTable({
+
+            "ajax": {
+                "url": '/Interne/getlisteLigneTR?cbMarq=' + @Model.cbMarq,
+                "type": "get",
+                "datatype": "json",
+                "autoWidth": false
+            },
+            "columns": [
+                    { "data": "statut" },
+                    { "data": "AR_Ref" },
+                    { "data": "AR_Design"},
+                    { "data": "sortie" },
+                    { "data": "entree" },
+                    { "data": "qtD" },
+                    { "data": "qtE" },
+                    { "data": "LS_NoSerie" },
+
+            ],
+            "columnDefs": [
+                    {
+                        targets: [0],
+                        render: function (data, type, row) {
+                            if (data == 0) {
+                                return '<i class="label text-purplebee" style="background-color: #e5e5f5;">En cours</i>';
+                            }
+                            else if (data == 1) {
+                                return '<i class="label style1 bg-greenbee">Validé</i>';
+                            }
+                            else if (data == 2 ){
+                                return '<i class="label bg-purplebee ">Confirmé</i>';
+                            }
+                            else if (data == 3) {
+                                return '<i class="label bg-graybee">Annulé</i>';
+                            }
+                        }
+                    }
+            ]
+        });
+
+
+    });
+        $('#validerBord').click(function () {
+            $("#validerBordereau").modal();
+        });
+
+        $('#AnnulerTrans').click(function () {
+            $("#AnnulerTransfert").modal();
+        });
+        $('#NoTransfert').click(function () {
+            var url = "/Interne/AnnulerTransfert?cbmarq=" + @Model.cbMarq  ;
+            $.ajax({
+                type: "POST",
+                url: url,
+                dataType: "json",
+                success: function (data) {
+                    window.location = "/Interne/ListeDemandesTransfert/";            }
+            })
+        });
+        function ValiderTransfert() {
+            var serie = [] ;
+            var qteDisp = [] ;
+            var cbm = [] ;
+            var qtdm = [];
+            var test= false;
+            var cells = [];
+            var rows = $("#ListeTransfert").dataTable().fnGetNodes();
+            for(var i=0;i<rows.length;i++)
+            {
+                var tr = $(rows[i]);
+                var valueSerie = tr.find('td:eq(7)').find('option:selected').text();
+                var valueCbmarq = tr.find('td:eq(7)').find('option:selected').val();
+                var valueQTDis = tr.find('td:eq(5)').text();
+                var valueQTDM = tr.find('td:eq(6)').text();
+
+                serie.push(valueSerie);
+                qteDisp.push(valueQTDis);
+                cbm.push(valueCbmarq);
+                qtdm.push(valueQTDM);
+            }
+			serie = serie.filter(function(item) {
+                return item !== "Non sérialisé";
+            });
+            serie = serie.filter(function(item) {
+                return item !== "Non Sérialisé";
+            });
+            serie = serie.filter(function(item) {
+                return item !== "Pas de stock";
+            });
+            serie = serie.filter(function(item) {
+                return item !== "Aucun";
+            });
+            serie = serie.filter(function(item) {
+                if(item.startsWith("Pas")== false){
+                    return item = item;
+                }
+            });
+            serie = serie.filter(function(item) {
+                if(item.startsWith("Aucun")== false){
+                    return item = item;
+                }
+            });
+            var reportRecipientsDuplicate = [];
+            if(serie.length > 1){
+                for (var i =0; i < serie.length - 1; i++) {
+                    if (serie[i + 1] == serie[i]) {
+                        reportRecipientsDuplicate.push(serie[i]);
+                    }
+                }
+            }
+            if(reportRecipientsDuplicate.length !=0)
+            {
+                toastr.error('Des numéros de séries ne peuvent pas être duppliqués', 'ERREUR');
+            }
+            else{
+
+                var url = "/Interne/ValiderTransfert?cbmarq=" + @Model.cbMarq + "&&serie=" + serie + "&&QTEDis="+ qteDisp + "&&QTDM="+ qtdm +"&&Marq="+ cbm ;
+                $.ajax({
+                    type: "POST",
+                    url: url,
+                    dataType: "json",
+                    success: function (data) {
+                        window.location = "/Interne/ListeDemandesTransfert/";
+
+                    }
+
+                });
+
+            }
+        }
+
+  
+
+    $(document).ready(function () {
+        $(document).ajaxStart(function () {
+            $("#wait").css("display", "block");
+            $("#annulerCochage").css("display", "none");
+        });
+        $(document).ajaxComplete(function () {
+            $("#wait").css("display", "none");
+            $("#annulerCochage").css("display", "inline-block");
+        });
+        $("button").click(function () {
+            $("#txt").load("demo_ajax_load.asp");
+        });
+    });
+
+      @*$('#confirmation').click(function () {
+            var url = "/Interne/ConfirmerTransfert?cbmarq=" + @Model.cbMarq ;
+            $.ajax({
+                type: "POST",
+                url: url,
+                dataType: "json",
+                success: function (msg) {
+                                   alert (msg.msg)
+                           //
+                   // $('#confirmerTransfert').modal('hide');
+                    window.location = "Interne/ListeDemandesTransfert";
+                    alert(msg.msg)
+                           // location.reload();
+                            }
+            })
+      });*@
+    $('#ConfirmerTrans').click(function () {
+        $("#confirmerTransfert").modal();
+    });
+
+    $('.confirmation').click(function () {
+            $.ajax({
+                type: "Post",
+                url: "/Interne/ConfirmerTransfert?cbmarq=" + @Model.cbMarq ,
+                dataType: 'json',
+                success: function (msg) {
+                    if (msg.msg == 2) {
+                        toastr.error(msg.result, 'Erreur');
+                    }
+
+                    else {
+                        swal({
+                            title: "Confirmer ",
+                            text: "Confirmer ",
+                            type: "success",
+                            showCancelButton: true,
+                            confirmButtonColor: "#DD6B55",
+                            confirmButtonText: "Oui",
+                            closeOnConfirm: false,
+                            showCancelButton: false,
+                        }, function () {
+                            window.open('/Interne/ListeDemandesTransfert/', '_blank');
+                            swal("Confirmer", " ", "success");
+                          //  location.reload();
+
+
+                        });
+                    }
+                }
+            });
+    });
+
+</script>

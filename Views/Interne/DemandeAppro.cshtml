@@ -1,0 +1,587 @@
+﻿
+@{
+    ViewBag.Title = "DemandeAppro";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    .dataTables_filter, .dataTables_info, .dataTables_length {
+        display: none;
+    }
+</style>
+
+
+<link href="~/css/plugins/chosen/bootstrap-chosen.css" rel="stylesheet">
+
+<link href="~/css/plugins/dataTables/datatables.min.css" rel="stylesheet">
+ <!-- Ladda style -->
+<link href="css/plugins/ladda/ladda-themeless.min.css" rel="stylesheet">
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-lg-10">
+        <h2>Demande d'approvisionnement</h2>
+        <ol class="breadcrumb">
+            <li>
+                <a href="@Url.Action("index","Home")">Acceuil </a>
+            </li>
+            <li>
+                <a href="@Url.Action("ListeDemandeAppro","Interne")">Liste des deamndes d'appro </a>
+            </li>
+            <li class="active">
+                <strong>Demande d'approvisionnement </strong>
+            </li>
+        </ol>
+    </div>
+
+</div>
+
+
+
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row ">
+
+
+
+        <div class="panel">
+            <div class="panel-body">
+                <div>
+                    <h3>Saisir la demande REF #@ViewBag.demandereference</h3>
+                </div>
+                <div class="row">
+                    <div class="col-lg-3">
+                        <div class="widget style1 gray-bg" style="background-image: linear-gradient(0deg,#d7d7ea,#fff);">
+                            <div class="row">
+                                <div class="col-xs-4 text-center">
+                                </div>
+                                <div class="col-xs-8 text-right">
+                                    <span> Statut </span>
+                                    <h3 class="font-bold"><strong>Saisie</strong> </h3>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3">
+                        <div class="widget style1 gray-bg " style="background-image: linear-gradient(0deg,#d7d7ea,#fff);">
+                            <div class="row">
+                                <div class="col-xs-4">
+
+                                </div>
+                                <div class="col-xs-8 text-right">
+                                    <span> Date </span>
+                                    <h3 class="font-bold"><strong>@ViewBag.date</strong> </h3>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3">
+                        <div class="widget style1 gray-bg " style="background-image: linear-gradient(0deg,#d7d7ea,#fff);">
+                            <div class="row">
+                                <div class="col-xs-4">
+
+                                </div>
+                                <div class="col-xs-8 text-right">
+                                    <span> Récepteur </span>
+                                    <h3 class="font-bold" id="DepotR"><strong> @ViewBag.DepotR</strong></h3>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3">
+                        <div class="widget style1 gray-bg" style="background-image: linear-gradient(0deg,#d7d7ea,#fff);">
+                            <div class="row">
+                                <div class="col-xs-4">
+
+                                </div>
+                                <div class="col-xs-8 text-right">
+                                    <span> Emetteur </span>
+                                    <h3 class="font-bold" id="DepotE"><strong>@ViewBag.DepotE</strong></h3>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="row ">
+
+
+                    <div class="content-box border-top border-gray ">
+
+
+
+
+
+                        <div class="content-box-wrapper" id="entetelck">
+                            <fieldset id="SubmitForm">
+
+                                <div class="col-sm-12">
+                                    <div class="row">
+
+
+
+
+
+                                        <div class="col-md-4">
+
+
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </fieldset>
+
+
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="panel" id="addLignes">
+    <div class="panel-body">
+        <div class="row">
+
+
+            <div class="content-box border-top border-gray">
+
+
+
+
+                <h3 class="content-box-header clearfix">
+                    <small id="numcourant"> </small>
+
+                    <span class="btn-google pull-right" data-toggle="buttons">
+                        <button data-toggle="modal" data-target="#selectArticle" title="Ajouter Produit" class="btn bg-purplebee btn-circle" type="button">
+                            <i class="fa fa-plus"></i>
+                        </button>
+
+
+                        @*<button class="btn btn-info btn-circle" type="button">
+                                <i class="fa fa-save"></i>
+                            </button>*@
+
+                        <button class="btn btn-danger btn-circle" type="button">
+                            <i class="fa fa-close"></i>
+                        </button>
+
+
+
+
+                    </span>
+
+
+                </h3>
+                <div class="content-box-wrapper bg-white">
+
+
+
+                    <table class="table order-list" id="TableInput">
+                        @*<thead>
+                                <tr>
+                                    <td ></td>
+                                    <td></td>
+                                    <td></td>
+
+                                </tr>
+                            </thead>*@
+
+
+                    </table>
+
+
+                    <hr />
+                    <div class="ibox-content">
+
+                        <div class="content-box-wrapper bg-white">
+
+
+
+                            <div class="ibox-content">
+
+                                <table class="table">
+
+                                    <thead>
+                                        <tr>
+                                            <th>Code Article</th>
+                                            <th>Désignation</th>
+                                            <th>Quantité</th>
+                                            @*<th>N° Serie</th>*@
+
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+
+
+
+
+                                </table>
+
+
+
+
+                                <table id="TableListeLignesProduit" class="table table-striped  TableListeLignesProduit">
+
+
+
+                                    <tbody>
+                                        <tr class="row">
+
+
+                                            <td></td>
+
+
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+
+                                        </tr>
+                                    </tbody>
+
+
+                                </table>
+
+                            </div>
+
+                        </div>
+                        <div class="hr-line-dashed"></div>
+
+                        <div class="form-group">
+
+                            <button id="saisir" class="btn btn-purplebee  pull-right m-t-n-xs hidden " style="margin-left:10px;" type="button" data-toggle="modal" data-target="#saveAppro"><strong>Saisir la demande d'appro.</strong></button>
+                            <button id="annuler" type="reset" class="btn btn-white  pull-right m-t-n-xs hidden"><a href="/Interne/DemandeAppro"><strong>Annuler</strong></a></button>
+
+
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <br />
+
+
+
+    </div>
+</div>
+
+
+
+
+
+<div class="modal inmodal fade" id="selectArticle" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title">Liste des articles</h4>
+                <small class="font-bold">Double click pour séléctionner l'article de votre demande et préciser la quantité désirée.</small>
+
+                <br />
+                <hr />
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">Quantité</label>
+
+                    <div class="col-sm-10">
+                        <div class="input-group m-b">
+                            <span class="input-group-addon">
+                                <i class="fa fa-star"></i>
+                            </span> <input type="number" class="form-control" placeholder="Quantité" id="qt" value="1">
+                        </div>
+                    </div>
+                </div>
+
+
+
+                <div class="form-group" id="hideAffect">
+                    <label class="col-sm-2 control-label">Affecté à</label>
+
+                    <div class="col-sm-10">
+                        <div class="input-group m-b">
+                            <span class="input-group-addon">
+                                <i class="fa fa-star"></i>
+                            </span>
+                            <select class="chosen-select" id="affecteA">
+                                <option value=""></option>
+
+                                @foreach (var item in @ViewBag.listeRefAbon)
+                                {
+                                    <option value="@item.DO_RefTT">@item.DO_RefTT</option>
+
+                                }
+                            </select>
+                            @*<input type="text" class="form-control" placeholder="Reference abonnement" id="affecteA">*@
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+
+
+            <div class="modal-body">
+
+
+                <div class="table-responsive">
+
+                    <table id="listeArticles" class="table table-striped table-bordered table-hover dataTables-example full-width" style="cursor:pointer;">
+                        <thead>
+                            <tr>
+
+
+
+                                <th>
+                                    Référence Article
+                                </th>
+                                <th>
+                                    Désignation
+                                </th>
+
+                            </tr>
+                        </thead>
+
+
+
+                    </table>
+
+                </div>
+
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-white" data-dismiss="modal">Fermer</button>
+                @*<button type="button" class="btn btn-primary">Save changes</button>*@
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal inmodal" id="saveAppro" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content animated flipInY">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <i class="fa fa-paper-plane modal-icon"></i>
+                <h4 class="modal-title">Vous confirmez l'envoi de votre demande d'appro </h4>
+            </div>
+          
+            <div class="modal-footer">
+                <button type="button" class="btn btn-graybee" data-dismiss="modal">Annuler</button>
+
+                <button type="button" class="btn btn-purplebee  ladda-button" onclick="SaveDemande()">Confirmer </button>
+
+            </div>
+        </div>
+    </div>
+</div>
+<script src="~/js/jquery-3.1.1.min.js"></script>
+
+<script src="~/js/plugins/metisMenu/jquery.metisMenu.js"></script>
+<script src="~/js/plugins/dataTables/datatables.min.js"></script>
+<script src="~/js/plugins/chosen/chosen.jquery.js"></script>
+    <!-- Ladda -->
+<script src="~/js/plugins/ladda/spin.min.js"></script>
+<script src="~/js/plugins/ladda/ladda.min.js"></script>
+<script src="~/js/plugins/ladda/ladda.jquery.min.js"></script>
+<script>
+
+
+
+    $(document).ready(function () {
+        $(".chosen-select").chosen();
+        listedesArticlesTable();
+
+        // Bind normal buttons
+        Ladda.bind('.ladda-button', { timeout: 2000 });
+        // Bind progress buttons and simulate loading progress
+        Ladda.bind('.progress-demo .ladda-button', {
+            callback: function (instance) {
+                var progress = 0;
+                var interval = setInterval(function () {
+                    progress = Math.min(progress + Math.random() * 0.1, 1);
+                    instance.setProgress(progress);
+
+                    if (progress === 1) {
+                        instance.stop();
+                        clearInterval(interval);
+                    }
+                }, 2000);
+            }
+        });
+    });
+
+    function AddLineTrsf(arref)
+    {
+
+        $.ajax({
+            type: "GET",
+            url: "/Interne/getInfoArticle2?Arref=" + arref,
+            success: function (res) {
+
+                var counter = 0;
+                counter++;
+                var newRow = $("<tr class='row'>");
+                var cols = "";
+
+                cols += '<td ><input type="text" id="ArticleID" name="ArticleID' + counter + '" value="' + res.infoArticle.AR_Ref + '"class="form-control ref-ids" disabled/></td>';
+                cols += '<td ><input type="text" id="ArticleDesign" name="ArticleDesign' + counter + '" value="' + res.infoArticle.AR_Design + '"class="form-control articles-ids" disabled/></td>';
+
+                cols += '<td><input type="text" id="quantite" type="number" name="quantite' + counter + '" value="' + $('#qt').val() + '"class="form-control qt-ids disabled" /></td>';
+                //cols += '<td><input type="text" id="serie" type="number" value="' + nserie + '" name="series' + counter + '"class="form-control serie-ids" disabled /></td>';
+                //cols += '<td><input type="text" id="depot" type="number" value="' + depot + '" name="depot' + counter + '"class="form-control depot-ids" disabled /></td>';
+                cols += '<td><a class="deleteRowGamme btn btn-xs btn-round btn-azure"> <div class="form-control"><i class="fa fa-trash"></i></div> </a></td>';
+
+                newRow.append(cols);
+
+                $(".TableListeLignesProduit").append(newRow);
+            }
+
+        });
+
+
+        var count = $('#TableListeLignesProduit tbody tr').length;
+
+        if (count == 0) {
+            $('#annuler').addClass('hidden');
+        }
+        else {
+            $('#annuler').removeClass('hidden');
+
+        }
+
+
+
+        if (count == 0) {
+            $('#saisir').addClass('hidden');
+        }
+        else {
+            $('#saisir').removeClass('hidden');
+
+        }
+
+
+
+    }
+
+    function listedesArticlesTable() {
+        //$(".chosen-select").chosen();
+
+        var oTable = $('#listeArticles').DataTable({
+            "ajax": {
+                "url": '/Interne/getlistedesArticles',
+                "type": "get",
+                "datatype": "json",
+                "autoWidth": false
+
+            },
+            "columns": [
+
+                    { "data": "AR_Ref" },
+                    { "data": "AR_Desigh" }
+            ]
+
+        });
+
+
+
+        $('#listeArticles tbody').on('dblclick', 'tr', function () {
+
+            var tr = $(this).closest('tr');
+            var value = tr.find('td:eq(0)').html();
+            //var design = tr.find('td:eq(1)').html();
+
+            //var nserie = tr.find('td:eq(4)').html();
+
+            //var depot = tr.find('td:eq(4)').html();
+            //var value2 = tr.find('td:eq(1)').html();
+
+            var qtt = $('#qtyEntree').val();
+
+
+
+
+
+
+
+            $('#selectArticle').modal('hide');
+            AddLineTrsf(value);
+
+
+
+
+
+            //
+
+
+
+
+            //     location.reload();
+
+        });
+
+
+
+
+
+
+    }
+        $('.chosen-select').chosen({ width: "100%" });
+        $('#listeArticles tbody').on('click', 'tr', function () {
+            if ($(this).hasClass('tr-selected')) {
+                $(this).removeClass('tr-selected');
+                var value = $(this).find('td:first').html();
+
+            }
+            else {
+                oTable.$('tr.tr-selected').removeClass('tr-selected');
+                $(this).addClass('tr-selected');
+                var value = $(this).find('td:first').html();
+
+            }
+        });
+
+        function SaveDemande() {
+        var ArticleID = [];
+        var Qtys = [];
+            //var rowCount = $('table.order-list tr').length - 2;
+        $('#TableListeLignesProduit tr').find('td .ref-ids').each(function () {
+            ArticleID.push(($(this).val()));
+        });
+
+        $('#TableListeLignesProduit tr').find('td .qt-ids').each(function () {
+            Qtys.push(($(this).val()));
+        });
+            //$('#TableListeLignesProduit tr').find('td .serie-ids').each(function () {
+            //    Serie.push(($(this).val()));
+            //});
+
+        //$('#TableListeLignesProduit tr').find('td .depot-ids').each(function () {
+        //    Depot.push(($(this).val()));
+        //});
+
+        if (ArticleID.length == 0) {
+            toastr.error('Veuillez selectionner les articles que vous souhaitez avoir !', 'Erreur');
+        }
+        else {
+            var url = "/Interne/EnvoyerAppro?arref=" + ArticleID + "&&Qtys=" + Qtys;
+            $.ajax({
+                type: "Post",
+                url: url,
+
+                success: function (data) {
+                    window.location = "/Interne/ListeDemandeAppro/";
+
+                }
+            });
+      }
+}
+
+
+</script>
+

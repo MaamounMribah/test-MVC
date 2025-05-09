@@ -1,0 +1,213 @@
+﻿
+
+@{
+    ViewBag.Title = "ReservationMateriels";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<link href="~/css/plugins/chosen/bootstrap-chosen.css" rel="stylesheet">
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-sm-4">
+        <h2> Modifier </h2>
+        <ol class="breadcrumb">
+
+            <li>
+                <a href="@Url.Action("index","Home")">Acceuil </a>
+            </li>
+            <li>
+                Modifer
+            </li>
+
+
+            <li class="active">
+                Réservation Matériel
+            </li>
+        </ol>
+    </div>
+</div>
+<br />
+<div class="ibox-content">
+    <div class="row m-t-sm">
+        <div class="col-lg-12">
+            <div class="panel blank-panel">
+
+
+                <div class="panel-body">
+
+                    <div class="tab-content">
+
+                        @using (Html.BeginForm("ReservationMateriels", "Abonnement", FormMethod.Post, new { id = "popupForm" }))
+                        {
+                            <fieldset id="SubmitForm" class="form-horizontal bordered-row">
+
+                                <input hidden type="text" name="cbMarq" value=@ViewBag.abotete.cbMarq id="cbMarq" />
+                                <div class="row">
+                                    <div class="alert alert-success alert-dismissable hidden" id="alertAppro">
+                                        <button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>
+                                        La demande d'appro. à été envoyé avec succès ! une notification vous sera envoyée dès que l'article est disponible dans votre stock.
+
+                                        <br /> Cliquez <a class="alert-link" href="" id="hrefAppro"> ici </a> pour voir la demande d'appro. envoyée.
+                                    </div>
+                                    <p class="text-info">
+                                        Cet abonnement sera mis en service TT
+                                        <small class="text-muted"> Un contrat sera généré à partir les informations entrées.  </small>
+                                    </p>
+                                    <hr />
+
+                                    @if (ViewBag.abotete.DO_Valide == 1)
+                                    {
+                                        <div class="alert alert-warning">
+                                            <p>  Les articles attachés à cet abonnement : </p>
+                                            <br />
+                                            @foreach (var item in ViewBag.ArticlesAttribues)
+                                            {
+                                                <i class="fa fa-shopping-cart"></i> @item.AR_Ref
+                                                <br />
+                                            }
+
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        if (ViewBag.Materiel != null)
+                                        {
+                                            int i = 0;
+                                            <h3 class="text-purplebee float-e-margins m-l-lg">  Réservation matériel pour l'abonnement </h3>
+                                            foreach (var kk in ViewBag.Materiel)
+                                            {
+
+                                                <div class="form-group">
+
+                                                    <label class="col-sm-2 control-label">
+                                                        Articles
+                                                    </label>
+                                                    <div class="col-sm-10">
+                                                        <select data-placeholder="Choisir des articles..."
+                                                                id="ReservationMateriel[@i]" name="ReservationMateriel[@i]" class="form-control">
+                                                            @if (ViewBag.Materiel != null)
+                                                            {
+                                                                <option value="@kk.AR_Ref">@kk.AR_Design</option>
+                                                            }
+                                                            else
+                                                            {
+                                                                <option value="null">Aucun</option>
+                                                            }
+                                                        </select>
+                                                    </div>
+                                                </div>
+
+                                                if (ViewBag.LotSerie != null)
+                                                {
+                                                    //for (int kkkk = 0; kkkk < ViewBag.LotSerie.Count; kkkk++)
+                                                    //{
+                                                    <div class="form-group">
+                                                        <label class="col-sm-2 control-label">N° de série</label>
+                                                        <div class="col-sm-10" id="selectedLSSERIE">
+                                                            <select class="form-control chosen-select" id="LotSerie[@i]" name="LotSerie[@i]" data-placeholder="Choisir les références...">
+
+
+                                                                @if (ViewBag.NumMaterielsReserves.Count != 0)
+                                                                {
+                                                                    <option style="background-color:#4D57A6;" class="text-white form-control" selected="selected" value="@ViewBag.NumSeriesReserves[i].LS_NoSerie">@ViewBag.NumSeriesReserves[i].LS_NoSerie</option>
+
+                                                                    @*foreach (var aa in ViewBag.LotSerie[i].LS_NoSerie)
+                                                                        {
+                                                                            <option class="font-bold text-purplebee form-control" value="@aa.LS_NoSerie">@aa.LS_NoSerie</option>
+
+                                                                        }*@
+
+
+                                                                }
+                                                                else
+                                                                {
+                                                                    if (ViewBag.LotSerieDepot != null)
+                                                                    {
+                                                                        //if (ViewBag.LotSerieDepot.AR_Ref == kk.AR_Ref)
+                                                                        //{
+                                                                        <optgroup label="Dépôt Revendeur">
+
+                                                                            @foreach (var item in ViewBag.LotSerieDepot)
+                                                                            {
+                                                                                if (item.AR_Ref == kk.AR_Ref)
+                                                                                {
+                                                                                    <option class="font-bold text-greenbee" value="@item.LS_NoSerie">@item.LS_NoSerie</option>
+                                                                                }
+
+                                                                            }
+                                                                        </optgroup>
+                                                                        //}
+
+                                                                    }
+                                                                    <optgroup label="Dépôt Siège" class="bg-purplebee-light">
+                                                                        @if (ViewBag.LotSerie[i] != null)
+                                                                        {
+                                                                            foreach (var aa in ViewBag.LotSerie[i].LS_NoSerie)
+                                                                            {
+                                                                                <option class="font-bold text-purplebee" value="@aa.LS_NoSerie">@aa.LS_NoSerie</option>
+                                                                            }
+                                                                        }
+
+                                                                    </optgroup>
+                                                                }
+
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    //}
+
+                                                }
+                                                else
+                                                {
+                                                    if (ViewBag.Materiel != null)
+                                                    {
+                                                        <div class="form-group">
+                                                            <label class="col-md-4 control-label">
+                                                                <p class="text-danger">  Cet article est en rupture de stock.</p>
+                                                            </label>
+                                                            <div class="col-md-6">
+                                                                <button type="button" class="btn btn-xs btn-success " id="envoiedemandeAppro" onclick="DemandeApproAutomatique();">Envoyer une demande d'approvisonnement </button>
+                                                            </div>
+                                                        </div>
+                                                    }
+                                                }
+                                                i = i + 1;
+                                            }
+                                        }
+
+                                    }
+
+                                </div>
+
+                                <br />
+                                <br />
+                                <div class="modal-footer">
+
+                                    <button type="submit" class="btn btn-greenbee ladda-button ladda-button-demo" name="cmd"><i class="fa fa-check"></i>&nbsp;Enregistrer les modifications</button>
+                                </div>
+
+
+                            </fieldset>
+
+                        }
+
+
+
+
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+<!-- Chosen -->
+<script src="~/js/plugins/chosen/chosen.jquery.js"></script>
+
+<script>
+    $('.chosen-select').chosen({ width: "100%" });
+</script>
+

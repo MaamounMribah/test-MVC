@@ -1,0 +1,210 @@
+﻿<div class="col-lg-4">
+    <div class="ibox">
+        <div class="ibox-content">
+            <!-- ETATAPE_OP ET_DESCRIPION-->
+            <div class="ibox-content">
+                @*<div id="using_json"></div>*@
+
+                <!-- ETATAPE_OP ET_DESCRIPION cbmarq-->
+                <div id="vertical-timeline" class="vertical-container">
+                    <div class="vertical-timeline-block">
+
+                        @if (ViewBag.Etappe != 8 && ViewBag.Etape == 0 )
+                        {
+                            <div class="vertical-timeline-icon label-purplebee">
+                                <i class="fa fa-level-down" data-toggle="modal" data-target="#detailsEtape"></i>
+                            </div>
+                        }
+                        else if (ViewBag.Etappe == 8 && ViewBag.Etape == 0)
+                        {
+                            <div class="vertical-timeline-icon label-danger">
+                                <i class="fa fa-level-down" data-toggle="modal" data-target="#detailsEtape"></i>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="vertical-timeline-icon label-greenbee">
+                                <i class="fa fa-level-down"></i>
+                            </div>
+                        }
+                        <div class="vertical-timeline-content">
+                            <h2>Nouveau</h2>
+                        </div>
+                    </div>
+
+
+                    <div class="vertical-timeline-block">
+                        @if (ViewBag.Etappe != 8 &&  ViewBag.Etape == 10)
+                        {
+                            <div class="vertical-timeline-icon label-purplebee">
+                                <i class="fa fa-level-down" data-toggle="modal" data-target="#detailsEtape"></i>
+                            </div>
+                        }
+                        else if (ViewBag.Etappe == 8 && ViewBag.Etape == 10)
+                        {
+                            <div class="vertical-timeline-icon label-danger">
+                                <i class="fa fa-level-down" data-toggle="modal" data-target="#detailsEtape"></i>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="vertical-timeline-icon label-greenbee">
+                                <i class="fa fa-level-down"></i>
+                            </div>
+                        }
+                        <div class="vertical-timeline-content">
+                            <h2>Confirmation client</h2>
+                        </div>
+                    </div>
+
+
+                    <div class="vertical-timeline-block">
+                        @if (ViewBag.Etappe != 8 &&  ViewBag.Etape == 30)
+                        {
+
+                            @*<div class="vertical-timeline-icon label-purplebee">
+                                <i class="fa fa-level-down"></i>
+                            </div>*@
+                            <div class="vertical-timeline-icon label-purplebee">
+                                <i class="fa fa-level-down" data-toggle="modal" data-target="#detailsEtape"></i>
+                            </div>
+                        }
+                        else if (ViewBag.Etappe == 8 && ViewBag.Etape == 30)
+                        {
+                            <div class="vertical-timeline-icon label-danger">
+                                <i class="fa fa-level-down" data-toggle="modal" data-target="#detailsEtape"></i>
+                            </div>
+                        }
+                        else
+                        {
+
+                            <div class="vertical-timeline-icon label-greenbee">
+                                <i class="fa fa-level-down"></i>
+                            </div>
+                        }
+                        <div class="vertical-timeline-content">
+                            <h2>Traveaux TT </h2>
+                        </div>
+                    </div>
+
+
+
+                    <div class="vertical-timeline-block">
+                        @if (ViewBag.Etappe != 8 &&  ViewBag.Etape == 50 || ViewBag.Etappe != 8 &&  ViewBag.Etape == 80)
+                        {
+
+                            @*<div class="vertical-timeline-icon label-purplebee">
+                                <i class="fa fa-level-down"></i>
+                            </div>*@
+                            <div class="vertical-timeline-icon label-purplebee">
+                                <i class="fa fa-level-down" data-toggle="modal" data-target="#detailsEtape"></i>
+                            </div>
+                        }
+                        else if (ViewBag.Etappe == 8 && ViewBag.Etape == 50 || ViewBag.Etappe == 8 && ViewBag.Etape == 80)
+                        {
+                            <div class="vertical-timeline-icon label-danger">
+                                <i class="fa fa-level-down" data-toggle="modal" data-target="#detailsEtape"></i>
+                            </div>
+                        }
+                        else
+                        {
+
+                            <div class="vertical-timeline-icon label-greenbee">
+                                <i class="fa fa-level-down"></i>
+                            </div>
+                        }
+                        <div class="vertical-timeline-content">
+                            <h2>Mise en service TT</h2>
+                        </div>
+                    </div>
+
+                    @*eliminer else if travailler avec if else*@ 
+
+                <div class="vertical-timeline-block">
+
+                    @if (ViewBag.Etappe != 8 && ViewBag.Etape == 90)
+                    {
+                        <div class="vertical-timeline-icon label-purplebee">
+                            <i class="fa fa-level-down" data-toggle="modal" data-target="#detailsEtape"></i>
+                        </div>
+                    }
+                    else if (ViewBag.Etappe == 8 && ViewBag.Etape == 90)
+                    {
+                        <div class="vertical-timeline-icon label-danger">
+                            <i class="fa fa-level-down" data-toggle="modal" data-target="#detailsEtape"></i>
+                        </div>
+                    }
+                    else if (ViewBag.Etappe != 8 && ViewBag.Etape == 90)
+                    {
+                        <div class="vertical-timeline-icon label-purplebee">
+                            <i class="fa fa-level-down" data-toggle="modal" data-target="#detailsEtape"></i>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="vertical-timeline-icon label-greenbee">
+                            <i class="fa fa-level-down"></i>
+                        </div>
+                    }
+                    <div class="vertical-timeline-content">
+                        <h2>Abonnement validé</h2>
+                    </div>
+                </div>
+
+
+                    <div class="vertical-timeline-block">
+
+                        @if (ViewBag.Etappe == 8)
+                        {
+                            <div class="vertical-timeline-icon label-danger">
+                                <i class="fa fa-level-down" data-toggle="modal" data-target="#detailsEtape"></i>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="vertical-timeline-icon label-greenbee">
+                                <i class="fa fa-level-down"></i>
+                            </div>
+                        }
+                        <div class="vertical-timeline-content ">
+                            <h2>Abonnement annulé</h2>
+                        </div>
+                    </div>
+
+                    <div class="vertical-timeline-block">
+
+                        @if (ViewBag.Etappe != 8 && ViewBag.Etape == 100)
+                        {
+                            <div class="vertical-timeline-icon label-purplebee">
+                                <i class="fa fa-level-down" data-toggle="modal" data-target="#detailsEtape"></i>
+                            </div>
+                        }
+                        else if (ViewBag.Etappe == 8 && ViewBag.Etape == 100)
+                        {
+                            <div class="vertical-timeline-icon label-danger">
+                                <i class="fa fa-level-down" data-toggle="modal" data-target="#detailsEtape"></i>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="vertical-timeline-icon label-greenbee">
+                                <i class="fa fa-level-down"></i>
+                            </div>
+                        }
+                        <div class="vertical-timeline-content ">
+                            <h2>Clôture</h2>
+                        </div>
+                    </div>
+                    
+
+
+                </div>
+
+
+
+            </div>
+        </div>
+    </div>
+</div>
+
+

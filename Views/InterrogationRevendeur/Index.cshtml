@@ -1,0 +1,129 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<!-- Toastr style -->
+<link href="~/css/plugins/toastr/toastr.min.css" rel="stylesheet">
+<link href="~/css/plugins/datapicker/datepicker3.css" rel="stylesheet" />
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+<link href="~/css/plugins/chosen/bootstrap-chosen.css" rel="stylesheet">
+<link href="~/css/plugins/awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css" rel="stylesheet">
+<link href="~/css/plugins/iCheck/custom.css" rel="stylesheet">
+<!-- Sweet Alert -->
+<link href="~/css/plugins/sweetalert/sweetalert.css" rel="stylesheet">
+<!-- Ladda style -->
+<link href="~/css/plugins/ladda/ladda-themeless.min.css" rel="stylesheet">
+<link href="~/css/plugins/touchspin/jquery.bootstrap-touchspin.min.css" rel="stylesheet">
+<link href="~/css/plugins/jasny/jasny-bootstrap.min.css" rel="stylesheet">
+
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-lg-10">
+        <br />
+        <ol class="breadcrumb">
+            <li>
+                <a href="@Url.Action("index","Home")">Acceuil</a>
+            </li>
+            <li>
+                <a href="@Url.Action("Index","InterrogationRevendeur")">Interrogation Revendeur </a>
+            </li>
+            <li class="active">
+                <strong>Interrogation Revendeur </strong>
+            </li>
+        </ol>
+    </div>
+</div>
+
+<div class="wrapper wrapper-content animated fadeInRight">
+    @if (ViewBag.Agence == 0)
+    {
+        <div class="row">
+            <div class="col-lg-12">
+
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title" style="height:80px;">
+
+                        @using (Html.BeginForm("Index", "InterrogationRevendeur", FormMethod.Post))
+                        {
+                            <div class="col-sm-2">
+                                <label class="control-label">Selectionner une agence </label>
+                            </div>
+                            <div class="col-sm-6">
+                                <select name="A_Code" class="form-control chosen-select">
+                                    @foreach (var item in ViewBag.ListeAgence)
+                                    {
+
+                                        <option value="@item.cbMarq">@item.A_Intitule</option>
+
+                                    }
+                                </select>
+                            </div>
+                            <div class="col-sm-2">
+
+                                <button type="submit" class="btn btn-purplebee btn-rounded btn-outline">Interroger  </button>
+                            </div>
+
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+    else if (@ViewBag.test == true)
+    {
+        <div class="row">
+            <div class="col-lg-12">
+
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title" style="height:80px;">
+
+                        @using (Html.BeginForm("Index", "InterrogationRevendeur", FormMethod.Post))
+                        {
+                            <div class="col-sm-2">
+                                <label class="control-label">Selectionner une agence </label>
+                            </div>
+                            <div class="col-sm-6">
+                                <select name="A_Code" class="form-control chosen-select">
+                                    @foreach (var item in ViewBag.ListeAgence)
+                                    {
+
+                                        <option value="@item.cbMarq">@item.A_Intitule</option>
+
+                                    }
+                                </select>
+                            </div>
+                            <div class="col-sm-2">
+
+                                <button type="submit" class="btn btn-purplebee btn-rounded btn-outline">Interroger  </button>
+                            </div>
+
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+
+<!-- Toastr script -->
+<script src="~/js/plugins/toastr/toastr.min.js"></script>
+<script src="~/js/jquery-3.1.1.min.js"></script>
+<!-- Chosen -->
+<script src="~/js/plugins/chosen/chosen.jquery.js"></script>
+<script src="~/js/plugins/datapicker/bootstrap-datepicker.js"></script>
+<!-- Sweet alert -->
+<script src="~/js/plugins/sweetalert/sweetalert.min.js"></script>
+<!-- TouchSpin -->
+<script src="~/js/plugins/touchspin/jquery.bootstrap-touchspin.min.js"></script>
+<!-- Ladda -->
+<script src="~/js/plugins/ladda/spin.min.js"></script>
+<script src="~/js/plugins/ladda/ladda.min.js"></script>
+<script src="~/js/plugins/ladda/ladda.jquery.min.js"></script>
+
+<script>
+    $(document).ready(function () {
+        $('.chosen-select').chosen({ width: "100%" });
+    });
+</script>

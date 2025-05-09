@@ -1,0 +1,174 @@
+﻿<div class="wrapper wrapper-content project-manager">
+    <div class="ibox-content" id="ibox-content">
+        <div id="vertical-timeline" class="vertical-container dark-timeline">
+
+            <div class="vertical-timeline-block ">
+
+                @if (ViewBag.Etape == 0)
+                {
+                    <div class="vertical-timeline-icon label-purplebee">
+                        <i class="fa fa-pencil" data-toggle="modal" data-target="#detailsEtape"></i>
+                    </div>
+                }
+                else
+                {
+                    <div class="vertical-timeline-icon label-greenbee">
+                        <i class="fa fa-pencil"></i>
+                    </div>
+                }
+                <div class="vertical-timeline-content ">
+                    <h2>Référence TT</h2>
+                </div>
+            </div>
+            <div class="vertical-timeline-block ">
+
+                @if (ViewBag.Etape == 1)
+                {
+                    <div class="vertical-timeline-icon label-purplebee">
+                        <i class="fa fa-question" data-toggle="modal" data-target="#detailsEtape"></i>
+                    </div>
+                }
+                else
+                {
+                    <div class="vertical-timeline-icon label-greenbee">
+                        <i class="fa fa-question"></i>
+                    </div>
+                }
+                <div class="vertical-timeline-content ">
+                    <h2>Faisabilité</h2>
+                </div>
+            </div>
+
+            <div class="vertical-timeline-block ">
+
+                @if (ViewBag.Etape == 2)
+                {
+                    <div class="vertical-timeline-icon label-purplebee">
+                        <i class="fa fa-phone" data-toggle="modal" data-target="#detailsEtape"></i>
+                    </div>
+                }
+                else
+                {
+                    <div class="vertical-timeline-icon label-greenbee">
+                        <i class="fa fa-phone"></i>
+                    </div>
+                }
+                <div class="vertical-timeline-content ">
+                    <h2>Numéro Fixe</h2>
+                </div>
+            </div>
+           
+            <div class="vertical-timeline-block ">
+
+                @if (ViewBag.Etape == 3)
+                {
+                    <div class="vertical-timeline-icon label-purplebee">
+                        <i class="fa fa-vcard" data-toggle="modal" data-target="#detailsEtape"></i>
+                    </div>
+                }
+                else
+                {
+                    <div class="vertical-timeline-icon label-greenbee">
+                        <i class="fa fa-vcard"></i>
+                    </div>
+                }
+                <div class="vertical-timeline-content ">
+                    <h2>Offre de l'abonnement</h2>
+                </div>
+            </div>
+            <div class="vertical-timeline-block ">
+
+                @if (ViewBag.Etape == 4)
+                {
+                    <div class="vertical-timeline-icon label-purplebee">
+                        <i class="fa fa-vcard" data-toggle="modal" data-target="#detailsEtape"></i>
+                    </div>
+                }
+                else
+                {
+                    <div class="vertical-timeline-icon label-greenbee">
+                        <i class="fa fa-vcard"></i>
+                    </div>
+                }
+                <div class="vertical-timeline-content ">
+                    <h2>Frais démenagement</h2>
+                </div>
+            </div>
+            <div class="vertical-timeline-block ">
+
+                @if (ViewBag.Etape == 5)
+                {
+                    <div class="vertical-timeline-icon label-purplebee">
+                        <i class="fa fa-check" data-toggle="modal" data-target="#detailsEtape"></i>
+                    </div>
+                    @*if (ViewBag.statut == 4)
+                        {
+                            <div class="vertical-timeline-icon label-greenbee">
+                                <i class="fa fa-plus"></i>
+                            </div>
+
+
+                            <div class="vertical-timeline-content ">
+                                <h2> Annuler transfert</h2>
+                            </div>
+                        }*@
+                    @*<div class="vertical-timeline-content ">
+                            <h2>Annuler transfert</h2>
+                        </div>*@
+
+                }
+
+                else
+                {
+                    <div class="vertical-timeline-icon label-greenbee">
+                        <i class="fa fa-check"></i>
+                    </div>
+                }
+                <div class="vertical-timeline-content ">
+                    <h2>Validation du Transfert de ligne</h2>
+                </div>
+
+
+            </div>
+
+            <div class="vertical-timeline-block ">
+
+                @if (ViewBag.statut == 4)
+                {
+                    <div class="vertical-timeline-icon label-purplebee">
+                        <i class="fa fa-ban" data-toggle="modal" data-target="#detailsEtape"></i>
+                    </div>
+                }
+                else
+                {
+                    <div class="vertical-timeline-icon label-greenbee">
+                        <i class="fa fa-ban" data-toggle="modal" data-target="#detailsEtape"></i>
+                    </div>
+                }
+                <div class="vertical-timeline-content ">
+                    <h2>Annuler transfert</h2>
+                </div>
+            </div>
+            <div class="vertical-timeline-block ">
+
+                @if (ViewBag.Etape == 6 || ViewBag.Etape == 7)
+                {
+                    <div class="vertical-timeline-icon label-purplebee">
+                        <i class="fa fa-file" data-toggle="modal" data-target="#detailsEtape"></i>
+                    </div>
+                }
+                else
+                {
+                    <div class="vertical-timeline-icon label-greenbee">
+                        <i class="fa fa-file"></i>
+                    </div>
+                }
+                <div class="vertical-timeline-content ">
+                    <h2>Facturation</h2>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+

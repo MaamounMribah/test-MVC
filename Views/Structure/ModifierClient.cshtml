@@ -1,0 +1,225 @@
+﻿@model BeeProj.Models.D_COMPTET
+@{
+    ViewBag.Title = "ModifierClient";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<link href="~/css/plugins/chosen/bootstrap-chosen.css" rel="stylesheet">
+
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-sm-4">
+        <h2> Modifier Client</h2>
+        <ol class="breadcrumb">
+
+            <li>
+                <a href="@Url.Action("index","Home")">Acceuil </a>
+            </li>
+            <li>
+                <a href=@Url.Action("ListeClients", "Structure")>Liste des Clients</a>
+            </li>
+
+
+            <li class="active">
+                <a href=@Url.Action("ModifierClient", "Structure")><strong>Modifier Client</strong></a>
+            </li>
+        </ol>
+    </div>
+</div>
+<br />
+   @if (ViewBag.msg != null)
+                {
+                    <div class="alert alert-danger alert-dismissable">
+                        <button type="button" class="close " data-dismiss="alert">×</button>
+                        <p>@ViewBag.msg</p>
+                    </div>
+                }
+<div class="ibox-content">
+    <div class="row m-t-sm">
+        <div class="col-lg-12">
+            <div class="panel blank-panel">
+             
+
+                <div class="panel-body">
+
+                    <div class="tab-content">
+
+                        @using (Html.BeginForm("ModifierClient", "Structure", FormMethod.Post, new { id = "popupForm" }))
+                        {
+                            <fieldset id="SubmitForm" class="form-horizontal bordered-row">
+                                @Html.HiddenFor(model => Model.cbMarq)
+
+                                <div class="row">
+                                    <div class="row form-group col-md-6">
+                                        <div class="col-md-12">
+
+                                            <label>Nom et prénom<sup>*</sup></label>
+
+                                            <div class="input-group">
+                                                <span class="input-group-addon"><i class="fa fa-user"></i></span>
+                                                <input type="text" class="form-control" name="CT_Intitule" id="CT_Intitule" value="@Model.CT_Intitule">
+
+                                            </div>
+                                            @Html.ValidationMessageFor(m => Model.CT_Intitule)
+                                        </div>
+                                    </div>
+                                    <div class="row form-group col-md-6">
+                                        <div class="col-md-12">
+
+                                            <label>Identifiant</label>
+
+
+                                            <div class="input-group">
+                                                <span class="input-group-addon"><i class="fa fa-flag"></i></span>
+                                                <input type="text" class="form-control" name="CT_Identifiant" id="CT_Identifiant" value="@Model.CT_Identifiant">
+
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                    <div class="row form-group col-md-6">
+                                        <div class="col-md-12">
+
+                                            <label>Telephone</label>
+
+                                            <div class="input-group">
+                                                <span class="input-group-addon"><i class="fa fa-phone"></i></span>
+                                                @*@Html.TextBoxFor(m => Model.CT_Telephone, new { @id = "CT_Telephone", @class = "form-control", @placeholder = "Telephone ..." })*@
+                                                <input type="text" class="form-control" name="CT_Telephone" id="CT_Telephone" value="@Model.CT_Telephone">
+
+
+                                            </div>
+                                          
+                                        </div>
+                                    </div>
+                                    <div class="row form-group col-md-6">
+                                        <div class="col-md-12">
+
+                                            <label>Date de naissance</label>
+
+                                            
+                                            <div class="input-group">
+                                                <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                                                <input class="form-control" pattern="\d{1,2}/\d{1,2}/\d{4}" type="text" id="CT_DateNaiss" name="CT_DateNaiss" value="@Model.CT_DateNaiss.GetValueOrDefault().ToString("dd/MM/yyyy")"
+                                                       placeholder="jj/mm/aaaa" /> <br />
+                                                @Html.ValidationMessageFor(m => Model.CT_DateNaiss)
+
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+                                    <div class="row form-group col-md-6">
+                                        <div class="col-md-12">
+
+                                            <label>Fax</label>
+
+
+                                            <div class="input-group">
+                                                <span class="input-group-addon"><i class="fa fa-briefcase"></i></span>
+                                                <input type="text" class="form-control" name="CT_Telecopie" id="CT_Telecopie" value="@Model.CT_Telecopie" placeholder = "Fax ...">
+
+                                            </div>
+                                            @Html.ValidationMessageFor(m => Model.CT_Telecopie)
+                                        </div>
+
+                                    </div>
+                                    <div class="row form-group col-md-6">
+                                        <div class="col-md-12">
+
+                                            <label>Email</label>
+
+
+                                            <div class="input-group">
+                                                <span class="input-group-addon"><i class="fa fa-envelope-open-o"></i></span>
+                                                <input type="text" class="form-control" name="CT_EMail" id="CT_EMail" value="@Model.CT_EMail" placeholder="CT_EMail...">
+
+                                            </div>
+                                            @Html.ValidationMessageFor(m => Model.CT_EMail)
+                                        </div>
+
+                                    </div>
+                                    <div class="row form-group col-md-6">
+                                        <div class="col-md-12">
+
+                                            <label>Société<sup>*</sup></label>
+
+
+                                            <div class="input-group">
+                                                <span class="input-group-addon"><i class="fa fa-university"></i></span>
+
+                                                <select class="form-control chosen-select" id="PersonneMorale" name="PersonneMorale">
+                                                    <option>--choisir--</option>
+                                                    @foreach (var item in ViewBag.ListePersonneMorale)
+                                                    {
+                                                        if (item.cbMarq == Model.ID_Moral)
+                                                        {
+                                                            <option value=@item.cbMarq selected>@item.CT_Intitule</option>
+                                                        }
+                                                        else
+                                                        {
+                                                            <option value=@item.cbMarq>@item.CT_Intitule</option>
+
+                                                        }
+                                                    }
+                                                </select>
+
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                    <div class="row form-group col-md-6">
+                                        <div class="col-md-12">
+
+                                            <label>Matricule société</label>
+
+
+                                            <div class="input-group">
+                                                <span class="input-group-addon"><i class="fa fa-address-card"></i></span>
+                                                <input type="text" class="form-control" name="CT_MatriculeSociete" id="CT_MatriculeSociete" value="@Model.CT_MatriculeSociete" placeholder = "MatriculeSociete ...">
+                                            </div>
+                                            @Html.ValidationMessageFor(m => Model.CT_MatriculeSociete)
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+                                <br />
+                                <br />
+                                <div class="modal-footer">
+
+                                    <button type="submit" class="btn btn-greenbee ladda-button ladda-button-demo" name="cmd"><i class="fa fa-check"></i>&nbsp;Enregistrer les modifications</button>
+                                </div>
+
+
+                            </fieldset>
+
+                        }
+
+
+
+
+
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Toastr script -->
+<script src="~/js/plugins/toastr/toastr.min.js"></script>
+<script src="~/js/jquery-3.1.1.min.js"></script>
+<!-- Chosen -->
+<script src="~/js/plugins/chosen/chosen.jquery.js"></script>
+<script src="~/js/plugins/codemirror/codemirror.js"></script>
+<script src="~/js/plugins/codemirror/mode/xml/xml.js"></script>
+<script src="~/js/plugins/jasny/jasny-bootstrap.min.js"></script>
+<script>
+
+    $(document).ready(function () {
+        $('.chosen-select').chosen({ width: "100%" });
+    });
+</script>

@@ -1,0 +1,232 @@
+﻿@model BeeProj.Models.D_ARTICLE
+@{
+    ViewBag.Title = "DetailsArticle";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<link href="~/css/plugins/chosen/bootstrap-chosen.css" rel="stylesheet">
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="ibox-content">
+        <h3>Détails Article:  Ref# @Model.AR_Ref</h3>
+        <ol class="breadcrumb">
+            <li>
+                <a href="@Url.Action("index","Home")">Acceuil </a>
+            </li>
+            <li>
+                <a href=@Url.Action("ListeArticles", "Structure")>Liste des Articles</a>
+            </li>
+            <li class="active">
+                <strong>Détails Article </strong>
+            </li>
+        </ol>
+    </div>
+</div>
+<div class="row m-t-md">
+    <div class="col-lg-12">
+        <div class="ibox product-detail">
+            <div class="ibox-content">
+                <div class="row">
+                    <div class="col-md-5">
+                        <div class="product-images">
+                            <div>
+                                <div class="">
+                                    <img src="@Url.Action("PhotoArticle", "Structure" , new { id= Model.cbMarq })" class="img-preview img-responsive img-rounded" onError="this.onerror=null;this.src='/img/DefaultImage.png';" />
+                                </div>
+                            </div>                          
+                        </div>
+                    </div>
+                    <div class="col-md-7">
+                        <h2 class="font-bold m-b-xs">
+                            Le produit Ref# @Model.AR_Ref
+                        </h2>
+                        <small>@Model.AR_Commentaire</small>
+                        </br>
+                        </br>
+                        <small>@Model.AR_Clause</small>
+
+                        <h3>Détails du produit</h3>
+                        </br>
+                        <div class="col-lg-5">
+                            <dl class="dl-horizontal">
+                                <dt>Désignation : </dt>
+                                <dd>@Html.DisplayFor(model => model.AR_Design)</dd>
+                                </br>
+                                <dt>Famille:</dt>
+                                <dd>@Html.DisplayFor(model => model.FA_CodeFamille)</dd>
+                                </br>
+                                @if (Model.AR_TypeBEE == 0)
+                                {
+                                    <dt>Débit :</dt>
+                                    <dd>@Html.DisplayFor(model => model.D_Debit) </dd>
+                                }
+                                else if (Model.AR_TypeBEE == 1)
+                                {
+                                    <dt>Code à barre :</dt>
+                                    <dd>@Html.DisplayFor(model => model.AR_CodeBarre) </dd>
+                                }
+                                </br>
+                                @*<dt>Code ERP : </dt>
+                <dd>@Html.DisplayFor(model => model.AR_CodeERP)</dd>
+                </br>*@
+                                @if (Model.AR_Engagement != null && Model.AR_Engagement != 0)
+                                {
+                                    <dt>Période d'engagement : </dt>
+                                    <dd>@Html.DisplayFor(model => model.AR_Engagement) Mois</dd>
+                                }
+                                </br>
+                            </dl>
+                        </div>
+                        <div class="col-lg-5">
+                            <dl class="dl-horizontal">
+                                <dt>Prix d'achat : </dt>
+                                <dd>@Html.DisplayFor(model => model.AR_PrixAch)</dd>
+                                </br>
+                                <dt>Prix de vente :</dt>
+                                <dd>@Html.DisplayFor(model => model.AR_PrixVente)</dd>
+                                </br>
+                                <dt>Prix Minimal :</dt>
+                                <dd>@Html.DisplayFor(model => model.Montant_Min)</dd>
+                                </br>
+                                <dt>Fréquence Minimale : </dt>
+                                <dd>@Html.DisplayFor(model => model.FrequenceMin)</dd>
+                                </br>
+                                <dt><i class="fa fa-percent"></i> Remise par défaut  </dt>
+                                <dd>@Html.DisplayFor(model => model.AR_Remise)</dd>
+                                </br>
+                                <dt>Remise si 3 mois</dt>
+                                <dd>@Html.DisplayFor(model => model.AR_RemiseP3)</dd>
+                                </br>
+                                <dt>Remise si 6 mois </dt>
+                                <dd>@Html.DisplayFor(model => model.AR_RemiseP6)</dd>
+                                </br>
+                                <dt>Remise si 12 mois </dt>
+                                <dd>@Html.DisplayFor(model => model.AR_RemiseP12)</dd>
+                                </br>
+
+                            </dl>
+                        </div>
+
+
+
+                        <div class="form-group">
+                            <div class="col-lg-6" id="cluster_info">
+                                <span> <strong> Liste des articles liés :</strong> </span>
+                                @if (ViewBag.ArticleListLie.Count != 0)
+                                {
+                                    foreach (var item in ViewBag.ArticleListLie)
+                                    {
+                                        <span> <i class="fa fa-shopping-cart"></i> @item.NO_RefDet </span>
+                                    }
+                                }
+                                else
+                                {
+                                    <span>-</span>
+                                }
+
+                            </div>
+                            <div class="col-lg-6" id="cluster_info">
+                                <span> <strong>Liste des Articles de proposition :</strong>  </span>
+                                @if (ViewBag.ArticleListProp.Count != 0)
+                                {
+                                    foreach (var item in ViewBag.ArticleListProp)
+                                    {
+                                        <span> <i class="fa fa-shopping-cart"></i> @item.NO_RefDet </span>
+                                    }
+                                }
+                                else
+                                {
+                                    <span>-</span>
+                                }
+                            </div>
+                            </br>
+                        </div>
+                        <br />
+                        <div class="form-group">
+                            <div class="col-lg-10" id="cluster_info">
+                                <dl class="dl-horizontal">
+
+
+
+                                    @if (Model.AR_Garantie == 0 && ViewBag.modalite == null)
+                                    {
+                                        <dt>Garantie :</dt>
+                                        <dd><i class="fa fa-circle text-success"></i>  Oui </dd>
+
+
+
+                                    }
+
+                                    else if (Model.AR_Garantie == 0 && ViewBag.modalite != null)
+                                    {
+                                        <dt>Garantie :</dt>
+                                        <dd>OUI </dd>
+                                        foreach (var item in ViewBag.modalite)
+                                        {
+                                            <dd style="padding-right:100px;">
+                                                <i class="fa fa-circle text-navy"></i>
+                                                @item.P_MODALITEPAIEMENT.Intitule <strong>
+                                                    @item.P_MODALITEPAIEMENT.NbCheques Chéques
+                                                </strong>avec <span class="text-danger">@string.Format("{0:0.000}", item.P_MODALITEPAIEMENT.Remise) </span> % Remise.
+                                            </dd>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <dt>Garantie :</dt>
+                                        <dd>Non </dd>
+                                    }
+                                </dl>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-lg-10" id="cluster_info">
+                                <dl class="dl-horizontal">
+                                    <dt>Articles Replacements :</dt>
+                                    @foreach (var item in ViewBag.ArticleRemplacement)
+                                    {
+                                        <dd> <i class="fa fa-star"></i><strong>@item.AR_RefRemplacement</strong> </dd>
+                                    }
+                                </dl>
+                            </div>
+                        </div>
+                        @if(Model.PackBase != null)
+                            {
+                                    <div class="form-group">
+                                        <div class="col-lg-10" id="cluster_info">
+                                            <dl class="dl-horizontal">
+                                                <dt>Pack de base  :</dt>
+
+                                                <dd> <i class="fa fa-star"></i><strong>@Model.PackBase </strong > </dd >
+                                            </dl>
+                                        </div>
+                                    </div>
+                            }
+                        
+                    </div>
+                        </div>
+                        <div>
+                            <div class="btn-group pull-right">
+                                <a href=@Url.Action("ModifierArticle/"+Model.cbMarq, "Structure") class="btn btn-primary btn-sm"><i class="fa fa-binoculars "></i>Modifier</a>
+                                <button class="btn btn-white btn-sm"><i class="fa fa-star"></i> Mettre en Someil </button>
+                                @*<button class="btn btn-white btn-sm"><i class="fa fa-trash"></i> Supprimer </button>*@
+                            </div>
+                        </div>
+                    </div>          
+        </div>
+    </div>
+</div>
+<script src="~/js/jquery-3.1.1.min.js"></script>
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+<!-- Chosen -->
+<script src="~/js/plugins/chosen/chosen.jquery.js"></script>
+<!-- JSKnob -->
+<script src="~/js/plugins/jsKnob/jquery.knob.js"></script>
+<!-- Input Mask-->
+<script src="~/js/plugins/jasny/jasny-bootstrap.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $('.chosen-select').chosen({ width: "100%" });
+    });
+</script>
+
+
+

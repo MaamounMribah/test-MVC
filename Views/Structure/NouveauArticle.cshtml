@@ -1,0 +1,392 @@
+﻿@model BeeProj.Models.D_ARTICLE
+@{
+    ViewBag.Title = "NouveauArticle";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<link href="~/css/plugins/chosen/bootstrap-chosen.css" rel="stylesheet">
+
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-sm-4">
+        <h2>Nouvel Article</h2>
+        <ol class="breadcrumb">
+
+            <li>
+                <a>Structue </a>
+            </li>
+            <li>
+                <a>Liste des articles</a>
+            </li>
+
+            <li class="active">
+                <strong>Nouvel Article</strong>
+            </li>
+        </ol>
+    </div>
+</div>
+
+<script src="~/js/plugins/metisMenu/jquery.metisMenu.js"></script>
+
+@using (Html.BeginForm("SaveArticle", "Structure", FormMethod.Post, new { @class = "form-horizontal", role = "form", enctype = "multipart/form-data" }))
+{
+<div class="wrapper wrapper-content">
+
+    <div class="row">
+        <div class="col-lg-4">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <span class="label label-success pull-right">Types</span>
+                    @*<h5>Income</h5>*@
+                </div>
+                <div class="ibox-content">
+
+                    <label>Type </label>
+                    @*<input type="text" id="DepotEntete" name="" class="form-control" disabled />*@
+
+
+                    <div class="bg-white input-prepend">
+                        @Html.DropDownListFor(m => m.AR_Type, new List<SelectListItem>()
+                                                        {
+
+                                                            new SelectListItem(){ Text= "Materiel", Value = "0"},
+                                                             new SelectListItem(){ Text= "Service", Value = "1"},
+
+                                                         }, new { @id = "AR_Type", @class = "form-control" })
+
+
+
+
+
+
+                        @*<input name="AR_Type" id="AR_Type" class="form-control"  />*@
+                    </div>
+
+
+
+                    <label>Suivie en stock </label>
+                    @*<input type="text" id="DepotEntete" name="" class="form-control" disabled />*@
+
+
+                    <div class="bg-white input-prepend">
+
+
+                        @Html.DropDownListFor(m => m.AR_SuiviStock, new List<SelectListItem>()
+                                                        {
+                                                            new SelectListItem(){ Text= "Aucun", Value = "0"},
+                                                            new SelectListItem(){ Text= "Sérialisé", Value = "1"},
+
+                                                             new SelectListItem(){ Text= "CMUP", Value = "2"},
+                                                         }, new { @id = "AR_SuiviStock", @class = "form-control" })
+
+
+
+
+
+
+
+                    </div>
+
+
+                    <label>Famille</label>
+                    <div class="input-prepend">
+
+                        @*<input name="FA_CodeFamille" id="FA_CodeFamille" class="form-control" />*@
+
+                        <select id="FA_CodeFamille" name="FA_CodeFamille" class="form-control">
+                            @foreach (var item in ViewBag.listeFamilleMateriel)
+                            {
+                                <option value="@item.FA_CodeFamille">@item.FA_CodeFamille</option>
+                            }
+                        </select>
+                        @*@Html.DropDownListFor(m => m.FA_CodeFamille, ViewBag.listeFamilleMateriel as SelectList, new { @class = "form-control chosen-select " })
+
+
+                        @Html.DropDownListFor(m => m.FA_CodeFamille, ViewBag.listeFamilleService as SelectList, new { @class = "form-control chosen-select " })*@
+
+
+
+
+                    </div>
+
+
+
+                    <label>Débit</label>
+                    <div class="input-prepend">
+
+                        <input name="D_Debit" id="D_Debit" class="form-control" disabled />
+
+                    </div>
+
+
+
+
+
+
+
+
+
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <span class="label label-info pull-right">Codes</span>
+                    @*<h5>Orders</h5>*@
+                </div>
+                <div class="ibox-content">
+
+
+
+                    <label>Code Article </label>
+
+                    <div class="input-prepend ">
+                        <input id="AR_Ref" name="AR_Ref" class="form-control" />
+
+
+                    </div>
+
+
+
+                    <label>Désignation </label>
+                    <div class="input-prepend">
+                        <input id="AR_Design" name="AR_Design" class="form-control" />
+
+
+
+                    </div>
+
+
+
+
+                    <label>Code ERP</label>
+                    <div class="input-prepend">
+
+                        <input name="AR_CodeERP" id="AR_CodeERP" class="form-control" />
+
+                    </div>
+
+                    <label>Code à barre</label>
+                    <div class="input-prepend ">
+                        <input id="AR_CodeBarre" name="AR_CodeBarre" class="form-control" />
+
+                    </div>
+
+
+
+
+
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <span class="label label-danger pull-right">Prix</span>
+                    @*<h5>visits</h5>*@
+                </div>
+                <div class="ibox-content">
+
+
+                    <label>Prix Achat</label>
+                    <div class="input-prepend ">
+                        <input id="AR_PrixAch" name="AR_PrixAch" class="form-control" />
+
+                    </div>
+
+                    <label>Prix Vente</label>
+                    <div class="input-prepend ">
+                        <input id="AR_PrixVen" name="AR_PrixVen" class="form-control" />
+
+                    </div>
+
+
+
+
+
+                    <label>Unité de vente</label>
+                    <div class="input-prepend ">
+                        @*<input id="AR_UniteVen" name="AR_UniteVen" class="form-control" />*@
+                        @Html.DropDownListFor(m => m.AR_UniteVen, ViewBag.UniteList as SelectList, new { @class = "form-control chosen-select " })
+
+
+                    </div>
+
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <label>Remise %</label>
+                            <div class="input-prepend ">
+                                <input id="AR_Remise" name="AR_Remise" class="form-control" />
+
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <label>Garantie</label>
+                            <div class="input-prepend ">
+                                <input id="AR_Garantie" name="AR_Garantie" class="form-control" />
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+   
+
+
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="ibox float-e-margins">
+                <div class="ibox-content">
+                    <div class="ibox-title">
+                        <span class="label label-warning pull-right">Affichage</span>
+                        @*<h5>visits</h5>*@
+                    </div>
+
+                    <div class="m-t-sm">
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div>
+
+                                    <label>Description</label>
+                                    <span class="help-block m-b-none">
+                                        @*<textarea class="form-control" name="AR_Description" form="usrform" id="AR_Description"></textarea>*@
+                                        @Html.TextAreaFor(m => m.AR_Description, new { id = "AR_Description", @placeholder = "Description...", @class = "form-control" })
+                                    </span>
+
+
+
+
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <label>Attacher une Image</label>
+
+                                <div><input type="file" class="form-control" id="AR_Photo" name="AR_Photo"></div>
+
+
+                            </div>
+
+                        </div>
+                    </div>
+
+
+                </div>
+
+
+
+
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <span class="label label-primary pull-right">Liés</span>
+                    <h5>Articles liées</h5>
+                </div>
+                <div class="col-sm-12 hidden" id="lie">
+                    <div class="row">
+                        <div class="ibox-content">
+
+                            <span>
+                                <select data-placeholder="Choisir un article lié..." class="chosen-select form-control" multiple style="width:350px;" tabindex="4" name="selectedAticle">
+
+                                    @foreach (var item in ViewBag.ArticleList)
+                                    {
+                                        <option name="selectLié" selected="@item.Selected" value="@item.Value">@item.Text</option>
+                                    }
+                                </select>
+                            </span>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="row">
+
+        <div class="col-lg-12">
+            <div class="ibox-content">
+                <div class="ibox float-e-margins">
+
+                    <div class="btn-group pull-right">
+
+                        <button class="btn btn-primary  pull-right m-t-n-xs" style="margin-left:10px;" type="submit"><strong>Envoyer</strong></button>
+                        <button type="reset" class="btn btn-white  pull-right m-t-n-xs"><strong>Annuler</strong></button>
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+    
+
+</div>
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+             
+                <script src="~/js/jquery-3.1.1.min.js"></script>
+                <!-- Input Mask-->
+                <script src="~/js/plugins/jasny/jasny-bootstrap.min.js"></script>
+                <script src="~/js/plugins/chosen/chosen.jquery.js"></script>
+
+
+                <script>
+
+                    $(document).ready(function () {
+
+                        $('.chosen-select').chosen({ width: "100%" });
+                        $('#AR_Type').change(function () {
+
+
+                            if ($("#AR_Type").val() == 0) {
+                                $("#D_Debit").prop('disabled', true);
+                                $("#AR_CodeBarre").prop('disabled', false);
+                                $('#lie').addClass('hidden');
+                                $("#FA_CodeFamille").empty();
+                                $("#FA_CodeFamille").append('@foreach(var item in ViewBag.listeFamilleMateriel)
+                                {<option value="@item.FA_CodeFamille">@item.FA_CodeFamille</option>}');
+                            }
+                            else {
+                                $("#D_Debit").prop('disabled', false);
+                                $("#AR_CodeBarre").prop('disabled', true);
+                                $('#lie').removeClass('hidden');
+                                  $("#FA_CodeFamille").empty();
+                                $("#FA_CodeFamille").append('@foreach(var item in ViewBag.listeFamilleService)
+                                {<option value="@item.FA_CodeFamille">@item.FA_CodeFamille</option>}');
+                            }
+                        });
+
+                    });
+                </script>
+
+
+

@@ -1,0 +1,975 @@
+﻿@model BeeProj.ViewModels.KPIdashbordViewModel
+@{
+    ViewBag.Title = "EtatVenteParPoste";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@*<h2>EtatVenteParPoste</h2>*@
+
+
+<link href="~/css/plugins/iCheck/custom.css" rel="stylesheet">
+<link href="~/css/plugins/jasny/jasny-bootstrap.min.css" rel="stylesheet">
+<link href="~/css/plugins/footable/footable.core.css" rel="stylesheet">
+<link href="~/css/plugins/chosen/bootstrap-chosen.css" rel="stylesheet">
+<link href="~/css/plugins/sweetalert/sweetalert.css" rel="stylesheet">
+<link href="~/css/plugins/dataTables/datatables.min.css" rel="stylesheet">
+
+<!-- Ladda style -->
+<link href="~/css/plugins/ladda/ladda-themeless.min.css" rel="stylesheet">
+<!-- Toastr style -->
+<link href="~/css/plugins/toastr/toastr.min.css" rel="stylesheet">
+<script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+<link href="~/css/plugins/c3/c3.min.css" rel="stylesheet">
+<link href="~/css/plugins/morris/morris-0.4.3.min.css" rel="stylesheet">
+
+
+
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-lg-12">
+        <br />
+        <h3 class="text-black-50"><a href="@Url.Action("Index", "Dashboard")">Généralité KPI</a></h3>
+        <ol class="breadcrumb">
+            <li>
+                <a href="@Url.Action("Index", "Dashboard")"><label class="text-success">Chiffre d’affaire,paiement et versement mensuel</label></a>
+            </li>
+            <li>
+                <a href="@Url.Action("KPIs", "Dashboard")">@*>>*@<label class="text-success"> Etat mensuel des ventes</label></a>
+            </li>
+            <li>
+                <a href="@Url.Action("EtatVenteParPoste", "Dashboard")">@*>>*@ <label class="text-success"> Etat mensuel des ventes par la Poste</label></a>
+            </li>
+            <li>
+                <a href="@Url.Action("EtatMensuelPaiementPoste", "Dashboard")">@*>>*@ <label class="text-success"> Etat mensuel des paiements par la Poste</label> </a>
+            </li>
+
+        </ol>
+        <ol class="breadcrumb">
+            <li>
+                <a href="@Url.Action("Index", "Dashboard")">@*>>*@  <label class="text-success"> Etat des ventes et paiement par point de vente</label> </a>
+            </li>
+            <li>
+                <a href="@Url.Action("Index", "Dashboard")">@*>>*@ <label class="text-success"> Etat des impayés</label> </a>
+            </li>
+            <li>
+                <a href="@Url.Action("EtatRecapitulatifDemandesEnCours", "Dashboard")">@*>>*@ <label class="text-success"> Etat récapitulatif des demandes en cours</label> </a>
+            </li>
+            <li>
+                <a href="@Url.Action("EtatRecapitulatifDeFacturation", "Dashboard")">@*>>*@ <label class="text-success"> Etat récapitulatif de facturation</label> </a>
+            </li>
+            <li>
+                <a href="@Url.Action("Index", "Dashboard")">@*>>*@ <label class="text-success"> Etat des paiements</label> </a>
+            </li>
+            <li>
+                <a href="@Url.Action("BilanActivite", "Dashboard")">@*>>*@ <label class="text-success"> Bilan de l’activité</label> </a>
+            </li>
+        </ol>
+    </div>
+    <div class="col-lg-2">
+
+    </div>
+</div>
+
+<div class="wrapper wrapper-content  animated fadeInRight">
+    <div class="row">
+        <div class="col-sm-12">
+
+            <div class="ibox">
+                <div class="ibox-content" style="height:1000px">
+                    <div class="row">
+                        @using (Html.BeginForm("EtatVenteParPoste", "Dashboard", FormMethod.Post))
+                        {
+                            <div class="input-group">
+                                <span class="text-purplebee">
+                                    Du <strong>@Model.StartDate.GetValueOrDefault().ToString("dd/MM/yyyy")</strong>
+                                    au <strong>@Model.EndDate.GetValueOrDefault().ToString("dd/MM/yyyy")</strong>
+                                </span>
+                                <div class="input-daterange input-group" id="datepicker">
+                                    @Html.TextBoxFor(model => model.StartDate, new { type = "date", @class = "form-control" })
+                                    <span class="input-group-addon">au </span>
+                                    @Html.TextBoxFor(model => model.EndDate, new { type = "date", @class = "form-control" })
+                                    <span class="input-group-btn">
+                                        <button type="submit" class="btn btn-purplebee ladda-button ladda-button-demo">Filtrer</button>
+                                    </span>
+                                </div>
+
+                            </div>
+
+
+                        }
+                    </div>
+
+                    <div class="clients-list">
+                        <ul class="nav nav-tabs">
+                            <li class="active"><a data-toggle="tab" href="#tab-2-1">Demande en cours Poste </a></li>
+                            <li class=""><a data-toggle="tab" href="#tab-2-2">Demandes annulé poste</a></li>
+                            <li class=""><a data-toggle="tab" href="#tab-2-3">Demandes validé poste</a></li>
+
+                        </ul>
+
+                        <div class="tab-content">
+                            <!----------------------------------- Etat mensuel des ventes par la Poste ------------------------>
+                            <!--Demande en  cours Poste  -->
+                            <div id="tab-2-1" class="tab-pane active">
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                        <div class="ibox float-e-margins">
+
+                                            <div class="ibox-content">
+                                                <div class="ibox">
+                                                    <div class="col-lg-6">
+                                                        <canvas id="myChart" height="114"></canvas>
+                                                    </div>
+                                                    @*<div class="col-lg-6">
+                                                        <canvas id="barChart" height="114"></canvas>
+                                                    </div>*@
+                                                    <center>
+                                                        <small>
+                                                            <strong>Total Nombre par annee :</strong>
+                                                        </small><br />
+                                                    </center>
+                                                    <div class="col-lg-6">
+                                                        <canvas id="doughnutChart6" height="50" title="Total Nombre par annee"></canvas>
+                                                    </div>
+                                                    <center>
+                                                        <small>
+                                                            <strong>Total Montant par annee :</strong>
+                                                        </small><br />
+                                                    </center>
+                                                    <div class="col-lg-6">
+                                                        <canvas id="doughnutChartt6" height="50" title="Total Montant par annee"></canvas>
+                                                    </div>
+                                                    <br />
+                                                    <div class="ibox-content">
+                                                        @*<div class="row">*@
+                                                        <h3 class="font-bold no-margins">
+                                                            Nombre et Montant des abonnements en  cours Poste
+                                                        </h3>
+                                                        <div class="clients-list">
+                                                            <ul class="nav nav-tabs">
+
+                                                                @foreach (var item4 in ViewBag.demandeAboEnCoursPoste)
+                                                                {
+                                                                    <li class="bg-primary">
+                                                                        <a data-toggle="tab" href="#A_@item4.GetType().GetProperty("Key").GetValue(item4)">
+                                                                            <i class="fa fa-calendar"></i>@item4.GetType().GetProperty("Key").GetValue(item4)
+                                                                        </a>
+                                                                    </li>
+                                                                }
+
+                                                            </ul>
+                                                            <div class="tab-content">
+
+                                                                @foreach (var grouped4 in ViewBag.demandeAboEnCoursPoste)
+                                                                {
+                                                                    if (grouped4.GetType().GetProperty("Key").GetValue(grouped4) == 2020)
+                                                                    {
+                                                                        <div id="A_@grouped4.GetType().GetProperty("Key").GetValue(grouped4)"
+                                                                             class="tab-pane active text-black-50">
+                                                                            <div class="full-height-scroll">
+                                                                                <div class="table-responsive">
+
+                                                                                    <table class="table table-striped table-hover data datatable-style">
+
+                                                                                        <thead>
+                                                                                            <tr>
+                                                                                                <th>Mois</th>
+                                                                                                <th colspan="2">Demandes en  cours Poste</th>
+                                                                                            </tr>
+                                                                                            <tr>
+                                                                                                <th> </th>
+                                                                                                <TH>Nombre</TH>
+                                                                                                <TH>Montant</TH>
+                                                                                            </tr>
+                                                                                        </thead>
+                                                                                        <tbody>
+                                                                                            @foreach (var item4 in grouped4)
+                                                                                            {
+
+                                                                                                <tr>
+                                                                                                    <td>@System.Globalization.CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(item4.Mois)</td>
+                                                                                                    <td>@item4.Nombre</td>
+                                                                                                    <td>@item4.Montant</td>
+
+                                                                                                </tr>
+
+
+
+                                                                                            }
+                                                                                            <tr>
+                                                                                                @foreach (var gd4 in ViewBag.TotalMontantNombreAboEnCoursPoste)
+                                                                                                {
+                                                                                                    if (grouped4.GetType().GetProperty("Key").GetValue(grouped4) == gd4.Annee)
+                                                                                                    {
+                                                                                                        <td>Total : </td>
+                                                                                                                <td> <span class="fa fa-calculator"></span> @gd4.NombreTotal </td>
+                                                                                                                <td> <span class="fa fa-calculator"></span> @gd4.MontantTotal </td>
+                                                                                                    }
+                                                                                                }
+                                                                                            </tr>
+                                                                                        </tbody>
+                                                                                    </table>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        <div id="A_@grouped4.GetType().GetProperty("Key").GetValue(grouped4)"
+                                                                             class="tab-pane active text-black-50">
+                                                                            <div class="full-height-scroll">
+                                                                                <div class="table-responsive">
+
+                                                                                    <table class="table table-striped table-hover data datatable-style">
+
+                                                                                        <thead>
+                                                                                            <tr>
+                                                                                                <th>Mois</th>
+                                                                                                <th colspan="2">Demandes en  cours Poste</th>
+                                                                                            </tr>
+                                                                                            <tr>
+                                                                                                <th> </th>
+                                                                                                <TH>Nombre</TH>
+                                                                                                <TH>Montant</TH>
+                                                                                            </tr>
+                                                                                        </thead>
+                                                                                        <tbody>
+                                                                                            @foreach (var item4 in grouped4)
+                                                                                            {
+
+                                                                                                <tr>
+                                                                                                    <td>@System.Globalization.CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(item4.Mois)</td>
+                                                                                                    <td>@item4.Nombre</td>
+                                                                                                    <td>@item4.Montant</td>
+
+                                                                                                </tr>
+
+
+
+                                                                                            }
+                                                                                            <tr>
+                                                                                                @foreach (var gd4 in ViewBag.TotalMontantNombreAboEnCoursPoste)
+                                                                                                {
+                                                                                                    if (grouped4.GetType().GetProperty("Key").GetValue(grouped4) == gd4.Annee)
+                                                                                                    {
+                                                                                                        <td>Total : </td>
+                                                                                                                <td> <span class="fa fa-calculator"></span> @gd4.NombreTotal </td>
+                                                                                                                <td> <span class="fa fa-calculator"></span> @gd4.MontantTotal </td>
+                                                                                                    }
+                                                                                                }
+                                                                                            </tr>
+                                                                                        </tbody>
+                                                                                    </table>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+
+                                                                    }
+                                                                }
+                                                            </div>
+                                                        </div>
+                                                        @*</div>*@
+
+                                                    </div>
+
+
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!--Demandes annulé poste-->
+                            <div id="tab-2-2" class="tab-pane">
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                        <div class="ibox float-e-margins">
+
+                                            <div class="ibox-content">
+                                                <div class="ibox">
+                                                    <div class="col-lg-6">
+                                                        <canvas id="myChartt" height="114"></canvas>
+                                                    </div>
+                                                    @*<div class="col-lg-6">
+                                                        <canvas id="barChartt" height="114"></canvas>
+                                                    </div>*@
+                                                    <center>
+                                                        <small>
+                                                            <strong>Total Nombre par annee :</strong>
+                                                        </small><br />
+                                                    </center>
+                                                    <div class="col-lg-6">
+                                                        <canvas id="doughnutChart7" height="50" title="Total Nombre par annee"></canvas>
+                                                    </div>
+                                                    <center>
+                                                        <small>
+                                                            <strong>Total Montant par annee :</strong>
+                                                        </small><br />
+                                                    </center>
+                                                    <div class="col-lg-6">
+                                                        <canvas id="doughnutChartt7" height="50" title="Total Montant par annee"></canvas>
+                                                    </div>
+                                                    <br />
+                                                    <div class="ibox-content">
+                                                        @*<div class="row">*@
+                                                        <h3 class="font-bold no-margins">
+                                                            Nombre et Montant des abonnements annulé par poste
+                                                        </h3>
+
+                                                        <div class="clients-list">
+                                                            <ul class="nav nav-tabs">
+
+                                                                @foreach (var item5 in ViewBag.demandeAboAnnuleePoste)
+                                                                {
+                                                                    <li class="">
+                                                                        <a data-toggle="tab" href="#An_@item5.GetType().GetProperty("Key").GetValue(item5)">
+                                                                            <i class="fa fa-calendar"></i>@item5.GetType().GetProperty("Key").GetValue(item5)
+                                                                        </a>
+                                                                    </li>
+                                                                }
+
+                                                            </ul>
+                                                            <div class="tab-content">
+
+                                                                @foreach (var grouped5 in ViewBag.demandeAboAnnuleePoste)
+                                                                {
+                                                                    if (grouped5.GetType().GetProperty("Key").GetValue(grouped5) == 2020)
+                                                                    {
+                                                                        <div id="An_@grouped5.GetType().GetProperty("Key").GetValue(grouped5)"
+                                                                             class="tab-pane active text-black-50">
+                                                                            <div class="full-height-scroll">
+                                                                                <div class="table-responsive">
+
+                                                                                    <table class="table table-striped table-hover data datatable-style">
+
+                                                                                        <thead>
+                                                                                            <tr>
+                                                                                                <th>Mois</th>
+                                                                                                <th colspan="2">Abonnements annulé par poste</th>
+                                                                                            </tr>
+                                                                                            <tr>
+                                                                                                <th> </th>
+                                                                                                <TH>Nombre</TH>
+                                                                                                <TH>Montant payé</TH>
+                                                                                            </tr>
+                                                                                        </thead>
+                                                                                        <tbody>
+                                                                                            @foreach (var item5 in grouped5)
+                                                                                            {
+                                                                                                <tr>
+                                                                                                    <td>@System.Globalization.CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(item5.Mois)</td>
+                                                                                                    <td>@item5.Nombre</td>
+                                                                                                    <td>@item5.Montant</td>
+                                                                                                </tr>
+                                                                                            }
+                                                                                            <tr>
+                                                                                                @foreach (var gd5 in ViewBag.TotalMontantNombreAboAnnuleePoste)
+                                                                                                {
+                                                                                                    if (grouped5.GetType().GetProperty("Key").GetValue(grouped5) == gd5.Annee)
+                                                                                                    {
+                                                                                                        <td>Total : </td>
+                                                                                                                <td> <span class="fa fa-calculator"></span> @gd5.NombreTotal </td>
+                                                                                                                <td> <span class="fa fa-calculator"></span> @gd5.MontantTotal </td>
+                                                                                                    }
+                                                                                                }
+                                                                                            </tr>
+                                                                                        </tbody>
+                                                                                    </table>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        <div id="An_@grouped5.GetType().GetProperty("Key").GetValue(grouped5)"
+                                                                             class="tab-pane active text-black-50">
+                                                                            <div class="full-height-scroll">
+                                                                                <div class="table-responsive">
+
+                                                                                    <table class="table table-striped table-hover data datatable-style">
+
+                                                                                        <thead>
+                                                                                            <tr>
+                                                                                                <th>Mois</th>
+                                                                                                <th colspan="2">Abonnements annulé par poste</th>
+                                                                                            </tr>
+                                                                                            <tr>
+                                                                                                <th> </th>
+                                                                                                <TH>Nombre</TH>
+                                                                                                <TH>Montant payé</TH>
+                                                                                            </tr>
+                                                                                        </thead>
+                                                                                        <tbody>
+                                                                                            @foreach (var item5 in grouped5)
+                                                                                            {
+                                                                                                <tr>
+                                                                                                    <td>@System.Globalization.CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(item5.Mois)</td>
+                                                                                                    <td>@item5.Nombre</td>
+                                                                                                    <td>@item5.Montant</td>
+                                                                                                </tr>
+                                                                                            }
+                                                                                            <tr>
+                                                                                                @foreach (var gd5 in ViewBag.TotalMontantNombreAboAnnuleePoste)
+                                                                                                {
+                                                                                                    if (grouped5.GetType().GetProperty("Key").GetValue(grouped5) == gd5.Annee)
+                                                                                                    {
+                                                                                                        <td>Total : </td>
+                                                                                                                <td> <span class="fa fa-calculator"></span> @gd5.NombreTotal </td>
+                                                                                                                <td> <span class="fa fa-calculator"></span> @gd5.MontantTotal </td>
+                                                                                                    }
+                                                                                                }
+                                                                                            </tr>
+                                                                                        </tbody>
+                                                                                    </table>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+
+                                                                    }
+                                                                }
+                                                            </div>
+                                                        </div>
+
+                                                        @*</div>*@
+
+                                                    </div>
+
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!--Abonnements validé poste -->
+                            <div id="tab-2-3" class="tab-pane">
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                        <div class="ibox float-e-margins">
+
+                                            <div class="ibox-content">
+                                                <div class="ibox">
+                                                    <div class="col-lg-6">
+                                                        <canvas id="myCharttt" height="114"></canvas>
+                                                    </div>
+                                                    @*<div class="col-lg-6">
+                                                        <canvas id="barCharttt" height="114"></canvas>
+                                                    </div>*@
+                                                    <center>
+                                                        <small>
+                                                            <strong>Total Nombre par annee :</strong>
+                                                        </small><br />
+                                                    </center>
+                                                    <div class="col-lg-6">
+                                                        <canvas id="doughnutChart8" height="50" title="Total Nombre par annee"></canvas>
+                                                    </div>
+                                                    <center>
+                                                        <small>
+                                                            <strong>Total Montant par annee :</strong>
+                                                        </small><br />
+                                                    </center>
+                                                    <div class="col-lg-6">
+                                                        <canvas id="doughnutChartt8" height="50" title="Total Montant par annee"></canvas>
+                                                    </div>
+                                                    <br />
+                                                    <div class="ibox-content">
+                                                        @*<div class="row">*@
+                                                        <h3 class="font-bold no-margins">
+                                                            Nombre et Montant des Abonnements validés par la Poste
+                                                        </h3>
+                                                        <div class="clients-list">
+                                                            <ul class="nav nav-tabs">
+
+                                                                @foreach (var item3 in ViewBag.demandeAbovalidesEtatMensuelParPoste)
+                                                                {
+                                                                    <li class="">
+                                                                        <a data-toggle="tab" href="#Ann_@item3.GetType().GetProperty("Key").GetValue(item3)">
+                                                                            <i class="fa fa-calendar"></i>@item3.GetType().GetProperty("Key").GetValue(item3)
+                                                                        </a>
+                                                                    </li>
+                                                                }
+
+                                                            </ul>
+                                                            <div class="tab-content">
+
+                                                                @foreach (var grouped3 in ViewBag.demandeAbovalidesEtatMensuelParPoste)
+                                                                {
+                                                                    if (grouped3.GetType().GetProperty("Key").GetValue(grouped3) == 2020)
+                                                                    {
+                                                                        <div id="Ann_@grouped3.GetType().GetProperty("Key").GetValue(grouped3)"
+                                                                             class="tab-pane active text-black-50">
+                                                                            <div class="full-height-scroll">
+                                                                                <div class="table-responsive">
+
+                                                                                    <table class="table table-striped table-hover data datatable-style">
+
+                                                                                        <thead>
+                                                                                            <tr>
+                                                                                                <th>Mois</th>
+                                                                                                <th colspan="3">Abonnements validé Post</th>
+                                                                                            </tr>
+                                                                                            <tr>
+                                                                                                <th> </th>
+                                                                                                <TH>Nombre</TH>
+                                                                                                <TH>Montant payé</TH>
+                                                                                                <TH>Montant facturé</TH>
+                                                                                            </tr>
+                                                                                        </thead>
+                                                                                        <tbody>
+                                                                                            @foreach (var item3 in grouped3)
+                                                                                            {
+
+                                                                                                <tr>
+                                                                                                    <td>@System.Globalization.CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(item3.Mois)</td>
+                                                                                                    <td>@item3.Nombre</td>
+                                                                                                    <td>@item3.Montant</td>
+                                                                                                    <td>@item3.MontantFacture</td>
+
+                                                                                                </tr>
+
+
+
+                                                                                            }
+                                                                                            <tr>
+                                                                                                @foreach (var gd3 in ViewBag.TotalMontantNombreAbovalidesEtatMensuelParPoste)
+                                                                                                {
+                                                                                                    if (grouped3.GetType().GetProperty("Key").GetValue(grouped3) == gd3.Annee)
+                                                                                                    {
+                                                                                                        <td>Total : </td>
+                                                                                                                <td> <span class="fa fa-calculator"></span> @gd3.NombreTotal </td>
+                                                                                                                <td> <span class="fa fa-calculator"></span> @gd3.MontantTotal </td>
+                                                                                                                    <td> <span class="fa fa-calculator"></span> @gd3.MontantTotalFacturee </td>
+                                                                                                    }
+                                                                                                }
+                                                                                            </tr>
+                                                                                        </tbody>
+                                                                                    </table>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        <div id="Ann_@grouped3.GetType().GetProperty("Key").GetValue(grouped3)"
+                                                                             class="tab-pane active text-black-50">
+                                                                            <div class="full-height-scroll">
+                                                                                <div class="table-responsive">
+
+                                                                                    <table class="table table-striped table-hover data datatable-style">
+
+                                                                                        <thead>
+                                                                                            <tr>
+                                                                                                <th>Mois</th>
+                                                                                                <th colspan="3">Abonnements validé Post</th>
+                                                                                            </tr>
+                                                                                            <tr>
+                                                                                                <th> </th>
+                                                                                                <TH>Nombre</TH>
+                                                                                                <TH>Montant payé</TH>
+                                                                                                <TH>Montant facturé</TH>
+                                                                                            </tr>
+                                                                                        </thead>
+                                                                                        <tbody>
+                                                                                            @foreach (var item3 in grouped3)
+                                                                                            {
+
+                                                                                                <tr>
+                                                                                                    <td>@System.Globalization.CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(item3.Mois)</td>
+                                                                                                    <td>@item3.Nombre</td>
+                                                                                                    <td>@item3.Montant</td>
+                                                                                                    <td>@item3.MontantFacture</td>
+
+                                                                                                </tr>
+
+
+
+                                                                                            }
+                                                                                            <tr>
+                                                                                                @foreach (var gd3 in ViewBag.TotalMontantNombreAbovalidesEtatMensuelParPoste)
+                                                                                                {
+                                                                                                    if (grouped3.GetType().GetProperty("Key").GetValue(grouped3) == gd3.Annee)
+                                                                                                    {
+                                                                                                        <td>Total : </td>
+                                                                                                                <td> <span class="fa fa-calculator"></span> @gd3.NombreTotal </td>
+                                                                                                                <td> <span class="fa fa-calculator"></span> @gd3.MontantTotal </td>
+                                                                                                                    <td> <span class="fa fa-calculator"></span> @gd3.MontantTotalFacturee </td>
+                                                                                                    }
+                                                                                                }
+                                                                                            </tr>
+                                                                                        </tbody>
+                                                                                    </table>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+
+                                                                    }
+                                                                }
+                                                            </div>
+                                                        </div>
+
+                                                        @*</div>*@
+
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+
+
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Mainly scripts -->
+<script src="~/js/jquery-3.1.1.min.js"></script>
+<script src="~/js/bootstrap.min.js"></script>
+<script src="~/js/plugins/metisMenu/jquery.metisMenu.js"></script>
+<script src="~/js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+<!-- Custom and plugin javascript -->
+<script src="~/js/inspinia.js"></script>
+<script src="~/js/plugins/pace/pace.min.js"></script>
+<!-- ChartJS-->
+<script src="~/js/plugins/chartJs/Chart.min.js"></script>
+<script src="~/js/plugins/dataTables/datatables.min.js"></script>
+
+<script src="~/js/plugins/c3/c3.min.js"></script>
+<script src="~/js/plugins/d3/d3.min.js"></script>
+<!-- Morris -->
+<script src="~/js/plugins/morris/raphael-2.1.0.min.js"></script>
+<script src="~/js/plugins/morris/morris.js"></script>
+
+<script>
+
+    $(function () {
+        $('.datatable-style').DataTable({
+            order:false,
+            responsive: true,
+            "paging": false,
+            dom: '<"html5buttons"B>lTfgitp',
+            buttons: [
+                { extend: 'copy' },
+                { extend: 'csv' },
+                { extend: 'excel', title: 'Export' },
+                { extend: 'pdf', title: 'Export' },
+                {
+                    extend: 'print',
+                    customize: function (win) {
+                        $(win.document.body).addClass('white-bg');
+                        $(win.document.body).css('font-size', '10px');
+
+                        $(win.document.body).find('table')
+                                .addClass('compact')
+                                .css('font-size', 'inherit');
+                    }
+                }
+            ]
+
+        });
+
+
+        var ctx = document.getElementById("myChart");
+        var chart = new Chart(ctx, {
+            type: "bar",
+            data: {
+                labels: @Html.Raw(ViewBag.MoisdemandeAboEnCoursPoste),
+                datasets: [{
+                    label: "Nombre des abonnements  par mois",
+                    fill: false,
+                    backgroundColor: 'rgba(255,69,0,0.3)',
+                    borderColor: 'rgb(255,69,0)',
+                    pointStyle: "circle",
+                    pointBackgroundColor: 'rgb(0,222,0)',
+                    pointRadius: 5,
+                    pointHoverRadius: 10,
+                    data: @Html.Raw(ViewBag.NombredemandeAboEnCoursPoste)
+                },{
+                    label: "Montant des abonnements  par mois",
+                    fill: false,
+                    backgroundColor: 'rgba(255,140,0,0.3)',
+                    borderColor: 'rgb(255,140,0)',
+                    pointStyle: "circle",
+                    pointBackgroundColor: 'rgb(0,222,0)',
+                    pointRadius: 5,
+                    pointHoverRadius: 10,
+                    data: @Html.Raw(ViewBag.MontantdemandeAboEnCoursPoste)
+                }]
+            },
+            options: {
+                responsive: true,
+
+                animation: {
+                    duration: 2000
+                }
+            }
+        });
+
+
+
+        @*var lineDatabarChart = {
+            labels: @Html.Raw(ViewBag.AnneedemandeAboEnCoursPoste),
+            datasets: [
+
+                {
+                    label: "Nombre Total par annee",
+                    backgroundColor: 'rgba(255,69,0,0.5)',
+                    borderColor: "rgba(255,69,0,0.7)",
+                    pointBackgroundColor: "rgba(26,179,148,1)",
+                    pointBorderColor: "#fff",
+                    data: @Html.Raw(ViewBag.NombredemandeAboEnCoursPosteParAnnee)
+                }, {
+                    label: "Montant Total par annee",
+                    backgroundColor: 'rgb(255,140,0, 0.5)',
+
+                    pointBorderColor: "#fff",
+                    data: @Html.Raw(ViewBag.MontantdemandeAboEnCoursPosteParAnnee)
+                }
+
+            ]
+        };
+
+        var lineOptions = {
+            responsive: true
+        };
+        var ctx = document.getElementById("barChart").getContext("2d");
+        new Chart(ctx, { type: 'bar', data: lineDatabarChart, options: lineOptions });*@
+
+
+        var doughnutData6 = {
+            labels: @Html.Raw(ViewBag.AnneedemandeAboEnCoursPoste),
+            datasets: [{
+                data: @Html.Raw(ViewBag.NombredemandeAboEnCoursPosteParAnnee),
+                backgroundColor: ["#ff4500", "#ff8f66", "#b5b8cf","#a3e1d4"]
+            }]
+        };
+        var doughnutOptions = {
+            responsive: true
+        };
+        var ctx6 = document.getElementById("doughnutChart6").getContext("2d");
+        new Chart(ctx6, { type: 'doughnut', data: doughnutData6, options: doughnutOptions });
+
+        var doughnutDataa6 = {
+            labels: @Html.Raw(ViewBag.AnneedemandeAboEnCoursPoste),
+            datasets: [{
+                data: @Html.Raw(ViewBag.MontantdemandeAboEnCoursPosteParAnnee),
+                backgroundColor: [ "#ff8c00", "#dedede", "#8489da", "#b5b8cf"]
+            }]
+        };
+        var doughnutOptions = {
+            responsive: true
+        };
+        var ctx66 = document.getElementById("doughnutChartt6").getContext("2d");
+        new Chart(ctx66, { type: 'doughnut', data: doughnutDataa6, options: doughnutOptions });
+
+
+        var ctx = document.getElementById("myChartt");
+        var chart = new Chart(ctx, {
+            type: "bar",
+            data: {
+                labels: @Html.Raw(ViewBag.MoisdemandeAboAnnuleePoste),
+                datasets: [{
+                    label: "Nombre des abonnements  par mois",
+                    fill: false,
+                    backgroundColor: 'rgba(0,191,255,0.3)',
+                    borderColor: 'rgb(0,191,255)',
+                    pointStyle: "circle",
+                    pointBackgroundColor: 'rgb(0,222,0)',
+                    pointRadius: 5,
+                    pointHoverRadius: 10,
+                    data: @Html.Raw(ViewBag.NombredemandeAboAnnuleePoste)
+                },{
+                    label: "Montant des abonnements  par mois",
+                    fill: false,
+                    backgroundColor: 'rgba(0,0,139,0.3)',
+                    borderColor: 'rgb(0,0,139)',
+                    pointStyle: "circle",
+                    pointBackgroundColor: 'rgb(0,222,0)',
+                    pointRadius: 5,
+                    pointHoverRadius: 10,
+                    data: @Html.Raw(ViewBag.MontantdemandeAboAnnuleePoste)
+                }]
+            },
+            options: {
+                responsive: true,
+
+                animation: {
+                    duration: 2000
+                }
+            }
+        });
+
+
+        @*var lineDatabarChartt = {
+            labels: @Html.Raw(ViewBag.AnneedemandeAboAnnuleePoste),
+            datasets: [
+
+                {
+                    label: "Nombre Total par annee",
+                    backgroundColor: 'rgba(0,191,255,0.5)',
+                    borderColor: "rgba(0,191,255,0.7)",
+                    pointBackgroundColor: "rgba(26,179,148,1)",
+                    pointBorderColor: "#fff",
+                    data: @Html.Raw(ViewBag.NombredemandeAboAnnuleePosteParAnnee)
+                }, {
+                    label: "Montant Total par annee",
+                    backgroundColor: 'rgb(10,0,139, 0.5)',
+
+                    pointBorderColor: "#fff",
+                    data: @Html.Raw(ViewBag.MontantdemandeAboAnnuleePosteParAnnee)
+                }
+
+            ]
+        };
+
+        var lineOptions = {
+            responsive: true
+        };
+        var ctx = document.getElementById("barChartt").getContext("2d");
+        new Chart(ctx, { type: 'bar', data: lineDatabarChartt, options: lineOptions });*@
+
+
+        var doughnutData7 = {
+            labels: @Html.Raw(ViewBag.AnneedemandeAboAnnuleePoste),
+            datasets: [{
+                data: @Html.Raw(ViewBag.NombredemandeAboAnnuleePosteParAnnee),
+                backgroundColor: [" #00bfff", "#66d9ff", "#b5b8cf","#a3e1d4"]
+            }]
+        };
+        var doughnutOptions = {
+            responsive: true
+        };
+        var ctx7 = document.getElementById("doughnutChart7").getContext("2d");
+        new Chart(ctx7, { type: 'doughnut', data: doughnutData7, options: doughnutOptions });
+
+        var doughnutDataa7 = {
+            labels: @Html.Raw(ViewBag.AnneedemandeAboAnnuleePoste),
+            datasets: [{
+                data: @Html.Raw(ViewBag.MontantdemandeAboAnnuleePosteParAnnee),
+                backgroundColor: [ "#0a008b", "#dedede", "#8489da", "#b5b8cf"]
+            }]
+        };
+        var doughnutOptions = {
+            responsive: true
+        };
+        var ctx77 = document.getElementById("doughnutChartt7").getContext("2d");
+        new Chart(ctx77, { type: 'doughnut', data: doughnutDataa7, options: doughnutOptions });
+
+
+
+        var ctx = document.getElementById("myCharttt");
+        var chart = new Chart(ctx, {
+            type: "bar",
+            data: {
+                labels: @Html.Raw(ViewBag.MoisdemandeAbovalidesEtatMensuelParPoste),
+                datasets: [{
+                    label: "Nombre des abonnements  par mois",
+                    fill: false,
+                    backgroundColor: 'rgba(220,20,60,0.3)',
+                    borderColor: 'rgb(220,20,60)',
+                    pointStyle: "circle",
+                    pointBackgroundColor: 'rgb(0,222,0)',
+                    pointRadius: 5,
+                    pointHoverRadius: 10,
+                    data: @Html.Raw(ViewBag.NombredemandeAbovalidesEtatMensuelParPoste)
+                },{
+                    label: "Montant des abonnements  par mois",
+                    fill: false,
+                    backgroundColor: 'rgba(219,112,147,0.3)',
+                    borderColor: 'rgb(219,112,147)',
+                    pointStyle: "circle",
+                    pointBackgroundColor: 'rgb(0,222,0)',
+                    pointRadius: 5,
+                    pointHoverRadius: 10,
+                    data: @Html.Raw(ViewBag.MontantdemandeAbovalidesEtatMensuelParPoste)
+                }]
+            },
+            options: {
+                responsive: true,
+
+                animation: {
+                    duration: 2000
+                }
+            }
+        });
+
+
+
+
+        @*var lineDatabarCharttt = {
+            labels: @Html.Raw(ViewBag.AnneedemandeAbovalidesEtatMensuelParPoste),
+            datasets: [
+
+                {
+                    label: "Nombre Total par annee",
+                    backgroundColor: 'rgba(220,20,60,0.5)',
+                    borderColor: "rgba(220,20,60,0.7)",
+                    pointBackgroundColor: "rgba(26,179,148,1)",
+                    pointBorderColor: "#fff",
+                    data: @Html.Raw(ViewBag.NombredemandeAbovalidesEtatMensuelParPosteParAnnee)
+                }, {
+                    label: "Montant Total par annee",
+                    backgroundColor: 'rgb(219,112,147, 0.5)',
+
+                    pointBorderColor: "#fff",
+                    data: @Html.Raw(ViewBag.MontantdemandeAbovalidesEtatMensuelParPosteParAnnee)
+                }
+
+            ]
+        };
+
+        var lineOptions = {
+            responsive: true
+        };
+        var ctx = document.getElementById("barCharttt").getContext("2d");
+        new Chart(ctx, { type: 'bar', data: lineDatabarCharttt, options: lineOptions });*@
+
+
+        var doughnutData8 = {
+            labels: @Html.Raw(ViewBag.AnneedemandeAbovalidesEtatMensuelParPoste),
+            datasets: [{
+                data: @Html.Raw(ViewBag.NombredemandeAbovalidesEtatMensuelParPosteParAnnee),
+                backgroundColor: ["#dc143c", "#f16581", "#b5b8cf","#a3e1d4"]
+            }]
+        };
+        var doughnutOptions = {
+            responsive: true
+        };
+        var ctx8 = document.getElementById("doughnutChart8").getContext("2d");
+        new Chart(ctx8, { type: 'doughnut', data: doughnutData8, options: doughnutOptions });
+
+        var doughnutDataa8 = {
+            labels: @Html.Raw(ViewBag.AnneedemandeAbovalidesEtatMensuelParPoste),
+            datasets: [{
+                data: @Html.Raw(ViewBag.MontantdemandeAbovalidesEtatMensuelParPosteParAnnee),
+                backgroundColor: [ "#db7093", "#f0c1d1", "#8489da", "#b5b8cf"]
+            }]
+        };
+        var doughnutOptions = {
+            responsive: true
+        };
+        var ctx88= document.getElementById("doughnutChartt8").getContext("2d");
+        new Chart(ctx88, { type: 'doughnut', data: doughnutDataa8, options: doughnutOptions });
+
+
+
+
+
+    });
+
+
+</script>

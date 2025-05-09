@@ -1,0 +1,1242 @@
+﻿@model IdentitySample.Models.GroupViewModel
+@{
+    ViewBag.Title = "Modifier le Groupe";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+}
+<script src="~/js/jquery-3.1.1.min.js"></script>
+<link href="~/css/plugins/iCheck/custom.css" rel="stylesheet">
+
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-lg-10">
+        <h2>Profile</h2>
+        <ol class="breadcrumb">
+            <li>
+                <a>Acceuil </a>
+            </li>
+            <li>
+                <a href="@Url.Action("index","Administration")">Administration</a>
+            </li>
+            <li class="active">
+                <strong>Modification rôle utilisateur</strong>
+            </li>
+        </ol>
+    </div>
+    <div class="col-lg-2">
+
+    </div>
+</div>
+
+<div class="panel">
+    <div class="panel-body">
+        @using (Html.BeginForm())
+        {
+            @Html.AntiForgeryToken()
+
+            <div class="form-horizontal">
+                <h2 class="font-azure font-bold">Modification du groupe utilisateur</h2>
+                <hr />
+                @Html.ValidationSummary(true)
+                @Html.HiddenFor(model => model.Id)
+
+                <div class="form-group">
+                    <label class="control-label col-md-2">Libellé</label>
+                    <div class="col-md-10">
+                        @Html.TextBoxFor(model => model.Name, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.Name)
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Description, new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.TextAreaFor(model => model.Description, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.Description)
+                    </div>
+                </div>
+                @foreach (var item in Model.RolesList)
+                {
+                    if ((item.Text == "Admin"))
+                    {
+                        <div class="form-group">
+                            <label class="control-label col-md-2"> Administrateur</label>
+                            <div class="col-md-10">
+                                <input name="SelectedRoles" type="checkbox" class="selectall i-checksss" checked="@item.Selected" value="@item.Text" />
+                            </div>
+                        </div>
+                    }
+                }
+                @foreach (var item in Model.RolesList)
+                {
+                    if ((item.Text == "Regional"))
+                    {
+                        <div class="form-group">
+                            <label class="control-label col-md-2"> Regional</label>
+                            <div class="col-md-10">
+                                <input id="Regional" name="SelectedRoles" type="checkbox" class="Regional selectRegional i-checksss" checked="@item.Selected" value="@item.Text" />
+                            </div>
+                        </div>
+                    }
+                }
+
+                @foreach (var item in Model.RolesList)
+                {
+                    if ((item.Text == "KPI"))
+                    {
+                        <div class="form-group">
+                            <label class="control-label col-md-2"> KPIs </label>
+                            <div class="col-md-10">
+                                <input id="Regional" name="SelectedRoles" type="checkbox" class="Regional selectRegional i-checksss" checked="@item.Selected" value="@item.Text" />
+                            </div>
+                        </div>
+                    }
+                }
+                <div class="form-group">
+                    @*<label class="col-md-2 control-label font-bold">
+                            Liste des Roles
+                        </label>*@
+
+
+
+                    <div class="col-md-10">
+                        @*@foreach (var item in Model.RolesList)
+                            {
+                                if ((item.Text == "Admin"))
+                                {
+                                            <div class="checkbox checkbox-danger">
+                                                <label>
+                                                    <div class="checker" id="uniform-inlineCheckbox113">
+                                                        <span class="">
+                                                            <input type="checkbox" id="inlineCheckbox114" name="SelectedRoles" checked="@item.Selected" value="@item.Text" class="checkbox">
+
+                                                            <i class="glyph-icon icon-check"></i>
+                                                        </span>
+                                                    </div>
+                                                    @Html.Label(item.Text, new { @class = "control-label text-danger font-bold" })
+                                                </label>
+                                            </div>}
+                            }*@
+                        <br />
+                        <div class="row" id="DivElement">
+                            <div class="col-md-12">
+
+                                <div class="col-lg-4" id="div1">
+                                    <div class="panel panel-info">
+                                        <div class="panel-heading">
+                                            <input type="checkbox" id="btnDiv1" class="select-all check" value="Select All" />
+
+
+                                            <i class="fa fa-info-circle"></i> Structure
+
+                                        </div>
+                                        <div class="panel-body">
+
+
+                                            <input type="checkbox" name="SelectedRoles" id="agences" class="select-all2  agences check" value="Select All" /><i class="text-danger">Agences</i>
+
+                                            @foreach (var item in Model.RolesList)
+                                            {
+                                                if ((item.Text == "Supprimer Agence")
+                                                  || (item.Text == "Liste Agence")
+                                                  || (item.Text == "Modifier Agence")
+                                                  || (item.Text == "Details Agence")
+                                                   || (item.Text == "Creer Agence")
+
+                                                  )
+                                                {
+                                                    <div class="checkbox checkbox-success">
+                                                        <label>
+                                                            <div class="checker" id="uniform-inlineCheckbox113">
+                                                                <span class="">
+                                                                    <input type="checkbox" id="inlineCheckbox113" name="SelectedRoles" checked="@item.Selected" value="@item.Text" class="role custom-checkbox check">
+
+                                                                    <i class="glyph-icon icon-check"></i>
+                                                                </span>
+                                                            </div>
+                                                            @Html.Label(item.Text, new { @class = "control-label" })
+                                                        </label>
+                                                    </div>}
+                                            }
+
+
+                                            <input type="checkbox" id="client" class="select-all2 client check" value="Select All" /><i class="text-danger">Clients</i>
+                                            @foreach (var item in Model.RolesList)
+                                            {
+                                                if (
+                                                  (item.Text == "Liste Clients")
+                                                  || (item.Text == "Details Client")
+
+
+
+                                                  )
+                                                {
+                                                    <div class="checkbox checkbox-success">
+                                                        <label>
+                                                            <div class="checker" id="uniform-inlineCheckbox113">
+                                                                <span class="">
+                                                                    <input type="checkbox" id="inlineCheckbox113" name="SelectedRoles" checked="@item.Selected" value="@item.Text" class="role2 custom-checkbox check">
+
+                                                                    <i class="glyph-icon icon-check"></i>
+                                                                </span>
+                                                            </div>
+                                                            @Html.Label(item.Text, new { @class = "control-label" })
+                                                        </label>
+                                                    </div>}
+                                            }
+
+                                            <input type="checkbox" id="btnDiv12" class="select-all2 famille check" value="Select All" /><i class="text-danger">Famille</i>
+                                            @foreach (var item in Model.RolesList)
+                                            {
+                                                if (
+                                                  (item.Text == "Liste Familles")
+                                                  || (item.Text == "Modifier Famille")
+
+
+
+                                                  )
+                                                {
+                                                    <div class="checkbox checkbox-success">
+                                                        <label>
+                                                            <div class="checker" id="uniform-inlineCheckbox113">
+                                                                <span class="">
+                                                                    <input type="checkbox" id="inlineCheckbox113" name="SelectedRoles" checked="@item.Selected" value="@item.Text" class="role3 custom-checkbox check">
+
+                                                                    <i class="glyph-icon icon-check"></i>
+                                                                </span>
+                                                            </div>
+                                                            @Html.Label(item.Text, new { @class = "control-label" })
+                                                        </label>
+                                                    </div>}
+                                            }
+
+
+                                            <input type="checkbox" id="btnDiv12" class="select-all2 article check" value="Select All" /><i class="text-danger">Articles</i>
+                                            @foreach (var item in Model.RolesList)
+                                            {
+                                                if (
+                                                  (item.Text == "Liste Articles")
+                                                  || (item.Text == "Modifier Article")
+
+
+
+                                                  )
+                                                {
+                                                    <div class="checkbox checkbox-success">
+                                                        <label>
+                                                            <div class="checker" id="uniform-inlineCheckbox113">
+                                                                <span class="">
+                                                                    <input type="checkbox" id="inlineCheckbox113" name="SelectedRoles" checked="@item.Selected" value="@item.Text" class="role4 custom-checkbox check">
+
+                                                                    <i class="glyph-icon icon-check"></i>
+                                                                </span>
+                                                            </div>
+                                                            @Html.Label(item.Text, new { @class = "control-label" })
+                                                        </label>
+                                                    </div>}
+                                            }
+
+
+                                            <input type="checkbox" id="btnDiv12" class="select-all2 depot check" value="Select All" /><i class="text-danger">Depot</i>
+                                            @foreach (var item in Model.RolesList)
+                                            {
+                                                if (
+                                                  (item.Text == "Liste Depots")
+                                                  || (item.Text == "Supprimer Depot")
+                                                  || (item.Text == "Modifier Depot")
+                                                  || (item.Text == "Ajouter Depot")
+
+                                                  )
+                                                {
+                                                    <div class="checkbox checkbox-success">
+                                                        <label>
+                                                            <div class="checker" id="uniform-inlineCheckbox113">
+                                                                <span class="">
+                                                                    <input type="checkbox" id="inlineCheckbox113" name="SelectedRoles" checked="@item.Selected" value="@item.Text" class="role5 custom-checkbox check">
+
+                                                                    <i class="glyph-icon icon-check"></i>
+                                                                </span>
+                                                            </div>
+                                                            @Html.Label(item.Text, new { @class = "control-label" })
+                                                        </label>
+                                                    </div>}
+                                            }
+                                            <input type="checkbox" id="btnDiv12" class="select-all2 promo check" value="Select All" /><i class="text-danger">Promotion</i>
+                                            @foreach (var item in Model.RolesList)
+                                            {
+                                                if (
+                                                  (item.Text == "Details Promotion")
+                                                  || (item.Text == "Modifier Promotion")
+                                                  || (item.Text == "Liste Promotion")
+                                                  || (item.Text == "Nouvelle Promotion")
+
+                                                  )
+                                                {
+                                                    <div class="checkbox checkbox-success">
+                                                        <label>
+                                                            <div class="checker" id="uniform-inlineCheckbox113">
+                                                                <span class="">
+                                                                    <input type="checkbox" id="inlineCheckbox113" name="SelectedRoles" checked="@item.Selected" value="@item.Text" class="role55 custom-checkbox check">
+
+                                                                    <i class="glyph-icon icon-check"></i>
+                                                                </span>
+                                                            </div>
+                                                            @Html.Label(item.Text, new { @class = "control-label" })
+                                                        </label>
+                                                    </div>}
+                                            }
+                                            <input type="checkbox" id="Utilisateur" class="select-all2 Utilisateur check" value="Select All" /><i class="text-danger">Utilisateurs</i>
+                                            @foreach (var item in Model.RolesList)
+                                            {
+                                                if (
+                                                   (item.Text == "Détails Utilisateur")
+                                                   || (item.Text == "Modifier Utilisateur")
+                                                    || (item.Text == "Create Utilisateur")
+                                                    || (item.Text == "Supprimer Utilisateur")
+                                                    || (item.Text == "Renvoyer Email")
+                                                   || (item.Text == "Liste des utilisateurs")
+
+                                                  )
+                                                {
+                                                    <div class="checkbox checkbox-success">
+                                                        <label>
+                                                            <div class="checker" id="uniform-inlineCheckbox113">
+                                                                <span class="">
+                                                                    <input type="checkbox" id="inlineCheckbox113" name="SelectedRoles" checked="@item.Selected" value="@item.Text" class="role2 custom-checkbox check">
+
+                                                                    <i class="glyph-icon icon-check"></i>
+                                                                </span>
+                                                            </div>
+                                                            @Html.Label(item.Text, new { @class = "control-label" })
+                                                        </label>
+                                                    </div>}
+                                            }
+                                            <input type="checkbox" id="Motifs" class="select-all2 Motifs check" value="Select All" /><i class="text-danger">Motifs</i>
+                                            @foreach (var item in Model.RolesList)
+                                            {
+                                                if (
+                                                   (item.Text == "Liste des motifs")
+
+                                                  )
+                                                {
+                                                    <div class="checkbox checkbox-success">
+                                                        <label>
+                                                            <div class="checker" id="uniform-inlineCheckbox113">
+                                                                <span class="">
+                                                                    <input type="checkbox" id="inlineCheckbox113" name="SelectedRoles" checked="@item.Selected" value="@item.Text" class="role2 custom-checkbox check">
+
+                                                                    <i class="glyph-icon icon-check"></i>
+                                                                </span>
+                                                            </div>
+                                                            @Html.Label(item.Text, new { @class = "control-label" })
+                                                        </label>
+                                                    </div>}
+                                            }
+                                        </div>
+
+                                    </div>
+                                </div>
+
+
+
+                                <div class="col-lg-4" id="div4">
+                                    <div class="panel panel-info">
+                                        <div class="panel-heading">
+                                            <input type="checkbox" id="btnDiv4" class="select-all check" value="Select All" />
+
+                                            <i class="fa fa-info-circle"></i> Gestion des demandes
+                                        </div>
+                                        <div class="panel-body">
+
+
+
+                                            <input type="checkbox" id="div1" class="select-all2 resi check" value="Select All" /><i class="text-danger">Demande résiliation</i>
+
+
+                                            @foreach (var item in Model.RolesList)
+                                            {
+                                                if ((item.Text == "DemandeResiListe")
+                                                  || (item.Text == "DemandeResiModifier")
+                                                  || (item.Text == "DemandeResiSupprimer")
+                                                  || (item.Text == "DemandeResiAjouter")
+                                                  || (item.Text == "Reception Resiliation")
+                                                  || (item.Text == "Repondre Resiliation")
+
+                                                  )
+                                                {
+                                                    <div class="checkbox checkbox-success">
+                                                        <label>
+                                                            <div class="checker" id="uniform-inlineCheckbox113">
+                                                                <span class="">
+                                                                    <input type="checkbox" id="inlineCheckbox113" name="SelectedRoles" checked="@item.Selected" value="@item.Text" class="role6 custom-checkbox check">
+
+                                                                    <i class="glyph-icon icon-check"></i>
+                                                                </span>
+                                                            </div>
+                                                            @Html.Label(item.Text, new { @class = "control-label" })
+                                                        </label>
+                                                    </div>}
+                                            }
+
+
+
+                                            <input type="checkbox" id="div1" class="select-all2 reaf check" value="Select All" /><i class="text-danger">Demande réaffectation</i>
+
+
+                                            @foreach (var item in Model.RolesList)
+                                            {
+                                                if ((item.Text == "DemandeReafAjouter")
+                                                  || (item.Text == "DemandeReafListe")
+                                                  || (item.Text == "DemandeReafSupprimer")
+                                                  || (item.Text == "DemandeReafModifier")
+                                                  )
+                                                {
+                                                    <div class="checkbox checkbox-success">
+                                                        <label>
+                                                            <div class="checker" id="uniform-inlineCheckbox113">
+                                                                <span class="">
+                                                                    <input type="checkbox" id="inlineCheckbox113" name="SelectedRoles" checked="@item.Selected" value="@item.Text" class="role7 custom-checkbox check">
+
+                                                                    <i class="glyph-icon icon-check"></i>
+                                                                </span>
+                                                            </div>
+                                                            @Html.Label(item.Text, new { @class = "control-label" })
+                                                        </label>
+                                                    </div>}
+                                            }
+
+
+
+                                            <input type="checkbox" id="div1" class="select-all2 transf check" value="Select All" /><i class="text-danger">Demande transfert</i>
+
+
+                                            @foreach (var item in Model.RolesList)
+                                            {
+                                                if ((item.Text == "DemandeTransListe")
+                                                  || (item.Text == "DemandeTransAjouter")
+                                                  || (item.Text == "DemandeTransModifier")
+                                                  || (item.Text == "DemandeTransSupprimer")
+                                                  )
+                                                {
+                                                    <div class="checkbox checkbox-success">
+                                                        <label>
+                                                            <div class="checker" id="uniform-inlineCheckbox113">
+                                                                <span class="">
+                                                                    <input type="checkbox" id="inlineCheckbox113" name="SelectedRoles" checked="@item.Selected" value="@item.Text" class="role custom-checkbox check">
+
+                                                                    <i class="glyph-icon icon-check"></i>
+                                                                </span>
+                                                            </div>
+                                                            @Html.Label(item.Text, new { @class = "control-label" })
+                                                        </label>
+                                                    </div>}
+                                            }
+
+
+                                            <input type="checkbox" id="div1" class="select-all2   transfLigne check" value="Select All" /><i class="text-danger">Demande transfert ligne</i>
+
+
+                                            @foreach (var item in Model.RolesList)
+                                            {
+                                                if ((item.Text == "ListeDemande")
+                                                  || (item.Text == "DemandeAjouterTrans")
+                                                  || (item.Text == "Modifier Transfert Ligne")
+                                                  || (item.Text == "Details Transfert Ligne")
+                                                  )
+                                                {
+                                                    <div class="checkbox checkbox-success">
+                                                        <label>
+                                                            <div class="checker" id="uniform-inlineCheckbox113">
+                                                                <span class="">
+                                                                    <input type="checkbox" id="inlineCheckbox113" name="SelectedRoles" checked="@item.Selected" value="@item.Text" class="role20 custom-checkbox check">
+
+                                                                    <i class="glyph-icon icon-check"></i>
+                                                                </span>
+                                                            </div>
+                                                            @Html.Label(item.Text, new { @class = "control-label" })
+                                                        </label>
+                                                    </div>}
+                                            }
+
+
+                                            <input type="checkbox" id="div1" class="select-all2 mig check" value="Select All " /><i class="text-danger">Demande migration</i>
+
+
+                                            @foreach (var item in Model.RolesList)
+                                            {
+                                                if ((item.Text == "DemandeMigListe")
+                                                  || (item.Text == "DemandeMigModifier")
+                                                  || (item.Text == "DemandeMigAjouter")
+                                                  || (item.Text == "DemandeMigSupprimer")
+                                                  || (item.Text == "Reception Migration")
+                                                  || (item.Text == "Repondre Migration")
+|| (item.Text == "ModifierMig")
+|| (item.Text == "Reservation mat migration")
+
+
+                                                  || (item.Text == "AvancerMig")
+                                                  || (item.Text == "RejeterDemande")
+                                                  || (item.Text == "DemandeMig")
+                                                  || (item.Text == "ListeDemdMig")
+
+                                                  || (item.Text == "Modifier abonnement fils")
+
+                                                  )
+                                                {
+                                                    <div class="checkbox checkbox-success">
+                                                        <label>
+                                                            <div class="checker" id="uniform-inlineCheckbox113">
+                                                                <span class="">
+                                                                    <input type="checkbox" id="inlineCheckbox113" name="SelectedRoles" checked="@item.Selected" value="@item.Text" class="role9 custom-checkbox check">
+
+                                                                    <i class="glyph-icon icon-check"></i>
+                                                                </span>
+                                                            </div>
+                                                            @Html.Label(item.Text, new { @class = "control-label" })
+                                                        </label>
+                                                    </div>}
+                                            }
+
+                                        </div>
+
+                                    </div>
+                                </div>
+
+                                <div class="col-lg-4" id="div666">
+                                    <div class="panel panel-info">
+                                        <div class="panel-heading">
+                                            <input type="checkbox" id="btnDiv666" class="select-all check" value="Select All" />
+                                            <i class="fa fa-info-circle"></i> Gestion des abonnements
+                                        </div>
+                                        <div class="panel-body">
+                                            @foreach (var item in Model.RolesList)
+                                            {
+                                                if ((item.Text == "AbonnementAjouter")
+                                                  || (item.Text == "AbonnementListe")
+                                                  || (item.Text == "AbonnementListe2")
+                                                  || (item.Text == "AbonnementModifier")
+                                                  || (item.Text == "Maryoul")
+                                                  || (item.Text == "FacturerAbonnementEnInstance")
+                                                  || (item.Text == "ChangerLivraison")
+                                                  || item.Text == ("ChangerParametreAbonnement")
+                                                  || item.Text == ("SuspensionAbonnement")
+                                                  || item.Text == ("ResiliationAbonnement")
+                                                  || item.Text == ("abonnements migres")
+                                                  || item.Text == ("Abonnement Transferes")
+                                                  || (item.Text == "AbonnementSupprimer")
+                                                  || (item.Text == "Exporter Abonnements")
+                                                  || (item.Text == "AbonnementPoste")
+                                                  || (item.Text == "RechercheAbonnement")
+                                                  || (item.Text == "RemiseAbonnement")
+                                                  || (item.Text == "AffectationMaterielAbonnement")
+                                                  || (item.Text == "AbonnementSUS")
+                                                  || (item.Text == "ChangementDateContrat")
+                                                  || (item.Text == "Recherche Abonnement")
+                                                  || (item.Text == "AbonnementWeb")
+                                                  || (item.Text == "Abonnement Convention")
+                                                  || (item.Text == "Generer Contre Recu")
+                                                  || item.Text == ("AnnulerAbonnement")
+                                                  || item.Text == ("Paiement et Livraison")
+                                                  || item.Text == ("ChangerPeriodeEngage")
+
+
+                                                  || item.Text == ("RetourEtapeReservation")
+                                                  || item.Text == ("RetourEtapeFacturation")
+                                                  || item.Text == ("MigrationOffre")
+
+                                                  || item.Text == ("SeuilRevendeur")
+                                                  || item.Text == ("Supprimer remarque")
+                                                  || item.Text == ("Activation radius")
+
+                                                  || item.Text == ("InjecterRefttEtFixe")
+                                                     || item.Text == ("Changement Remise")
+                                                        || item.Text == ("ChangeAgenceCreation")
+|| item.Text == ("RemiseVente")
+
+                                                  )
+                                                {
+                                                    <div class="checkbox checkbox-success">
+                                                        <label>
+                                                            <div class="checker" id="uniform-inlineCheckbox113">
+                                                                <span class="">
+                                                                    <input type="checkbox" id="inlineCheckbox113" name="SelectedRoles" checked="@item.Selected" value="@item.Text" class="custom-checkbox check">
+                                                                    <i class="glyph-icon icon-check"></i>
+                                                                </span>
+                                                            </div>
+                                                            @Html.Label(item.Text, new { @class = "control-label" })
+                                                        </label>
+                                                    </div>}
+                                            }
+
+                                        </div>
+
+                                    </div>
+                                </div>
+                                <div class="col-lg-4" id="div3">
+                                    <div class="panel panel-info">
+                                        <div class="panel-heading">
+                                            <input type="checkbox" id="btnDiv3" class="select-all check" value="Select All" />
+                                            <i class="fa fa-info-circle"></i> Gestion des réclamations
+                                        </div>
+                                        <div class="panel-body">
+                                            @foreach (var item in Model.RolesList)
+                                            {
+                                                if ((item.Text == "ReclamationListe")
+                                                  || (item.Text == "ReclamationSupprimer")
+                                                  || (item.Text == "ReclamationAjouter")
+                                                  || (item.Text == "ReclamationModifier")
+                                                    || (item.Text == "Repondre Reclamation")
+                                                    || (item.Text == "Reception Reclamation")
+                                                  )
+                                                {
+                                                    <div class="checkbox checkbox-success">
+                                                        <label>
+                                                            <div class="checker" id="uniform-inlineCheckbox113">
+                                                                <span class="">
+                                                                    <input type="checkbox" id="inlineCheckbox113" name="SelectedRoles" checked="@item.Selected" value="@item.Text" class="custom-checkbox check">
+
+                                                                    <i class="glyph-icon icon-check"></i>
+                                                                </span>
+                                                            </div>
+                                                            @Html.Label(item.Text, new { @class = "control-label" })
+                                                        </label>
+                                                    </div>
+                                                }
+                                            }
+
+                                        </div>
+
+                                    </div>
+                                </div>
+
+
+                                <div class="col-lg-6" id="div6">
+                                    <div class="panel panel-info">
+                                        <div class="panel-heading">
+                                            <input type="checkbox" id="btnDiv6" class="select-all check" value="Select All" />
+                                            <i class="fa fa-info-circle"></i> Gestion de facturation
+                                        </div>
+                                        <div class="panel-body">
+                                            @foreach (var item in Model.RolesList)
+                                            {
+                                                if ((item.Text == "Liste Factures")
+
+                                                    || (item.Text == "Liste PreFactures")
+
+                                                  || (item.Text == "Nouvelle Facture")
+                                                  || (item.Text == "Nouveau Versement")
+                                                  || (item.Text == "Nouveau Versement Siege")
+
+                                                  || (item.Text == "Liste Versement")
+                                                  || (item.Text == "Frais Commission")
+                                                  || (item.Text == "Voir Total Commission")
+                                                  || (item.Text == "Exporter Factures")
+                                                  || (item.Text == "FactureSurDemande")
+                                                  || (item.Text == "Regional Verser Bordereau")
+                                                  || (item.Text == "Controleur de Recette")
+                                                  || (item.Text == "Details Facture")
+                                                  || (item.Text == "Paiement Client")
+                                                  || (item.Text == "EtatVersement")
+                                                  || (item.Text == "Versement par type")
+                                                  || (item.Text == "PayerResilie")
+
+                                                  || (item.Text == "Controleur de Recette")
+                                                  || (item.Text == "Supprimer Ligne Versement")
+                                                  || (item.Text == "Etat_ListeFactures")
+                                                  || (item.Text == "ListeFacturesImpayeeParDate")
+
+                                                  || (item.Text == "avance sur commission")
+                                                  || (item.Text == "Recouvrement")
+                                                  || (item.Text == "Ajout Reglement libre")
+                                                  || (item.Text == "Liste Avances")
+                                                || (item.Text == "Liste Contre reçu")
+                                                  || (item.Text == "GenererAvoir")
+                                                  || (item.Text == "Recherche Facture")
+
+                                                  || (item.Text == "Annuler Proformat")
+                                                  || (item.Text == "Retablir Proformat")
+                                                  || (item.Text == "Transformer Proformat")
+                                                    || (item.Text == "Visibilite proformat ")
+                                                  || (item.Text == "Liste Abonnement preventive")
+                                                  || (item.Text == "Notification suspension")
+                                                  || (item.Text == "Notification resiliation")
+                                                     || (item.Text == "Liste Facture Avoir")
+                                                     || (item.Text == "Decaler Facture")
+                                                      || (item.Text == "Correction")
+                                                       || (item.Text == "Generer Premiere facture")
+                                                    || (item.Text == "soldeRevendeur")
+                                                     || (item.Text == "Payer Facture")
+                                                     || (item.Text == "Accepter Facture")
+                                                     || (item.Text == "Valider Facture")
+                                                     || (item.Text == "Rejeter Facture")
+
+
+                                                  )
+                                                {
+                                                    <div class="checkbox checkbox-success">
+                                                        <label>
+                                                            <div class="checker" id="uniform-inlineCheckbox113">
+                                                                <span class="">
+                                                                    <input type="checkbox" id="inlineCheckbox113" name="SelectedRoles" checked="@item.Selected" value="@item.Text" class="custom-checkbox check">
+                                                                    <i class="glyph-icon icon-check"></i>
+                                                                </span>
+                                                            </div>
+                                                            @Html.Label(item.Text, new { @class = "control-label" })
+                                                        </label>
+                                                    </div>}
+                                            }
+
+                                        </div>
+
+                                    </div>
+                                </div>
+
+
+                            </div>
+
+
+
+                            <div class="col-md-12">
+
+                                <div class="col-lg-4" id="div5">
+                                    <div class="panel panel-info">
+                                        <div class="panel-heading">
+                                            <input type="checkbox" id="btnDiv5" class="select-all" value="Select All" />
+
+                                            <i class="fa fa-info-circle"></i> Gestion interne
+                                        </div>
+                                        <div class="panel-body">
+
+                                            <input type="checkbox" id="div1" class="select-all2 appro check" value="Select All" /><i class="text-danger">Demande d'appro.</i>
+                                            @foreach (var item in Model.RolesList)
+                                            {
+                                                if ((item.Text == "DemandeApproListe")
+                                                  || (item.Text == "DemandeApproAjouter")
+                                                  || (item.Text == "DemandeApproSupprimer")
+                                                  || (item.Text == "DemandeApproModifier")
+                                                  || (item.Text == "Bon de Sortie")
+                                                  || (item.Text == "Validation Demande Appro")
+                                                  || (item.Text == "Liste Articles Reserves")
+                                                  || (item.Text == "ListeArticlesReserves")
+
+
+
+                                                  )
+                                                {
+                                                    <div class="checkbox checkbox-success">
+                                                        <label>
+                                                            <div class="checker" id="uniform-inlineCheckbox113">
+                                                                <span class="">
+                                                                    <input type="checkbox" id="inlineCheckbox113" name="SelectedRoles" checked="@item.Selected" value="@item.Text" class="role10 custom-checkbox check roleR">
+
+                                                                    <i class="glyph-icon icon-check"></i>
+                                                                </span>
+                                                            </div>
+                                                            @Html.Label(item.Text, new { @class = "control-label" })
+                                                        </label>
+                                                    </div>}
+                                            }
+                                            <input type="checkbox" id="div1" class="select-all2 stock check" value="Select All" /><i class="text-danger">Gestion stock</i>
+
+                                            @foreach (var item in Model.RolesList)
+                                            {
+                                                if ((item.Text == "StockListe")
+                                                  || (item.Text == "StockAjouter")
+                                                  || (item.Text == "StockModifier")
+                                                  || (item.Text == "StockSupprimer")
+                                                  || (item.Text == "SynchronisationBL")
+                                                  || (item.Text == "BondeRetour")
+                                                  || (item.Text == "Validation Transfert Stock")
+                                                  || (item.Text == "EtatEchange")
+
+
+                                                  )
+                                                {
+                                                    <div class="checkbox checkbox-success">
+                                                        <label>
+                                                            <div class="checker" id="uniform-inlineCheckbox113">
+                                                                <span class="">
+                                                                    <input type="checkbox" id="inlineCheckbox113" name="SelectedRoles" checked="@item.Selected" value="@item.Text" class="role11 custom-checkbox check roleR">
+
+                                                                    <i class="glyph-icon icon-check"></i>
+                                                                </span>
+                                                            </div>
+                                                            @Html.Label(item.Text, new { @class = "control-label" })
+                                                        </label>
+                                                    </div>}
+                                            }
+
+
+
+                                            <input type="checkbox" id="div1" class="select-all2 tran check" value="Select All" /><i class="text-danger">Transfert article</i>
+
+                                            @foreach (var item in Model.RolesList)
+                                            {
+                                                if ((item.Text == "TransfertArticle")
+                                                     || (item.Text == "Documents de Transfert")
+
+                                                  )
+                                                {
+                                                    <div class="checkbox checkbox-success">
+                                                        <label>
+                                                            <div class="checker" id="uniform-inlineCheckbox113">
+                                                                <span class="">
+                                                                    <input type="checkbox" id="inlineCheckbox113" name="SelectedRoles" checked="@item.Selected" value="@item.Text" class="role12 custom-checkbox check roleR">
+
+                                                                    <i class="glyph-icon icon-check"></i>
+                                                                </span>
+                                                            </div>
+                                                            @Html.Label(item.Text, new { @class = "control-label" })
+                                                        </label>
+                                                    </div>}
+                                            }
+                                        </div>
+
+                                    </div>
+                                </div>
+
+
+
+
+
+                                <div class="col-lg-6" id="div7">
+                                    <div class="panel panel-info">
+                                        <div class="panel-heading">
+                                            <input type="checkbox" id="btnDiv7" class="select-all check" value="Select All" />
+
+                                            <i class="fa fa-info-circle"></i> Intérrogation et suivi
+                                        </div>
+                                        <div class="panel-body">
+                                            @foreach (var item in Model.RolesList)
+                                            {
+                                                if ((item.Text == "InterrogerClient")
+                                                  || (item.Text == "InterrogerStock")
+                                                  || (item.Text == "InterrogerCA")
+                                                  || (item.Text == "Interroger Revendeur")
+                                                  )
+
+                                                {
+                                                    <div class="checkbox checkbox-success">
+                                                        <label>
+                                                            <div class="checker" id="uniform-inlineCheckbox113">
+                                                                <span class="">
+                                                                    <input type="checkbox" id="inlineCheckbox113" name="SelectedRoles" checked="@item.Selected" value="@item.Text" class="custom-checkbox check">
+
+                                                                    <i class="glyph-icon icon-check"></i>
+                                                                </span>
+                                                            </div>
+                                                            @Html.Label(item.Text, new { @class = "control-label" })
+                                                        </label>
+                                                    </div>}
+                                            }
+
+                                        </div>
+
+                                    </div>
+                                </div>
+
+                                <div class="col-lg-6" id="div8">
+                                    <div class="panel panel-info">
+                                        <div class="panel-heading">
+                                            <input type="checkbox" id="btnDiv8" class="select-all check" value="Select All" />
+
+                                            <i class="fa fa-info-circle"></i> Bibliothèque
+                                        </div>
+                                        <div class="panel-body">
+                                            @foreach (var item in Model.RolesList)
+                                            {
+                                                if ((item.Text == "Liste Bibliotheque")
+                                                   || (item.Text == "Ajouter Bibliotheque")
+                                                   || (item.Text == "ToDoList")
+                                                   )
+                                                {
+                                                    <div class="checkbox checkbox-success">
+                                                        <label>
+                                                            <div class="checker" id="uniform-inlineCheckbox113">
+                                                                <span class="">
+                                                                    <input type="checkbox" id="inlineCheckbox113" name="SelectedRoles" checked="@item.Selected" value="@item.Text" class="custom-checkbox check">
+
+                                                                    <i class="glyph-icon icon-check"></i>
+                                                                </span>
+                                                            </div>
+                                                            @Html.Label(item.Text, new { @class = "control-label" })
+                                                        </label>
+                                                    </div>}
+                                            }
+
+                                        </div>
+
+                                    </div>
+                                </div>
+
+                                <div class="col-lg-6" id="div9">
+                                    <div class="panel panel-info">
+                                        <div class="panel-heading">
+                                            <input type="checkbox" id="btnDiv9" class="select-all check" value="Select All" />
+                                            <i class="fa fa-info-circle"></i> Exports
+                                        </div>
+                                        <div class="panel-body">
+                                            @foreach (var item in Model.RolesList)
+                                            {
+                                                if ((item.Text == "ExportToExcelListingFacture")
+                                                   || (item.Text == "ExportToExcelSoldeClient")
+                                                   || (item.Text == "ExportToExcelSoldeClientReglement")
+                                                   || (item.Text == "ExportToExcelListeAbonnementss")
+                                                   || (item.Text == "ExportToExcelListeFacture")
+                                                   || (item.Text == "ExportToExcelReglementAvance")
+                                                   || (item.Text == "ExportToExcelListeArticleReserves")
+
+                                                   || (item.Text == "ExportToExcelListeFactureNonPayees")
+                                                   || (item.Text == "ExportToExcelListeFacturePayees")
+
+                                                   || (item.Text == "Exports")
+                                                   || (item.Text == "ExportFactureVente")
+|| (item.Text == "ExportListeDesRemarques")
+|| (item.Text == "ExportToExcelListeAboMigrees")
+|| (item.Text == "ExportToExcelListeStock")
+
+                                                   )
+                                                {
+                                                    <div class="checkbox checkbox-success">
+                                                        <label>
+                                                            <div class="checker" id="uniform-inlineCheckbox113">
+                                                                <span class="">
+                                                                    <input type="checkbox" id="inlineCheckbox113" name="SelectedRoles" checked="@item.Selected" value="@item.Text" class="custom-checkbox check">
+
+                                                                    <i class="glyph-icon icon-check"></i>
+                                                                </span>
+                                                            </div>
+                                                            @Html.Label(item.Text, new { @class = "control-label" })
+                                                        </label>
+                                                    </div>}
+                                            }
+
+                                        </div>
+
+                                    </div>
+                                </div>
+
+
+
+                            </div>
+
+                            <div class="col-md-12">
+
+                                <div class="col-lg-4" id="div13">
+                                    <div class="panel panel-info">
+                                        <div class="panel-heading">
+                                            <input type="checkbox" id="btnDiv13" class="select-all" value="Select All" />
+
+                                            <i class="fa fa-info-circle"></i> Vente Libre
+                                        </div>
+                                        <div class="panel-body">
+
+                                            <input type="checkbox" id="div1" class="select-all2 ventelibre check" value="Select All" /><i class="text-danger">Vente libre matériel</i>
+                                            @foreach (var item in Model.RolesList)
+                                            {
+                                                if ((item.Text == "Payer Vente Libre")
+                                                  || (item.Text == "BL Vente Libre")
+                                                  || (item.Text == "Ajouter Materiel Vente Libre")
+                                                  || (item.Text == "Liste Vente Libre")
+                                                  || (item.Text == "Details Vente Libre")
+                                                  || (item.Text == "Valider Vente Libre")
+                                                  || (item.Text == "Nouveau Vente Libre")
+                                                  || (item.Text == "Facturer Vente Libre")
+                                                  || (item.Text == "Annuler Materiel Vente Libre")
+
+
+                                                  )
+                                                {
+                                                    <div class="checkbox checkbox-success">
+                                                        <label>
+                                                            <div class="checker" id="uniform-inlineCheckbox113">
+                                                                <span class="">
+                                                                    <input type="checkbox" id="inlineCheckbox113" name="SelectedRoles" checked="@item.Selected" value="@item.Text" class="role13 custom-checkbox check roleR">
+
+                                                                    <i class="glyph-icon icon-check"></i>
+                                                                </span>
+                                                            </div>
+                                                            @Html.Label(item.Text, new { @class = "control-label" })
+                                                        </label>
+                                                    </div>}
+                                            }
+
+
+
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+
+
+                        </div>
+
+
+                    </div>
+
+
+                </div>
+
+                <div class="form-group  modal-footer">
+                    <div class="col-md-offset-2 col-md-10">
+                        @Html.ActionLink("Retourner", "Index", null, new { @class = "btn btn-default" })
+
+
+                        <input type="submit" value="Enregister" class="btn btn-danger" />
+                    </div>
+                </div>
+            </div>
+        }
+
+    </div>
+</div>
+<!-- iCheck -->
+<script src="js/plugins/iCheck/icheck.min.js"></script>
+
+<script>
+
+
+
+    $('.agences').on('click', function () {
+
+        if ($('.agences').is(':checked')) {
+
+
+            $('.role').prop('checked', true);
+        }
+        else {
+            $('.role').prop('checked', false);
+        }
+
+
+
+    });
+
+    $('.Regional').on('click', function () {
+
+        if ($('.Regional').is(':checked')) {
+
+
+            $('.roleR').prop('checked', true);
+        }
+        else {
+            $('.roleR').prop('checked', false);
+        }
+
+
+
+    });
+    $('.client').on('click', function () {
+
+        if ($('.client').is(':checked')) {
+
+
+            $('.role2').prop('checked', true);
+        }
+        else {
+            $('.role2').prop('checked', false);
+        }
+
+
+
+    });
+    $('.famille').on('click', function () {
+
+        if ($('.famille').is(':checked')) {
+
+
+            $('.role3').prop('checked', true);
+        }
+        else {
+            $('.role3').prop('checked', false);
+        }
+
+
+
+    });
+    $('.article').on('click', function () {
+
+        if ($('.article').is(':checked')) {
+
+
+            $('.role4').prop('checked', true);
+        }
+        else {
+            $('.role4').prop('checked', false);
+        }
+
+
+
+    });
+    $('.depot').on('click', function () {
+
+        if ($('.depot').is(':checked')) {
+
+
+            $('.role5').prop('checked', true);
+        }
+        else {
+            $('.role5').prop('checked', false);
+        }
+    });
+    $('.promo').on('click', function () {
+
+        if ($('.promo').is(':checked')) {
+
+
+            $('.role55').prop('checked', true);
+        }
+        else {
+            $('.role55').prop('checked', false);
+        }
+    });
+    $('.resi').on('click', function () {
+
+        if ($('.resi').is(':checked')) {
+
+
+            $('.role6').prop('checked', true);
+        }
+        else {
+            $('.role6').prop('checked', false);
+        }
+
+
+
+    });
+    $('.reaf').on('click', function () {
+
+        if ($('.reaf').is(':checked')) {
+
+
+            $('.role7').prop('checked', true);
+        }
+        else {
+            $('.role7').prop('checked', false);
+        }
+
+
+
+    });
+
+    $('.ventelibre').on('click', function () {
+
+        if ($('.ventelibre').is(':checked')) {
+
+
+            $('.role13').prop('checked', true);
+        }
+        else {
+            $('.role13').prop('checked', false);
+        }
+
+
+
+    });
+    $('.transf').on('click', function () {
+
+        if ($('.transf').is(':checked')) {
+
+
+            $('.role8').prop('checked', true);
+        }
+        else {
+            $('.role8').prop('checked', false);
+        }
+
+
+
+    });
+    $('.mig').on('click', function () {
+
+        if ($('.mig').is(':checked')) {
+
+
+            $('.role9').prop('checked', true);
+        }
+        else {
+            $('.role9').prop('checked', false);
+        }
+
+
+
+    });
+    $('.transfLigne').on('click', function () {
+
+        if ($('.transfLigne').is(':checked')) {
+
+
+            $('.role20').prop('checked', true);
+        }
+        else {
+            $('.role20').prop('checked', false);
+        }
+
+
+
+    });
+    $('.appro').on('click', function () {
+
+        if ($('.appro').is(':checked')) {
+
+
+            $('.role10').prop('checked', true);
+        }
+        else {
+            $('.role10').prop('checked', false);
+        }
+
+
+
+    });
+    $('.stock').on('click', function () {
+
+        if ($('.stock').is(':checked')) {
+
+
+            $('.role11').prop('checked', true);
+        }
+        else {
+            $('.role11').prop('checked', false);
+        }
+
+
+
+    });
+    $('.tran').on('click', function () {
+
+        if ($('.tran').is(':checked')) {
+
+
+            $('.role12').prop('checked', true);
+        }
+        else {
+            $('.role12').prop('checked', false);
+        }
+    });
+
+    $(".selectall").click(function () {
+        $(".check").prop("checked", $(this).prop("checked"));
+    });
+
+
+    $(document).ready(function () {
+
+        $('.select-all').on('click', function () {
+
+            if ($('.select-all').is(':checked')) {
+
+
+                $('#div' + this.id.replace(/\D/g, '') + ' input.check').prop('checked', true);
+            }
+            else {
+                $('#div' + this.id.replace(/\D/g, '') + ' input.check').prop('checked', false);
+
+            }
+        });
+        $('.i-checksss').iCheck({
+            checkboxClass: 'icheckbox_square-green',
+            radioClass: 'iradio_square-green',
+        });
+    });
+</script>

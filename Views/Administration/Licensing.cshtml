@@ -1,0 +1,231 @@
+﻿@{
+    ViewBag.Title = "LICENCE";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+
+<div class="row">
+
+    <div class="col-lg-12">
+
+        <div class="ibox">
+
+            <div class="ibox-content">
+
+                <div class="panel-group payments-method" id="accordion">
+
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            @if (ViewBag.isLicenseValid == true)
+                            {
+                                <div class="pull-right">
+                                    <i class="fa fa-check-circle-o text-success"></i> Licence active
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="pull-right">
+                                    <i class="fa fa-warning text-danger"></i> Veuillez activez votre licence
+                                </div>
+                            }
+
+
+                            <a data-toggle="modal" data-target="#Licence"><i class="fa fa-info-circle small text-info">Licence</i></a>
+
+
+                        </div>
+                        <div class="panel">
+                            <div class="panel-body">
+
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <h2>BEE</h2>
+                                        <strong>Date de lancement:</strong> 14/01/2018 <br />
+                                        <p class="m-t">
+                                            BEE propose, outre les services classiques de tout fournisseur d’accès Internet,
+                                            des solutions innovantes pour les professionnels et les particuliers grâce à l’expertise
+                                            de son équipe ainsi qu’à ses équipements à la pointe de la technologie.
+                                        </p>
+                                        <div class="row">
+                                            <div class="col-xs-6">
+                                                <div class="form-group">
+                                                    <label>Utilisateurs </label>
+                                                    <div class="input-group">
+                                                        <input type="text" class="form-control" name="text" disabled value="@ViewBag.NBUSERS" />
+                                                        <span class="input-group-addon"><i class="fa fa-users"></i></span>
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-xs-6">
+                                                <div class="form-group">
+                                                    <label>Agences </label>
+                                                    <div class="input-group">
+                                                        <input type="text" class="form-control" name="text" disabled value="@ViewBag.NBAGENCES" />
+                                                        <span class="input-group-addon"><i class="fa fa-map-marker"></i></span>
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <span>
+                                            Total des agences actives: @ViewBag.NombreAgencesActives
+                                            <br />
+                                            Total des agences non actives: @ViewBag.NombreAgencesNonActives
+                                            <br />
+
+                                        </span>
+                                        <span>
+                                            Total des utilisateurs actifs @ViewBag.NombreUsersActives <br />
+                                            Total des utilisateurs désactivés: @ViewBag.NombreUsersNonActives
+                                            <br />
+
+                                        </span>
+
+                                    </div>
+                                    @Html.AntiForgeryToken()
+
+
+                                    <div class="col-md-8">
+                                        @using (Html.BeginForm("Licensing", "Administration", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+                                        {
+                                            if (ViewData.ModelState[""] != null && ViewData.ModelState[""].Errors.Count > 0)
+                                            {
+                                                <div class="alert alert-danger alert-dismissable">
+                                                    <button type="button" class="close " data-dismiss="alert"> × </button>
+                                                    @Html.ValidationSummary("", new { @class = "text-danger" })
+
+                                                </div>
+                                            }
+                                            <form role="form" id="payment-form">
+                                                <div class="row">
+                                                    <div class="col-xs-12">
+                                                        <div class="form-group">
+                                                            <label>License </label>
+                                                            <div class="input-group">
+                                                                <input type="text" class="form-control" name="LICENSINGKEY" id="LICENSINGKEY" placeholder="Licence Valide" required value="@ViewBag.licenseKey" />
+                                                                <span class="input-group-addon"><i class="fa fa-key"></i></span>
+
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-xs-7 col-md-7">
+                                                        <div class="form-group">
+                                                            <label>Société</label>
+                                                            <input type="text" class="form-control" name="FIRM" id="FIRM" required value="@ViewBag.FIRM" />
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-5 col-md-5 pull-right">
+                                                        <div class="form-group">
+                                                            <label>Raison Sociale</label>
+                                                            <input type="text" class="form-control" name="RC" id="RC" required value="@ViewBag.RC" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+
+                                                <div class="row">
+                                                    <div class="col-xs-7 col-md-7">
+                                                        <div class="form-group">
+                                                            <label>Adresse </label>
+                                                            <input type="text" class="form-control" name="ADDRESS" id="ADDRESS" required value="@ViewBag.ADDRESS" />
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-5 col-md-5 pull-right">
+                                                        <div class="form-group">
+                                                            <label>Téléphone</label>
+                                                            <input type="text" class="form-control" name="TELEPH" id="TELEPH" required value="@ViewBag.TELEPH" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+
+                                                <div class="row">
+                                                    <div class="col-xs-12">
+                                                        <div class="form-group">
+                                                            <label>Email</label>
+                                                            <input type="email" placeholder="adresse email" class="form-control" id="MAIL" name="MAIL" value="@ViewBag.MAIL">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-xs-12">
+                                                        <div class="form-group">
+                                                            <label>Responsable général</label>
+                                                            <input type="text" class="form-control" name="CONTACT" id="CONTACT" placeholder="Responsable général" value="@ViewBag.CONTACT" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="row">
+                                                    <div class="col-xs-12">
+                                                        <button class="btn btn-primary pull-right" type="submit">Valider </button>
+                                                    </div>
+                                                </div>
+                                            </form>
+
+
+
+                                        }
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+
+<div class="modal inmodal" id="Licence" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content animated bounceInUp">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <i class="fa fa-pencil-square-o modal-icon"></i>
+                <h4 class="modal-title">Licence</h4>
+                <small class="font-bold">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</small>
+            </div>
+            <div class="modal-body">
+                <p>
+                    <strong>Lorem Ipsum is simply dummy</strong> text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown
+                    printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting,
+                    remaining essentially unchanged.
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-white" data-dismiss="modal">Fermer</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="~/js/jquery-3.1.1.min.js"></script>
+<!-- Sweet alert -->
+<script src="~/js/plugins/sweetalert/sweetalert.min.js"></script>
+<!-- Ladda -->
+<script src="~/js/plugins/ladda/spin.min.js"></script>
+<script src="~/js/plugins/ladda/ladda.min.js"></script>
+<script src="~/js/plugins/ladda/ladda.jquery.min.js"></script>
+<!-- Chosen -->
+<script src="~/js/plugins/chosen/chosen.jquery.js"></script>
+<!-- Data picker -->
+<script src="~/js/plugins/datapicker/bootstrap-datepicker.js"></script>
+<script src="~/js/plugins/fullcalendar/moment.min.js"></script>
+
+<!-- Date range picker -->
+<script src="~/js/plugins/daterangepicker/daterangepicker.js"></script>

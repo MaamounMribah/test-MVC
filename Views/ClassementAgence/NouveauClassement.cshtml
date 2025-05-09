@@ -1,0 +1,181 @@
+﻿@model BeeProj.Models.ModeleClassementAgence
+
+
+@{
+    ViewBag.Title = "NouvelleAgence";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<link href="~/css/plugins/chosen/bootstrap-chosen.css" rel="stylesheet">
+<link href="~/css/plugins/sweetalert/sweetalert.css" rel="stylesheet">
+<!-- Ladda style -->
+<link href="~/css/plugins/ladda/ladda-themeless.min.css" rel="stylesheet">
+
+
+
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-lg-8">
+        <h2>Nouveau classement </h2>
+        <ol class="breadcrumb">
+            <li>
+                <a href="@Url.Action("index","Administration")">Administration</a>
+            </li>
+            <li>
+                <a href="@Url.Action("Index","ClassementAgence")">Liste classement</a>
+            </li>
+            <li class="active">
+                <strong><a href="@Url.Action("NouveauClassement", "ClassementAgence")">Nouveau modèle de classement</a></strong>
+            </li>
+        </ol>
+    </div>
+    <div class="col-lg-2">
+
+    </div>
+</div>
+
+ 
+@using (Html.BeginForm("NouveauClassement", "ClassementAgence", FormMethod.Post, new { @class = "form-horizontal", role = "form", enctype = "multipart/form-data" }))
+{
+
+
+
+@Html.AntiForgeryToken()
+<div class="wrapper wrapper-content animated fadeInRight">
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-content">
+                    <div class="form-horizontal">
+                        @*@Html.ValidationSummary(true, "", new { @class = "text-danger" })*@
+                        @if (ViewData.ModelState[""] != null && ViewData.ModelState[""].Errors.Count > 0)
+                        {
+                        <div class="alert alert-danger alert-dismissable">
+                            <button type="button" class="close " data-dismiss="alert"> × </button>
+                            @Html.ValidationSummary("", new { @class = "text-danger" })
+
+                        </div>
+                        }
+                        <div class="wrapper wrapper-content animated fadeInRight">
+                      
+
+                                <div class="ibox float-e-margins">
+                                    <div class="ibox-content">
+                                        <div class="row">
+
+                                            
+                                                <div class="panel" style="border-color:#1ab394;">
+                                                    <div class="panel-heading" style="background-color:#1ab394;border-color:#1ab394;">
+                                                     <h4 class="text-white">  Nouveau Classement </h4>
+                                                    </div>
+                                                    <div class="panel-body">
+                                                        <div class="form-group">
+                                                            <label class="col-md-4 control-label">Intitulé du classement </label>
+                                                            <div class="col-md-4">
+                                                                <input type="text" id="C_Intitule" name="C_Intitule" class="form-control" />
+                                                            </div>
+                                                        </div>
+
+
+                                                        <div class="form-group">
+                                                            <label class="col-md-4 control-label">Modèle de commission</label>
+                                                            <div class="col-md-4">
+                                                                <select class="col-sm-6 form-control chosen-select" id="AG_CLASSEMENT" name="AG_CLASSEMENT">
+                                                                    @*<option value="">  </option>*@
+                                                                    @foreach (var item in ViewBag.ListeModelesCommissions)
+                                                                    {
+                                                                        <option class="font-bold" value=@item.cbMarq> @item.C_CodeCommission</option>
+                                                                    }
+                                                                </select>  
+
+
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label class="col-md-4 control-label">Liste des agences bénéficiant de cette classement</label>
+                                                            <div class="col-sm-8">
+
+                                                                <select required class="chosen-select form-control  col-sm-6" multiple style="width:490px;" tabindex="5" name="ListeAGENCEDATEAVANCECOM" id="ListeAGENCEDATEAVANCECOM">
+
+                                                                    @foreach (var item in ViewBag.ListePVI)
+                                                                    {
+                                                                        <option value="@item.Value">@item.Text</option>
+                                                                    }
+                                                                </select>
+
+                                                            </div>
+                                                        </div>
+
+                                                        <button class="btn btn-primary pull-right ladda-button" type="submit">Enregistrer</button>
+
+                                                    </div>
+                                                </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            @*<button class="btn btn-primary pull-right ladda-button" type="submit" >Enregistrer</button>*@
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+}
+
+
+
+<script src="~/js/jquery-3.1.1.min.js"></script>
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+<!-- Chosen -->
+<script src="~/js/plugins/chosen/chosen.jquery.js"></script>
+
+<script src="~/js/plugins/sweetalert/sweetalert.min.js"></script>
+<!-- Ladda -->
+<script src="~/js/plugins/ladda/spin.min.js"></script>
+<script src="~/js/plugins/ladda/ladda.min.js"></script>
+<script src="~/js/plugins/ladda/ladda.jquery.min.js"></script>
+
+<script>
+    $(document).ready(function () {
+        $('.chosen-select').chosen();
+    });
+        $(document).ready(function () {
+
+        // Bind normal buttons
+        Ladda.bind('.ladda-button', { timeout: 5000 });
+
+        // Bind progress buttons and simulate loading progress
+        Ladda.bind('.progress-demo .ladda-button', {
+            callback: function (instance) {
+                var progress = 0;
+                var interval = setInterval(function () {
+                    progress = Math.min(progress + Math.random() * 0.1, 1);
+                    instance.setProgress(progress);
+
+                    if (progress === 1) {
+                        instance.stop();
+                        clearInterval(interval);
+                    }
+                }, 200);
+            }
+        });
+
+
+        var l = Ladda.bind('.ladda-button-demo');
+
+        l.click(function () {
+            // Start loading
+            l.ladda('start');
+
+            // Timeout example
+            // Do something in backend and then stop ladda
+            setTimeout(function () {
+                l.ladda('stop');
+            }, 12000)
+
+
+        });
+
+    });
+</script>

@@ -1,0 +1,175 @@
+﻿@model BeeProj.Models.D_DEPOT
+
+@{
+    ViewBag.Title = "AjouterDepot";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-lg-8">
+        <h2>Nouveau dépôt </h2>
+        <ol class="breadcrumb">
+            <li>
+                <a>Administration</a>
+            </li>
+            <li>
+                <a>Nouveau dépôt</a>
+            </li>
+            <li class="active">
+                <strong>Ajouter dépôt</strong>
+            </li>
+        </ol>
+    </div>
+    <div class="col-lg-2">
+
+    </div>
+</div>
+@*@using (Html.BeginForm("SaveNouveauClassement", "Administration", FormMethod.Post, new { @class = "form-horizontal", role = "form", enctype = "multipart/form-data" }))
+    {*@
+
+@if (ViewData.ModelState[""] != null && ViewData.ModelState[""].Errors.Count > 0)
+{
+    <div class="alert alert-danger alert-dismissable">
+        <button type="button" class="close " data-dismiss="alert"> × </button>
+        @Html.ValidationSummary("", new { @class = "text-danger" })
+
+    </div>
+}
+
+@Html.AntiForgeryToken()
+<div class="wrapper wrapper-content animated fadeInRight">
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-content">
+                    <div class="form-horizontal">
+                        @using (Html.BeginForm("AjoutDepot", "Administration", FormMethod.Post, new { @class = "form-horizontal", role = "form", enctype = "multipart/form-data" }))
+                        {
+
+                            <div class="wrapper wrapper-content animated fadeInRight">
+                                <div class="row">
+
+                                    <div class="ibox float-e-margins">
+                                        <div class="ibox-title">
+                                            <h5>BEE <small>Ajouter un nouveau dépôt</small></h5>
+                                        </div>
+
+                                        <div class="ibox-content">
+                                            <div class="row">
+                                                <fieldset id="myForm">
+
+                                                    <div class="col-sm-10 b-r">
+
+                                                        <form role="form">
+                                                       
+                                                            <div class="form-group">
+                                                                <label class="col-md-4 control-label">Intitulé</label>
+                                                                <div class="col-md-8">
+                                                                    <input id="DE_Intitule" name="DE_Intitule" class="form-control" required />
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label class="col-md-4 control-label">Adresse</label>
+                                                                <div class="col-md-8">
+                                                                    <input id="DE_Adresse" name="DE_Adresse" class="form-control" required />
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label class="col-md-4 control-label">Ville</label>
+                                                                <div class="col-md-8">
+                                                                    <select class="form-control chosen-select" name="DE_Ville" id="DE_Ville">
+                                                                        <option value="Ariana">Ariana</option>
+                                                                        <option value="Beja">Beja</option>
+                                                                        <option value="Ben arous">Ben arous</option>
+                                                                        <option value="Bizerte">Bizerte</option>
+                                                                        <option value="Gabes">Gabes</option>
+                                                                        <option value="Gafsa">Gafsa</option>
+                                                                        <option value="Jendouba">Jendouba</option>
+                                                                        <option value="Kairouan">Kairouan</option>
+                                                                        <option value="Kasserine">Kasserine</option>
+                                                                        <option value="Kebili">Kebili</option>
+                                                                        <option value="Kef">Kef</option>
+                                                                        <option value="Mahdia">Mahdia</option>
+                                                                        <option value="Mannouba">Mannouba</option>
+                                                                        <option value="Medenine">Medenine</option>
+                                                                        <option value="Monastir">Monastir</option>
+                                                                        <option value="Nabeul">Nabeul</option>
+                                                                        <option value="Sfax">Sfax</option>
+                                                                        <option value="Sidi bouzid">Sidi bouzid</option>
+                                                                        <option value="Siliana">Siliana</option>
+                                                                        <option value="Sousse">Sousse</option>
+                                                                        <option value="Tataouine">Tataouine</option>
+                                                                        <option value="Tozeur">Tozeur</option>
+                                                                        <option value="Tunis">Tunis</option>
+                                                                        <option value="Zaghouan">Zaghouan</option>
+                                                                    </select>
+                                                                    </div>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label class="col-md-4 control-label">Code Region</label>
+                                                                <div class="col-md-8">
+                                                                    <input id="DE_Region" name="DE_Region" class="form-control" required/>
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label class="col-md-4 control-label">Email</label>
+                                                                <div class="col-md-8">
+                                                                    <input id="DE_Mail" type="email" name="DE_Mail" class="form-control" required/>
+                                                                </div>
+                                                            </div>
+
+                                                         
+                                                            <div class="form-group">
+                                                                <label class="col-md-4 control-label">Telephone</label>
+                                                                <div class="col-md-8">
+                                                                    <input id="DE_Telephone" name="DE_Telephone" class="form-control" />
+                                                                </div>
+                                                            </div>
+
+
+                                                            <div class="form-group">
+                                                                <label class="col-md-4 control-label">Telecopie</label>
+                                                                <div class="col-md-8">
+                                                                    <input id="DE_Telecopie" name="DE_Telecopie" class="form-control" />
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label class="col-md-4 control-label">Contact </label>
+                                                                <div class="col-md-8">
+                                                                    <input id="DE_Contact" name="DE_Contact" class="form-control" required />
+                                                                </div>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                </fieldset>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <button class="btn btn-primary pull-right" type="submit" >Enregistrer</button>
+
+
+
+                            </div>
+
+
+
+                        }
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<script src="~/js/jquery-3.1.1.min.js"></script>
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+

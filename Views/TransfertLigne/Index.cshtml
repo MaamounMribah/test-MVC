@@ -1,0 +1,213 @@
+﻿@*@model BeeProj.Models.B_DEMENAGEMENT*@
+@*@model IEnumerable<BeeProj.Models.ListeDemenagementModel>*@
+
+
+@{
+    ViewBag.Title = "ListeDemandeTransfert";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<link href="~/css/plugins/dataTables/datatables.min.css" rel="stylesheet">
+
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-sm-4">
+        <h2>Demande Transfert de Ligne</h2>
+        <ol class="breadcrumb">
+
+            <li class="active">
+                <strong>Liste Demande Transfert Ligne </strong>
+            </li>
+        </ol>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-3">
+        <div class="widget style1 bg-purplebee-light">
+            <div class="row">
+                <div class="col-xs-4">
+                    <i class="fa fa-bandcamp fa-5x"></i>
+                </div>
+                <div class="col-xs-8 text-right">
+                    <span> Nouvelles</span>
+                    <h2 class="font-bold"> @ViewBag.cree</h2>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-3">
+        <div class="widget style1 bg-purplebee">
+            <div class="row">
+                <div class="col-xs-4">
+                    <i class="fa fa-shopping-cart fa-5x"></i>
+                </div>
+                <div class="col-xs-8 text-right">
+                    <span> En cours </span>
+                    <h2 class="font-bold">@ViewBag.encours</h2>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-3">
+        <div class="widget style1 bg-greenbee">
+            <div class="row">
+                <div class="col-xs-4">
+                    <i class="fa fa-check-circle-o fa-5x"></i>
+                </div>
+                <div class="col-xs-8 text-right">
+                    <span>  Validées </span>
+                    <h2 class="font-bold">@ViewBag.valide</h2>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-3">
+        <div class="widget style1 bg-graybee-light">
+            <div class="row">
+                <div class="col-xs-4">
+                    <i class="fa fa-warning fa-5x"></i>
+                </div>
+                <div class="col-xs-8 text-right">
+                    <span> Annulées </span>
+                    <h2 class="font-bold">@ViewBag.annule</h2>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>Liste des demandes de Demenagement</h5>
+                    <div class="project-actions">
+                        @if (User.IsInRole("Admin") || User.IsInRole("DemandeAjouterTrans"))
+                        {
+                            <a href=@Url.Action("Nouveau", "TransfertLigne") class="btn btn-sm btn-outline bg-purplebee" target="_blank">
+                                <i class="fa fa-plus "></i> Nouvelle demande
+                            </a>
+                        }
+                    </div>
+                </div>
+
+
+            </div>
+            <div class="ibox-content">
+                <table class="table table-striped table-bordered table-hover dataTables-example" id="ListeFacturesVersee">
+                    <thead>
+                        <tr>
+                            <th>Statut</th>
+                            <th>N°Demande</th>
+                            <th>Nouvelle RefTT</th>
+                            <th>Ancien Telephone</th>
+                            <th>Nouveau Telephone</th>
+                            <th>Intitulé Client</th>
+                            <th>CIN</th>
+                            <th>Offre</th>
+                            <th>Nouvelle Adresse Installation</th>
+                            <th>Ancienne Adresse Installation</th>
+                            <th>Date</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+
+                            <tr>
+
+                                <td>
+                                    @if (@item.TL_Statut == 0)
+                                    {
+
+                                        <i class="label bg-purplebee-light ">Nouveau</i>
+                                    }
+                                    else if (@item.TL_Statut == 1 || @item.TL_Statut == 2)
+                                    {
+
+                                        <i class="label bg-purplebee"> En cours</i>
+                                    }
+
+                                    else if (@item.TL_Statut == 3)
+                                    {
+
+                                        <i class="label bg-greenbee">Valide</i>
+                                    }
+                                    else if (@item.TL_Statut == 4)
+                                    {
+
+                                        <i class="label bg-graybee-light">Annuler</i>
+                                    }
+                                </td>
+                                <td class="project-title"><span>@item.TL_Piece</span> </td>
+                                <td><span>@item.New_RefTT </span> </td>
+                                <td>@item.CT_Telephone</td>
+                                <td>@item.New_Telephone</td>
+                                <td>@item.CT_Intitule</td>
+                                <td>@item.CT_Identifiant</td>
+                                <td>@item.article</td>
+                                <td>@item.AB_AdresseIns  / @item.NouvelleComplement  / @item.NouvelleVille  / @item.NouvelleCite /@item.NouvelleCodePostal</td>
+
+                                <td>@item.CT_AnciennneAdresse /  @item.AncienComplement/ @item.AncienVille  /@item.AncienCite/ @item.AncienCodePostal</td>
+                                <td>@item.cbModification </td>
+                                @if (User.IsInRole("Admin") || User.IsInRole("Details Transfert Ligne"))
+                                {
+                                    <td>
+                                        <a href=@Url.Action("Details/" + item.cbMarq, "TransfertLigne") class="btn btn-sm btn-outline btn-purplebee ">
+                                            <i class="fa fa-eye "></i> Détails
+                                        </a>
+                                    </td>
+                                }
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script src="~/js/jquery-3.1.1.min.js"></script>
+<script src="~/js/plugins/metisMenu/jquery.metisMenu.js"></script>
+<script src="~/js/plugins/pace/pace.min.js"></script>
+<script src="~/js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+<script src="~/js/plugins/chosen/chosen.jquery.js"></script>
+<script src="~/js/plugins/dataTables/datatables.min.js"></script>
+
+<script>
+    $(function () {
+        $('.dataTables-example').DataTable({
+            pageLength: 25,
+            order: false,
+            responsive: true,
+            dom: '<"html5buttons"B>lTfgitp',
+            buttons: [
+                { extend: 'copy' },
+                { extend: 'csv' },
+                { extend: 'excel', title: 'ExampleFile' },
+                { extend: 'pdf', title: 'ExampleFile' },
+
+                {
+                    extend: 'print',
+                    customize: function (win) {
+                        $(win.document.body).addClass('white-bg');
+                        $(win.document.body).css('font-size', '100px');
+
+                        $(win.document.body).find('table')
+                                .addClass('compact')
+                                .css('font-size', 'inherit');
+                    }
+                }
+            ]
+
+        });
+
+    });
+
+</script>
+
+

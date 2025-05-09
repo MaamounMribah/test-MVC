@@ -1,0 +1,476 @@
+﻿@model BeeProj.Models.B_MIGRATION
+@{
+    ViewBag.Title = "Migration";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<link href="~/css/plugins/chosen/bootstrap-chosen.css" rel="stylesheet">
+<link href="~/css/plugins/dataTables/datatables.min.css" rel="stylesheet">
+<!-- Toastr style -->
+<link href="~/css/plugins/toastr/toastr.min.css" rel="stylesheet">
+
+
+<div class="row wrapper border-bottom white-bg page-heading">
+
+    <div class="col-lg-8">
+        <h2>Demande de Migration</h2>
+        <ol class="breadcrumb">
+            <li>
+                <a href="index-2.html">Home</a>
+            </li>
+            <li>
+                <a>Gestion des Demandes</a>
+            </li>
+            <li class="active">
+                <strong>Demande de Migration</strong>
+            </li>
+        </ol>
+    </div>
+
+</div>
+<div class="row">
+    <div class="col-lg-12">
+        <div class="ibox float-e-margins">
+            <div class="ibox-title">
+                <h5>Demande Réf. #@ViewBag.demandereference</h5>
+            </div>
+            @using (Html.BeginForm("Nouveau", "Migration", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+            {
+                <div class="ibox-content">
+                    @if (ViewData.ModelState[""] != null && ViewData.ModelState[""].Errors.Count > 0)
+                    {
+                        <div class="alert alert-danger alert-dismissable">
+                            <button type="button" class="close " data-dismiss="alert">×</button>
+                            @Html.ValidationSummary("", new { @class = "text-danger" })
+                        </div>
+                    }
+                    <form method="get" class="form-horizontal">
+
+                        <div class="row">
+
+
+                            <div class="alert alert-warning alert-dismissable">
+
+                                <button type="button" class="close " data-dismiss="alert">×</button>
+
+                                Veuillez séléctionner la référence de l'abonnement ou entrer le numéro de téléphone de l'abonnement .
+                            </div>
+
+                            <div class="form-group col-lg-6">
+
+                                <div class="ibox-content">
+
+
+
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label"> N°Téléphone </label>
+
+                                        <div class="col-sm-9"><input type="text" class="form-control" id="GD_Tel" name="GD_Tel"></div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label"> Identifiant </label>
+
+                                        <div class="col-sm-9"><input type="text" class="form-control" id="CT_Identifiant" name="CT_Identifiant"></div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label"> Référence Abonnment </label>
+
+                                        <div class="col-sm-9">
+                                            @if (ViewBag.ListeAbo == null)
+                                            {
+                                                <select class="chosen-select form-control" id="DO_RefTT" name="DO_RefTT">
+                                                    <option value=""> </option>
+
+                                                </select>
+                                            }
+                                            else
+                                            {
+                                                <select class="chosen-select form-control" id="DO_RefTT" name="DO_RefTT">
+                                                    <option value=""> --Selectionner un abonnement-- </option>
+                                                    @foreach (var item in ViewBag.ListeAbo)
+                                                    {
+                                                        <option value="@item.DO_RefTT">@item.DO_RefTT</option>
+                                                    }
+
+                                                </select>
+                                            }
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label"> Description </label>
+
+                                        <div class="col-sm-9">
+                                            @Html.TextAreaFor(m => m.GD_Description, new { id = "GD_Description", @placeholder = "Description...", @class = "form-control" })
+                                        </div>
+                                    </div>
+
+
+                                </div>
+                            </div>
+                            <div class="form-group col-lg-6">
+                                <div class="ibox-content">
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label"> Intitulé Client </label>
+
+                                        <div class="col-sm-9">
+                                            <input type="text" class="form-control" id="GD_Intitule" name="GD_Intitule">
+                                            <span class="fa fa-user"><a href="" target="_blank" id="infoClient"> informations client</a></span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label"> Ancien Service </label>
+
+                                        <div class="col-sm-9">
+                                            @Html.TextBoxFor(model => model.GD_AncienService, new { @id = "GD_AncienService", @class = "hidden" })
+                                            <input type="text" class="form-control" id="GD_AncienDL" name="GD_AncienDL" required disabled>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label"> Nouveau Service </label>
+                                        <div class="col-sm-9">
+                                            <select class="form-control m-b chosen-select" name="GD_NouveauService" id="GD_NouveauService" required>
+                                                <option> --Choisir--</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+
+
+
+
+                    </form>
+                    <div class="hr-line-dashed"></div>
+                    <div class="form-group">
+                        @* ***************************************************************MANEL 03/10/2019************************************************************************************ *@
+                        <button class="ladda-button btn btn-primary pull-right m-t-n-xs " style="margin-left:10px;" type="submit" id="Enregistrer" disabled><strong>Enregistrer</strong></button>
+                        <button type="button" class="btn btn-white  pull-right m-t-n-xs" onclick="location.href='@Url.Action("Nouveau","Migration")'"><strong>Annuler</strong></button>
+                        @* ***************************************************************MANEL 03/10/2019************************************************************************************ *@
+                    </div>
+
+                </div>
+            }
+        </div>
+    </div>
+
+</div>
+<div class="modal inmodal fade" id="ListeAbonnements" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title">Liste des abonnements </h4>
+                <small class="font-bold">Choisissez l'abonnement pour rajouter des services en SUS .</small>
+            </div>
+            <div class="modal-body">
+
+                <div class="row">
+                    <div class="col-md-10">
+                        <input class="form-control" type="text" id="idC" />
+                    </div>
+                    <div class="col-md-2">
+                        <button class="btn btn-sm btn-rounded" id="retrieveListeAbo">Ok</button>
+                    </div>
+                </div>
+
+                <br />
+                <div class="full-height-scroll">
+                    <div class="table-responsive">
+                        <table class="table table-striped table-hover" id="TablelisteAbonnements" style="cursor:pointer;">
+
+                            <thead>
+                                <tr>
+                                    <th>Référence Abonnement</th>
+                                    <th>Intitulé Client</th>
+                                    <th>Téléphone</th>
+
+                                    <th>Adresse</th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+
+
+            </div>
+
+
+        </div>
+    </div>
+</div>
+<script src="~/js/jquery-3.1.1.min.js"></script>
+<script src="~/js/plugins/metisMenu/jquery.metisMenu.js"></script>
+<script src="~/js/plugins/chosen/chosen.jquery.js"></script>
+<script src="~/js/plugins/dataTables/datatables.min.js"></script>
+
+<!-- Toastr script -->
+<script src="~/js/plugins/toastr/toastr.min.js"></script>
+
+
+<script>
+    $(document).ready(function () {
+
+        $('.chosen-select').chosen({ width: "100%" });
+
+        $('#DO_RefTT').on("change", function (event) {
+            $.ajax({
+                type: "get",
+                url: '@Url.Action("GetInfoClientInformation")',
+                dataType: 'json',
+                data: { tel: null, RefTT: $("#DO_RefTT").val() },
+                success: function (msg) {
+                    if (msg.result == 0) {
+                        $("#GD_Tel").val((msg.abonnementClient.CT_Telephone));
+                        $("#CT_Identifiant").val((msg.data.CT_Identifiant));
+                        $("#GD_Intitule").val((msg.data.CT_Intitule));
+                        $("#infoClient").attr("href", "/Structure/DetailsClient/" + msg.data.cbMarq);
+                        var aref = msg.data2.DL_Design;
+                        var deb = msg.DebitAncienArticle;
+                        var anciendeb = "Debit : " + deb + " : " + aref;
+                        $("#GD_AncienService").val(msg.data2.AR_Ref);
+                        //  $("#GD_AncienService2").val((msg.DebitAncienArticle));
+                        $("#GD_AncienDL").val(anciendeb);
+                        $('.chosen-select').chosen({ width: "100%" });
+
+                        $("#GD_NouveauService").empty();
+                        $.ajax({
+                            type: "get",
+                            url: "/Migration/LoadDebit?tel=" + $("#GD_Tel").val(),
+                            dataType: "json",
+                            success: function (msg) {
+                                //var d = JSON.parse(msg.data);
+                                $('.chosen-select').chosen({ width: "100%" });
+                                $("#GD_NouveauService").empty();
+                                var select = $('#GD_NouveauService');
+                                select.append('<option>--Choisir--</option>');
+                                for (var i = 0; i < msg.count; i++) {
+
+
+                                    //mylist = mylist + '<option value="' + msg.data[i].AR_Ref + '">' + msg.data[i].AR_Design + '</option>';
+
+                               //     var select = $('#GD_NouveauService');
+                                    select.append('    <option> --Choisir--</option>'+'<option value="' + msg.data[i].AR_Ref + '">Référence: '+ msg.data[i].AR_Ref + ' Debit: ' + msg.data[i].D_Debit+' : ' + msg.data[i].AR_Design + '</option>');
+
+                                }
+                            }
+
+                        });
+                    }
+                    else {
+
+                        toastr.error(msg.msg, 'le client n existe pas');
+
+                        $('#DO_RefTT').val("");
+                        $('#CT_Identifiant').val("");
+                        $('#DO_RefTT').trigger("chosen:updated");
+                        $("#GD_Intitule").val("");
+                        $("#GD_AncienService").val("");
+                        $("#GD_AncienDL").val((""));
+                        $("#GD_NouveauService").empty();
+                        $("#infoClient").attr("href", "#");
+                    }
+                }
+            });
+
+        });
+$('.chosen-select').chosen({ width: "100%" });
+        $('#GD_Tel').on("change", function (event) {
+            $.ajax({
+                type: "get",
+                url: '@Url.Action("GetInfoClientInformation")',
+                dataType: 'json',
+                data: { tel: $("#GD_Tel").val(), RefTT: null },
+                success: function (msg) {
+                    if (msg.result == 0) {
+                        $('#DO_RefTT').val(msg.abonnementClient.DO_RefTT);
+                        $('#DO_RefTT').trigger("chosen:updated");
+                        $("#CT_Identifiant").val((msg.data.CT_Identifiant));
+                        $("#GD_Intitule").val((msg.data.CT_Intitule));
+                        $("#infoClient").attr("href", "/Structure/DetailsClient/" + msg.data.cbMarq);
+                    //    $("#GD_AncienService").val((msg.data2.AR_Ref));
+
+                        var aref = msg.data2.DL_Design;
+                        var deb = msg.DebitAncienArticle;
+                        var anciendeb = "Debit : " + deb + " : " + aref;
+                        $("#GD_AncienService").val(msg.data2.AR_Ref);
+                        $("#GD_AncienDL").val((msg.data2.DL_Design));
+                        $('.chosen-select').chosen({ width: "100%" });
+                        $("#GD_NouveauService").empty();
+                        $.ajax({
+                            type: "get",
+                            url: "/Migration/LoadDebit?tel=" + $("#GD_Tel").val(),
+                            dataType: "json",
+                            success: function (msg) {
+                                //var d = JSON.parse(msg.data);
+                                $('.chosen-select').chosen({ width: "100%" });
+                                $("#GD_NouveauService").empty();
+                                var select = $('#GD_NouveauService');
+                                select.append('<option>--Choisir--</option>');
+                                for (var i = 0; i < msg.count; i++) {
+                                    //mylist = mylist + '<option value="' + msg.data[i].AR_Ref + '">' + msg.data[i].AR_Design + '</option>';
+                                  //  var select = $('#GD_NouveauService');
+                                    select.append('    <option> --Choisir--</option>'+'<option value="' + msg.data[i].AR_Ref + '">Référence: '+ msg.data[i].AR_Ref + '  Désignation: ' + msg.data[i].AR_Design + '</option>');
+                                }
+                                $('#GD_NouveauService').trigger("chosen:updated");
+                            }
+                        });
+						$('.chosen-select').chosen({ width: "100%" });
+                    }
+                    else {
+                        toastr.error(msg.msg, 'le client n existe pas');
+                        $('#DO_RefTT').val("");
+                        $('#CT_Identifiant').val("");
+                        $('#DO_RefTT').trigger("chosen:updated");
+                        $("#GD_Intitule").val("");
+                        $("#GD_AncienService").val((""));
+                        $("#GD_AncienDL").val((""));
+                        $("#GD_NouveauService").empty();
+                        $('#GD_NouveauService').trigger("chosen:updated");
+                        $("#infoClient").attr("href", "#");
+                    }
+                }
+            });
+        });
+        $('#CT_Identifiant').focus(function () {
+            //open bootsrap modal
+            $('#ListeAbonnements').modal({
+                show: true
+            });
+        });
+
+        $("#retrieveListeAbo").click(function () {
+            if ($('#idC').val() != "") {
+                $("#TablelisteAbonnements").DataTable({
+                    "ajax": {
+                        "url": "/Abonnement/listeAbonnementIdentifiant?IdentifiantClient=" + $('#idC').val(),
+                        "type": 'get',
+                        "datatype": "json"
+                    },
+                    "columns": [
+                        { "data": "DO_RefTT" },
+                        { "data": "CT_Intitule" },
+                        { "data": "CT_Telephone" },
+                        { "data": "CT_Adresse" },
+                    ]
+                });
+                $('#TablelisteAbonnements tbody').on('dblclick', 'tr', function () {
+                    var tr = $(this).closest('tr');
+                    var DO_RefTT = tr.find('td:eq(0)').html();
+                    var CT_Telephone = tr.find('td:eq(2)').html();
+                    var b = tr.find('td:eq(1)').html();
+                    var intitule = tr.find('td:eq(1)').html();
+                    $('#DO_RefTT').val(DO_RefTT);
+                    $('#DO_RefTT').trigger("chosen:updated");
+                    $("#CT_Identifiant").val($('#idC').val());
+                    $("#GD_Tel").val(CT_Telephone);
+                    $("#CT_Intitule").val(intitule);
+                    //$("#infoClient").attr("href", "/Structure/DetailsClient/" + msg.data.cbMarq);
+
+                    $('.chosen-select').chosen({ width: "100%" });
+                        $.ajax({
+                        type: "get",
+                        url: '@Url.Action("GetInfoClientInformation")',
+                        dataType: 'json',
+                        data: { tel: $("#GD_Tel").val(), RefTT: null },
+                        success: function (msg) {
+                            if (msg.result == 0) {
+                        $('#DO_RefTT').val(msg.abonnementClient.DO_RefTT);
+                        $('#DO_RefTT').trigger("chosen:updated");
+                        $("#CT_Identifiant").val((msg.data.CT_Identifiant));
+                        $("#GD_Intitule").val((msg.data.CT_Intitule));
+                        $("#infoClient").attr("href", "/Structure/DetailsClient/" + msg.data.cbMarq);
+                //        $("#GD_AncienService").val((msg.data2.AR_Ref));
+                        var aref = msg.data2.DL_Design;
+                        var deb = msg.DebitAncienArticle;
+                        var anciendeb = "Debit : " + deb + " : " + aref;
+                        $("#GD_AncienService").val(msg.data2.AR_Ref);
+                        $("#GD_AncienDL").val((msg.data2.DL_Design));
+                        $('.chosen-select').chosen({ width: "100%" });
+                        $("#GD_NouveauService").empty();
+                        $.ajax({
+                            type: "get",
+                            url: "/Migration/LoadDebit?tel=" + $("#GD_Tel").val(),
+                            dataType: "json",
+                            success: function (msg) {
+                                //var d = JSON.parse(msg.data);
+                                $('.chosen-select').chosen({ width: "100%" });
+                                $("#GD_NouveauService").empty();
+                                var select = $('#GD_NouveauService');
+                                select.append('<option>--Choisir--</option>');
+                                for (var i = 0; i < msg.count; i++) {
+                                    //mylist = mylist + '<option value="' + msg.data[i].AR_Ref + '">' + msg.data[i].AR_Design + '</option>';
+                                   // var select = $('#GD_NouveauService');
+                                    select.append('    <option> --Choisir--</option>'+'<option value="' + msg.data[i].AR_Ref + '">' + msg.data[i].AR_Design + '</option>');
+                                }
+                                $('#GD_NouveauService').trigger("chosen:updated");
+                            }
+                        });
+                    }
+                    else {
+                        toastr.error(msg.msg, 'le client n existe pas');
+                        $('#DO_RefTT').val("");
+                        $('#CT_Identifiant').val("");
+                        $('#DO_RefTT').trigger("chosen:updated");
+                        $("#GD_Intitule").val("");
+                        $("#GD_AncienService").val((""));
+                        $("#GD_AncienDL").val((""));
+                        $("#GD_NouveauService").empty();
+                        $('#GD_NouveauService').trigger("chosen:updated");
+                        $("#infoClient").attr("href", "#");
+                    }
+                }
+            });
+                    $('#ListeAbonnements').modal('hide');
+                    $("#TablelisteAbonnements").dataTable().destroy();
+                });
+            }
+        });
+
+
+
+
+        //************************************************************************************* MANEL 03/10/2019 ****************************************************************************//
+        // Bind normal buttons
+        Ladda.bind('.ladda-button', { timeout: 20000 });
+        // Bind progress buttons and simulate loading progress
+        Ladda.bind('.progress-demo .ladda-button', {
+            callback: function (instance) {
+                var progress = 0;
+                var interval = setInterval(function () {
+                    progress = Math.min(progress + Math.random() * 0.1, 1);
+                    instance.setProgress(progress);
+
+                    if (progress === 1) {
+                        instance.stop();
+                        clearInterval(interval);
+                    }
+                }, 20000);
+            }
+        });
+
+        //$('#Enregistrer').click(function () {
+
+        //    $('#Enregistrer').prop(disabled, true);
+        //});
+
+
+        //************************************************************************************* MANEL 03/10/2019 ****************************************************************************//
+    });
+
+
+        //new 
+        $(document).ready(function () {
+            $(document).on("change", '#GD_NouveauService', function () {
+                //  var Ancien = $("#GD_AncienDL").val();
+                var Nouveau = $('#GD_NouveauService').val();
+                var submitAbonnement = $('#Enregistrer');
+                if (Nouveau == "--Choisir--") {
+                    submitAbonnement.prop("disabled", true);
+                } else { submitAbonnement.prop("disabled", false); }
+            });
+        });
+</script>
+
+

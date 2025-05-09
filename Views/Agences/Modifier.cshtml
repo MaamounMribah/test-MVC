@@ -1,0 +1,913 @@
+﻿@model BeeProj.Models.B_AGENCE
+
+@{
+    ViewBag.Title = "Modifier";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<link href="~/css/plugins/chosen/bootstrap-chosen.css" rel="stylesheet">
+<link href="~/css/plugins/iCheck/custom.css" rel="stylesheet">
+
+<link href="~/css/plugins/chosen/bootstrap-chosen.css" rel="stylesheet">
+<link href="~/css/plugins/awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css" rel="stylesheet">
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-lg-8">
+        <h2>Agence</h2>
+        <ol class="breadcrumb">
+            <li>
+                <a>Administration</a>
+            </li>
+            <li>
+                <a>Agence</a>
+            </li>
+            <li class="active">
+                <strong>Modifier Agence</strong>
+            </li>
+        </ol>
+    </div>
+    <div class="col-lg-2">
+
+    </div>
+</div>
+<div class="wrapper wrapper-content animated fadeInRight">
+    @if (TempData["MSG"] != null)
+            {
+        <div class="alert alert-warning alert-dismissable">
+            <button type="button" class="close " data-dismiss="alert"> × </button>
+            <p class="text-danger">@TempData["MSG"]</p>
+        </div>
+
+    }
+
+    <div class="ibox">
+        <div class="ibox-content">
+            <div class="row m-b-lg m-t-lg ">
+                <div class="col-md-6">
+                    <div class="profile-image">
+                        <img src="~/img/bee.png" class="img-circle circle-border m-b-md" alt="profile">
+                    </div>
+                    <div class="profile-info">
+                        <div class="">
+                            <div>
+                                <h2 class="no-margins">
+                                    @Model.A_Intitule - #@Model.A_Code
+                                </h2>
+                                <h2 class="no-margins">
+                                    @Model.CT_Num
+                                </h2>
+                                <h4>@Model.A_Contact</h4>
+                                <small>
+                                    @Model.A_Adresse @Model.A_CodePostal
+                                </small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <table class="table small m-b-xs">
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <strong>@ViewBag.NombreAbonnements</strong> Abonnements
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <strong>@String.Format("{0:N3}", (decimal)(Model.Seuil1 ?? 0)) TND </strong> Seuil 1
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <strong>@String.Format("{0:N3}", (decimal)(Model.Seuil2 ?? 0)) TND </strong> Seuil 2
+                                </td>
+                            </tr>
+
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="col-md-3">
+                    <table class="table small m-b-xs">
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <p>Nombre de <strong style="font-size:1.2em">Jours</strong> de blocage paiement <strong style="font-size:1.2em">(Bordereau) :</strong><strong> @String.Format("{0:N0}", (decimal)(Model.ValueBord ?? 0)) </strong>jours </p>
+
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <p>Nombre de <strong style="font-size:1.2em">Jours</strong> de blocage paiement <strong style="font-size:1.2em">(Réglement) : </strong><strong> @String.Format("{0:N0}", (decimal)(Model.ValueReg ?? 0)) </strong>jours</p>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td>
+                                    <p>Nombre de <strong style="font-size:1.2em">Jours</strong> de blocage Bordereau <strong style="font-size:1.2em">(Bordereau) : </strong><strong> @String.Format("{0:N0}", (decimal)(Model.NbreJoursBord ?? 0)) </strong>jours</p>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+
+            </div>
+        </div>
+    </div>
+
+
+    @using (Html.BeginForm("EditAgence", "Agences", FormMethod.Post, new { @class = "form-horizontal", role = "form", enctype = "multipart/form-data" }))
+    {
+        <div class="wrapper wrapper-content animated fadeInRight">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="ibox float-e-margins">
+                        <div class="ibox-content">
+                            <div class="form-horizontal">
+                                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                                <div class="wrapper wrapper-content animated fadeInRight">
+                                    <div class="row">
+
+                                        <div class="ibox float-e-margins">
+
+
+                                            <div class="ibox-content">
+                                                <div class="row">
+                                                    <div class="col-lg-12">
+                                                        <div class="panel panel-default">
+                                                            <div class="panel-heading">
+                                                                Informations générales
+                                                            </div>
+                                                            <div class="panel-body">
+
+                                                                <div class="form-group">
+                                                                    <div class="col-md-4">
+                                                                        <div class="form-group">
+                                                                            <label class="col-md-4 control-label">Type agence</label>
+                                                                            <div class="col-md-8">
+                                                                                <select name="A_Type" class="chosen-select form-control" id="A_Type">
+                                                                                    @foreach (var item in ViewBag.listTypeAgence)
+                                                                                    {
+                                                                                        if (item.Value == Model.A_Type.ToString())
+                                                                                        {
+                                                                                            <option value="@item.Value" selected>@item.Text</option>
+                                                                                        }
+                                                                                        else
+                                                                                        {
+                                                                                            <option value="@item.Value"> @item.Text </option>
+
+                                                                                        }
+                                                                                    }
+                                                                                </select>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    @if (Model.A_Type != 0)
+                                                                    {
+                                                                        <div class="col-md-4" id="hideAgMere">
+
+                                                                            <div class="form-group">
+                                                                                <label class="col-md-4 control-label">Agence mère</label>
+                                                                                <div class="col-md-8">
+                                                                                    <select name="A_Parent" class="form-control" id="A_Parent">
+                                                                                        @foreach (var item in ViewBag.AgenceSiege)
+                                                                                        {
+                                                                                            if (item.cbMarq == Model.A_Parent)
+                                                                                            {
+                                                                                                <option value="@item.cbMarq" selected>@item.A_Code @item.A_Intitule</option>
+                                                                                            }
+                                                                                            else
+                                                                                            {
+                                                                                                <option value="@item.cbMarq">@item.A_Code @item.A_Intitule</option>
+
+                                                                                            }
+                                                                                        }
+                                                                                    </select>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    }
+                                                                    <div class="col-md-4">
+                                                                        <label class="col-md-4 control-label">Dépôt Agence</label>
+                                                                        <div class="col-md-8">
+                                                                            <input class="form-control" id="DE_No" name="DE_No" value="@ViewBag.Depot" disabled />
+                                                                        </div>
+
+                                                                    </div>
+                                                                    <div class="col-md-4">
+                                                                        <label class="col-sm-4 control-label">
+                                                                            Active
+                                                                        </label>
+                                                                        <div class="col-sm-8">
+                                                                            <label>
+                                                                                @if (Model.A_Active == 0)
+                                                                                {
+                                                                                    <input class="checkbox-inline i-checks" type="radio" checked value=0 id="A_Active" name="A_Active"><span>Oui </span>
+                                                                                    <input class="checkbox-inline i-checks" type="radio" value=1 id="A_Active" name="A_Active"> <span> Non </span>
+                                                                                }
+                                                                                else
+                                                                                {
+                                                                                    <input class="checkbox-inline i-checks" type="radio" value=0 id="A_Active" name="A_Active"> <span>Oui </span>
+                                                                                    <input class="checkbox-inline i-checks" type="radio" value=1 checked id="A_Active" name="A_Active"> <span> Non </span>
+                                                                                }
+                                                                            </label>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <div class="col-md-4">
+                                                                        <label class="col-md-4 control-label">Souche Agence</label>
+                                                                        <div class="col-md-8">
+                                                                            <input id="Id_Souche" name="Id_Souche" class="form-control" value="@ViewBag.Souche" disabled />
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-md-4">
+                                                                        <label class="col-md-4 control-label">Région Agence</label>
+                                                                        <div class="col-md-8">
+                                                                            <select name="R_CodeRegion" class="chosen-select form-control" id="R_CodeRegion">
+                                                                                @foreach (var item in ViewBag.ListeRegions)
+
+                                                                                {
+                                                                                    if (Model.R_CodeRegion == item.R_CodeRegion)
+                                                                                    {
+                                                                                        <option value="@item.R_CodeRegion" selected="selected">@item.R_CodeRegion: @item.R_Intitule </option>
+
+
+                                                                                    }
+                                                                                    else
+                                                                                    {
+                                                                                        <option value="@item.R_CodeRegion">@item.R_CodeRegion: @item.R_Intitule </option>
+
+                                                                                    }
+
+                                                                                }
+
+
+
+                                                                            </select>
+                                                                            <span class="help-block m-b-none"><a class="" data-toggle="modal" data-target="#NewRegion">Créer une nouvelle région  </a></span>
+
+                                                                        </div>
+
+                                                                    </div>
+
+
+                                                                    @if (Model.A_Type == 2)
+                                                                    {
+
+                                                                        <div class="col-md-4" id="classementForPDV">
+                                                                            <div class="form-group">
+                                                                                <label class="col-md-4 control-label">Modèle de commission </label>
+
+                                                                                <div class="col-md-8">
+                                                                                    @if (ViewBag.ModeleClassement == null)
+                                                                                    {
+
+                                                                                        <a href='@Url.Action("ModeleCommission", "Administration")' target="_blank">créer un nouveau modèle de classement de commission</a>
+                                                                                    }
+                                                                                    else
+                                                                                    {
+
+                                                                                        <select name="A_Classement" class="chosen-select form-control" id="A_Classement">
+
+                                                                                            <option value=""></option>
+
+                                                                                            @foreach (var item in ViewBag.ModeleClassement)
+
+                                                                                            {
+                                                                                                if (Model.A_Classement == item.cbMarq)
+                                                                                                {
+                                                                                                    <option selected="selected" value="@item.cbMarq">@item.Intitule </option>
+
+                                                                                                }
+                                                                                                else
+                                                                                                {
+                                                                                                    <option value="@item.cbMarq">@item.Intitule </option>
+
+                                                                                                }
+                                                                                            }
+
+
+
+                                                                                        </select>
+
+
+                                                                                        @*<span class="help-block m-b-none"><a href='@Url.Action("ModeleCommission", "Administration")' target="_blank">créer un nouveau modèle de classement de commission</a></span>*@
+
+                                                                                    }
+
+
+                                                                                </div>
+                                                                            </div>
+
+                                                                        </div>
+                                                                    }
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-lg-6">
+                                                        <div class="ibox">
+                                                            @*<div class="ibox-title">
+                </div>*@
+
+                                                            <div class="ibox-content">
+
+                                                                <div class="form-group">
+                                                                    <label class="col-md-4 control-label">Identifiant agence</label>
+                                                                    <div class="col-md-8">
+                                                                        <input id="A_Identifiant" name="A_Identifiant" class="form-control" value="@Model.A_Identifiant" />
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label class="col-md-4 control-label">Intitulé</label>
+                                                                    <div class="col-md-8">
+                                                                        <input id="A_Intitule" name="A_Intitule" class="form-control" value="@Model.A_Intitule" />
+                                                                    </div>
+                                                                </div>
+
+                                                                <div class="form-group">
+                                                                    <label class="col-md-4 control-label">Raison Sociale</label>
+                                                                    <div class="col-md-8">
+                                                                        <input id="A_RaisonSociale" name="A_RaisonSociale" class="form-control" value="@Model.A_RaisonSociale" />
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    @Html.HiddenFor(model => model.cbMarq)
+
+
+                                                    <div class="col-lg-6">
+                                                        <div class="ibox">
+
+                                                            <div class="ibox-content">
+
+                                                                <div class="form-group">
+                                                                    <label class="col-md-4 control-label">Adresse agence</label>
+                                                                    <div class="col-md-8">
+
+                                                                        <textarea id="A_Adresse" name="A_Adresse" class="form-control">@Model.A_Adresse</textarea>
+                                                                    </div>
+                                                                </div>
+
+
+                                                                <div class="form-group">
+                                                                    <label class="col-md-4 control-label">Ville</label>
+                                                                    <div class="col-md-8">
+                                                                        <input name="A_Ville" id="A_Ville" class="form-control" value="@Model.A_Ville" />
+                                                                    </div>
+                                                                </div>
+
+                                                                <div class="form-group">
+                                                                    <label class="col-md-4 control-label">Code Postal</label>
+                                                                    <div class="col-md-8">
+                                                                        <input id="A_CodePostal" name="A_CodePostal" class="form-control" value="@Model.A_CodePostal" />
+                                                                    </div>
+
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-lg-6">
+
+                                                        <div class="ibox">
+
+
+
+
+                                                            <div class="ibox-content">
+
+                                                                <div class="form-group">
+                                                                    <label class="col-md-4 control-label">Identifiant Fiscale</label>
+                                                                    <div class="col-md-8">
+                                                                        <input id="A_MatriculeFiscale" name="A_MatriculeFiscale" class="form-control" value="@Model.A_MatriculeFiscale" />
+                                                                    </div>
+                                                                </div>
+
+                                                                <div class="form-group">
+                                                                    <label class="col-md-4 control-label">Registre de commerce</label>
+                                                                    <div class="col-md-8">
+                                                                        <input id="A_REGISTRE" name="A_REGISTRE" class="form-control" value="@Model.A_REGISTRE" />
+                                                                    </div>
+                                                                </div>
+
+
+
+                                                                <div class="form-group">
+                                                                    <label class="col-md-4 control-label">Modes de règlement </label>
+                                                                    <div class="col-md-8">
+
+                                                                        <span class="col-md-10">
+                                                                            <select data-placeholder="Choisir régions..." class="chosen-select" multiple style="width:350px;" tabindex="4" name="ModeReglementList">
+
+                                                                                @foreach (var item in Model.ModeReglementList)
+                                                                                {
+                                                                                    <option name="ModeReglementList" selected="@item.Selected" value="@item.Value">@item.Text</option>
+                                                                                }
+                                                                            </select>
+                                                                        </span>
+
+
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+
+                                                    <div class="col-lg-6">
+
+                                                        <div class="ibox">
+
+                                                            <div class="ibox-content">
+
+
+
+                                                                <div class="form-group">
+
+                                                                    <label class="col-md-4 control-label">Contact principal</label>
+                                                                    <div class="col-md-8">
+                                                                        <input id="A_Contact" name="A_Contact" class="form-control" value="@Model.A_Contact" />
+                                                                    </div>
+                                                                </div>
+
+                                                                <div class="form-group">
+                                                                    <label class="col-md-4 control-label">Email</label>
+                                                                    <div class="col-md-8">
+                                                                        <input name="A_Mail" id="A_Mail" type="email" class="form-control" value="@Model.A_Mail" />
+                                                                    </div>
+                                                                </div>
+
+                                                                <div class="form-group">
+                                                                    <label class="col-md-4 control-label">Téléphone agence</label>
+                                                                    <div class="col-md-8">
+                                                                        <input id="A_Telephone" name="A_Telephone" class="form-control" value="@Model.A_Telephone" />
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group">
+
+                                                                    <label class="col-md-4 control-label">Télécopie</label>
+                                                                    <div class="col-md-8">
+                                                                        <input id="A_Telecopie" name="A_Telecopie" class="form-control" value="@Model.A_Telecopie" />
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label class="col-md-4 control-label">Identifiant Agence</label>
+                                                                    <div class="col-md-8">
+                                                                        <input id="CT_Num" name="Identifiant Agence" class="form-control" value="@Model.CT_Num" disabled />
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-lg-6">
+                                                        <div class="ibox">
+                                                            <div class="ibox-content">
+                                                                <div class="form-group">
+                                                                    <label class="col-md-4 control-label">Seuil 1 </label>
+                                                                    <div class="col-md-8">
+                                                                        <input id="Seuil1" name="Seuil1" class="form-control" value="@Model.Seuil1" />
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    @Html.HiddenFor(model => model.cbMarq)
+                                                    <div class="col-lg-6">
+                                                        <div class="ibox">
+                                                            <div class="ibox-content">
+                                                                <div class="form-group">
+                                                                    <label class="col-md-4 control-label">Seuil 2</label>
+                                                                    <div class="col-md-8">
+                                                                        <input id="Seuil2" name="Seuil2" class="form-control" value="@Model.Seuil2" />
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    @if (@Model.A_Type == 2 || @Model.A_Type == 3)
+                                                    {
+                                                        <div class="col-lg-6">
+                                                            <div class="ibox">
+                                                                <div class="ibox-content">
+                                                                    <div class="form-group">
+                                                                        <label class="col-md-4">Nombre de <strong style="font-size:1.2em">Jours</strong> de blocage paiement <strong style="font-size:1.2em">(Bordereau)</strong> </label>
+                                                                        <div class="col-md-8">
+                                                                            @*<input id="ValueBord" name="ValueBord" class="form-control" value="@Model.ValueBord" />*@
+                                                                            @Html.TextBoxFor(m => m.ValueBord, new { @class = "form-control", id = "ValueBord" })
+                                                                            @Html.ValidationMessageFor(model => model.ValueBord, "", new { @class = "text-danger" })
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-lg-6">
+                                                            <div class="ibox">
+                                                                <div class="ibox-content">
+                                                                    <div class="form-group">
+                                                                        <label class="col-md-4">Nombre de <strong style="font-size:1.2em">Jours</strong> de blocage paiement <strong style="font-size:1.2em">(Réglement)</strong> </label>
+                                                                        <div class="col-md-8">
+                                                                            @*<input id="ValueReg" name="ValueReg" class="form-control" value="@Model.ValueReg" />*@
+                                                                            @Html.TextBoxFor(m => m.ValueReg, new { @class = "form-control", id = "ValueReg", value = @Model.ValueReg })
+                                                                            @Html.ValidationMessageFor(model => model.ValueReg, "", new { @class = "text-danger" })
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-lg-6">
+                                                            <div class="ibox">
+                                                                <div class="ibox-content">
+                                                                    <div class="form-group">
+                                                                        <label class="col-md-4">Nombre de <strong style="font-size:1.2em">Jours</strong> de blocage Bordereau <strong style="font-size:1.2em">(Bordereau)</strong> </label>
+                                                                        <div class="col-md-8">
+                                                                            @*<input id="ValueReg" name="ValueReg" class="form-control" value="@Model.ValueReg" />*@
+                                                                            @Html.TextBoxFor(m => m.NbreJoursBord, new { @class = "form-control", id = "NbreJoursBord", value = @Model.NbreJoursBord })
+                                                                            @Html.ValidationMessageFor(model => model.NbreJoursBord, "", new { @class = "text-danger" })
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    }
+
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-lg-12">
+                                                        <div class="panel panel-default">
+                                                            <div class="panel-body">
+                                                                <div class="row">
+                                                                    <div class="col-md-6">
+                                                                        <label class="col-md-4 control-label">Latitude</label>
+                                                                        <div class="col-md-8">
+                                                                            <input id="A_Latitude" name="A_Latitude" value=@Model.A_Latitude class="MapLat form-control" type="text" placeholder="Latitude">
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-md-6">
+                                                                        <label class="col-md-4 control-label">Longitude</label>
+                                                                        <div class="col-md-8">
+                                                                            <input id="A_Longitude" name="A_Longitude" value=@Model.A_Longitude class="MapLon form-control" type="text" placeholder="Longitude">
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div id="map_canvas" style="height: 400px;width:inherit;margin: 0.6em;"></div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <button type="submit" class="btn btn-w-m btn-danger pull-right">Sauvgarder les modifications</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    }
+
+</div>
+
+
+
+
+<div class="modal inmodal" id="NewRegion" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content animated flipInY">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title">Nouvelle Région </h4>
+                <small class="font-bold">Créer une nouvelle région .</small>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+
+
+                    <form role="form">
+                        <div class="form-group">
+                            <label class="col-md-4 control-label">Code Région</label>
+
+                            <div class="col-md-8">
+                                <input class="form-control" id="RCodeRegion" name="RCodeRegion" />
+                            </div>
+
+                            <label class="col-md-4 control-label">Intitulé</label>
+                            <div class="col-md-8">
+                                <input id="RIntitule" name="RIntitule" class="form-control" />
+                            </div>
+                        </div>
+
+
+
+                    </form>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-white" data-dismiss="modal">Annuler</button>
+
+                <button type="button" class="btn btn-primary" id="CreateRegion">Enregistrer</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="modal inmodal" id="NewSouche" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content animated flipInY">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title">Nouvelle Souche</h4>
+                <small class="font-bold">Créer une nouvelle souche .</small>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label class="control-label">Intitulé de souche</label>
+                            <input type="text" id="S_IntituleNew" name="S_IntituleNew" placeholder="Intitulé de souche" class="form-control">
+                        </div>
+                    </div>
+                    @for (int i = 0; i < ViewBag.ListeTypeDoc.Count - 2; i++)
+                    {
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="control-label">@ViewBag.ListeTypeDoc[i].D_Intitule</label>
+                                <input type="text" id="TypeDocument_@ViewBag.ListeTypeDoc[i].cbIndice" name="TypeDocument_@ViewBag.ListeTypeDoc[i].cbIndice" placeholder="Doc0001" class="form-control">
+                            </div>
+                        </div>
+                    }
+
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-white" data-dismiss="modal">Annuler</button>
+
+                <button type="button" class="btn btn-primary" id="CreateSouche">Enregistrer</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+<script src="~/js/jquery-3.1.1.min.js"></script>
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+
+<script src="~/js/plugins/chosen/chosen.jquery.js"></script>
+
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCDtrxC4SA0NJdCKtzOq3DfAytbq_2ucJI&libraries=places&callback=initAutocomplete&region=tn&language=fr&sensor=true"></script>
+<!-- Chosen -->
+<script src="~/js/plugins/chosen/chosen.jquery.js"></script>
+<!-- JSKnob -->
+<script src="~/js/plugins/jsKnob/jquery.knob.js"></script>
+
+<!-- Input Mask-->
+<script src="~/js/plugins/jasny/jasny-bootstrap.min.js"></script>
+<!-- iCheck -->
+<script src="~/js/plugins/iCheck/icheck.min.js"></script>
+<script>
+        //switch classementForPDV show or hide classementForPDV typeagence
+    $(function () {
+        $('.chosen-select').chosen({ width: "100%" });
+        var icone = {
+            url: "/img/Marker1.png", // url
+            scaledSize: new google.maps.Size(50, 50), // scaled size
+            origin: new google.maps.Point(0, 0), // origin
+            anchor: new google.maps.Point(0, 0) // anchor
+        };
+        var icone2 = {
+            url: "/img/Marker2.png", // url
+            scaledSize: new google.maps.Size(50, 50), // scaled size
+            origin: new google.maps.Point(0, 0), // origin
+            anchor: new google.maps.Point(0, 0) // anchor
+        };
+        var lngg = $('#A_Longitude').val().replace(",", ".");
+        var latt = $('#A_Latitude').val().replace(",", ".");
+        var lat = latt,
+            lng = lngg,
+            latlng = new google.maps.LatLng(lat, lng);
+        //   icon = icon;
+        //zoomControl: true,
+        //zoomControlOptions: google.maps.ZoomControlStyle.LARGE,
+
+        var mapOptions = {
+            center: new google.maps.LatLng(lat, lng),
+            zoom: 10,
+            mapTypeId: google.maps.MapTypeId.ROADMAP,
+            panControl: true,
+            panControlOptions: {
+                position: google.maps.ControlPosition.TOP_RIGHT
+            },
+            zoomControl: true,
+            zoomControlOptions: {
+                style: google.maps.ZoomControlStyle.LARGE,
+                position: google.maps.ControlPosition.TOP_left
+            }
+        },
+        map = new google.maps.Map(document.getElementById('map_canvas'), mapOptions),
+            marker = new google.maps.Marker({
+                position: latlng,
+                map: map,
+                draggable: true,
+                icon: icone2
+            });
+
+        var input = document.getElementById('searchTextField');
+        var autocomplete = new google.maps.places.Autocomplete(input, {
+            types: ["geocode"]
+        });
+
+        autocomplete.bindTo('bounds', map);
+        var infowindow = new google.maps.InfoWindow();
+
+        google.maps.event.addListener(autocomplete, 'place_changed', function (event) {
+            infowindow.close();
+            var place = autocomplete.getPlace();
+            if (place.geometry.viewport) {
+                map.fitBounds(place.geometry.viewport);
+            } else {
+                map.setCenter(place.geometry.location);
+                map.setZoom(17);
+            }
+
+            moveMarker(place.name, place.geometry.location);
+
+            $('.MapLat').val(place.geometry.location.lat());
+            $('.MapLon').val(place.geometry.location.lng());
+        });
+        google.maps.event.addListener(map, 'click', function (event) {
+
+
+            $('.MapLat').val((event.latLng.lat().toFixed(6)).replace('.', ','));
+            $('.MapLon').val((event.latLng.lng().toFixed(6)).replace('.', ','));
+            infowindow.close();
+            var geocoder = new google.maps.Geocoder();
+            geocoder.geocode({
+                "latLng": event.latLng
+            }, function (results, status) {
+                console.log(results, status);
+                if (status == google.maps.GeocoderStatus.OK) {
+                    console.log(results);
+                    var lat = results[0].geometry.location.lat(),
+                        lng = results[0].geometry.location.lng(),
+                        placeName = results[0].address_components[0].long_name,
+                        latlng = new google.maps.LatLng(lat, lng);
+
+                    moveMarker(placeName, latlng);
+                    $("#searchTextField").val(results[0].formatted_address);
+                }
+            });
+        });
+
+        function moveMarker(placeName, latlng) {
+            marker.setIcon(image);
+            marker.setPosition(latlng);
+            infowindow.setContent(placeName);
+            alert(placeName);
+            infowindow.open(map, marker);
+        }
+        google.maps.event.addListener(marker, 'dragend', function (event) {
+            //$('.MapLat').val(event.latLng.lat());
+            //$('.MapLon').val(event.latLng.lng());
+
+            $('.MapLat').val((event.latLng.lat().toFixed(6)).replace('.', ','));
+            $('.MapLon').val((event.latLng.lng().toFixed(6)).replace('.', ','));
+        });
+
+        google.maps.event.addListener(map, 'click', function (event) {
+
+            $('.MapLat').val((event.latLng.lat().toFixed(6)).replace('.', ','));
+            $('.MapLon').val((event.latLng.lng().toFixed(6)).replace('.', ','));
+
+
+            //$('.MapLat').val(event.latLng.lat());
+            //$('.MapLon').val(event.latLng.lng());
+            marker.setPosition(event.latLng);
+            // Center the map on the marker
+            map.setZoom(8);
+       //     map.panTo(marker.position);
+        });
+
+
+
+
+        $('#CreateSouche').click(function () {
+            if ($("#S_IntituleNew").val() == "") {
+                alert("Le nom  de la souche ne peut pas être vide !");
+            }
+            else {
+                $.ajax({
+                    type: 'POST',
+                    url: '@Url.Action("CreerSouche")', // we are calling json method
+                    dataType: 'json',
+                    data: {
+                        s_intituleNew: $("#S_IntituleNew").val(),
+                        TypeDocument_1: $("#TypeDocument_1").val(), TypeDocument_2: $("#TypeDocument_2").val()
+                        , TypeDocument_3: $("#TypeDocument_3").val()
+                        , TypeDocument_4: $("#TypeDocument_4").val()
+                        , TypeDocument_5: $("#TypeDocument_5").val()
+                        , TypeDocument_6: $("#TypeDocument_6").val()
+                        , TypeDocument_7: $("#TypeDocument_7").val()
+                        , TypeDocument_8: $("#TypeDocument_8").val()
+                        , TypeDocument_9: $("#TypeDocument_9").val()
+                        , TypeDocument_10: $("#TypeDocument_10").val()
+                          , TypeDocument_11: $("#TypeDocument_11").val()
+                          , TypeDocument_12: $("#TypeDocument_12").val()
+                    },
+
+
+
+                    success: function (data) {
+                        if (data.result == 0) {
+                            alert(data.msg);
+                        }
+                        else {
+
+                            ///******
+                            //reload select list
+
+                            var o = new Option($('#S_IntituleNew').val(), $('#S_IntituleNew').val());
+                            alert($('#S_IntituleNew').val());
+                            $("#Id_Souche").append(o);
+
+                            $('#Id_Souche').val($('#S_IntituleNew').val())
+                            $('#Id_Souche').trigger("chosen:updated");
+
+
+                            $("#S_IntituleNew").prop('disabled', true);
+
+                            $('#NewSouche').modal('hide');
+
+                        }
+
+                    }
+                });
+            }
+        });
+        $('#CreateRegion').click(function () {
+
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("CreerRegion")', // we are calling json method
+                dataType: 'json',
+                data: { R_Intitule: $("#RIntitule").val(), R_CodeRegion: $("#RCodeRegion").val() },
+                success: function (data) {
+                    if (data.result == 0) {
+                        alert(data.msg);
+                    }
+                    else {
+
+                        ///******
+                        //reload select list
+
+                        var o = new Option($('#RCodeRegion').val() + ": " + $('#RIntitule').val(), $('#RCodeRegion').val());
+
+                        $("#R_CodeRegion").append(o);
+
+                        $('#R_CodeRegion').val($('#RCodeRegion').val())
+                        $('#R_CodeRegion').trigger("chosen:updated");
+
+                        $('#NewRegion').modal('hide');
+
+
+                    }
+
+                }
+            });
+        });
+
+    });
+
+    $('#A_Type').change(function () {
+        //  $('#selectCP').addClass('chosen-select');
+        if ($('select#A_Type').find("option:selected").val() == 2) {
+            $("#A_Parent").empty();
+            $("#A_Parent").append('@foreach(var item in ViewBag.AgenceParentList){<option value="@item.cbMarq">@item.A_Code @item.A_Intitule</option>}');
+            $('#hideAgMere').removeClass('hidden');
+        }
+        else if ($('select#A_Type').find("option:selected").val() == 1 || $('select#A_Type').find("option:selected").val() == 3) {
+            $("#A_Parent").empty();
+            $("#A_Parent").append('@foreach(var item in ViewBag.AgenceSiege){<option value="@item.cbMarq">@item.A_Code @item.A_Intitule</option>}');
+
+            $('#hideAgMere').removeClass('hidden');
+        }
+        else {
+            $('#hideAgMere').addClass('hidden');
+        }
+    });
+</script>

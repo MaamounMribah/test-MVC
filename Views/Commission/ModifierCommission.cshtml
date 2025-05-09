@@ -1,0 +1,427 @@
+﻿@{
+    ViewBag.Title = "Nouveau modèle de commission revendeur";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@*<link href="~/css/plugins/ionRangeSlider/ion.rangeSlider.css" rel="stylesheet" />*@
+<link href="~/css/plugins/ionRangeSlider/ion.rangeSlider.skinFlat.css" rel="stylesheet" />
+
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-lg-8">
+        <h2>Commission revendeur</h2>
+        <ol class="breadcrumb">
+            <li>
+                <a>Acceuil</a>
+            </li>
+            <li>
+                <a>Nouveau modèle de commission revendeur </a>
+            </li>
+
+        </ol>
+    </div>
+    <div class="col-lg-2">
+    </div>
+</div>
+
+<div class="wrapper wrapper-content animated fadeInRight">
+    @using (Html.BeginForm("ModifierCommission", "Commission", FormMethod.Post))
+    {
+        @model IEnumerable<BeeProj.Models.CommissionViewModel>
+
+        <button type="submit" class="btn btn-purplebee btn-outline pull-right"><i class="fa fa-save"></i> Créer le modèle de commission </button>
+        foreach (var a in ViewBag.commision)
+        {
+        <div class="ibox float-e-margins">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>Commission   </h5>
+                </div>
+                <div class="ibox-content">
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-horizontal">
+
+                                <div class="form-group">
+                                    <label class="col-lg-2 control-label">Intitulé</label>
+
+                                    <div class="col-lg-10"><input class="form-control" name="C_Intitule" value="@a.C_Intitule" /></div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-lg-2 control-label">Description</label>
+
+                                    <div class="col-lg-10"><textarea class="form-control" name="C_Description" value="@a.C_Description"></textarea></div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-lg-2 control-label">Statut</label>
+                                    @if (a.C_Statut == 1)
+                                    {
+                                    <div class="col-lg-10"><div class="i-checks"><label> <input type="checkbox" value="true" checked="" name="C_Statut" > <i></i>Oui </label></div></div>
+                                    }
+                                    else
+                                    {
+                                        <div class="col-lg-10"><div class="i-checks"><label> <input type="checkbox" value="false" checked="" name="C_Statut"> <i></i>Oui </label></div></div>
+                                    }
+
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-horizontal">
+                                <div class="form-group">
+                                    <label class="col-lg-8 control-label">Choisissez la méthode de calcul: en % ou en TND </label>
+
+                                    <div class="col-lg-4">
+                                        <select class="form-control" name="C_MethodeCalcul" required>
+                                            @if (a.C_MethodeCalcul == 0)
+                                            {
+                                            <option value=0>%</option>
+                                            }
+                                            else
+                                            {
+                                            <option selected value=1>TND</option>
+                                            }
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="col-lg-8 control-label">Par </label>
+
+                                    <div class="col-lg-4">
+                                        <select class="form-control" id="selectNbJours" required>
+                                            <option value="jour" disabled>Jours </option>
+                                            <option selected value="mois">Mois</option>
+                                            <option value="annee" disabled>Annee</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="ibox float-e-margins">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>Calcul  </h5>
+                </div>
+                <div class="ibox-content">
+                    <div class="form-horizontal">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="col-sm-4 control-label">Choisissez la méthode de calcul: en % ou en TND </label>
+                                <div class="col-sm-8">
+                                    <select class="form-control" name="C_MethodeCalcul">
+                                        <option value=0>%</option>
+                                        <option selected value=1>TND</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group ">
+                                <label class="col-sm-4 control-label"> Nombre par </label>
+                                <div class="col-sm-8">
+                                    <select class="form-control" id="selectNbJours">
+                                        <option value="jour" disabled>Jours </option>
+                                        <option selected value="mois">Mois</option>
+                                        <option value="annee" disabled>Annee</option>
+
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <br /><br /><br />
+                </div>
+            </div>
+        </div>
+
+        <div class="ibox float-e-margins">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>Commission de Base </h5>
+                </div>
+                <div class="ibox-content">
+                    <div class="form-horizontal">
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">Commission de Base </label>
+                            <div class="col-sm-2"><input type="text" class="form-control" name="C_Standard" value="@a.C_Standard"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        }
+        <div class="ibox float-e-margins">
+            <div class="ibox-title">
+                <h5>Commission d'acquisition </h5>
+            </div>
+            <div class="ibox-content">
+                <div class="table-responsive">
+                    <table class="table table-striped jqGrid_wrapper">
+                        <thead>
+                            <tr>
+                                <th>  </th>
+                                @for (int i = 0; i < @Model.GroupBy(x => x.FA_Famille).Count(); i++)
+                                {
+                                    <th colspan=@Model.Where(x => x.FA_Famille == @Model.GroupBy(k => k.FA_Famille).ToList()[i].Key).Count() valign="middle">
+                                        @Model.GroupBy(x => x.FA_Famille).ToList()[i].Key                   
+
+
+                                    </th>
+                                }
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <th> PERIODICITE / DEBIT</th>
+                                @foreach (var item in Model)
+                                {
+                                    <th name="ListeDebit" value="@item.D_Debit">@item.D_Debit Mbps           </th>
+                                }
+                            </tr>
+     
+                            <tr>
+                            @*@model IEnumerable<BeeProj.Models.ModelModifierCommission>*@ 
+                                <td>Mensuelle</td>
+                            
+                                @foreach (var item1 in ViewBag.QuatreSus)
+                                {
+                                    for (int i = 0; i < ViewBag.QuatreSus.Count; i++)
+                                    {
+                                        <td><input class="form-control col-sm-1 " type="text" value="@item1.ListeMensuel[i]" name=""/>     </td>
+                                    }
+                                }
+                           
+
+                                
+                            </tr>
+                            <tr>
+                                <td>Trimestrielle</td>
+                                   @foreach (var item3 in ViewBag.douzeSus)
+                                   {
+                                       for (int t = 0; t < ViewBag.douzeSus.Count; t++)
+                                       {
+                                          <td><input class="form-control col-sm-1 " type="text"  value="@item3.ListeTrimestriel[t]" />      </td>
+                                       }
+
+                                   }
+
+                            </tr>
+
+                            <tr>
+                                <td>Semestrielle</td>
+                                @foreach (var item4 in ViewBag.HuiteAdsl)
+                                {
+                                    for (int s = 0; s < ViewBag.HuiteAdsl.Count; s++)
+                                    {
+                                    <td><input class="form-control col-sm-1 " type="text" @*value=0*@ @*name="ListeSemestriel"*@ value="@item4.ListeSemestriel[s]" />        </td>
+                                    }
+                                }
+                            </tr>
+                            <tr>
+                                <td>Annuelle</td>
+                                @foreach (var item5 in ViewBag.dixAdsl)
+                                {
+                                    for (int a = 0; a < ViewBag.dixAdsl.Count; a++)
+                                    {
+                                    <td><input class="form-control col-sm-1 " type="text" @*value=0*@ @*name="ListeAnnuel"*@ value="@item5.ListeAnnuel[a]" />           </td>
+                                    }
+                                }
+                            </tr>
+                            <tr>
+                                <td class="text-purplebee font-bold">CDE</td>
+                                @foreach (var item6 in ViewBag.DouzeAdsl)
+                                {
+                                    for (int cd = 0; cd < ViewBag.DouzeAdsl.Count; cd++)
+                                    {
+                                    <td><input class="form-control col-sm-1 " type="text" @*value=0*@ name="ListeCDE" value="@item6.ListeCDE[cd]" />          </td>
+                                    }
+                                }
+                            </tr>
+                            <tr>
+                                <td class="text-purplebee font-bold">CA</td>
+                                @foreach (var item7 in ViewBag.QutreAdsl)
+                                {
+                                    for (int ca = 0; ca < ViewBag.QutreAdsl.Count; ca++)
+                                    {
+                                    <td><input class="form-control col-sm-1 " type="text" @*value=0*@ @*name="ListeCA"*@  value="@item7.ListeCA[ca]"/>         </td>
+                                    }
+                                }
+                            </tr>
+                            <tr>
+                                <td class="text-purplebee font-bold">CL</td>
+                                @foreach (var item8 in ViewBag.VigntAdsl)
+                                {
+                                    for (int cl = 0; cl < ViewBag.VigntAdsl.Count; cl++)
+                                    {
+                                    <td><input class="form-control col-sm-1" type="text" @*value="0"*@ @*name="ListeCL"*@ value="@item8.ListeCL[cl]" /> </td>
+                                    }
+                                }
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="ibox float-e-margins">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>Conditions <span class="font-bold text-warning" id="parnbjours">par mois</span></h5>
+                </div>
+                <div class="ibox-content">
+                 <table class="table table-hover">
+                          
+                        <tbody>
+                          
+                            <tr>
+                                @foreach (var item in ViewBag.commcondition)
+                                {
+
+                                    if (item.TypeCondition == 0)
+                                    {
+                                        
+                                        <td>à partir la deuxième facture, si revendeur a </td>
+                                        <td><input type="number" class="input-sm form-control col-sm-1" name="Nb_Min"  value="@item.Nb_Min"></td>
+                                        <td>et</td>
+                                        <td><input type="number" class="input-sm form-control col-sm-1" name="Nb_Max"  value="@item.Nb_Max"></td>
+                                        <td>de clients validés, on ajoute sur le total de commission	</td>
+                                        <td><input type="text" class="input-sm form-control col-sm-1" name="Montant_Condition" value="@item.Montant_Condition"></td>
+                                    }
+                                  
+                                }
+                                     </tr>
+                                  
+                              
+                                    <tr>
+                                  @foreach (var item in ViewBag.commcondition)
+                                  {
+                                      if (item.TypeCondition == 1)
+                                      {
+                                        <td><span class="font-bold text-purplebee">[pour chaque demande]</span> Si nombre de demandes est entre </td>
+                                        <td><input type="number" class="input-sm form-control col-sm-1" name="Nb_Min" @*value=0*@ value="@item.Nb_Min"></td>
+                                        <td>et</td>
+                                        <td><input type="number" class="input-sm form-control col-sm-1" name="Nb_Max" @*value=0*@ value="@item.Nb_Max"></td>
+                                        <td>alors</td>
+                                        <td><input type="text" class="input-sm form-control col-sm-1" name="Montant_Condition"  value="@item.Montant_Condition"></td>
+                                      }
+                                     
+                                  }
+                                  </tr>
+
+                         
+                            <tr>
+                        @foreach (var item in ViewBag.commcondition)
+                        {
+                            if (item.TypeCondition == 2)
+                            {
+                                <td><span class="font-bold text-purplebee">[pour chaque première facture payée] </span> Si nombre de demandes est entre</td>
+                                <td><input type="number" class="input-sm form-control col-sm-1" name="Nb_Min"  value="@item.Nb_Min"></td>
+                                <td>et</td>
+                                <td><input type="number" class="input-sm form-control col-sm-1" name="Nb_Max" value="@item.Nb_Max"></td>
+                                <td>alors</td>
+                                <td><input type="text" class="input-sm form-control col-sm-1" name="Montant_Condition" @*value=0*@ value="@item.Montant_Condition"></td>
+                            }
+                      
+                        }
+                            </tr>
+                            <tr>
+                               @foreach (var item in ViewBag.commcondition)
+                               {
+                                   if (item.TypeCondition == 3)
+                                   {
+
+                                <td><span class="font-bold text-purplebee">[pour chaque livraison matériel au client] </span>Si nombre de demandes est entre</td>
+                                <td><input type="number" class="input-sm form-control col-sm-1" name="Nb_Min" @*value=0*@ value="@item.Nb_Min"></td>
+                                <td>et</td>
+                                <td><input type="number" class="input-sm form-control col-sm-1" name="Nb_Max" @*value=0*@ value="@item.Nb_Max"></td>
+                                <td>alors</td>
+                                <td><input type="text" class="input-sm form-control col-sm-1" name="Montant_Condition" @*value=0*@ value="@item.Montant_Condition"></td>
+                                    }
+                                    @*else
+                                    {
+                                        <td><span class="font-bold text-purplebee">[pour chaque livraison matériel au client] </span>Si nombre de demandes est entre</td>
+                                        <td><input type="number" class="input-sm form-control col-sm-1" name="Nb_Min" value=0 ></td>
+                                        <td>et</td>
+                                        <td><input type="number" class="input-sm form-control col-sm-1" name="Nb_Max" value=0 ></td>
+                                        <td>alors</td>
+                                        <td><input type="text" class="input-sm form-control col-sm-1" name="Montant_Condition" value=0 ></td>
+                                    }*@
+                                }
+                            </tr>
+
+                        </tbody>
+                    </table>
+
+                </div>
+            </div>
+        </div>
+
+    }
+</div>
+<!-- Chosen -->
+<script src="~/js/plugins/chosen/chosen.jquery.js"></script>
+<!-- IonRangeSlider -->
+<script src="~/js/plugins/ionRangeSlider/ion.rangeSlider.min.js"></script>
+<script>
+    $('select#selectNbJours').change(function () {
+        $('#parnbjours').text("par "+ $('select#selectNbJours').find("option:selected").val());
+
+    });
+
+
+
+    //$(document).ready(function(){
+    //    $('.chosen-select').chosen({ width: "100%" });
+
+    //    var button = document.getElementById("btnAddressAdd");
+
+    //    button.addEventListener("click", function () {
+    //        var sourceNode = document.getElementById("conditions");
+    //        var node = duplicateNode(sourceNode, ["id", "name", "placeholder"]);
+
+    //        sourceNode.parentNode.appendChild(node);
+    //    }, false);
+
+
+    //    var counter = 0;
+    //    function duplicateNode(/*DOMNode*/sourceNode, /*Array*/attributesToBump) {
+    //        counter++;
+    //        var out = sourceNode.cloneNode(true);
+    //        if (out.hasAttribute("id")) { out["id"] = bump(out["id"]); }
+    //        var nodes = out.getElementsByTagName("*");
+
+    //        for (var i = 0, len1 = nodes.length; i < len1; i++) {
+    //            var node = nodes[i];
+    //            for (var j = 0, len2 = attributesToBump.length; j < len2; j++) {
+    //                var attribute = attributesToBump[j];
+    //                if (node.hasAttribute(attribute)) {
+    //                    node[attribute] = bump(node[attribute]);
+    //                }
+    //            }
+    //        }
+
+    //        function bump(/*String*/str) {
+    //            return str + "_" + counter;
+    //        }
+
+    //        return out;
+    //    }
+
+    //    //$("#ionrange_1").ionRangeSlider({
+    //    //    min: 0,
+    //    //    max: 5000,
+    //    //    type: 'double',
+    //    //    prefix: "$",
+    //    //    maxPostfix: "+",
+    //    //    prettify: false,
+    //    //    hasGrid: true
+    //    //});
+    //})
+</script>

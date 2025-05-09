@@ -1,0 +1,531 @@
+﻿@*@model BeeProj.Models.B_DEMENAGEMENT*@
+@{
+    ViewBag.Title = "Nouveau Transfert Ligne";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<link href="~/css/plugins/chosen/bootstrap-chosen.css" rel="stylesheet">
+<link href="~/css/plugins/dataTables/datatables.min.css" rel="stylesheet">
+<!-- Toastr style -->
+<link href="~/css/plugins/toastr/toastr.min.css" rel="stylesheet">
+<!-- Ladda style -->
+<link href="~/css/plugins/ladda/ladda-themeless.min.css" rel="stylesheet">
+
+<div class="row wrapper border-bottom white-bg page-heading">
+
+    <div class="col-lg-8">
+        <h2>Demande de Transfert de Ligne </h2>
+        <ol class="breadcrumb">
+            <li>
+                <a href="index-2.html">Accueil</a>
+            </li>
+
+            <li class="active">
+                <strong>Nouvelle demande de Transfert de Ligne</strong>
+            </li>
+        </ol>
+    </div>
+
+</div>
+
+<div class="row wrapper wrapper-content">
+    <div class="col-lg-12">
+        <div class="ibox float-e-margins">
+            <div class="ibox-title">
+                <h5>Demande Réf. #@ViewBag.demandereference</h5>
+            </div>
+            @using (Html.BeginForm("Nouveau", "TransfertLigne", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+            {
+                <div class="ibox-content">
+                    @if (ViewData.ModelState[""] != null && ViewData.ModelState[""].Errors.Count > 0)
+                    {
+                        <div class="alert alert-danger alert-dismissable">
+                            <button type="button" class="close " data-dismiss="alert">×</button>
+                            @Html.ValidationSummary("", new { @class = "text-danger" })
+                        </div>
+                    }
+                    <form method="get" class="form-horizontal">
+                        <div class="alert alert-warning alert-dismissable">
+
+                            <button type="button" class="close " data-dismiss="alert">×</button>
+
+                            Veuillez entrer le numéro de téléphone de l'abonnement .
+                        </div>                      
+                        <div class="col-lg-6">
+                            <div class="ibox float-e-margins">
+                                <div class="ibox-content">
+                                    <div class="col-md-12" id="hideAgMere">
+                                        <div class="form-group">
+                                            <label>Telephone <sup>*</sup></label>
+                                            <input class="form-control" id="CT_Telephone" name="CT_Telephone" placeholder="Numero fixe du client ..." required/>
+                                        </div>
+                                    </div>
+                                    <br />
+                                    <label>Intitulé Client</label>
+                                    <div class="bg-white input-prepend">
+                                        <input class="form-control" id="CT_Intitule" name="CT_Intitule" placeholder="client ..." required/>
+                                        <span class="pull-left"><a href="" target="_blank" id="infoClient"> Informations client</a></span>
+                                        <br />
+                                    </div>
+                                    <div class="col-md-12" id="hideAgMere">
+                                        <div class="form-group">
+                                            <label>Référence Abonnement <sup>*</sup></label>
+                                            <input class="form-control" id="DO_RefTT" name="DO_RefTT" placeholder="Référence Abonnement ..." required/>
+                                        </div>
+                                    </div>
+                                    <label>Adresse</label>
+                                    <div class="bg-white input-prepend">
+                                        <input type="text" class="form-control" id="AB_AdresseI" placeholder="Adresse Client ..." required>
+                                    </div>
+                                    <label>Ville</label>
+                                    <div class="bg-white input-prepend">
+                                        <input type="text" class="form-control" id="CT_Ville" placeholder="Ville ..." required>
+                                    </div>
+                                    <label>Code postal</label>
+                                    <div class="bg-white input-prepend">
+                                        <input type="text" class="form-control" id="CT_CodePostal" placeholder="Code Postal ..." required>
+                                    </div>
+                                    <label>Gouvernorat</label>
+                                    <div class="bg-white input-prepend">
+                                        <input type="text" class="form-control" id="CT_Gouvernorat" placeholder="Gouvernorat ..." required>
+                                    </div>
+                                    <label>Cité</label>
+                                    <div class="bg-white input-prepend">
+                                        <input type="text" class="form-control" id="CT_Localite" placeholder="Cité ..."required>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="ibox float-e-margins">
+                                <div class="ibox-content">
+                                    <label> Nouvelle Adresse Client <sup>*</sup></label>
+                                    <div class="bg-white input-prepend">
+                                        <input type="text" class="form-control" name="AdresseClient" id="AdresseClient"  required>
+                                    </div>
+                                    <label> Nouvelle Adresse d'installation <sup>*</sup></label>
+                                    <div class="bg-white input-prepend">
+                                        <input type="text" class="form-control" name="AB_AdresseIns" id="AB_AdresseIns"  required>
+                                    </div>
+                                    <label> Adresse de facturation  </label>
+                                    <div class="bg-white input-prepend">
+                                        <input type="text" class="form-control" name="AB_AdresseFacturation" id="AB_AdresseFacturation"  required>
+                                    </div>
+                                    <label>Complément Adresse </label>
+                                    <span class="help-block m-b-none">
+                                        <input type="text" class="form-control" name="CT_AdresseComplement" id="CT_AdresseComplement" >
+                                    </span>
+                                   
+
+                                    
+                                    <label required>Gouvernorat</label>
+                                    <div class="bg-white input-prepend">
+
+                                        <select class="form-control" id="search" name="CT_Gouvernorat" required>
+                                            <option selected="selected">-- Choisir --</option>
+                                            @foreach (var item in ViewBag.Gouvernoratt)
+                                            {
+                                                <option value="@item.Gouvernorat">@item.Gouvernorat</option>
+                                            }
+                                        </select>
+                                    </div>
+                                    <label>Ville</label>
+                                    <div class="bg-white input-prepend">
+                                        <select class="form-control" name="CT_Ville" id="Ville" required></select>
+                                    </div>
+                                    <label>Cité</label>
+                                    <div class="bg-white input-prepend">
+                                        <select class="form-control" name="CT_Localite" id="Localite" required></select>
+                                    </div>
+                                    <label>Code postal</label>
+                                    <div class="bg-white input-prepend">
+                                        <input type="text" class="form-control" name="CT_CodePostal" id="CodePostal" required>
+                                    </div>
+                                    <label>Description</label>
+                                    <div class="bg-white input-prepend">
+                                        <input type="text" class="form-control" name="TL_Description" id="TL_Description">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="list-group">
+                                <br />
+                                <br />
+                                <button class="btn btn-purplebee ladda-button  pull-right m-t-n-xs" style="margin-left:10px;" type="submit"><strong>Envoyer</strong></button>
+                                <button type="button" class="btn btn-white  pull-right m-t-n-xs" onclick="location.href='@Url.Action("Nouveau","TransfertLigne")'"><strong>Annuler</strong></button>
+                            </div>
+                        </div>
+                    </form>
+
+                </div>
+            }
+        </div>
+    </div>
+</div>
+<div class="modal inmodal fade" id="ListeAbonnements" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title">Liste des abonnements </h4>
+            </div>
+            <div class="modal-body">
+
+                <div class="row">
+                    <div class="col-md-10">
+                        <input class="form-control" type="text" id="idC" />
+                    </div>
+                    <div class="col-md-2">
+                        <button class="btn btn-sm btn-rounded" id="retrieveListeAbo">Ok</button>
+                    </div>
+                </div>
+
+                <br />
+                <div class="full-height-scroll">
+                    <div class="table-responsive">
+                        <table class="table table-striped table-hover" id="TablelisteAbonnements" style="cursor:pointer;">
+                            <thead>
+                                <tr>
+                                    <th>Telephone</th>
+                                    <th>Intitulé Client</th>
+                                    <th>Identifiant</th>
+                                    <th>Adresse Installation</th>
+                                    <th>Ville</th>
+                                    <th>Code postal</th>
+                                    <th>Gouvernorat</th>
+                                    <th>Cite</th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+
+
+            </div>
+
+
+        </div>
+    </div>
+</div>
+
+@*telephone*@
+<div class="modal inmodal fade" id="ListeAbonnementsParTeleph" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title">Liste des abonnements </h4>
+            </div>
+            <div class="modal-body">
+
+                <div class="row">
+                    <div class="col-md-10">
+                        <input class="form-control" type="text" id="teleph" />
+                    </div>
+                    <div class="col-md-2">
+                        <button class="btn btn-sm btn-rounded" id="retrieveListeAbonnement">Ok</button>
+                    </div>
+                </div>
+
+                <br />
+                <div class="full-height-scroll">
+                    <div class="table-responsive">
+                        <table class="table table-striped table-hover" id="TablelisteAbonnementss" style="cursor:pointer;">
+
+                            <thead>
+                                <tr>
+                                    <th>Référence Abonnement</th>
+                                    <th>Intitulé Client</th>
+                                    <th>Identifiant</th>
+                                    <th>Adresse Installation</th>
+                                    <th>Ville</th>
+                                    <th>Code postal</th>
+                                    <th>Gouvernorat</th>
+                                    <th>Cite</th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="~/js/jquery-3.1.1.min.js"></script>
+<!-- Chosen -->
+<script src="~/js/plugins/chosen/chosen.jquery.js"></script>
+<script src="~/js/plugins/dataTables/datatables.min.js"></script>
+<!-- Toastr script -->
+<script src="~/js/plugins/toastr/toastr.min.js"></script>
+<!-- Ladda -->
+<script src="~/js/plugins/ladda/spin.min.js"></script>
+<script src="~/js/plugins/ladda/ladda.min.js"></script>
+<script src="~/js/plugins/ladda/ladda.jquery.min.js"></script>
+<script>
+            $(document).ready(function () {
+                // Bind normal buttons
+                Ladda.bind('.ladda-button', { timeout: 200000 });
+                // Bind progress buttons and simulate loading progress
+                Ladda.bind('.progress-demo .ladda-button', {
+                    callback: function (instance) {
+                        var progress = 0;
+                        var interval = setInterval(function () {
+                            progress = Math.min(progress + Math.random() * 0.1, 1);
+                            instance.setProgress(progress);
+
+                            if (progress === 1) {
+                                instance.stop();
+                                clearInterval(interval);
+                            }
+                        }, 200000);
+                    }
+                });
+                var l = Ladda.bind('.ladda-button-demo');
+                $('#DO_RefTT').focus(function () {
+                    $('#ListeAbonnements').modal({
+                        show: true
+                    });
+                });
+                $("#retrieveListeAbo").click(function () {
+                    //$("#TablelisteAbonnements").DataTable().destroy();
+                    if ($('#idC').val() != "") {
+                        $("#TablelisteAbonnements").DataTable({
+                            "ajax": {
+                                "url": "/TransfertLigne/listeAbonnementRefTT?REFTT=" + $('#idC').val(),
+                                "type": 'get',
+                                "datatype": "json"
+                            },
+                            "bDestroy": true,
+                            "columns": [
+                                { "data": "CT_Telephone" },
+                                { "data": "CT_Intitule" },
+                                { "data": "CT_Identifiant" },
+                                { "data": "AB_AdresseI" },
+                                { "data": "CT_Ville" },
+                                { "data": "CT_CodePostal" },
+                                { "data": "CT_Gouvernorat" },
+                                { "data": "CT_Localite" },
+                            ]
+                        });
+                        $('#TablelisteAbonnements tbody').on('dblclick', 'tr', function () {
+                            $('#ListeAbonnements').modal('hide');
+                            var tr = $(this).closest('tr');
+                            var Teleph = tr.find('td:eq(0)').html();
+                            var intitule = tr.find('td:eq(1)').html();
+                            var Identifiant = tr.find('td:eq(2)').html();
+                            var adress = tr.find('td:eq(3)').html();
+                            var ville = tr.find('td:eq(4)').html();
+                            var codepostal = tr.find('td:eq(5)').html();
+                            var gouvernorat = tr.find('td:eq(6)').html();
+                            var cite = tr.find('td:eq(7)').html();
+                            $('#CT_Telephone').val(Teleph);
+                            $("#DO_RefTT").val($('#idC').val());
+                            $("#CT_Intitule").val(intitule);
+                            $("#CT_Identifiant").val(Identifiant);
+                            $("#AB_AdresseI").val(adress);
+                            $("#CT_Ville").val(ville);
+                            $("#CT_CodePostal").val(codepostal);
+                            $("#CT_Gouvernorat").val(gouvernorat);
+                            $("#CT_Localite").val(cite);
+                            //
+                            $.ajax({
+                                type: "get",
+                                url: '@Url.Action("GetInfoClientInformation")',
+                                dataType: 'json',
+                                data: { tel: null, RefTT: $("#DO_RefTT").val() },
+                                success: function (msg) {
+                                    if (msg.result == 0) {
+                                        $("#infoClient").attr("href", "/Structure/DetailsClient/" + msg.data.cbMarq);
+                                    }
+                                    else {
+                                        toastr.error(msg.msg, 'le client n existe pas');
+                                        $('#DO_RefTT').val("");
+                                        $("#CT_Intitule").val("");
+                                        $("#AB_AdresseI").val("");
+                                        $("#CT_Identifiant").val("");
+                                        $("#infoClient").attr("href", "#");
+                                        $("#CT_Telephone").val("");
+                                        $("#CT_Ville").val("");
+                                        $("#CT_CodePostal").val("");
+                                        $("#CT_Gouvernorat").val("");
+                                        $("#CT_Localite").val("");
+                                    }
+                                }
+                            });
+                        });
+                    }
+                });
+                $('#CT_Telephone').focus(function () {
+                    $('#ListeAbonnementsParTeleph').modal({
+                        show: true
+                    });
+                });
+                $("#retrieveListeAbonnement").click(function () {
+                    //$("#TablelisteAbonnementss").DataTable().destroy();
+                    if ($('#teleph').val() != "") {
+                        $("#TablelisteAbonnementss").DataTable({
+                            "ajax": {
+                                "url": "/TransfertLigne/listeAbonnementTele?TelephClient=" + $('#teleph').val(),
+                                "type": 'get',
+                                "datatype": "json"
+                            },
+                            "bDestroy": true,
+                            "columns": [
+                                { "data": "DO_RefTT" },
+                                { "data": "CT_Intitule" },
+                                { "data": "CT_Identifiant" },
+                                { "data": "AB_AdresseI" },
+                                { "data": "CT_Ville" },
+                                { "data": "CT_CodePostal" },
+                                 { "data": "CT_Gouvernorat" },
+                                { "data": "CT_Localite" },
+                            ]
+                        });
+                        $('#TablelisteAbonnementss tbody').on('dblclick', 'tr', function () {
+                            $('#ListeAbonnementsParTeleph').modal('hide');
+                            var tr = $(this).closest('tr');
+                            var DO_RefTT = tr.find('td:eq(0)').html();
+                            var intitule = tr.find('td:eq(1)').html();
+                            var Identifiant = tr.find('td:eq(2)').html();
+                            var adress = tr.find('td:eq(3)').html();
+                            var ville = tr.find('td:eq(4)').html();
+                            var codepostal = tr.find('td:eq(5)').html();
+                            var gouvernorat = tr.find('td:eq(6)').html();
+                            var cite = tr.find('td:eq(7)').html();
+                            $('#DO_RefTT').val(DO_RefTT);
+                            $("#CT_Telephone").val($('#teleph').val());
+                            $("#CT_Intitule").val(intitule);
+                            $("#CT_Identifiant").val(Identifiant);
+                            $("#AB_AdresseI").val(adress);
+                            $("#CT_Ville").val(ville);
+                            $("#CT_CodePostal").val(codepostal);
+                            $("#CT_Gouvernorat").val(gouvernorat);
+                            $("#CT_Localite").val(cite);
+                            $.ajax({
+                                type: "get",
+                                url: '@Url.Action("GetInfoClientInformation")',
+                                dataType: 'json',
+                                data: { tel: null, RefTT: $("#DO_RefTT").val() },
+                                success: function (msg) {
+                                    if (msg.result == 0) {
+
+                                        $("#infoClient").attr("href", "/Structure/DetailsClient/" + msg.data.cbMarq);
+                                    }
+                                    else {
+                                        toastr.error(msg.msg, 'le client n existe pas');
+                                        $('#DO_RefTT').val("");
+                                        $("#CT_Intitule").val("");
+                                        $("#AB_AdresseI").val("");
+                                        $("#CT_Identifiant").val("");
+                                        $("#infoClient").attr("href", "#");
+                                        $("#CT_Telephone").val("");
+                                        $("#CT_Ville").val("");
+                                        $("#CT_CodePostal").val("");
+                                        $("#CT_Gouvernorat").val("");
+                                        $("#CT_Localite").val("");
+                                    }
+                                }
+                            });
+
+                        });
+                    }
+                });
+            });
+    @*$('#CodeRegion').change(function () {
+        region = $('select#CodeRegion').find("option:selected").val();
+        getRegion1();
+    });
+    function getRegion1() {
+
+        $.ajax({
+            type: "get",
+            url: '@Url.Action("isRegionNewExists")', // we are calling json method
+            dataType: 'json',
+            data: { identifiant: $('select#CodeRegion').find("option:selected").val() },
+            success: function (msg) {
+                if (msg.result == 0) {
+
+                    var len = msg.data.length;
+
+                    $("#search").empty();
+                    $("#search").append("<option>-- Choisir --</option>");
+
+                    for (var i = 0; i < len; i++) {
+
+                        $("#search").append("<option value='" + msg.data[i].trim() + "'>" + msg.data[i].trim() + "</option>");
+                    }
+
+                }
+            }
+        });
+    }*@
+    $('#search').change(function () {
+        region = $('select#search').find("option:selected").val();
+        getRegion();
+    });
+     function getRegion() {
+
+                $.ajax({
+                    type: "get",
+                    url: '@Url.Action("isRegionExists")', // we are calling json method
+                    dataType: 'json',
+                    data: { identifiant: $('select#search').find("option:selected").val() },
+                    success: function (msg) {
+                        if (msg.result == 0) {
+
+                            var len = msg.data.length;
+
+                            $("#Ville").empty();
+                            $("#Ville").append("<option>-- Choisir --</option>");
+
+                            for (var i = 0; i < len; i++) {
+
+                                $("#Ville").append("<option value='" + msg.data[i].trim() + "'>" + msg.data[i].trim() + "</option>");
+                            }
+
+                        }
+                    }
+                });
+            }
+    $('#Ville').change(function () {
+        ville = $('select#Ville').val();
+                getCitee();
+            });
+            function getCitee() {
+
+                $.ajax({
+                    type: "get",
+                    url: '@Url.Action("isCiteeExists")', // we are calling json method
+                    dataType: 'json',
+                    data: { identifiant: $('select#Ville').find("option:selected").val() },
+                    success: function (msg) {
+                        if (msg.result == 0) {
+                            var len = msg.data.length;
+                            $("#Localite").empty();
+                            $("#Localite").append("<option>-- Choisir --</option>");
+                            for (var i = 0; i < len; i++) {
+                                $("#Localite").append("<option value='" + msg.data[i].trim() + "'>" + msg.data[i].trim() + "</option>");
+                            }
+                        }
+                    }
+                });
+            }
+            $('#Localite').change(function () {
+                citee = $('select#Localite').val();
+                getCodepostal();
+            });
+            function getCodepostal() {
+                $.ajax({
+                    type: "get",
+                    url: '@Url.Action("isCodePostalExists")', // we are calling json method
+                    dataType: 'json',
+                    data: { identifiant: $('select#Localite').find("option:selected").val() },
+                    success: function (msg) {
+                        if (msg.result == 0) {
+                            $("#CodePostal").val(msg.data);
+                        }
+                    }
+                });
+            }
+</script>

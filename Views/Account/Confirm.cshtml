@@ -1,0 +1,23 @@
+﻿
+@{
+    ViewBag.Title = "Un e-mail de confirmation a été envoyé";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+    <div class="middle-box text-center animated fadeInDown">
+
+        <h3 class="font-bold">Un E-mail de confirmation a été envoyé avec succés</h3>
+
+        <div class="error-desc">
+            <br />
+            Veuillez vérifier votre boîte de réception e-mail, vous trouvez votre login et mot de passe. <br /> un e-mail de confirmation est envoyé à :<br />
+             @ViewBag.Email
+
+         </div>
+    </div>
+
+    <!-- Mainly scripts -->
+    <script src="~/js/jquery-3.1.1.min.js"></script>
+
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+

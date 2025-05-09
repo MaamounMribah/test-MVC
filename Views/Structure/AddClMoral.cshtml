@@ -1,0 +1,737 @@
+﻿@model BeeProj.Models.NouvelAbonnementModel
+@{
+    ViewBag.Title = "AddClMoral";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@*<h2>AddClMoral</h2>*@
+
+<!-- Toastr style -->
+<link href="~/css/plugins/toastr/toastr.min.css" rel="stylesheet">
+<link href="~/css/plugins/datapicker/datepicker3.css" rel="stylesheet" />
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+<link href="~/css/plugins/chosen/bootstrap-chosen.css" rel="stylesheet">
+<link href="~/css/plugins/awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css" rel="stylesheet">
+<link href="~/css/plugins/iCheck/custom.css" rel="stylesheet">
+<!-- Sweet Alert -->
+<link href="~/css/plugins/sweetalert/sweetalert.css" rel="stylesheet">
+<!-- Ladda style -->
+<link href="~/css/plugins/ladda/ladda-themeless.min.css" rel="stylesheet">
+
+<link href="~/css/plugins/touchspin/jquery.bootstrap-touchspin.min.css" rel="stylesheet">
+<link href="~/css/plugins/jasny/jasny-bootstrap.min.css" rel="stylesheet">
+<meta name='viewport' content='width=device-width, initial-scale=1'>
+@*<script src='https://kit.fontawesome.com/a076d05399.js'></script>*@
+<style>
+    #ui-datepicker-div {
+        font-size: 12px;
+    }
+</style>
+
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-lg-8">
+        <h2 class="active">Nouvelle Client morale</h2>
+        <ol class="breadcrumb">
+            <li>
+                <a>Acceuil</a>
+            </li>
+            <li>
+                <a>Convention</a>
+            </li>
+
+        </ol>
+    </div>
+    <div class="col-lg-2">
+
+    </div>
+</div>
+<div class="row wrapper wrapper-content page-body">
+
+    <div class="col-lg-12">
+        <div class="ibox-content">
+            <div class="row">
+
+                @if ((ViewBag.AgenceUser != null) && (ViewBag.msg == null))
+                {
+                    if (ViewData.ModelState[""] != null && ViewData.ModelState[""].Errors.Count > 0)
+                    {
+                        <div class="alert alert-danger alert-dismissable">
+                            <button type="button" class="close " data-dismiss="alert"> × </button>
+                            @Html.ValidationSummary("", new { @class = "text-danger" })
+
+                        </div>
+
+                    }
+                    else
+                    {
+                        <div class="col-lg-12">
+
+
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <div class="ibox float-e-margins">
+                                        <div class="ibox-title">
+
+                                            <div class="pull-right">
+
+                                            </div>
+
+                                        </div>
+                                        <div class="ibox-content">
+                                            @using (Html.BeginForm("AddClMoral", "Structure", FormMethod.Post, new { @class = "form-horizontal", @name = "myForm", role = "form", enctype = "multipart/form-data" }))
+                                            {
+
+                                                <div class="row">
+                                                    <div class="row form-group col-md-6">
+                                                        <div class="col-md-12">
+
+                                                            <label>Type pièce identité<sup>*</sup></label>
+
+
+                                                            <div class="input-group">
+                                                                <span class="input-group-addon"><i class="fa fa-address-card-o"></i></span>
+                                                                <select class="form-control" name="CT_TypeIdentifiant" id="CT_TypeIdentifiant">
+                                                                    <option value=0>CIN</option>
+                                                                    <option value=1>Passeport</option>
+                                                                    <option value=2>RC</option>
+
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row form-group col-md-6">
+                                                        <div class="col-md-12">
+
+                                                            <label>N° pièce identité<sup>*</sup></label>
+
+                                                            <div class="input-group" style="width: 454px;height:34px" id="Identifiant">
+                                                                <div id="datepicker">
+                                                                    @Html.TextBoxFor(m => m.CT_Identifiant, new { @class = "form-control", id = "CT_Identifiant" })
+                                                                </div>
+                                                                <span class="input-group-btn" style="width:45px;height:39px">
+                                                                    <a href="#showClientInfos" class="btn btn-greenbee ladda-button ladda-button-demo" id="searchClient">
+                                                                        <i class="fa fa-chevron-right"></i><i class="fa fa-chevron-right"></i>
+                                                                    </a>
+                                                                </span>
+                                                            </div>
+
+                                                        </div>
+                                                        @Html.ValidationMessageFor(model => model.CT_Identifiant, "", new { @class = "text-danger" })
+                                                    </div>
+
+                                                    <br />
+                                                    <br />
+                                                    <br />
+                                                    <div class="row hidden" id="showClientInfos">
+                                                        <br />
+                                                        <div class="row form-group col-md-6">
+                                                            <div class="col-md-12">
+
+                                                                <label>Civilité<sup>*</sup></label>
+
+
+                                                                <div class="input-group">
+                                                                    <span class="input-group-addon"><i class="fa fa-users"></i></span>
+                                                                    <select class="form-control" name="CT_Civilite" id="CT_Civilite">
+                                                                        <option value=0>Mr.</option>
+                                                                        <option value=1>Mme</option>
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row form-group col-md-6">
+                                                            <div class="col-md-12">
+
+                                                                <label>Nom et prénom<sup>*</sup></label>
+
+                                                                <div class="input-group">
+                                                                    <span class="input-group-addon"><i class="fa fa-user"></i></span>
+                                                                    @Html.TextBoxFor(model => model.CT_Intitule, new { @class = "form-control", @id = "CT_Intitule", @name = "CT_Intitule", @maxlength = "34" })
+
+                                                                </div>
+                                                                @Html.ValidationMessageFor(model => model.CT_Intitule, "", new { @class = "text-danger" })
+                                                            </div>
+                                                        </div>
+                                                       
+                                                        <div class="row form-group col-md-6">
+                                                            <div class="col-md-12">
+
+                                                                <label>Date de naissance<sup>*</sup></label>
+
+                                                                <div class="input-group">
+                                                                    <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                                                                    <input class="form-control" pattern="\d{1,2}/\d{1,2}/\d{4}" type="text" id="CT_DateNaiss" name="CT_DateNaiss" placeholder="jj/mm/aaaa" required /> <br />
+
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        @*<div class="row form-group col-md-6">
+                                                                <div class="col-md-12">
+
+                                                                    <label>Client conventionné</label>
+
+                                                                    <div class="input-group">
+                                                                        <input type="radio" class="custom-control-input" id="defaultGroupExample1" name="groupOfDefaultRadios">
+                                                                        <label class="checkbox-inline i-checks" for="defaultGroupExample1">
+                                                                            oui
+                                                                        </label>
+                                                                        <input type="radio" class="custom-control-input" id="defaultGroupExample2" name="groupOfDefaultRadios" checked>
+                                                                        <label class="checkbox-inline i-checks" for="defaultGroupExample2">
+                                                                            Non
+                                                                        </label>
+                                                                    </div>
+                                                                </div>
+                                                            </div>*@
+                                                        <div class="row form-group col-md-6">
+                                                            <div class="col-md-12">
+
+                                                                <label>Nationalité</label>
+
+
+                                                                <div class="input-group">
+                                                                    <span class="input-group-addon"><i class="fa fa-globe"></i></span>
+                                                                    @Html.TextBoxFor(model => model.CT_Nationnalité, new { @class = "form-control", @id = "CT_Nationnalité", @name = "CT_Nationnalité", @Value = "Tunisienne" })
+                                                                </div>
+                                                                @Html.ValidationMessageFor(model => model.CT_DateNaiss, "", new { @class = "text-danger" })
+                                                            </div>
+                                                        </div>
+
+                                                        @*<div class="hide" id="toshoww">
+                                                                <div class="row form-group col-lg-12">
+                                                                    <div class="row form-group col-md-6">
+                                                                        <div class="col-md-12">
+
+                                                                            <label>Société<sup>*</sup></label>
+
+
+                                                                            <div class="input-group">
+                                                                                <span class="input-group-addon"><i class="fa fa-address-card"></i></span>
+                                                                                <select data-placeholder="Choisir..." class="chosen-select" style="width:350px;"
+                                                                                        tabindex="4" id="PersonneMorale" name="PersonneMorale">
+                                                                                    <option>--choisir--</option>
+                                                                                    @foreach (var item in ViewBag.ListePersonneMorale)
+                                                                                    {
+                                                                                        <option value=@item.cbMarq>@item.CT_Intitule</option>
+                                                                                    }
+                                                                                </select>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="row form-group col-md-6">
+                                                                        <div class="col-md-12">
+
+                                                                            <label>Matricule société<sup></sup></label>
+
+                                                                            <div class="input-group">
+                                                                                <span class="input-group-addon"><i class="fa fa-user"></i></span>
+                                                                                @Html.TextBoxFor(model => model.MatriculeSociete, new { @class = "form-control", @id = "MatriculeSociete", @name = "MatriculeSociete", @maxlength = "34" })
+
+                                                                            </div>
+
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+
+                                                            </div>*@
+
+                                                        <div class="row form-group col-md-6">
+                                                            <div class="col-md-12">
+
+                                                                <label>Tél de contact<sup>*</sup></label>
+
+                                                                <div class="input-group">
+                                                                    <span class="input-group-addon"><i class="fa fa-phone"></i></span>
+                                                                    @Html.TextBoxFor(model => model.CT_Telephone, new { @class = "form-control", data_mask = "99999999", @id = "CT_Telephone", @name = "CT_Telephone", @placeholder = "" })
+
+                                                                </div>
+                                                                @Html.ValidationMessageFor(model => model.CT_Telephone, "", new { @class = "text-danger" })
+                                                            </div>
+                                                        </div>
+                                                        <div class="row form-group col-md-6">
+                                                            <div class="col-md-12">
+
+                                                                <label>Adresse <sup>*</sup></label>
+
+
+                                                                <div class="input-group">
+                                                                    <span class="input-group-addon"><i class="fa fa-home"></i></span>
+                                                                    <textarea class="form-control" name="CT_Adresse" id="CT_Adresse" maxlength="34" required></textarea>
+                                                                </div>
+                                                            </div>
+
+                                                        </div>
+                                                        <div class="row form-group col-md-6">
+                                                            <div class="col-md-12">
+
+                                                                <label>Complement Adresse</label>
+
+                                                                <div class="input-group">
+                                                                    <span class="input-group-addon"><i class="fa fa-address-book"></i></span>
+                                                                    @Html.TextAreaFor(m => m.CT_AdresseComplement, new { @class = "form-control", id = "CT_AdresseComplement", name = "CT_AdresseComplement" })
+
+                                                                </div>
+                                                                @Html.ValidationMessageFor(model => model.CT_AdresseComplement, "", new { @class = "text-danger" })
+                                                            </div>
+
+                                                        </div>
+                                                        <div class="row form-group col-md-6">
+                                                            <div class="col-md-12">
+
+                                                                <label>Pays</label>
+
+
+                                                                <div class="input-group">
+                                                                    <span class="input-group-addon"><i class="fa fa-flag"></i></span>
+                                                                    <input type="text" class="form-control" name="CT_Pays" id="CT_Pays" value="Tunisie" required>
+                                                                </div>
+                                                            </div>
+
+                                                        </div>
+                                                        <div class="row form-group col-md-6">
+                                                            <div class="col-md-12">
+
+                                                                <label>Région<sup>*</sup></label>
+
+
+                                                                <div class="input-group">
+                                                                    <span class="input-group-addon"><i class="fa fa-flag-checkered"></i></span>
+                                                                    <select class="form-control" id="search" name="CT_Gouvernorat" required>
+                                                                        <option selected="selected">-- Choisir --</option>
+                                                                        @foreach (var item in ViewBag.Gouvernoratt)
+                                                                        {
+                                                                            <option value="@item.Gouvernorat">@item.Gouvernorat</option>
+                                                                        }
+                                                                    </select>
+
+                                                                </div>
+                                                            </div>
+
+                                                        </div>
+                                                        <div class="row form-group col-md-6">
+                                                            <div class="col-md-12">
+
+                                                                <label>Ville<sup>*</sup></label>
+
+
+                                                                <div class="input-group">
+                                                                    <span class="input-group-addon"><i class="fa fa-flag-o"></i></span>
+                                                                    <select class="form-control" name="CT_Ville" id="CT_Ville" required></select>
+
+                                                                </div>
+                                                            </div>
+
+                                                        </div>
+                                                        <div class="row form-group col-md-6">
+                                                            <div class="col-md-12">
+
+                                                                <label>Cité<sup>*</sup></label>
+
+
+                                                                <div class="input-group">
+                                                                    <span class="input-group-addon"><i class="fa fa-window-restore"></i></span>
+                                                                    <select class="form-control" name="CT_Localite" id="Localite" required></select>
+                                                                </div>
+                                                            </div>
+
+                                                        </div>
+                                                        <div class="row form-group col-md-6">
+                                                            <div class="col-md-12">
+
+                                                                <label>Code postal<sup>*</sup></label>
+
+
+                                                                <div class="input-group">
+                                                                    <span class="input-group-addon"><i class="fa fa-university"></i></span>
+                                                                    <input type="text" class="form-control" name="CT_CodePostal" id="CT_CodePostal" required>
+                                                                </div>
+                                                            </div>
+
+                                                        </div>
+                                                        <div class="row form-group col-md-6">
+                                                            <div class="col-md-12">
+
+                                                                <label>Date établissement<sup>*</sup></label>
+
+
+                                                                <div class="input-group">
+                                                                    <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                                                                    <input class="form-control" pattern="\d{1,2}/\d{1,2}/\d{4}" name="CT_IdDateEtab" id="CT_IdDateEtab" placeholder="jj/mm/aaaa" required /> <br />
+
+                                                                </div>
+
+                                                            </div>
+                                                            @Html.ValidationMessageFor(model => model.CT_IdDateEtab, "", new { @class = "text-danger" })
+                                                        </div>
+
+                                                        <br />
+                                                        <br />
+
+                                                        <button type="submit" class="btn btn-greenbee ladda-button ladda-button-demo pull-right" name="cmd"><i class="fa fa-check"></i>&nbsp;Valider</button>
+
+                                                    </div>
+                                                    <br />
+                                                 
+                                                </div>
+
+
+                                            }
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+
+
+                }
+                else if ((ViewBag.AgenceUser != null) || (ViewBag.msg != null))
+                {
+                    <div class="alert alert-danger alert-dismissable">
+                        <button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>
+                        @ViewBag.msg
+                    </div>
+                }
+                else
+                {
+                    <div class="alert alert-danger alert-dismissable">
+                        <button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>
+                        Erreur d cnx
+                    </div>
+                }
+
+            </div>
+        </div>
+
+    </div>
+
+
+</div>
+
+
+
+<script src="~/js/plugins/slick/slick.min.js"></script>
+<script src="~/js/jquery-3.1.1.min.js"></script>
+
+<script src="~/js/plugins/datapicker/bootstrap-datepicker.js"></script>
+<script src="~/js/plugins/chosen/chosen.jquery.js"></script>
+<!-- Jasny -->
+<script src="~/js/plugins/jasny/jasny-bootstrap.min.js"></script>
+<!-- DROPZONE -->
+<script src="~/js/plugins/dropzone/dropzone.js"></script>
+<!-- CodeMirror -->
+<script src="~/js/plugins/codemirror/codemirror.js"></script>
+<script src="~/js/plugins/codemirror/mode/xml/xml.js"></script>
+<script src="~/js/plugins/jasny/jasny-bootstrap.min.js"></script>
+<!-- iCheck -->
+<script src="~/js/plugins/iCheck/icheck.min.js"></script>
+
+
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
+
+<script src="~/js/plugins/dataTables/datatables.min.js"></script>
+<!-- Toastr script -->
+<script src="~/js/plugins/toastr/toastr.min.js"></script>
+
+
+<!-- Ladda -->
+<script src="~/js/plugins/ladda/spin.min.js"></script>
+<script src="~/js/plugins/ladda/ladda.min.js"></script>
+<script src="~/js/plugins/ladda/ladda.jquery.min.js"></script>
+
+
+
+
+
+<script>
+
+    $('.chosen-select').chosen({ width: "100%" });
+
+        //$(document).ready(function () {
+
+        //    var ckbox = $('#defaultGroupExample1');
+
+        //    $('input:radio').on('click', function () {
+        //        if (ckbox.is(':checked')) {
+
+        //            //console.log("hello");
+        //            var elementtoShoww = document.getElementById('toshoww');
+        //            //console.log("elementtoShoww.className" + elementtoShoww.className);
+        //            if (elementtoShoww.className === 'hide') {
+        //                //console.log("hii if ");
+        //                elementtoShoww.className = 'show';
+        //                document.getElementsByTagName('body')[0].className = 'on';
+
+
+
+        //            }
+        //            //else {
+        //            //    elementtoShoww.className = 'hide';
+
+        //            //    document.getElementsByTagName('body')[0].className = 'off';
+
+
+        //            //}
+
+        //        }
+
+        //    });
+        //    var ckboxx = $('#defaultGroupExample2');
+
+        //    $('input:radio').on('click', function () {
+        //        if (ckboxx.is(':checked')) {
+
+        //            var elementtoShoww = document.getElementById('toshoww');
+
+        //            if (elementtoShoww.className === 'show') {
+        //                elementtoShoww.className = 'hide';
+
+        //                document.getElementsByTagName('body')[0].className = 'off';
+
+
+        //            }
+        //        }
+
+        //    });
+
+
+
+        //});
+
+
+        $('#CT_DateNaiss').datepicker({
+            changeMonth: true,
+            changeYear: true,
+            showButtonPanel: true,
+            dateFormat: "m/d/yy"
+        });
+
+        $('#CT_IdDateEtab').datepicker({
+            changeMonth: true,
+            changeYear: true,
+            showButtonPanel: true,
+            dateFormat: "m/d/yy"
+        });
+
+
+
+        $("#CT_Identifiant").change(function () {
+
+            if ($("#CT_Identifiant").val() == null) {
+                $("#searchClient").prop('disabled', true);
+            }
+            else {
+                $("#searchClient").prop('disabled', false);
+            }
+        });
+        $("#searchClient").click(function () {
+
+            $("#showClientInfos").removeClass("hidden");
+
+
+
+            var RegNumber = new RegExp('^\\d+$');
+            var RegChar = new RegExp('[0-9a-zA-Z]');
+            var RegString = new RegExp('[a-zA-Z]');
+            var TypeIdentite = document.getElementById("CT_TypeIdentifiant");
+
+            var inputValue = $('#CT_Identifiant').val();
+            var IdentiteValue = TypeIdentite.options[TypeIdentite.selectedIndex].value;
+
+            if (inputValue.length < 8) {
+                $('#Identifiant').after('<span class="error">Le champ N° pièce identité ne peut contenir que 7 Charactère</span>');
+
+            }
+
+            if (IdentiteValue == 0) {
+                if (inputValue.match(RegNumber) && inputValue.length == 8) {
+                    $(".error").remove();
+                    getInformationClient();
+
+                    $('#Clients').show();
+                } else {
+                    $(".error").remove();
+                    $('#Identifiant').after('<span class="error">Le champ N° pièce identité ne peut contenir que 8 chiffre</span>');
+                }
+            }
+            if (IdentiteValue == 1) {
+                if (inputValue.match(RegChar) && inputValue.length == 7) {
+                    $(".error").remove();
+                    getInformationClient();
+                    $('#Clients').show();
+                }
+                else {
+                    $(".error").remove();
+                    $('#Identifiant').after('<span class="error">Le champ N° pièce identité ne peut contenir que 7 Charactère</span>');
+                }
+            }
+            if (IdentiteValue == 2) {
+                if (inputValue.match(RegChar)) {
+                    $(".error").remove();
+                    getInformationClient();
+                    $('#Clients').show();
+                }
+                else {
+                    $(".error").remove();
+                    $('#Identifiant').after('<span class="error">Le champ N° pièce identité ne peut contenir que Charactère</span>');
+                }
+            }
+        });
+
+        function getInformationClient() {
+
+            $.ajax({
+                type: "get",
+                url: '@Url.Action("isClientExists")',
+                dataType: 'json',
+                data: { identifiant: $("#CT_Identifiant").val() },
+                success: function (msg) {
+                    if (msg.result == 0) {
+                        $("#CT_Intitule").val(msg.data.CT_Intitule);
+
+                        $("#CT_CodePostal").val(msg.data.CT_CodePostal);
+                        $("#CT_Telephone").val(msg.data.CT_Telephone);
+                        $("#CT_Contact").val(msg.data.CT_Intitule);
+                        $("textarea#CT_Adresse").val(msg.data.CT_Adresse);
+                        $("#CT_AdresseComplement").val(msg.data.CT_Complement);
+                        $("textarea#CT_AdresseAbo").val(msg.data.CT_Adresse);
+                        $("#CT_IdDateEtab").val(msg.DateEtab);
+                        $("#CT_DateNaiss").val(msg.dateNaissance);
+                        document.getElementById("CT_Civilite").selectedIndex = msg.data.CT_Civilite;
+                        var select = $('#CT_Ville');
+                        select.append('<option value="' + msg.data.CT_Ville + '" selected="selected">' + msg.data.CT_Ville + '</option>');
+                        var selectLocalite = $('#Localite');
+                        selectLocalite.append('<option value="' + msg.data.CT_Localite + '" selected="selected">' + msg.data.CT_Localite + '</option>');
+                        var selectCT_Gouvernorat = $('#search');
+                        selectCT_Gouvernorat.append('<option value="' + msg.data.CT_Gouvernorat + '" selected="selected">' + msg.data.CT_Gouvernorat + '</option>');
+                    }
+                }
+            });
+        }
+
+        function isValidDate(s) {
+            var bits = s.split('/');
+            var d = new Date(bits[2] + '/' + bits[1] + '/' + bits[0]);
+            return !!(d && (d.getMonth() + 1) == bits[1] && d.getDate() == Number(bits[0]));
+        }
+
+
+        $('#search').change(function () {
+            region = $('select#search').find("option:selected").val();
+            getRegion();
+        });
+        function getRegion() {
+
+            $.ajax({
+                type: "get",
+                url: '@Url.Action("isRegionExists")', // we are calling json method
+                dataType: 'json',
+                data: { identifiant: $('select#search').find("option:selected").val() },
+                success: function (msg) {
+                    if (msg.result == 0) {
+
+                        var len = msg.data.length;
+
+                        $("#CT_Ville").empty();
+                        $("#CT_Ville").append("<option>-- Choisir --</option>");
+
+                        for (var i = 0; i < len; i++) {
+
+                            $("#CT_Ville").append("<option value='" + msg.data[i].trim() + "'>" + msg.data[i].trim() + "</option>");
+                        }
+
+                    }
+                }
+            });
+        }
+        $('#CT_Ville').change(function () {
+            ville = $('select#CT_Ville').val();
+            getCitee();
+
+        });
+        function getCitee() {
+
+            $.ajax({
+                type: "get",
+                url: '@Url.Action("isCiteeExists")',
+                dataType: 'json',
+                data: { identifiant: $('select#CT_Ville').find("option:selected").val() },
+                success: function (msg) {
+                    if (msg.result == 0) {
+
+                        var len = msg.data.length;
+                        $("#Localite").empty();
+                        $("#Localite").append("<option>-- Choisir --</option>");
+
+                        for (var i = 0; i < len; i++) {
+
+                            $("#Localite").append("<option value='" + msg.data[i].trim() + "'>" + msg.data[i].trim() + "</option>");
+
+                        }
+
+                    }
+                }
+            });
+        }
+
+        $('#Localite').change(function () {
+            citee = $('select#Localite').val();
+            getCodepostal();
+
+        });
+        function getCodepostal() {
+
+            $.ajax({
+                type: "get",
+                url: '@Url.Action("isCodePostalExists")',
+                dataType: 'json',
+                data: { identifiant: $('select#Localite').find("option:selected").val() },
+                success: function (msg) {
+                    if (msg.result == 0) {
+                        $("#CT_CodePostal").val(msg.data);
+                    }
+                }
+            });
+        }
+
+       // });
+            // Bind normal buttons
+            Ladda.bind('.ladda-button', { timeout: 8000 });
+
+            // Bind progress buttons and simulate loading progress
+            Ladda.bind('.progress-demo .ladda-button', {
+                callback: function (instance) {
+                    var progress = 0;
+                    var interval = setInterval(function () {
+                        progress = Math.min(progress + Math.random() * 0.1, 1);
+                        instance.setProgress(progress);
+
+                        if (progress === 1) {
+                            instance.stop();
+                            clearInterval(interval);
+                        }
+                    }, 8000);
+                }
+            });
+
+
+            var l = Ladda.bind('.ladda-button-demo');
+
+            l.click(function () {
+                // Start loading
+                l.ladda('start');
+
+                // Timeout example
+                // Do something in backend and then stop ladda
+                setTimeout(function () {
+                    l.ladda('stop');
+                }, 15000)
+
+
+            });
+
+</script>
+
+
+

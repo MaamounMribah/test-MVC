@@ -1,0 +1,250 @@
+﻿
+@{
+    ViewBag.Title = "Redevance";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-lg-10">
+        <h2>Redevance</h2>
+        <ol class="breadcrumb">
+            <li>
+                <a href="@Url.Action("Index","Redevance")">Redevance </a>
+            </li>
+
+            <li class="active">
+                <a href="@Url.Action("index","Redevance")">Liste Redevance </a>
+             </li>
+        </ol>
+    </div>
+</div>
+
+<div class="wrapper wrapper-content animated fadeInRight">    
+    @if (TempData["MSG"] != null)
+            {
+        <div class="alert alert-warning alert-success">
+            <button type="button" class="close " data-dismiss="alert"> × </button>
+            <p class="text-danger">@TempData["MSG"]</p>
+        </div>
+
+    }
+    @if (TempData["MSG1"] != null)
+            {
+        <div class="alert alert-warning alert-dismissable">
+            <button type="button" class="close " data-dismiss="alert"> × </button>
+            <p class="text-danger">@TempData["MSG1"]</p>
+        </div>
+
+    }
+    <div class="row">
+        @if (ViewBag.ArticleRedevance != null)
+        {
+            using (Html.BeginForm("Index", "Redevance", FormMethod.Post, new { id = "popupForm" }))
+            {
+                <div class="wrapper wrapper-content animated fadeInRight">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="ibox float-e-margins">
+                                <div class="ibox-title">
+                                    <h5>Liste Redevance </h5>
+                                </div>
+                                <div class="ibox-content">
+                                    <table class="table table-striped table-bordered table-hover dataProformat">
+                                        <thead>
+                                            <tr>
+                                                <th>Redevance</th>
+                                                <th>Article</th>
+                                                <th>Prix achat </th>    
+                                                <th>Modification </th>                                              
+                                                <th>Action</th>
+                                            </tr>
+                                        <tbody>
+                                         @foreach (var item in ViewBag.ArticleRedevance)
+                                         {
+                                            <tr>
+                                                
+                                                <td>
+                                                    Redevance
+                                                </td>
+                                                <td>
+                                                    @item.AE_Ref
+                                                </td>
+                                                <td>
+                                                    <input type="text" pattern="\d*([,\/]?\d+)" name="Montant" id="Montant-@item.cbMarq" class="form-control" value="@item.AE_PrixAch">
+                                                </td>
+                                                <td>
+                                                     @item.cbModification
+                                                </td>
+                                                <td>
+                                                    <center>                                                     
+                                                            <button type="button" class="btn btn-purplebee ladda-button" name="CbmarqLigne" onclick="GenererRed(@item.cbMarq)">
+                                                                <i class="fa fa-save"></i> Modifier
+                                                            </button>
+                                                    </center>
+                                                </td>
+                                            </tr>
+                                         }
+                                        </tbody>
+                                    </table>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+    </div>
+</div>
+
+
+<script src="~/js/jquery-3.1.1.min.js"></script>
+<script src="~/js/plugins/metisMenu/jquery.metisMenu.js"></script>
+<script src="~/js/plugins/pace/pace.min.js"></script>
+<script src="~/js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+<script src="~/js/plugins/chosen/chosen.jquery.js"></script>
+<script src="~/js/plugins/dataTables/datatables.min.js"></script>
+<!-- Sweet alert -->
+<script src="~/js/plugins/sweetalert/sweetalert.min.js"></script>
+<!-- Chosen -->
+<script src="~/js/plugins/chosen/chosen.jquery.js"></script>
+<link href="~/css/plugins/ladda/ladda-themeless.min.css" rel="stylesheet">
+<!-- Ladda -->
+<script src="~/js/plugins/ladda/spin.min.js"></script>
+<script src="~/js/plugins/ladda/ladda.min.js"></script>
+<script src="~/js/plugins/ladda/ladda.jquery.min.js"></script>
+<script>
+    $(document).ready(function () {
+
+        $('.dataProformat').DataTable({
+            pageLength: 25,
+            responsive: true,
+            dom: '<"html5buttons"B>lTfgitp',
+            buttons: [
+                { extend: 'copy' },
+                { extend: 'csv' },
+                { extend: 'excel', title: 'Bordereau' },
+                { extend: 'pdf', title: 'Bordereau' },
+
+                {
+                    extend: 'print',
+                    customize: function (win) {
+                        $(win.document.body).addClass('white-bg');
+                        $(win.document.body).css('font-size', '10px');
+
+                        $(win.document.body).find('table')
+                            .addClass('compact')
+                            .css('font-size', 'inherit');
+                    }
+                }
+            ]
+
+        });
+
+    });
+
+    $(document).ready(function () {
+
+        // Bind normal buttons
+        Ladda.bind('.ladda-button', { timeout: 2000 });
+
+        // Bind progress buttons and simulate loading progress
+        Ladda.bind('.progress-demo .ladda-button', {
+            callback: function (instance) {
+                var progress = 0;
+                var interval = setInterval(function () {
+                    progress = Math.min(progress + Math.random() * 0.1, 1);
+                    instance.setProgress(progress);
+
+                    if (progress === 1) {
+                        instance.stop();
+                        clearInterval(interval);
+                    }
+                }, 200);
+            }
+        });
+
+
+        var l = Ladda.bind('.ladda-button-demo');
+
+        l.click(function () {
+            // Start loading
+            l.ladda('start');
+
+            // Timeout example
+            // Do something in backend and then stop ladda
+            setTimeout(function () {
+                l.ladda('stop');
+            }, 12000)
+
+
+        });
+
+    });
+
+
+    $(document).ready(function () {
+        $('.i-checks').iCheck({
+            checkboxClass: 'icheckbox_square-green',
+            radioClass: 'iradio_square-green'
+        });
+        $(".todo-list").sortable({
+            placeholder: "sort-highlight",
+            handle: ".handle",
+            forcePlaceholderSize: true,
+            zIndex: 999999
+        }).disableSelection();
+
+        $('.classDate').datepicker();
+
+        $('.i-checks').iCheck({
+            radioClass: 'iradio_square-green'
+        });
+        $('.chosen-select').chosen({ width: "100%" });
+
+
+    });
+
+
+    function GenererRed(cbMarq) {
+        var montant = $("#Montant-" + cbMarq).val()
+        montant = montant.replace(",", ".");
+        swal({
+            title: "Modifier ",
+            text: " ",
+            type: "success",
+            showCancelButton: true,
+            confirmButtonColor: "#DD6B55",
+            confirmButtonText: "Oui",
+            closeOnConfirm: false,
+            showCancelButton: false,
+        },
+         function (msg) {
+             if (msg) {
+                 $.ajax({
+                     type: "Post",
+                     url: "/Redevance/Index?CbmarqLigne=" + cbMarq + "&&Montant=" + montant,
+                     success: function (msg) {
+                         if (msg = 1) {
+                             swal("modifié montant avec succès", " ", "success");
+                             location.reload();
+                         } else {
+
+                             swal("Erreur dans la modification de montant", "Veuilez contacter votre administrateur", "error");
+                             location.reload();
+                         }
+                     }
+                 });
+             } else {
+                 swal("Annuler");
+             }
+         })
+    }
+
+</script>
+
+
+
+
+

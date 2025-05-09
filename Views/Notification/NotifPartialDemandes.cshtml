@@ -1,0 +1,80 @@
+﻿@using BeeProj.Models;
+
+<a class="dropdown-toggle count-info" data-toggle="dropdown" href="#" title="Demandes">
+    <i class="fa fa-safari"></i>
+
+    <span class="label label-info">@ViewBag.NombreNotifDemandes</span>
+
+
+</a>
+
+
+
+<ul class="dropdown-menu dropdown-alerts " style="overflow:scroll; height: 500px;">
+
+    @if (ViewBag.NotificationDemandes == null)
+    {
+        <li>
+            <a href="#">
+                <div>
+                    <i class="fa fa-safari fa-fw"></i> Aucune notification de demandes
+
+                </div>
+            </a>
+        </li>
+    }
+    else
+    {
+        foreach (var item in ViewBag.NotificationDemandes)
+        {
+            if(item.GD_Type == 0) { 
+            <li>
+                
+                <a href="@Url.Action("DetailsDemande","Demande", new { id = @item.cbMarq })">
+                    <div>
+                        <i class="fa fa-safari fa-fw"></i> @item.GD_Reference
+                        <span class="pull-right text-info small">Demande de Résiliation </span>
+                    </div>
+                </a>
+            </li>
+            }
+
+
+
+           else if (item.GD_Type == 1)
+            {
+                <li>
+
+                    <a href="@Url.Action("DetailsDemande","Demande", new { id = @item.cbMarq })">
+                        <div>
+                            <i class="fa fa-safari fa-fw"></i> @item.GD_Reference
+                            <span class="pull-right text-info small">Demande de Réaffectation </span>
+                        </div>
+                    </a>
+                </li>
+            }
+
+            else if (item.GD_Type == 3)
+            {
+                <li>
+
+                    <a href="@Url.Action("DetailsDemande","Demande", new { id = @item.cbMarq })">
+                        <div>
+                            <i class="fa fa-safari fa-fw"></i> @item.GD_Reference
+                            <span class="pull-right text-info small">Demande de Migration </span>
+                        </div>
+                    </a>
+                </li>
+            }
+
+
+
+                <li class="divider"></li>
+    }
+
+
+
+    }
+</ul>
+
+

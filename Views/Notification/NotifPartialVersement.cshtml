@@ -1,0 +1,53 @@
+﻿@using BeeProj.Models;
+<a class="dropdown-toggle count-info" data-toggle="dropdown" href="#" title="Demande de Versement">
+    <i class="fa fa-money"></i>
+     <span class="label label-primary">@ViewBag.Countlistentete</span>
+
+
+</a>
+
+
+
+<ul class="dropdown-menu dropdown-alerts " style="overflow:scroll; height: 500px;">
+
+    @if (ViewBag.NotificationVersement == null)
+    {
+        <li>
+            <a href="#">
+                <div>
+                    <i class="fa fa-envelope fa-fw"></i> Aucune notification de versement
+
+                </div>
+            </a>
+        </li>
+    }
+    else
+    {
+        foreach (var item in ViewBag.NotificationVersement)
+        {
+            <li>
+                <a href="@Url.Action("DetailsVersement","GestionFactures", new { id = @item.cbMarq })">
+                    <div>
+                        <i class="fa fa-bell fa-fw"></i> @item.V_Piece
+                        <span class="pull-right text-info small">Demande de versement </span>
+                    </div>
+                </a>
+            </li>
+
+            <li class="divider"></li>
+        }
+
+
+    }
+
+
+
+
+
+
+
+
+
+</ul>
+
+

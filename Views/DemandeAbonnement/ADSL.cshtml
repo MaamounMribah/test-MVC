@@ -1,0 +1,356 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = null;
+}
+
+
+<style>
+    .foooter {
+        position: relative;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        padding: 1rem;
+        background-color: #efefef;
+        text-align: center;
+    }
+
+    .hederclass {
+        background: #fff;
+        background: -webkit-gradient(linear,left top,left bottom,from(#fff),to(#f3f3ff));
+        background: linear-gradient(180deg,#fff 0,#f3f3ff);
+        filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#ffffff",endColorstr="#f3f3ff",GradientType=0);
+        border-radius: 0;
+        -webkit-box-shadow: 0 12px 20px -10px rgb(73, 75, 148);
+        box-shadow: 0 12px 20px -10px rgb(241, 241, 241);
+    }
+</style>
+
+<!DOCTYPE html>
+<html style="font-size: 0.8rem !important;">
+
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="~/css/bootstrap.min.css" rel="stylesheet">
+    <link href="~/font-awesome/css/font-awesome.css" rel="stylesheet">
+    <link href="~/css/animate.css" rel="stylesheet">
+    <link href="~/css/style.css" rel="stylesheet">
+
+    <link href="~/css/plugins/dropzone/basic.css" rel="stylesheet">
+    <link href="~/css/plugins/dropzone/dropzone.css" rel="stylesheet">
+    <link href="~/css/plugins/jasny/jasny-bootstrap.min.css" rel="stylesheet">
+    <link href="~/css/plugins/codemirror/codemirror.css" rel="stylesheet">
+
+    <link href="~/css/plugins/iCheck/custom.css" rel="stylesheet">
+
+    @*<link href="~/css/style.css" rel="stylesheet">*@
+    <link href="~/css/plugins/daterangepicker/daterangepicker-bs3.css" rel="stylesheet" />
+    <link href="~/css/plugins/datapicker/datepicker3.css" rel="stylesheet" />
+    <link href="~/css/plugins/awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css" rel="stylesheet">
+    <link href="~/css/plugins/chosen/bootstrap-chosen.css" rel="stylesheet">
+    <link href="~/css/plugins/slick/slick.css" rel="stylesheet" />
+    <link href="~/css/plugins/slick/slick-theme.css" rel="stylesheet" />
+
+    <link rel="stylesheet" href="css/app208e.css?id=554255f5f9cdf8c1bb66">
+    <link href="~/css/app208e.css" rel="stylesheet" />
+</head>
+
+
+<body>
+    <header class="fixed-top navigation-bar">
+        <div class="">
+            <div class="top-bar">
+                <div class="container">
+                    <ul class="nav nav-top justify-content-end">
+                        <li class="nav-item">
+                            Service client: <a class="nav-link gold"
+                                               href="tel:+216 71 100 440">+216 71 100 440</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <nav class="navbar navbar-expand-lg navbar-bee">
+                <div class="container">
+                    <a class="navbar-brand" href="https://bee.net.tn/" style="margin-right:0;">
+                        <img src="https://bee.net.tn/images/logo.png" class="navbar-logo" alt="">
+                    </a>
+                    <button class="navbar-toggler text-purplebee" type="button" onclick="location.href='https://bee.net.tn/'" aria-expanded="false" aria-label="Toggle navigation">
+                        <i class="fa fa-2x fa-angle-double-left"></i>
+                    </button>
+
+                    <div class="navigation">
+                        <div class="collapse navbar-collapse navigation-categories show " id="navbarSupportedContent">
+                            <ul class="nav navbar-nav">
+                                <li class="nav-item" style="text-align-last: center;">
+                                    <a class="nav-link navigation-change-link active" data-nav="particular" href="#"
+                                       target="_self" style="font-weight: 700;font-size: 1.1rem;padding: 14px 20px 14px 25px;pointer-events:none;">
+                                        <span>Demande d'Abonnement ADSL</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="collapse navbar-collapse" id="">
+                            <div id="particular">
+                                <ul class="nav navbar-nav">
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="#" target="_self" style="pointer-events:none;">
+                                            <span>Choisissez le pack ADSL qui vous convient </span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <div class="content">
+        <div style="margin-top:170px">
+            <div class="container">
+                @*<div class="row">
+
+                        <div class="col-md-6 mb-5">
+                            <a href="https://bee.net.tn/offres/bee-speed">
+                                <div class="offer-card text-center" style="background-color: #5153a4; visibility: hidden; z-index: 999;">
+                                    <div class="offer-card-content">
+                                        <img src="https://bee.net.tn/storage/offers/November2018/DqggDv0zgFW6nCDfi0eT.png" class="img-responsive" alt="">
+                                        <h1>+ بسرعة <br> bee speed +</h1>
+                                        <p>L&#039;offre ADSL de BEE</p>
+                                        <a href="https://bee.net.tn/offres/bee-speed" class="btn btn-lg btn-rounded btn-warning">S'abonner</a>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+
+                    </div>*@
+                <div class="row ">
+                    @foreach (var item in ViewBag.ListeArticleBASE)
+                    {
+                        <div class="col-md-6 mb-5">
+                            @*<a href="#">*@
+                            <div class="offer-card text-center"  style="background-color: #5153a4; visibility: hidden; z-index: 999;">
+                                <div class="offer-card-content">
+                                    <img src="https://bee.net.tn/storage/offers/November2018/4woNqtGDZcLjKSc84w3l.png" class="img-responsive center-block" alt="">
+
+                                    @if (item.P_Duree != -1 && item.P_Duree != -2)
+                                    {
+                                        <h6 class="text-greenbee">EN PROMO</h6>
+                                    }
+                                    else if (item.P_Duree == -2)
+                                    {
+                                        @*<span class="label label-graybee pull-right">promotion expirée</span>*@
+                                        <h6 class="text-greenbee">PROMO expirée</h6>
+                                    }
+                                    else
+                                    {
+                                        <h6 class="text-greenbee">Offre de Base</h6>
+                                    }
+
+                                    <h1>@item.AR_Design</h1>
+
+                                    <div class="text-greenbee">
+                                        <h3> <small class="text-white">seulement</small> <br />@String.Format("{0:N3}", item.prixTTC) TND  </h3>
+                                    </div>
+
+
+                                    @if (item.P_Duree != -2)
+                                    {
+                                        <a href="@Url.Action("Nouvelle", "DemandeAbonnement", new { id = @item.cbMarq })" class="btn btn-lg btn-rounded btn-warning">S'abonner</a>
+                                    }
+                                    else
+                                    {
+                                        <a href="https://bee.net.tn/offres/bee-speedy" class="btn btn-lg btn-rounded btn-warning disabled">S'abonner</a>
+                                    }
+                                </div>
+                            </div>
+                            @*</a>*@
+                        </div>
+                    }
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-5 ">
+                    <p class="text-uppercase">Questions? S'il vous plaît vérifier avec nous maintenant!</p>
+                    <div class="footer-contact-ct">
+                        <div class="footer-contact">
+                            <img src="https://bee.net.tn/images/phone-icon.png" alt="" class="icon">
+                            <h6>Téléphone</h6>
+                            <a href="https://bee.net.tn/+216 71 100 440">+216 71 100 440</a>
+                        </div>
+                        <div class="footer-contact">
+                            <img src="https://bee.net.tn/images/mail-icon.png" alt="" class="icon">
+                            <h6>E-mail</h6>
+                            <a class="text-uppercase" href="MAILTO:contact@bee.net.tn">contact@bee.net.tn</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 offset-sm-1 find-store">
+
+                </div>
+            </div>
+            <div class="divider mb-md-5"></div>
+            <div class="row pt-md-3">
+                <div class="col-md-6">
+                    <a href="https://bee.net.tn/">
+                        <img src="https://bee.net.tn/images/logo.png" class="footer-logo" alt="Bee logo">
+                    </a>
+                    <br>
+                    <p class="color-white">Une entreprise tunisienne d'accès internet en Tunisie.</p>
+                </div>
+                <div class="col-md-6">
+                    <ul class="footer-nav">
+
+
+
+
+                        <li class="nav-parent-item">
+                            <a class="nav-link" href="#" target="_self" style="" class="dropdown-toggle" data-toggle="dropdown">
+
+                                <span>Nos offres</span>
+                                <span class="caret"></span>
+                            </a>
+                            <ul class="sub-nav">
+
+
+
+
+                                <li class="nav-item">
+                                    <a class="nav-link" href="https://bee.net.tn/offres/bee-speed" target="_self" style="">
+
+                                        <span>Bee speed</span>
+
+                                    </a>
+                                </li>
+
+
+                                <li class="nav-item">
+                                    <a class="nav-link" href="https://bee.net.tn/offres/bee-speedy" target="_self" style="">
+
+                                        <span>bee speedy</span>
+
+                                    </a>
+                                </li>
+
+                            </ul>
+                        </li>
+
+
+                        <li class="nav-parent-item">
+                            <a class="nav-link" href="#" target="_self" style="" class="dropdown-toggle" data-toggle="dropdown">
+
+                                <span>Nos réseaux</span>
+                                <span class="caret"></span>
+                            </a>
+                            <ul class="sub-nav">
+
+
+
+
+                                <li class="nav-item">
+                                    <a class="nav-link" href="https://www.facebook.com/bee.tunisie" target="_self" style="">
+
+                                        <span>Facebook</span>
+
+                                    </a>
+                                </li>
+
+
+                                <li class="nav-item">
+                                    <a class="nav-link" href="https://www.instagram.com/bee.officiel/" target="_self" style="">
+
+                                        <span>Instagram</span>
+
+                                    </a>
+                                </li>
+
+                            </ul>
+                        </li>
+
+                    </ul>
+
+                </div>
+            </div>
+            <div class="row footer-bottom">
+                <div class="col-md-6 bottom-links">
+                    <a href="#" class="text-uppercase">Conditions générales, info sur la consommation</a>
+                    <a href="#" class="text-uppercase">Vie privée</a>
+                </div>
+                <div class="col-md-6 copy-right">
+                    <span class="text-uppercase">Tous droits réservés. © 2019 bee</span>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+
+    <script src="~/js/jquery-3.1.1.min.js"></script>
+    <script src="~/Scripts/jquery-1.10.2.min.js"></script>
+
+    <!-- jQuery UI -->
+    <script src="~/js/plugins/jquery-ui/jquery-ui.min.js"></script>
+
+
+    <script>
+        $(document).ready(function(){
+
+            if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
+                $('.offer-card').css({visibility: 'visible' }).animateCss('zoomInDown');
+            } else {
+                var firstTime = true;
+                showOffrs();
+                $(document).on('scroll', function () {
+                    showOffrs();
+                });
+            }
+
+            function showOffrs() {
+                var position = $('.offer-card').offset().top - $(window).scrollTop();
+                if (position < 600 && firstTime === true) {
+                    firstTime = false;
+                    $('.offer-card').each(function(i){
+                        var row = $(this);
+                        setTimeout(function() {
+                            row.css({visibility: 'visible' });
+                            row.animateCss('zoomInDown');
+                        }, 300 * i);
+                    });
+                }
+            }
+
+        });
+    </script>
+    <script>
+        $(document).ready(function () {
+            $('.navigation-change-link').on('click', function (e) {
+                e.preventDefault();
+                $('.navigation-change-link').removeClass('active');
+                $(this).addClass('active');
+                // TODO show target nav
+                if ($(this).data('nav') === 'particular') {
+                    $('#particular').show();
+                    $('#professionals').hide();
+                } else {
+                    $('#particular').hide();
+                    $('#professionals').show();
+                }
+            });
+        });
+    </script>
+
+</body>
+
+</html>
+
+

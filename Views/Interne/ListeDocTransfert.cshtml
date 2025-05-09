@@ -1,0 +1,129 @@
+﻿@model IEnumerable <BeeProj.Models.DetailsDocTransfert>
+@{
+    ViewBag.Title = "ListeDocTransfert";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<link href="~/css/plugins/dataTables/datatables.min.css" rel="stylesheet">
+
+
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-lg-10">
+        <h2>Liste des transferts</h2>
+        <ol class="breadcrumb">
+            <li>
+                <a href="@Url.Action("index","Home")">Acceuil </a>
+            </li>
+            <li>
+                <a href="@Url.Action("ListeDocTransfert","Interne")">Gestion Interne </a>
+            </li>
+            <li class="active">
+                <strong>Liste des documents de transferts</strong>
+            </li>
+        </ol>
+    </div>
+    <div class="col-lg-2">
+
+    </div>
+</div>
+
+
+<div class="wrapper wrapper-content animated fadeInRight">
+
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="wrapper wrapper-content animated fadeInUp">
+
+                    <div class="ibox">
+                        <div class="ibox-title">
+                            <h5>Vos bordereaux de transfert</h5>
+                            @*<div class="ibox-tools">
+                                <a href=@Url.Action("NouveauTransfert", "Interne") class="btn btn-primary btn-xs">Nouveau transfert</a>
+                            </div>*@
+                        </div>
+                        <div class="ibox-content">
+                            <div class="project-list">
+                              
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>Statut</th>
+                                            <th>Date </th>
+                                            <th>N° Pièce </th>
+                                            <th>Dépôt Emetteur  </th>
+                                            <th>Dépôt Récepteur </th>
+                                            <th> </th>
+                                         
+                                        </tr>
+                                    </thead>
+                                    
+                                    <tbody>
+
+                                        @foreach (var item in Model)
+                                        {
+                                            <tr>
+
+                                                <td class="project-status">
+                                                   @if(item.TR_Statut == 0) {
+                                                        <span class="label text-purplebee" style="background-color: #e5e5f5;">En cours</span>
+                                                   }
+                                                   else if (item.TR_Statut == 1)
+                                                   {
+                                                    <span class="label bg-greenbee">Validé</span>
+                                                   }
+                                                   else if (item.TR_Statut == 2)
+                                                   {
+                                                    <span class="label bg-purplebee">Confirmé</span>
+                                                   }
+                                                   else
+                                                   {
+                                                    <span class="label bg-graybee">Annulé</span>
+                                                   }
+                                                </td>
+                                                <td>
+                                                    <span id="tt" class="meta">@item.TR_Date</span>
+                                                   
+                                                </td>
+                                                <td class="project-title">
+                                                    <a href="@Url.Action("DetailsTransfert/" + @item.cbMarq, "Interne")">
+                                                        @item.TR_Piece
+                                                    </a>
+                                                    <br />
+                                                    <small>  </small>
+                                                </td>
+                                                <td>
+                                                    @item.DepotE
+                                                </td>
+                                                <td>
+                                                    @item.DepotR
+
+                                                </td>
+                                                <td class="project-actions">
+                                                    <a href=@Url.Action("DetailsTransfert/" + @item.cbMarq, "Interne") target="_blank" class="btn btn-outline btn-purplebee"><i class="fa fa-binoculars "></i> Détails </a>
+                                                </td>
+                                            </tr>
+
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+</div>
+<script src="~/js/jquery-3.1.1.min.js"></script>
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+@*<script>
+    $(document).ready(function () {
+
+        var d = $('#tt').val();
+       
+        d = d.split(' ')[0];
+
+    });
+</script>*@

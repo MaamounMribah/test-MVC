@@ -1,0 +1,76 @@
+﻿
+@using BeeProj.Models;
+
+<a class="dropdown-toggle count-info" data-toggle="dropdown" href="#" title="Résiliations">
+    <i class="fa fa-exclamation-circle"></i>
+
+    <span class="label label-danger">@ViewBag.NombreNotifRes</span>
+
+
+</a>
+
+
+
+<ul class="dropdown-menu dropdown-alerts " style="overflow:scroll; height: 500px;">
+
+    @if (ViewBag.NotificationRes == null)
+    {
+        <li>
+            <a href="#">
+                <div>
+                    <i class="fa fa-envelope fa-fw"></i> Aucune notification de Résiliation
+
+                </div>
+            </a>
+        </li>
+    }
+    else
+    {
+        foreach (var item in ViewBag.NotificationRes)
+        {
+            <li>
+                <a href="@Url.Action("DetailsResiliation","Resiliation", new { id = @item.cbMarq })" onClick ="ReadNotif(@item.cbMarq);" >
+                    <div>
+                        <i class="fa fa-exclamation fa-fw"></i> @item.R_Piece
+                        <span class="pull-right text-info small">Résiliation </span>
+                    </div>
+                </a>
+            </li>
+
+            <li class="divider"></li>
+        }
+
+
+    }
+
+
+
+
+
+
+
+
+
+</ul>
+
+<script src="~/js/jquery-3.1.1.min.js"></script>
+
+<script>
+    function ReadNotif(cbm) {
+       
+
+        $.ajax({
+            type: "get",
+            url: "/Notification/ReadNotif?cbmarq=" + cbm,
+            dataType: "json",
+            success: function (msg) {
+
+
+
+            }
+        });
+    }
+
+
+</script>
+

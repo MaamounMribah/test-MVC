@@ -1,0 +1,325 @@
+﻿@{
+    ViewBag.Title = "detailscom";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<link href="~/css/plugins/dataTables/datatables.min.css" rel="stylesheet">
+
+<div class="wrapper wrapper-content animated fadeInRight">
+
+    @foreach (var a in ViewBag.commision)
+    {
+        <div class="ibox float-e-margins">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>Commission   </h5>
+                </div>
+                <div class="ibox-content">
+
+                    <div class="row">
+                        <div class="form-horizontal">
+                            <div class="form-group">
+                                <label class="col-lg-2 control-label">Intitulé</label>
+
+                                <div class="col-lg-10"><input class="form-control" name="C_Intitule" value="@a.C_Intitule" id="C_Intitule" /></div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-lg-2 control-label">Description</label>
+
+                                <div class="col-lg-10"><textarea class="form-control" name="C_Description" value="@a.C_Description" id="C_Description"></textarea></div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-lg-2 control-label">Statut</label>
+                                @if (a.C_Statut == 1)
+                                {
+                                    <div class="col-lg-10"><div class="i-checks"><label> <input type="checkbox" value="true" checked="" name="C_Statut" id=""> <i></i>Oui </label></div></div>
+                                }
+                                else
+                                {
+                                    <div class="col-lg-10"><div class="i-checks"><label> <input type="checkbox" value="false" checked="" name="C_Statut"> <i></i>Oui </label></div></div>
+                                }
+
+
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="ibox float-e-margins">
+            <div class="ibox-title">
+                <h5>Calcul  </h5>
+            </div>
+            <div class="ibox-content">
+                <div class="form-horizontal">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="col-sm-4 control-label">Choisissez la méthode de calcul: en % ou en TND </label>
+                            <div class="col-sm-8">
+                                <select class="form-control" name="C_MethodeCalcul" required>
+                                    @if (a.C_MethodeCalcul == 0)
+                                    {
+                                        <option value=0>%</option>
+                                    }
+                                    else
+                                    {
+                                        <option selected value=1>TND</option>
+                                    }
+                                </select>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group ">
+                            <label class="col-sm-4 control-label"> Nombre par </label>
+                            <div class="col-sm-8">
+                                <select class="form-control" id="selectNbJours">
+                                    <option value="jour" disabled>Jours </option>
+                                    <option selected value="mois">Mois</option>
+                                    <option value="annee" disabled>Annee</option>
+
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <br /><br /><br />
+            </div>
+        </div>
+
+
+        <div class="ibox float-e-margins">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>Commission de Base </h5>
+                </div>
+                <div class="ibox-content">
+                    <div class="form-horizontal">
+
+
+                        <div class="row">
+                            <div class="form-group col-md-6">
+                                <label class="control-label">Commission de Base </label>
+                                <div class="input-group">
+
+                                    <input type="text" class="form-control col-md-4" name="C_Standard" value=@a.C_Standard>
+                                    <span class="input-group-addon"><i class="glyphicon glyphicon-plus"></i></span>
+                                    <input type="text" class="form-control" name="C_StandardPlus" value=@a.C_StandardPlus>
+                                    <span class="input-group-addon">DT</span>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+
+                </div>
+
+
+            </div>
+        </div>
+
+    }
+    <div class="ibox float-e-margins">
+        <div class="ibox-title">
+            <h5>Conditions <span class="font-bold text-warning" id="parnbjours">par mois</span></h5>
+        </div>
+        <div class="ibox-content">
+            <table class="table table-hover">
+                <tbody>
+
+                    <tr>
+                        @foreach (var item in ViewBag.commcondition)
+                        {
+                            if (item.TypeCondition == 0)
+                            {
+                                <td>Pour chaque première facture, si revendeur <span class="font-bold text-greenbee">PVI</span></td>
+                                <td><input type="number" class="input-sm form-control col-sm-1" name="Nb_Min" @*value=0*@ value="@item.Nb_Min" id="Nb_Min"></td>
+                                <td>et</td>
+                                <td><input type="number" class="input-sm form-control col-sm-1" name="Nb_Max" @*value=0*@ value="@item.Nb_Max" id="Nb_Max"></td>
+                                <td>on ajoute sur le total de commission d'acquisition</td>
+                                <td><input type="text" class="input-sm form-control col-sm-1" name="Montant_Condition" @*value=0*@ value="@item.Montant_Condition" id="Montant_Condition"></td>
+                            }
+                        }
+                    </tr>
+                    <tr>
+                        @foreach (var item in ViewBag.commcondition)
+                        {
+                            if (item.TypeCondition == 1)
+                            {
+                                <td>Pour chaque première facture, si revendeur <span class="font-bold text-greenbee">PVI</span></td>
+                                <td><input type="number" class="input-sm form-control col-sm-1" name="Nb_Min" @*value=0*@ value="@item.Nb_Min" id="Nb_Min1"></td>
+                                <td>et</td>
+                                <td><input type="number" class="input-sm form-control col-sm-1" name="Nb_Max" @*value=0*@ value="@item.Nb_Max" id="Nb_Max1"></td>
+                                <td>on ajoute sur le total de commission d'acquisition</td>
+                                <td><input type="text" class="input-sm form-control col-sm-1" name="Montant_Condition" @*value=0*@ value="@item.Montant_Condition" id="Montant_Condition1"></td>
+                            }
+                        }
+                    </tr>
+                    <tr>
+                        @foreach (var item in ViewBag.commcondition)
+                        {
+                            if (item.TypeCondition == 2)
+                            {
+                                <td>Pour chaque première facture, si revendeur <span class="font-bold text-greenbee">PVI</span></td>
+                                <td><input type="number" class="input-sm form-control col-sm-1" name="Nb_Min" @*value=0*@ value="@item.Nb_Min" id="Nb_Min2"></td>
+                                <td>et</td>
+                                <td><input type="number" class="input-sm form-control col-sm-1" name="Nb_Max" @*value=0*@ value="@item.Nb_Max" id="Nb_Max2"></td>
+                                <td>on ajoute sur le total de commission d'acquisition</td>
+                                <td><input type="text" class="input-sm form-control col-sm-1" name="Montant_Condition" @*value=0*@ value="@item.Montant_Condition" id="Montant_Condition2"></td>
+                            }
+                        }
+                    </tr>
+
+                    <tr>
+                        @foreach (var item in ViewBag.commcondition)
+                        {
+                            if (item.TypeCondition == 3)
+                            {
+                                <td>à partir de la deuxième facture, si le revendeur <span class="font-bold text-greenbee">PVI</span> a plus de  </td>
+                                <td><input type="number" class="input-sm form-control col-sm-1" name="Nb_Min" @*value=0*@ value="@item.Nb_Min" id="Nb_Min3"></td>
+                                <td>clients validé </td>
+                                <td><input type="number" class="input-sm form-control col-sm-1 hidden" name="Nb_Max" @*value=0*@ value="@item.Nb_Max" id="Nb_Max3"></td>
+                                <td>alors on ajoute </td>
+                                <td><input type="text" class="input-sm form-control col-sm-1" name="Montant_Condition" @*value=0*@ value="@item.Montant_Condition" id="Montant_Condition3"></td>
+                            }
+                        }
+                    </tr>
+
+                    <tr>
+                        @foreach (var item in ViewBag.commcondition)
+                        {
+                            if (item.TypeCondition == 4)
+                            {
+                                <td><span class="font-bold text-purplebee">[pour chaque demande] FREELANCER</span> Si nombre de demandes est entre </td>
+                                <td><input type="number" class="input-sm form-control col-sm-1" name="Nb_Min" @*value=0*@ value="@item.Nb_Min" id="Nb_Min4"></td>
+                                <td>et</td>
+                                <td><input type="number" class="input-sm form-control col-sm-1" name="Nb_Max" @*value=0*@ value="@item.Nb_Max" id="Nb_Max4"></td>
+                                <td>alors</td>
+                                <td><input type="text" class="input-sm form-control col-sm-1" name="Montant_Condition" @*value=0*@ value="@item.Montant_Condition" id="Montant_Condition4"></td>
+                            }
+                        }
+                    </tr>
+                    <tr>
+                        @foreach (var item in ViewBag.commcondition)
+                        {
+                            if (item.TypeCondition == 5)
+                            {
+                                <td><span class="font-bold text-purplebee">[pour chaque première facture payée] FREELANCER </span> Si nombre de demandes est entre</td>
+                                <td><input type="number" class="input-sm form-control col-sm-1" name="Nb_Min" @*value=0*@ value="@item.Nb_Min" id="Nb_Min5"></td>
+                                <td>et</td>
+                                <td><input type="number" class="input-sm form-control col-sm-1" name="Nb_Max" @*value=0*@ value="@item.Nb_Max" id="Nb_Max5"></td>
+                                <td>alors</td>
+                                <td><input type="text" class="input-sm form-control col-sm-1" name="Montant_Condition" @*value=0*@ value="@item.Montant_Condition" id="Montant_Condition5"></td>
+                            }
+                        }
+                    </tr>
+                    <tr>
+                        @foreach (var item in ViewBag.commcondition)
+                        {
+                            if (item.TypeCondition == 6)
+                            {
+                                <td><span class="font-bold text-purplebee">[pour chaque livraison matériel au client] FREELANCER </span>Si nombre de demandes est entre</td>
+                                <td><input type="number" class="input-sm form-control col-sm-1" name="Nb_Min" @*value=0*@ value="@item.Nb_Min" id="Nb_Min6"></td>
+                                <td>et</td>
+                                <td><input type="number" class="input-sm form-control col-sm-1" name="Nb_Max" @*value=0*@ value="@item.Nb_Max" id="Nb_Max6"></td>
+                                <td>alors</td>
+                                <td><input type="text" class="input-sm form-control col-sm-1" name="Montant_Condition" @*value=0*@ value="@item.Montant_Condition" id="Montant_Condition6"></td>
+                            }
+                        }
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+
+
+    </div>
+
+
+    @*<h2>detailscom</h2>*@
+
+    @if (ViewBag.listcomm != null)
+    {
+
+
+        <div class="ibox float-e-margins">
+            <div class="ibox-title">
+                <h5>Commission d'acquisition </h5>
+            </div>
+            <div class="ibox-content">
+                <div class="table-responsive">
+                    <table class="table table-striped table-bordered table-hover dataTables-example full-width" id="myTable">
+                        @*<thead>
+                            <tr>
+
+                                @*<th>@item.FA_CodeFamille</th>*@
+
+                        @*</tr>
+                            </thead>*@
+                        <tbody>
+
+                            @foreach (var item in ViewBag.listcomm)
+                            {
+                                <tr>
+                                    <td style="text-align: center; vertical-align: middle;"><center><span class="font-bold text-purplebee"><b>@item.FA_CodeFamille</b></span></center></td>
+                                    <td style="text-align: center; vertical-align: middle;"><center><span class="font-bold text-purplebee"><b>@item.C_Debit </b></span></center></td>
+
+                                    <td>@item.C_Type</td>
+
+                                    <td>@item.Taux_commission</td>
+
+                                </tr>
+
+                            }
+
+                        </tbody>
+                    </table>
+
+                </div>
+            </div>
+        </div>
+    }
+
+</div>
+<script src="~/js/plugins/dataTables/datatables.min.js"></script>
+<script src="~/js/jquery-3.1.1.min.js"></script>
+
+<script>
+    $(function () {
+
+        function groupTable($rows, startIndex, total) {
+            if (total === 0) {
+                return;
+            }
+            var i, currentIndex = startIndex, count = 1, lst = [];
+            var tds = $rows.find('td:eq(' + currentIndex + ')');
+            var ctrl = $(tds[0]);
+            lst.push($rows[0]);
+            for (i = 1; i <= tds.length; i++) {
+                if (ctrl.text() == $(tds[i]).text()) {
+                    count++;
+                    $(tds[i]).addClass('deleted');
+                    lst.push($rows[i]);
+                }
+                else {
+                    if (count > 1) {
+                        ctrl.attr('rowspan', count);
+                        groupTable($(lst), startIndex + 1, total - 1)
+                    }
+                    count = 1;
+                    lst = [];
+                    ctrl = $(tds[i]);
+                    lst.push($rows[i]);
+                }
+            }
+        }
+        groupTable($('#myTable tr:has(td)'), 0, 3);
+        $('#myTable .deleted').remove();
+    });
+</script>
+

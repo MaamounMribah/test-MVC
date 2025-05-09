@@ -1,0 +1,336 @@
+﻿
+@{
+    ViewBag.Title = "Facture en cours";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<link href="~/css/plugins/dataTables/datatables.min.css" rel="stylesheet">
+<!-- Sweet Alert -->
+<link href="~/css/plugins/sweetalert/sweetalert.css" rel="stylesheet">
+<!-- Toastr style -->
+<link href="~/css/plugins/toastr/toastr.min.css" rel="stylesheet">
+<link href="~/css/plugins/jasny/jasny-bootstrap.min.css" rel="stylesheet">
+<!-- Ladda style -->
+<link href="~/css/plugins/ladda/ladda-themeless.min.css" rel="stylesheet">
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-lg-10">
+        <h2>Liste des Factures</h2>
+        <ol class="breadcrumb">
+            <li>
+                <a href=@Url.Action("Index","Home")>Acceuil</a>
+            </li>
+            <li>
+                <a href=@Url.Action("ListeFacture", "GestionFactures")>Gestion des Factures</a>
+            </li>
+            <li class="active">
+                <strong>Liste des Factures</strong>
+            </li>
+        </ol>
+    </div>
+    <div class="col-lg-2">
+    </div>
+</div> 
+
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>Liste des factures</h5>
+                    <a class="btn btn-greenbee btn-xs " href=@Url.Action("ResfreshData", "ListeFactures") title="Actualiser"><i class="fa fa-refresh"></i>  </a>
+                    <a class="btn btn-success btn-xs text-white btn-purplebee pull-right" href=@Url.Action("InterrogationListeFactures", "GestionFactures")><i class="fa fa-file-excel-o"> </i> Exporter la liste des Factures</a>
+
+                </div>
+                <div class="ibox-content">
+
+                    @if (ViewData.ModelState[""] != null && ViewData.ModelState[""].Errors.Count > 0)
+                    {
+                        <div class="alert alert-danger alert-dismissable">
+                            <button type="button" class="close " data-dismiss="alert"> × </button>
+                            @Html.ValidationSummary("", new { @class = "text-danger" })
+
+                        </div>
+                    }
+
+                    <div class="tabs-container">
+                        <div class="tab-content">
+                            <div class="panel-body">
+                                <table class="table table-striped table-bordered table-hover dataTables-example example" id="ListeFactures">
+                                    <thead>
+                                        <tr>
+                                            <th> N° Facture</th>
+                                            <th> Client </th>
+                                            <th> Téléphone </th>
+                                            <th> Identifiant </th>
+                                            <th>Date</th>
+                                            <th>Montant Total </th>
+                                            <th>Référence Abonnement </th>
+                                            <th>Agence </th>
+                                            <th width="10px"></th>
+                                            <th width="10px"></th>
+                                        </tr>
+                                    </thead>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal inmodal" id="PayerFactureModalite" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content animated flipInX">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Ok</span></button>
+                <h4 class="modal-title">Validation et paiement </h4>
+            </div>
+            <div class="modal-body">
+                <div class="modal-body">
+                    <fieldset id="SubmitForm" class="float-e-margins">
+                        <div class="row">
+                            <div class="form-group float-e-margins">
+                                <input id="Valider" name="Valider" value="0" class="hidden" />
+                                <div class="row">
+                                    <div class="ibox float-e-margins">
+                                        <div class="ibox-content">
+
+                                            <br /><strong>Net à payer : </strong>
+                                            <h3 class="label label-warning" id="netapayer">  </h3>
+
+
+                                            <form class="form-horizontal">
+                                                <div class="form-group">
+                                                    <label class="col-lg-4 control-label">Choisir votre mode de paiement *</label>
+                                                    <div class="col-lg-8">
+                                                        <select class="col-lg-8 form-control chosen-search " id="cbindice" name="cbindice">
+                                                            <option class="font-bold" value="2"> Choisir </option>
+
+                                                            @foreach (var item in ViewBag.ModeReglementAgence)
+                                                            {
+                                                                <option class="font-bold" value="@item.Value"> @item.Text </option>
+                                                            }
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div id="ifospayement" style="display:none">
+                                                    <div class="form-group">
+                                                        <label class="col-lg-4 control-label">Identifiant *</label>
+                                                        <div class="col-lg-8">
+                                                            <input type="text" class="form-control" name="identifiantpay" id="identifiantpay" placeholder="N° Chèque,Référence de paiement TPE , N° Compte du client," />
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label class="col-lg-4 control-label">Libellé</label>
+                                                        <div class="col-lg-8">
+                                                            <input type="text" class="form-control" name="libelle" id="libelle" placeholder="Nom de la banque,N° Ordre de virement" />
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label class="col-lg-4 control-label">Description</label>
+                                                        <div class="col-lg-8">
+                                                            <input type="text" class="form-control" name="description" id="description" placeholder="Titulaire du Chèque" />
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label class="col-lg-4 control-label">Date Echéance </label>
+                                                        <div class="col-lg-8">
+                                                            <input type="text" pattern="\d{1,2}/\d{1,2}/\d{4}" class="form-control" name="dateecheance" id="dateecheance" placeholder="Date d'échéance du chèque (format : jj/mm/aaaa)" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <hr />
+
+                                                <div class="form-group">
+                                                    <label class="col-lg-4 control-label">Attachement</label>
+                                                    <div class="col-lg-8">
+                                                        <div class="fileinput fileinput-new input-group" data-provides="fileinput">
+                                                            <div class="form-control" data-trigger="fileinput">
+                                                                <i class="glyphicon glyphicon-file fileinput-exists"></i>
+                                                                <span class="fileinput-filename"></span>
+                                                            </div>
+                                                            <span class="input-group-addon btn btn-default btn-file">
+                                                                <span class="fileinput-new">Selectionner</span>
+                                                                <span class="fileinput-exists">Changer</span>
+                                                                <input type="file" name="FileContact" id="FileContact" accept="image/png, image/jpeg" />
+                                                            </span>
+                                                            <a href="#" class="input-group-addon btn btn-default fileinput-exists" data-dismiss="fileinput">Supprimer</a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+
+
+                                                <div class="form-group">
+                                                    <label class="col-md-4 control-label">Total Facture </label>
+
+                                                    <div class="col-md-8">
+                                                        <input type="text" class="form-control" disabled id="totalfacture">
+                                                    </div>
+                                                </div>
+
+
+                                                <div class="form-group">
+                                                    <label class="col-md-4 control-label">Total Règlements </label>
+                                                    <div class="col-md-8">
+                                                        <input type="text" class="form-control" disabled id="totalreglements">
+                                                    </div>
+                                                </div>
+
+
+
+
+
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="reset" class="btn btn-white" data-dismiss="modal">Annuler</button>
+                                    <button type="button" class="btn btn-purplebee ladda-button" id="PayerFacture" onclick="this.disabled=true"><i class="fa fa-money"></i>Payer </button>
+                                </div>
+                            </div>
+                        </div>
+                    </fieldset>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<script src="~/js/jquery-3.1.1.min.js"></script>
+<script src="~/js/plugins/metisMenu/jquery.metisMenu.js"></script>
+<script src="~/js/plugins/pace/pace.min.js"></script>
+<script src="~/js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+<script src="~/js/plugins/chosen/chosen.jquery.js"></script>
+<script src="~/js/plugins/dataTables/datatables.min.js"></script>
+<!-- Sweet alert -->
+<script src="~/js/plugins/sweetalert/sweetalert.min.js"></script>
+<!-- Toastr script -->
+<script src="~/js/plugins/toastr/toastr.min.js"></script>
+<!-- Ladda -->
+<script src="~/js/plugins/ladda/spin.min.js"></script>
+<script src="~/js/plugins/ladda/ladda.min.js"></script>
+<script src="~/js/plugins/ladda/ladda.jquery.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $('#ListeFactures').dataTable({
+            "processing": true,
+            "serverSide": true,
+            "info": true,
+            "stateSave": true,
+            "lengthMenu": [[10, 20, 50, -1], [10, 20, 50, "All"]],
+            "ajax":{
+                "url": "@string.Format("{0}://{1}{2}", Request.Url.Scheme, Request.Url.Authority, Url.Content("~"))/ListeFactures/AjaxGetJsonData",
+                "type": "GET"
+            },
+            "columns": [
+               // { "data": "DO_Piece", "orderable": true },
+                 {
+                     data: "DO_Piece", "orderable": false, render: function (data, type, full, meta) {
+                         return type === 'display' ?
+                         '<a title="voir la facture"  target="_blank" href="/GestionFactures/DetailsFacture/' + full.cbMarq + '" target="_blank">'+ full.DO_Piece +'</a>' : data;
+                     }
+                 },
+                { "data": "CT_Intitule", "orderable": true },
+                
+                { "data": "CT_Telephone", "orderable": true },
+				{ "data": "CT_Identifiant", "orderable": true },
+                { "data": "DODate", "orderable": true },
+                { "data": "TotalTTC", "orderable": true },
+                { "data": "Ref_TTAbonnement", "orderable": true },
+                { "data": "A_Intitule", "orderable": true },            
+
+                {
+                    data: "cbMarq", "orderable": false, render: function (data, type, full, meta) {
+                        return type === 'display' ?
+                            '<a class="btn btn-purplebee btn-circle   btn-outline" title="voir la facture"  target="_blank" href="/GestionFactures/VisualiserFacture/' + full.cbMarq + '" target="_blank"><i title="Imprimer Facture " class="fa fa-print"></i></a>' : data;
+                    }
+                },
+				{
+				    data: "cbMarq", "orderable": false, render: function (data, type, full, meta) {
+				        if (full.DO_Cloture == 1) {
+				            return type === 'display' ?
+                            							'<a href="InterrogeClient/PaiementClient/' + full.cbMarqClient + '}" class="btn btn-success btn-facebook btn-outline"><i class="fa fa-money"> </i> Payer</a>' : data;
+
+                           //     '<button class="btn btn-purplebee  btn-outline" title="Payer cette facture" onClick="PayerFactu(' + full.cbMarq + ')"><i title="Payer Facture " class="fa fa-money"></i> Payer</button>' : data;
+				        } else {
+				            return type === 'display' ?
+                                '<a class="btn btn-greenbee  btn-outline" target="_blank" title="Payer cette facture" href="/Abonnement/modifier/' + full.cbmAbo + '"><i title="Payer Facture " class="fa fa-paste"></i> Valider</a>' : data;
+				        }
+				    }
+				}
+
+            ]
+        });
+    });
+
+
+    $('#cbindice').change(function () {
+
+        if ($('#cbindice').val() != 2) {
+            // $('#ifospayement').style.display='block';
+            document.getElementById("ifospayement").style.display = "block";
+        }
+        else {
+            // $('#ifospayement').style.display='none';
+            document.getElementById("ifospayement").style.display = "none";
+        }
+
+    });
+    function PayerFactu(data) {
+
+        $.ajax({
+            type: "get",
+            url: '/GestionFactures/getInfoSoldeFacture?id='+data, // we are calling json method
+            dataType: 'json',
+            success: function (msg) {
+                $("#totalreglements").val(msg.TotalReglements);
+                $("#totalfacture").val(msg.TotalFacture);
+                $("#netapayer").text(msg.NetaPayer);
+            }
+        });
+
+
+
+
+        $("#PayerFactureModalite").modal();
+
+        $("#PayerFacture").click(function () {
+            $.ajax({
+                type: "get",
+                url: '/GestionFactures/payerFacture?cbmFacture=' + data + '&&isPremiereFacture=false&&username=""&&cbindice=' + $('#cbindice').val() + '&&identifiantpay=' + $('#identifiantpay').val() + '&&dateecheance=' + $('#dateecheance').val() + '&&libelle=' + $('#libelle').val() + '&&description=' + $('#description').val(), // we are calling json method
+                dataType: 'json',
+                success: function (msg) {
+                    if (msg.msg == 0) {
+                        //print reçu
+                        toastr.success('La facture a été payée avec succès ! ', 'Succes');
+                        swal({
+                            title: "Imprimer ",
+                            text: "impression du reçu ",
+                            type: "success",
+                            showCancelButton: true,
+                            confirmButtonColor: "#DD6B55",
+                            confirmButtonText: "Oui",
+                            closeOnConfirm: false,
+                            showCancelButton: false,
+                        }, function () {
+                            window.open('/GestionFactures/RecuPaiementFacture/' + data, '_blank');
+                            swal("Facture réglée", "reçu téléchargé", "success");
+                            $('#PayerFactureModalite').modal('hide');
+                            location.reload(); 0
+                        });
+                    }
+                    else {
+                        toastr.error('Une erreur s est produite. Contactez votre superviseur.', 'Erreur');
+                    }
+                }
+            });
+        });
+    }
+
+</script>

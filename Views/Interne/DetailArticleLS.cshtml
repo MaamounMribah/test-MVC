@@ -1,0 +1,274 @@
+﻿
+@{
+    ViewBag.Title = "DetailArticleLS";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<link href="~/css/plugins/chosen/bootstrap-chosen.css" rel="stylesheet">
+<link href="~/css/plugins/dataTables/datatables.min.css" rel="stylesheet">
+<!-- Toastr style -->
+<link href="~/css/plugins/toastr/toastr.min.css" rel="stylesheet">
+<!-- Ladda style -->
+<link href="css/plugins/ladda/ladda-themeless.min.css" rel="stylesheet">
+<link href="~/css/plugins/jasny/jasny-bootstrap.min.css" rel="stylesheet">
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-lg-10">
+        <h2>Liste des articles en stock</h2>
+        <ol class="breadcrumb">
+            <li>
+                <a href="@Url.Action("index", "Home")">Acceuil </a>
+            </li>
+            <li>
+                <a href="@Url.Action("ListeStock", "Interne")">Gestion Interne </a>
+            </li>
+            <li>
+                <a href="@Url.Action("ListeStock", "Interne")"> Liste stock </a> 
+            </li>
+            <li class="active">
+                <strong>Details Article</strong>
+            </li>
+        </ol>
+    </div>
+    <div class="col-lg-2">
+
+    </div>
+</div>
+<link href="~/css/plugins/dataTables/datatables.min.css" rel="stylesheet">
+
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-lg-12">
+            @*<div class="ibox float-e-margins">*@
+               
+                <div class="ibox-content">
+                    <table class="table table-striped table-bordered table-hover dataTables-example2" id=".dataTables-example" data-page-length="150">
+                        <thead>
+                            <tr>
+                               <th>Intitule Depot</th>
+                                <th>Référence Article</th>
+                                <th>Désignation</th>
+                                <th><center>N° serie</center></th>
+                                <th><center>Réservé</center></th>
+                                <th>Référence TT</th>
+                                <th>Référence Abonnement</th>
+                                <th>Client</th>
+                                <th>Statut</th>
+                                <th><center>Action</center></th>
+                                @*<th><center>Voir Abonnement</center></th>*@
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (ViewBag.detailsStock.Count == 0)
+                            {
+                                <i>une erreur c produit !</i>
+                            }
+                            else
+                            {
+                                foreach (var item in ViewBag.detailsStock)
+                                {
+                                    <tr>
+                                       <td>@item.Intitule</td>
+                                        <td>@item.AR_Ref</td>
+                                        <td>@item.AR_Design</td>
+                                        <td>@item.LS_NoSerie</td>
+                                      
+                                        @if (item.isReserved == 0)
+                                        {
+                                           
+                                            <td><span class="text-greenbee">Non Réservé</span></td>
+                                        }
+                                        else {
+                                            
+                                            <td><span class="text-purplebee">Réservé</span></td>
+                                        }
+                                       
+                                        <td>@item.DO_ReftTT</td>
+                                        <td>@item.DO_PieceAbo</td>
+                                        <td>@item.CT_Intitule</td>
+                                        <td>
+
+                                            @if (ViewBag.StatutLotSerie != null)
+                                            {
+                                                int i = 0;
+
+
+                                                foreach (var item2 in ViewBag.StatutLotSerie)
+                                                {
+
+
+                                                    if (item.LS_NoSerie == item2.LS_NoSerie && item2.StatutArticle != null && i == 0)
+                                                    {
+
+                                                        if (ViewBag.ListOfStatutNS != null)
+                                                        {
+
+                                                            @*<input type="text" id="ValueOfNS" name="ValueOfNS" value="@item.LS_NoSerie" hidden />*@
+                                                            <select class="form-control chosen-select" name="ListOfStatutNS" id="ListOfStatutNS">
+
+                                                                @foreach (var item3 in ViewBag.ListOfStatutNS)
+                                                                {
+
+                                                                    if (item3.Intitule == item2.StatutArticle)
+                                                                    {
+                                                                        <option value="@item3.cbMarq" selected>@item3.Intitule</option>
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        <option value="@item3.cbMarq">@item3.Intitule</option>
+                                                                    }
+
+
+                                                                }
+                                                            </select>
+
+                                                            i = i + 1;
+
+                                                        }
+                                                    }
+                                                }
+
+                                                if (i == 0)
+                                                {
+                                                    if (ViewBag.ListOfStatutNS != null)
+                                                    {
+
+                                                        @*<input type="text" id="ValueOfNS" name="ValueOfNS" value="@item.LS_NoSerie" hidden />*@
+                                                        <select class="form-control chosen-select" name="ListOfStatutNS" id="ListOfStatutNS">
+
+                                                            @foreach (var item3 in ViewBag.ListOfStatutNS)
+                                                            {
+
+                                                                if (item3.isDefaut == true)
+                                                                {
+                                                                    <option value="@item3.cbMarq" selected>@item3.Intitule</option>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <option value="@item3.cbMarq">@item3.Intitule</option>
+                                                                }
+
+
+                                                            }
+                                                        </select>
+
+
+
+                                                    }
+                                                }
+
+
+
+                                            }
+
+
+
+                                        </td>
+
+                                        <td>
+                                                    <center>
+                                                        <button type="button" class="btn btn-outline btn-greenbee btn-sm ladda-button ladda-button-demo"  title="Modifier statut"
+                                                                onclick="Changer(this)">
+                                                            <span class="fa fa-pencil" title="Modifier statut"></span>
+                                                        </button>
+                                                    </center>
+                                                    @if (item.cbMarqAbonnement != 0)
+                                                     {
+                                                        <center>
+                                                            <a href=@Url.Action("Details/" + @item.cbMarqAbonnement, "Abonnement") class="btn btn-sm  btn-outline btn-purplebee ladda-button ladda-button-demo" title="Voir abonnement">
+                                                                <i class="fa fa-eye"></i>
+                                                            </a>
+                                                        </center>
+                                                     }
+                                        </td>
+
+                                     
+                                    </tr>
+
+                                }
+                            }
+
+                    </table>
+                </div>
+            @*</div>*@
+
+        </div>
+
+    </div>
+
+</div>
+
+
+
+<script src="~/js/plugins/dataTables/datatables.min.js"></script>
+<script src="~/js/jquery-3.1.1.min.js"></script>
+<script src="~/js/plugins/metisMenu/jquery.metisMenu.js"></script>
+<script src="~/js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+<!-- Chosen -->
+<script src="~/js/plugins/chosen/chosen.jquery.js"></script>
+<script src="~/js/plugins/dataTables/datatables.min.js"></script>
+<!-- Toastr script -->
+<script src="~/js/plugins/toastr/toastr.min.js"></script>
+
+
+<script>
+     
+
+
+    
+    $(function () {
+        $('.dataTables-example2').DataTable({
+            responsive: true,
+            order: false,
+            dom: '<"html5buttons"B>lTfgitp',
+            buttons: [
+                { extend: 'copy' },
+                { extend: 'csv' },
+                { extend: 'excel', title: 'ExampleFile' },
+                { extend: 'pdf', title: 'ExampleFile' },
+                {
+                    extend: 'print',
+                    customize: function (win) {
+                        $(win.document.body).addClass('white-bg');
+                        $(win.document.body).css('font-size', '10px');
+
+                        $(win.document.body).find('table')
+                            .addClass('compact')
+                            .css('font-size', 'inherit');
+                    }
+                }
+            ]
+
+        });
+    });
+
+    $('.chosen-select').chosen({ width: "100%" });
+
+    function Changer(button) {
+        //Determine the reference of the Row using the Button.
+        var row = $(button).closest("tr");
+        var idPiece = $("td", row).eq(0).html();
+        var idNoSerie = $("td", row).eq(2).html();
+        //var idStatut = $("td", row).eq(3).html();
+
+        var slect = $('select[name^="ListOfStatutNS"]', row).val();
+
+        $.ajax({
+            type: "get",
+            url: '/Interne/ModifierStatutNS?NS=' + idNoSerie + '&&StatutS=' + slect, // we are calling json method
+            dataType: 'json',
+            success: function (msg) {
+                if (msg.msg == "0") {
+                    location.reload();
+
+
+                } else {
+                    toastr.error(msg.msg, 'Erreur Abonnement SUS');
+                }
+
+
+            }
+        });
+
+    };
+
+    </script>

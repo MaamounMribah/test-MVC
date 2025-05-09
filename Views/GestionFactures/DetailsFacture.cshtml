@@ -1,0 +1,334 @@
+﻿@model BeeProj.Models.B_DOCENTETE
+
+@{
+    ViewBag.Title = "DetailsFacture";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<!-- Sweet Alert -->
+<link href="~/css/plugins/sweetalert/sweetalert.css" rel="stylesheet">
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-lg-10">
+        <h2>Détails Facture</h2>
+        <ol class="breadcrumb">
+            <li>
+                <a href="#">Acceuil</a>
+            </li>
+            <li>
+                <a>Détails Facture </a>
+            </li>
+            <li class="active">
+                <strong>Details Facture </strong>
+            </li>
+        </ol>
+    </div>
+    <div class="col-lg-2">
+
+    </div>
+</div>
+
+
+
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-lg-7">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>#@Model.DO_Piece </h5>
+                    @if (Model.DO_Statut == 0)
+                    {
+                        <span class="label label-warning"><i class="fa fa-remove"></i> Non payée</span>
+                    }
+                    else
+                    {
+                        <span class="label label-success"><i class="fa fa-check"></i> Payée</span>
+
+                    }
+
+                    @if (Request.IsAuthenticated && (User.IsInRole("Admin") || User.IsInRole("visibilite facture")))
+                    {
+
+                        if (Model.DO_Imprim == 0)
+                        {<button class="btn btn-round btn-greenbee btn-xs pull-right" title="Cliquer ici pour rendre la facture invisible ">
+                            <i title="Cliquer ici pour rendre la facture invisible" onClick="ChangerVisibiliteFacture(@Model.cbMarq)" class="fa fa-eye"> Visible </i>
+                        </button>
+
+                        }
+                        else
+                        {
+                            <button class="btn btn-round btn-danger btn-xs pull-right" title="Cliquer ici pour rendre la facture invisible ">
+                                <i title="Cliquer ici pour rendre la facture invisible" onClick="ChangerVisibiliteFacture(@Model.cbMarq)" class="fa fa-eye-slash">Invisible </i>
+                            </button>
+                        }
+                    }
+
+                </div>
+                <div>
+                    <div class="ibox-content profile-content">
+                        <h4><strong>@ViewBag.Abonnement.CT_Intitule</strong></h4>
+                        <span>Facture #<strong>@ViewBag.RangFacture</strong></span> 
+                        <p><i class="fa fa-map-marker"></i> @ViewBag.Abonnement.AB_AdresseI</p>
+                        <h5>
+                            #@ViewBag.Abonnement.DO_Piece 
+                            <br />
+                            <a href=@Url.Action("Details/" + ViewBag.Abonnement.cbMarq, "Abonnement") target="_blank"><i class="fa fa-edit"></i> Voir l'abonnement </a>
+                        </h5>
+                        <p><i class="fa fa-phone"></i> @ViewBag.Abonnement.CT_Telephone</p>
+
+                        <p>
+                            Période du  <strong>@Model.DO_DebutPeriod.GetValueOrDefault().ToString("dd/MM/yyyy")</strong>
+                            au <strong>@Model.DO_FinPeriod.GetValueOrDefault().ToString("dd/MM/yyyy")</strong>
+                        </p>
+                        <br />
+                        <p>@ViewBag.Abonnement.DO_RefTT</p>
+
+                        <span>Total Facture </span>
+                        <h5><strong>@String.Format("{0:N3}", Model.DO_totalTTC /*+ (decimal)0.600*/ ) </strong> TND </h5>
+
+                        <span>Net à Payer </span>
+                        <h5><strong>@String.Format("{0:N3}", ViewBag.NetAPayer) </strong> TND </h5>
+                        <p>@Model.DO_Commentaire </p>
+                        
+                        
+                        
+                        <div class="user-button">
+                            <div class="row">
+                                @if (ViewBag.Abonnement.TypeAbonnement == 6)
+                                {
+                                    <a class="btn btn-greenbee btn-sm btn-block" title="voir la facture"
+                                       href="@Url.Action("VisualiserFacture","VenteLibre", new { id = Model.cbMarq })" target="_blank">
+                                        <i title="Imprimer Facture " class="fa fa-print">Voir la facture </i>
+                                    </a>
+                                }
+
+                                else
+            {
+                            <a class="btn btn-greenbee btn-sm btn-block" title="voir la facture"
+                               href="@Url.Action("VisualiserFacture","GestionFactures", new { id = Model.cbMarq })" target="_blank">
+                                <i title="Imprimer Facture " class="fa fa-print">Voir la facture </i>
+                            </a>
+            }
+                                
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-12">
+                    <div class="ibox float-e-margins">
+                        <div class="ibox-title">
+                            <h4><i class="fa fa-money"></i><strong> Règlements </strong></h4>
+                        </div>
+                        <div class="ibox-content profile-content">
+
+                            <div class="form-group">
+                                @if (ViewBag.ReglementSurFacture.Count  == 0)
+                                {
+                                    <p>Aucun Reglement Attaché à cette facture  </p>
+                                }
+                                else
+                                {
+                                    <table class="table table-striped">
+                                        <thead>
+                                            <tr>
+                                                <th></th>
+                                                <th >N° Pièce</th>
+                                                <th>Date </th>
+                                                <th>Date imputation</th>
+                                                <th>Montant TTC</th>
+                                                <th>Voir </th>
+                                            </tr>
+                                        </thead>
+
+                                        <tbody>
+                                            @foreach (var item in ViewBag.ReglementSurFacture)
+                                            {
+
+                                                <tr>
+                                                    <td>
+                                                        @if (item.DO_Statut == 1)
+                                        {
+                                                            <span class="label label-default"><i class="fa fa-check"></i> Non versé</span>
+                                                        }
+                                                        else
+                                                        {
+                                                            <span class="label label-success"><i class="fa fa-check"></i> Versé</span>
+
+                                }
+                                                     
+
+                                                    </td>
+                                                    <td>
+                                                        @item.DO_Piece
+                                                    </td>
+                                                    <td>
+                                                        @item.DO_Date.ToString("dd/MM/yyyy")
+                                                    </td>
+                                                    <td>
+                                                        @item.DateImputation.ToString("dd/MM/yyyy")
+                                                    </td>
+                                                    <td>
+                                                        @String.Format("{0:N3}", item.DO_MontantTTC) TND
+                                                    </td>
+                                                    <td>
+                                                        <a class="btn btn-greenbee btn-circle btn-outline" title="voir le reçu de paiement "
+                                                            href="@Url.Action("ImpressionRecu","GestionFactures", new { id = item.cbMarq })" target="_blank">
+                                                            <i title="Imprimer Reçu " class="fa fa-print"></i>
+                                                        </a>
+                                                       
+                                                    </td>
+                                                </tr>
+
+                                            }
+                                        </tbody>
+                                    </table>
+                                }
+
+                            </div>
+
+                        </div>
+                    </div>
+
+            </div>
+
+        </div>
+       
+        <div class="col-lg-5">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h4><i class="fa fa-sticky-note-o"></i><strong> Remarques </strong></h4>
+                </div>
+                    <div class="ibox-content profile-content">
+
+                        @if (ViewBag.Remarques != null)
+                        {
+                            <div class="activity-stream fc-scroller">
+                                @foreach (var item in ViewBag.Remarques)
+                                {
+                                    <div class="stream">
+                                        <div class="stream-badge">
+                                            <i class="fa fa-pencil"></i>
+                                        </div>
+                                        <div class="stream-panel">
+                                            <div class="stream-info">
+                                                <a >
+                                                    <span>@item.RQ_Sujet</span>
+                                                    <span class="date">Ajouté @item.RQ_Date.ToString("dd/MM/yyyy")</span>
+                                                    <span>Crée par : @item.cbCreateur</span>
+                                                </a>
+                                            </div>
+                                            @item.RQ_Description
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        }
+                        <hr />
+                        @using (Html.BeginForm("AjouterRemarque", "GestionFactures", FormMethod.Post))
+                        {
+                            <form role="form">
+                                @Html.HiddenFor(model => model.cbMarq)
+                                <div class="form-group">
+                                    <label>Titre Remarque</label>
+                                    @Html.TextBoxFor(model => model.DO_Motif, new { @class = "form-control" })
+                                </div>
+                                <div class="form-group">
+                                    <label>Détails</label>
+                                    @Html.TextAreaFor(m => m.DO_Commentaire, new { @class = "form-control" })
+                                </div>
+                                <button class="btn btn-purplebee" type="submit">Ajouter remarque </button>
+                            </form>
+                        }
+                    </div>
+            </div>
+
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="ibox float-e-margins">
+                        <div class="ibox-title">
+                            <h5>Avoirs</h5>
+                        </div>
+                        <div class="ibox-content">
+                            @if (ViewBag.AvoirSurFacture == null || ViewBag.AvoirSurFacture.Count == 0)
+                            {
+                                <p>Aucune facture avoir attaché à cette facture  </p>
+                            }
+                            else
+                            {
+                            <div class="table-responsive">
+                                <table class="table table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>N° Pièce</th>
+                                            <th>Date </th>
+                                            <th> Commentaire</th>
+                                            <th>Montant TTC</th>
+                                            <th>Voir </th>
+                                        </tr>
+                                    </thead>
+
+                                    <tbody>
+                                        @foreach (var item in ViewBag.AvoirSurFacture)
+                                        {
+                                            <tr>
+                                                <td>
+                                                    @item.DO_Piece
+                                                </td>
+                                                <td>
+                                                    @item.DO_Date.ToString("dd/MM/yyyy")
+                                                </td>
+                                                <td>@item.DO_Commentaire</td>
+                                                <td>
+                                                    @String.Format("{0:N3}", item.DO_totalTTC) TND
+                                                </td>
+                                                <td>
+                                                    <a class="btn btn-purplebee btn-circle   btn-outline" title="voir la facture"
+                                                       href="@Url.Action("VisualiserFactureAvoir", "GestionFactures", new { id = item.cbMarq })" target="_blank">
+                                                        <i title="Imprimer Facture Avoir " class="fa fa-print"></i>
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Sweet alert -->
+<script src="~/js/plugins/sweetalert/sweetalert.min.js"></script>
+<script src="~/js/jquery-3.1.1.min.js"></script>
+
+<script>
+    function ChangerVisibiliteFacture(cbm) {
+        swal({
+            title: "Changer la visibilité de cete facture ?",
+            text: " ",
+            type: "warning",
+            showCancelButton: true,
+            cancelButtonText: 'Annuler',
+            confirmButtonColor: "#DD6B55",
+            confirmButtonText: "Oui.",
+            closeOnConfirm: false
+        }, function () {
+            $.ajax({
+                type: "get",
+                url: '/GestionFactures/ChangerVisibiliteFacture?id=' + cbm, // we are calling json method
+                dataType: 'json',
+                success: function (result) {
+                        swal("visibilité changée!", "visibilité de facture changée avec succès! ", "success");
+                        window.location = "/GestionFactures/DetailsFacture/" + cbm;
+                }
+            });
+        });
+
+
+    }
+
+</script>
+

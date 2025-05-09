@@ -1,0 +1,708 @@
+﻿<!DOCTYPE html>
+<html>
+<!-- Mirrored from webapplayers.com/inspinia_admin-v2.7.1/dashboard_2.html by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 09 Mar 2018 08:19:39 GMT -->
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>BEE | @ViewBag.Title</title>
+
+    <link href="~/css/bootstrap.min.css" rel="stylesheet">
+    <link href="~/font-awesome/css/font-awesome.css" rel="stylesheet">
+
+    <link href="~/css/animate.css" rel="stylesheet">
+    <link href="~/css/style.css" rel="stylesheet">
+    
+</head>
+
+<body>
+    <div id="wrapper">
+        <nav class="navbar-default navbar-static-side" role="navigation">
+            <div class="sidebar-collapse">
+                <ul class="nav metismenu" id="side-menu">
+                    <li class="nav-header">
+                        <div class="dropdown profile-element">
+                            <span>
+                                <a href="@Url.Action("index", "Home")"> <img alt="BEE KHIR" class="img-small img-responsive" src="~/img/axialogo.png" /></a>
+                            </span>
+                        </div>
+                        <div class="logo-element">
+                            BEE
+                        </div>
+                    </li>
+                    <li>
+                        <a href="@Url.Action("index", "Home")"><img src="~/img/IconAxia/bee.png" style="max-width: 18%;height: auto;" /> <span class="nav-label" style="font-size:1.1em;">BEE</span></a>
+                    </li>
+                    @if (Request.IsAuthenticated && (User.IsInRole("Admin") || User.IsInRole("KPI")))
+                    {
+                        <li>
+                            <a><i class="fa fa-line-chart" style="max-width: 17%;height: auto;"></i> <span class="nav-label">KPIs</span> <span class="fa arrow"></span></a>
+                            <ul class="nav nav-second-level collapse">
+                                @*<li><a href='@Url.Action("Index", "Dashboard")'>Generalité</a></li>*@
+                                <li><a href='@Url.Action("KPIAbonnement", "Dashboard")'>Etat Abonnement </a></li>
+                                <li><a href='@Url.Action("KPIFacturation", "Dashboard")'>Etat Facturation</a></li>
+                                @*<li><a href='@Url.Action("EtatRecapitulatifDeFacturation", "Dashboard")'>Etat récapitulatif de facturation</a></li>
+                    <li><a href='@Url.Action("EtatVenteParPoste", "Dashboard")'>Etat Vente Par Poste </a></li>
+                    <li><a href='@Url.Action("EtatMensuelPaiementPoste", "Dashboard")'>Etat Mensuel Paiement par Poste </a></li>*@
+
+
+                            </ul>
+                        </li>
+                    }
+                    <li>
+                        <a><img src="~/img/IconAxia/structure.png" style="max-width: 17%;height: auto;" /> <span class="nav-label" style="font-size: 1em;">Structure</span> <span class="fa arrow"></span></a>
+                        <ul class="nav nav-second-level collapse">
+
+                            @if (Request.IsAuthenticated && (User.IsInRole("Admin") || User.IsInRole("Liste Agence")))
+                            {
+                                <li><a href='@Url.Action("index", "Agences")'>Liste Agences</a></li>
+                            }
+                            @if (Request.IsAuthenticated && (User.IsInRole("Admin") || User.IsInRole("Liste Clients")))
+                            {
+                                <li><a href='@Url.Action("ListeClients", "Structure")'>Liste Clients</a></li>
+                                <li><a href='@Url.Action("ListeProspect", "Structure")'>Liste prospects</a></li>
+
+                            }
+                            @if (Request.IsAuthenticated && (User.IsInRole("Admin")))
+                            {
+                                <li><a href='@Url.Action("ListeMorale", "Structure")'>Liste Personnes Morales</a></li>
+
+                            }
+                            @if (Request.IsAuthenticated && (User.IsInRole("Admin") || User.IsInRole("Liste Familles")))
+                            {
+                                <li><a href='@Url.Action("ListeFamilles", "Structure")'>Liste Familles</a></li>
+
+                            }
+                            @if (Request.IsAuthenticated && (User.IsInRole("Admin") || User.IsInRole("Liste Articles")))
+                            {
+
+                                <li><a href='@Url.Action("ListeArticles", "Structure")'>Liste Articles</a></li>
+
+                            }
+                            @if (Request.IsAuthenticated && (User.IsInRole("Admin") || User.IsInRole("Liste Depots")))
+                            {
+
+                                <li><a href='@Url.Action("ListeDepots", "Structure")'>Liste Dépôts</a></li>
+                            }
+                            <li><a href='@Url.Action("Promotion", "Structure")'>Liste Promotions</a></li>
+                            @if (Request.IsAuthenticated && (User.IsInRole("Admin") || User.IsInRole("Liste des utilisateurs")))
+                            {
+
+                                <li><a href='@Url.Action("Index", "UsersAdmin")'>Liste des utilisateurs</a></li>
+
+                            }
+                            @if (Request.IsAuthenticated && (User.IsInRole("Admin") || User.IsInRole("Liste des motifs")))
+                            {
+
+                                <li><a href='@Url.Action("motif", "motif")'>Liste des motifs</a></li>
+
+                            }
+                        </ul>
+                    </li>
+                    @if (Request.IsAuthenticated && (User.IsInRole("Admin")))
+                    {
+                        <li>
+                            <a href="#"><img src="~/img/IconAxia/convention.png" style="max-width: 17%;height: auto;" /> <span class="nav-label" style="font-size:1em;">Convention </span><span class="fa arrow"></span></a>
+                            <ul class="nav nav-second-level collapse disabled">
+
+
+                                <li><a href="@Url.Action("Index", "Convention")">Liste des conventions </a></li>
+
+                            </ul>
+                        </li>
+                    }
+                    <li>
+                        <a><img src="~/img/IconAxia/G abonement.png" style="max-width: 17%;height: auto;" /> <span class="nav-label" style="font-size:1em;">Abonnements</span> <span class="fa arrow"></span></a>
+                        <ul class="nav nav-second-level collapse">
+
+                            @if (Request.IsAuthenticated && (User.IsInRole("Admin") || User.IsInRole("AbonnementAjouter")))
+                            {
+                                <li><a href="@Url.Action("Index", "Abonnement")">Nouvel Abonnement</a></li>
+                            }
+
+                            @if (Request.IsAuthenticated && (User.IsInRole("Admin") || User.IsInRole("AbonnementListe")))
+                            {
+                                <li><a href="@Url.Action("ListeAbonnement", "Abonnement")">Liste des Abonnements</a></li>
+                            }
+                            @* @if (Request.IsAuthenticated && (User.IsInRole("Admin") || User.IsInRole("AbonnementListe2")))
+                {
+                    <li><a href="@Url.Action("Index", "ListeAbonnements")">Liste des Abonnements</a></li>
+                }*@
+
+                            @if (Request.IsAuthenticated && (User.IsInRole("Admin") || User.IsInRole("RechercheAbonnement")))
+                            {
+
+                                <li><a href="@Url.Action("Index", "ListeAbonnementsRecherche")">Recherche Abonnement </a></li>
+                            }
+
+
+                            @* <li><a href="@Url.Action("Index", "VenteLibre")">Vente Matériel Libre </a></li>*@
+
+
+                            @if (Request.IsAuthenticated && (User.IsInRole("Admin") || User.IsInRole("abonnements migres")))
+                            {
+                                <li><a href="@Url.Action("AbonnementMigrer","Abonnement")"> Liste Abonnement Migrés</a></li>
+
+
+                            }
+
+                            @if (Request.IsAuthenticated && (User.IsInRole("Admin") || User.IsInRole("Abonnement Transferes")))
+                            {
+                                <li><a href="@Url.Action("AbonnementTransferes", "Abonnement")"> Liste Abonnement Transférés</a></li>
+                            }
+
+                            @if (Request.IsAuthenticated && (User.IsInRole("Admin") || User.IsInRole("FacturerAbonnementEnInstance")))
+                            {
+                                <li><a href="@Url.Action("Index", "ListeAboEnInstanceFacturation")">Abonnements en instance de facturation</a></li>
+                            }
+
+                            @if (Request.IsAuthenticated && (User.IsInRole("Admin")))
+                            {
+
+                                <li><a href="@Url.Action("ListeAbonnementSuspendus", "Abonnement")">Abonnements suspendus</a></li>
+                                <li><a href="@Url.Action("ListeAbonnementResilies", "Abonnement")">Abonnements résiliés</a></li>
+                            }
+
+                            @if (Request.IsAuthenticated && (User.IsInRole("Admin") || User.IsInRole("AbonnementSUS")))
+                            {
+                                <li><a href="@Url.Action("NouvelAbonnementSUS", "Abonnement")">Nouvel Abonnement en SUS</a></li>
+                                <li><a href="@Url.Action("ListeAbonnementSUS", "Abonnement")">Liste Abonnements SUS</a></li>
+
+                            }
+
+
+
+                            @if (Request.IsAuthenticated && (User.IsInRole("Admin") || User.IsInRole("AbonnementPoste")))
+                            {
+                                <li><a href="@Url.Action("index", "ListeAbonnementPoste")">Liste abonnements Poste Tunisienne</a></li>
+                            }
+                            @if (Request.IsAuthenticated && (User.IsInRole("Admin") || User.IsInRole("AbonnementWeb")))
+                            {
+
+                                <li><a href="@Url.Action("Index", "ListeAbonnementsWeb")">Liste des abonnements Web </a></li>
+                            }
+
+
+
+                        </ul>
+                    </li>
+
+                    <li>
+                        <a href="#"><img src="~/img/IconAxia/vente libre.png" style="max-width: 17%;height: auto;" /> <span class="nav-label" style="font-size:1em;">Vente libre </span><span class="fa arrow"></span></a>
+                        <ul class="nav nav-second-level collapse disabled">
+                            @if (Request.IsAuthenticated && (User.IsInRole("Admin") || User.IsInRole("Liste Vente Libre")))
+                            {
+                                <li><a href="@Url.Action("Index", "VenteLibre")">Liste vente libre</a></li>
+                            }
+
+                            @if (Request.IsAuthenticated && (User.IsInRole("Admin") || User.IsInRole("Nouveau Vente Libre")))
+                            {
+                                <li><a href="@Url.Action("Nouveau", "VenteLibre")">Nouvelle vente libre</a></li>
+
+                            }
+
+                        </ul>
+                    </li>
+
+
+                    <li>
+                        <a href="#"><img src="~/img/IconAxia/G des demande.png" style="max-width: 17%;height: auto;" /> <span class="nav-label" style="font-size:1em;">Demandes </span><span class="fa arrow"></span></a>
+                        <ul class="nav nav-second-level collapse disabled">
+
+                            @if (Request.IsAuthenticated && (User.IsInRole("Admin") || User.IsInRole("DemandeMig")))
+                            {
+
+                                <li><a href="@Url.Action("Nouveau", "Migration")">Demande de Migration</a></li>
+
+                            }
+
+
+                            @if (Request.IsAuthenticated && (User.IsInRole("Admin") || User.IsInRole("ListeDemdMig")))
+                            {
+                                <li><a href="@Url.Action("Index", "Migration")">Liste demande migration</a></li>
+
+
+                            }
+                            @if (Request.IsAuthenticated && (User.IsInRole("Admin") || User.IsInRole("ListeDemande")))
+                            {
+                                <li><a href="@Url.Action("Index", "TransfertLigne")">Demande de transfert de ligne</a></li>
+                            }
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="#"><img src="~/img/IconAxia/G interne.png" style="max-width: 17%;height: auto;" /> <span class="nav-label" style="font-size:1em;">Gestion Interne</span><span class="fa arrow"></span></a>
+                        <ul class="nav nav-second-level collapse">
+
+
+
+
+                            @if (Request.IsAuthenticated && (User.IsInRole("Admin") || User.IsInRole("DemandeTransListe")))
+                            {
+                                <li><a href="@Url.Action("ListeDemandesTransfert", "Interne")">Demandes de Transfert</a></li>
+                            }
+
+                            @if (Request.IsAuthenticated && (User.IsInRole("Admin") || User.IsInRole("Documents de Transfert")))
+                            {
+                                <li><a href="@Url.Action("ListeDocumentsTransfert", "Interne")">Liste Documents de Transfert</a></li>
+
+                            }
+                            @if (Request.IsAuthenticated && (User.IsInRole("Admin") || User.IsInRole("Liste Articles Reserves")))
+                            {
+                                <li><a href="@Url.Action("ListeArticleReserves", "ListeArticlesReserves")">Liste Articles Reserves</a></li>
+                            }
+
+
+                            @if (Request.IsAuthenticated && (User.IsInRole("Admin") || User.IsInRole("StockListe")))
+                            {
+                                <li><a href="@Url.Action("ListeStock", "Interne")">Liste des stocks</a></li>
+
+                            }
+
+                            @if (Request.IsAuthenticated && (User.IsInRole("Admin") || User.IsInRole("Bon de Sortie")))
+                            {
+                                <li><a href="@Url.Action("ListeBondeSortie", "DocumentsVente")">Liste des bon de sortie</a></li>
+
+                            }
+
+
+
+
+                            @if (Request.IsAuthenticated && (User.IsInRole("Admin") || User.IsInRole("BondeRetour")))
+                            {
+                                <li><a href="@Url.Action("Index", "BondeRetour")">Bon de retour</a></li>
+
+                            }
+
+                            @*  @if (Request.IsAuthenticated && (User.IsInRole("Admin") || User.IsInRole("SynchronisationBL")))
+                {
+                    <li><a href="@Url.Action("SyncLotdeSerie", "Synchronisation")">Synchroniser Entrée stock</a></li>
+                }*@
+                        </ul>
+
+
+                    </li>
+
+                    @if (Request.IsAuthenticated && (User.IsInRole("Admin") || User.IsInRole("EtatEchange")))
+                    {
+                        <li>
+                            <a href="#"><img src="~/img/IconAxia/echange.png" style="max-width: 17%;height: auto;" /> <span class="nav-label" style="font-size:1em;">Etat Echange </span><span class="fa arrow"></span></a>
+                            <ul class="nav nav-second-level collapse">
+
+                                <li><a href="@Url.Action("Index", "EtatEchange")">Echange sortie/stock </a></li>
+                                <li><a href="@Url.Action("IndexSortisSortis", "EtatEchange")">Echange sortie/sortie  </a></li>
+
+                            </ul>
+                        </li>
+                    }
+                    <li>
+                        <a href="#"><img src="~/img/IconAxia/g facturation.png" style="max-width: 17%;height: auto;" /> <span class="nav-label" style="font-size:1em;">Facturation</span><span class="fa arrow"></span></a>
+                        <ul class="nav nav-second-level collapse">
+
+
+                            @if (Request.IsAuthenticated && (User.IsInRole("Admin") || User.IsInRole("Recherche Facture")))
+                            {
+                                <li><a href="@Url.Action("Facture", "GestionFactures")"> Chercher une Facture</a></li>
+                            }
+
+
+                            @if (Request.IsAuthenticated && (User.IsInRole("Admin") || User.IsInRole("Paiement Client")))
+                            {
+                                <li><a href="@Url.Action("ReglerClient", "InterrogeClient")">Paiement Client</a></li>
+                            }
+
+                            @if (Request.IsAuthenticated && (User.IsInRole("Admin") || User.IsInRole("Nouvelle Facture")))
+                            {
+                                <li><a href="@Url.Action("NouvelleFacture", "GestionFactures")"> Nouvelle Facture</a></li>
+                            }
+
+
+
+                            @*  @if (Request.IsAuthenticated && (User.IsInRole("Admin") || User.IsInRole("Liste Factures")))
+                {
+                    <li><a href="@Url.Action("ListeFactures", "GestionFactures")">Liste Facture (tout) </a></li>
+                }*@
+
+
+                            @if (Request.IsAuthenticated && (User.IsInRole("Admin") || User.IsInRole("Liste Factures")))
+                            {
+                                <li><a href="@Url.Action("ListeFacture", "GestionFactures")">Factures non payées </a></li>
+                            }
+
+                            @if (Request.IsAuthenticated && (User.IsInRole("Admin") || User.IsInRole("Liste Factures")))
+                            {
+                                <li><a href="@Url.Action("ListeFacturePayees", "GestionFactures")">Factures Payées</a></li>
+                            }
+
+                            @if (Request.IsAuthenticated && (User.IsInRole("Admin") || User.IsInRole("Liste Factures")))
+                            {
+                                <li><a href="@Url.Action("ListeFactureVersees", "GestionFactures")">Factures Versées</a></li>
+                            }
+
+                            @if (Request.IsAuthenticated && (User.IsInRole("Admin")))
+                            {
+                                <li><a href="@Url.Action("ListeFactureAvoir", "GestionFactures")">Liste Facture Avoir</a></li>
+                            }
+
+                            @if (Request.IsAuthenticated && (User.IsInRole("Admin")))
+                            {
+                                <li><a href="@Url.Action("FactureAvoir", "GestionFactures")">Nouvel Avoir </a></li>
+                            }
+
+                            @* @if (Request.IsAuthenticated && (User.IsInRole("Admin") || User.IsInRole("Etat_ListeFactures")))
+                {
+                    <li><a href="@Url.Action("Etat_ListeFactures_Admin", "GestionFactures")"> Etat Liste Factures</a></li>
+                }
+                            *@
+                            @if (Request.IsAuthenticated && (User.IsInRole("Admin") || User.IsInRole("ListeFacturesImpayeeParDate")))
+                            {
+                                <li><a href="@Url.Action("ListeFacturesImpayeeParDate", "GestionFactures")"> Liste Factures Impayees</a></li>
+                            }
+                            @if (Request.IsAuthenticated && (User.IsInRole("Admin") || User.IsInRole("Décalage Facture")))
+                            {
+                                <li><a href="@Url.Action("DecalageFacture", "Correction")"> Décalage Facture</a></li>
+                            }
+                        </ul>
+                    </li>
+
+
+
+
+                    <li>
+                        <a href="#"><img src="~/img/IconAxia/finance.png" style="max-width: 17%;height: auto;" /> <span class="nav-label" style="font-size:1em;">Finance</span><span class="fa arrow"></span></a>
+                        <ul class="nav nav-second-level collapse">
+
+                            @if (Request.IsAuthenticated && (User.IsInRole("Admin") || User.IsInRole("Nouveau Versement Siege")))
+                            {
+                                <li><a href="@Url.Action("NouveauVersementSiege", "GestionFactures")">Nouveau Versement</a></li>
+                            }
+                            @if (Request.IsAuthenticated && (User.IsInRole("Nouveau Versement")))
+                            {
+                                <li><a href="@Url.Action("NouveauVersement", "GestionFactures")">Nouveau Versement</a></li>
+                            }
+
+                            @if (Request.IsAuthenticated && (User.IsInRole("Admin") || User.IsInRole("Liste Versement")))
+                            {
+
+                                <li><a href="@Url.Action("ListeVersement", "GestionFactures")">Liste des versements</a></li>
+                            }
+                            else
+                            {
+                                <li class="disabled"><a href="#">Liste des versements</a></li>
+
+                            }
+
+
+
+
+
+                            @if (Request.IsAuthenticated && (User.IsInRole("Admin") || User.IsInRole("Frais Commission")))
+                            {
+
+                                <li><a href="@Url.Action("ListeFraisCommission", "GestionFactures")">Frais Commission</a></li>
+                            }
+
+                            @if (Request.IsAuthenticated && (User.IsInRole("Admin")))
+                            {
+
+                                <li><a href="@Url.Action("ListeReglementZitouna", "GestionFactures")">Liste Réglement IZI Zitouna</a></li>
+                            }
+
+                            @if (Request.IsAuthenticated && (User.IsInRole("Admin")))
+                            {
+
+                                <li><a href="@Url.Action("ListeReglementWeb", "GestionFactures")">Liste Réglement WEB</a></li>
+                            }
+                        </ul>
+                    </li>
+
+
+                    @if (Request.IsAuthenticated && (User.IsInRole("Admin") || User.IsInRole("Liste Avances")))
+                    {
+                        <li>
+                            <a href="#"><img src="~/img/IconAxia/avances.png" style="max-width: 17%;height: auto;" /> <span class="nav-label" style="font-size:1em;">Avances </span><span class="fa arrow"></span></a>
+                            <ul class="nav nav-second-level collapse">
+
+                                @if (Request.IsAuthenticated && (User.IsInRole("Admin") || User.IsInRole("Liste Avances")))
+                                {
+                                    <li><a href="@Url.Action("ListeReglements", "Reglement")">Liste des avances </a></li>
+                                }
+                                @if (Request.IsAuthenticated && (User.IsInRole("Admin") || User.IsInRole("Liste Contre reçu")))
+                                {
+
+                                    <li><a href="@Url.Action("ListeContreRecu", "Reglement")">Liste des contres reçu </a></li>
+                                }
+                                @if (Request.IsAuthenticated && (User.IsInRole("Admin") || User.IsInRole("Liste Avances")))
+                                {
+
+                                    <li><a href="@Url.Action("Listefraisrésiliation", "Reglement")">Liste frais résiliation </a></li>
+                                }
+                                
+                                @if (Request.IsAuthenticated && (User.IsInRole("Admin") || User.IsInRole("Ajout Reglement Libre")))
+                                {
+
+                                    <li><a href="@Url.Action("AjoutReglement", "Reglement")">Nouveau Réglement </a></li>
+                                }
+                            </ul>
+
+                        </li>
+                    }
+                    <li>
+                        <a href="#">
+                            <img src="~/img/IconAxia/recouvrement.png" style="max-width: 17%;height: auto;" />
+                            <span class="nav-label" style="font-size:1em;">Recouvrement</span><span class="fa arrow"></span>
+                        </a>
+
+                        <ul class="nav nav-second-level collapse">
+                            @if (Request.IsAuthenticated && (User.IsInRole("Admin") || User.IsInRole("Recouvrement")))
+                            {
+                                <li class=""><a href="@Url.Action("PremierFactureNonpayees", "InterrogeClient")">Premiere Facture Impayée </a></li>
+                                @*<li class=""><a href="@Url.Action("SoldesClients", "InterrogeClient")">Solde clients </a></li>*@
+                                <li><a href="@Url.Action("FacturesAutomatiques", "GestionFactures")">Factures Automatique</a></li>
+
+
+                            }
+
+                            @if (Request.IsAuthenticated && (User.IsInRole("Admin") || User.IsInRole("Recouvrement") || User.IsInRole("EtatVersement")))
+                            {
+                                <li><a href="@Url.Action("EtatVersement", "GestionFactures")">Etat Versment par agence</a></li>
+                            }
+
+
+                            @if (Request.IsAuthenticated && (User.IsInRole("Admin") || User.IsInRole("Recouvrement") || User.IsInRole("Notification resiliation")))
+                            {
+                                <li><a href="@Url.Action("NotificationResiliation", "Abonnement")">Notification de résiliations</a></li>
+                            }
+                            @if (Request.IsAuthenticated && (User.IsInRole("Admin") || User.IsInRole("Recouvrement") || User.IsInRole("ReliquatResiliation")))
+                            {
+                                <li><a href="@Url.Action("ReliquatResiliation", "Abonnement")">Liste des Reliquats d'engagement</a></li>
+                            }
+                            @if (Request.IsAuthenticated && (User.IsInRole("Admin") || User.IsInRole("Recouvrement") || User.IsInRole("Notification suspension")))
+                            {
+
+                                <li><a href="@Url.Action("NotificationSuspension", "Abonnement")">Notification de suspension</a></li>
+                            }
+                            @if (Request.IsAuthenticated && (User.IsInRole("Admin") || User.IsInRole("Recouvrement") || User.IsInRole("NotificationSuspensionParametre")))
+                            {
+
+                                <li><a href="@Url.Action("NotificationSuspensionParametre", "Abonnement")">Liste d'action de recouvrement</a></li>
+                            }
+                            @if (Request.IsAuthenticated && (User.IsInRole("Admin") || User.IsInRole("Recouvrement") || User.IsInRole("Liste Abonnement preventive")))
+                            {
+
+                                <li><a href="@Url.Action("ListeAboPreventives", "Abonnement")">ListeAbonnement préventive</a></li>
+                            }
+                            @if (Request.IsAuthenticated && (User.IsInRole("Admin") || User.IsInRole("soldeRevendeur")))
+                            {
+                                <li class=""><a href="@Url.Action("EtatSoldeRevendeur", "Recouvrement")">Etat Solde Revendeur</a></li>
+                            }
+                            @if (Request.IsAuthenticated && (User.IsInRole("Admin") || User.IsInRole("Recouvrement") || User.IsInRole("SoldeClientParAbonnement")))
+                            {
+                                <li><a href="@Url.Action("SoldeClientParAbonnement", "Abonnement")">Solde Client Par Abonnement</a></li>
+                            }
+                            @if (Request.IsAuthenticated && (User.IsInRole("Admin") || User.IsInRole("Recouvrement") || User.IsInRole("FacturesSautées")))
+                            {
+                                <li><a href="@Url.Action("FacturesSautées", "Abonnement")">Factures Sautées</a></li>
+                            }
+                            @if (Request.IsAuthenticated && (User.IsInRole("Admin") || User.IsInRole("Recouvrement") || User.IsInRole("ListePreFactures")))
+                            {
+                                <li><a href="@Url.Action("ListePreFactures", "GestionFactures")">Liste Proformat </a></li>
+                            }
+                            @if (Request.IsAuthenticated && (User.IsInRole("Admin") || User.IsInRole("Recouvrement") || User.IsInRole("ListePreFactures")))
+                            {
+                                <li><a href="@Url.Action("ListePreFacturesAnnulees", "GestionFactures")">Liste Proformats annulées </a></li>
+                            }
+                        </ul>
+
+                    </li>
+
+                    @*     <li>
+            <a href="#"><i class="fa fa-retweet"></i> <span class="nav-label">SAV</span><span class="fa arrow"></span></a>
+
+            <ul class="nav nav-second-level collapse">
+                @if (Request.IsAuthenticated && (User.IsInRole("Admin")))
+                {
+                    <li><a href="@Url.Action("ListeBonDeRetour", "SAV")">Bon de Retour</a></li>
+                }
+
+            </ul>
+        </li>*@
+                    <li>
+                        <a href="#"><img src="~/img/IconAxia/interrogation.png" style="max-width: 17%;height: auto;" /><span class="nav-label" style="font-size:1em;">Interrogation</span><span class="fa arrow"></span></a>
+                        <ul class="nav nav-second-level collapse">
+                            @if (Request.IsAuthenticated && (User.IsInRole("Admin") || User.IsInRole("InterrogerClient")))
+                            {
+                                <li><a href="@Url.Action("Index", "interrogeClient")">Interroger client</a></li>
+                            }
+
+                            @if (Request.IsAuthenticated && (User.IsInRole("Admin")) || User.IsInRole("InterrogerStock"))
+                            {
+                                <li><a href="@Url.Action("index", "interrogerstock")">Interroger Stock</a></li>
+                            }
+
+                            @if (Request.IsAuthenticated && (User.IsInRole("Admin")) || User.IsInRole("Interroger Revendeur"))
+                            {
+                                <li><a href="@Url.Action("Index", "InterrogationRevendeur")">Interroger Revendeur </a></li>
+                            }
+
+
+
+
+
+                        </ul>
+                    </li>
+                    <li>
+                        @if (Request.IsAuthenticated && (User.IsInRole("Admin") || User.IsInRole("Liste Bibliotheque")))
+                        {
+                            <a href="@Url.Action("Index", "Bibliotheque")"><img src="~/img/IconAxia/bibliotheque.png" style="max-width: 17%;height: auto;" /> <span class="nav-label" style="font-size:1em;">Bibliothèque</span></a>
+                        }
+                    </li>
+
+                    <li>
+                        @if (Request.IsAuthenticated && (User.IsInRole("Admin") || User.IsInRole("Exports")))
+                        {
+                            <a href="@Url.Action("Index", "Export")"><i class="fa fa-files-o"></i> <span class="nav-label">Exports</span></a>
+                        }
+
+                    </li>
+                    <li>
+
+                        @if (Request.IsAuthenticated && (User.IsInRole("Admin")))
+                        {
+                            <a href="#"><img src="~/img/IconAxia/comptabilité.png" style="max-width: 17%;height: auto;" /> <span class="nav-label" style="font-size:1em;">Comptabilité</span><span class="fa arrow"></span></a>
+                            <ul class="nav nav-second-level collapse">
+                                <li><a href="@Url.Action("Index", "Comptabilite")">Comptabilité</a></li>
+                                <li><a href="@Url.Action("ComptabiliteFacture", "Comptabilite")">Comptabilite Facture</a></li>
+                                <li><a href="@Url.Action("ComptabiliteReglement", "Comptabilite")">Comptabilite Reglement</a></li>
+                                <li><a href="@Url.Action("ComptabiliteVersement", "Comptabilite")">Comptabilite Versement</a></li>
+
+                            </ul>
+                        }
+                    </li>
+                    <li>
+
+                        @if (Request.IsAuthenticated && (User.IsInRole("Admin")))
+                        {
+                            <a href="#"><img src="~/img/IconAxia/redevance.png" style="max-width: 17%;height: auto;" /> <span class="nav-label" style="font-size:1em;">Redevance</span><span class="fa arrow"></span></a>
+                            <ul class="nav nav-second-level collapse">
+                                <li><a href="@Url.Action("Index", "Redevance")">Liste Redevance</a></li>
+                                <li><a href="@Url.Action("GenerateRedevance", "Redevance")">Générer Redevance</a></li>
+
+                            </ul>
+                        }
+                    </li>
+                    <li>
+
+                    @*<li>
+                        @if (Request.IsAuthenticated && (User.IsInRole("Admin") || User.IsInRole("Exports")))
+                        {
+                            <a href="@Url.Action("Index", "Export")"><i class="fa fa-percent"></i> <span class="nav-label">Parametrage Ristourne</span></a>
+                        }
+
+                    </li>*@
+
+                  
+                </ul>
+            </div>
+        </nav>
+        <div id="page-wrapper" class="gray-bg">
+            <div class="row border-bottom">
+                <nav class="navbar navbar-static-top white-bg" role="navigation" style="margin-bottom: 0">
+                    <div class="navbar-header">
+                        <a class="navbar-minimalize minimalize-styl-2 btn btn-primary " href="#"><i class="fa fa-bars"></i> </a>
+
+                    </div>
+                  
+                    <ul class="nav navbar-top-links navbar-right">
+                        <li class="dropdown">
+
+                            @if (ViewBag.MsgRevendeurPay != null)
+                            {
+                               
+                            <h3 style="color: red;" >
+                            <strong> @ViewBag.MsgRevendeurPay</strong></h3>
+                               
+                            }
+
+                        </li>
+                        @if (Request.IsAuthenticated && (User.IsInRole("Admin") || User.IsInRole("ToDoList")))
+                        {
+                            <li>
+                                <a class="dropdown-toggle count-info" data-toggle="dropdown" href="#" title="Rappels">
+                                    <i class="fa fa-calendar"></i>
+                                    <span class="label label-warning">?</span>
+                                </a>
+                                <ul class="dropdown-menu dropdown-alerts " style="overflow:scroll; width:500px; height: 500px;">
+                                    <li><a href="@Url.Action("Index", "Reminder") ">Ajouter </a></li>
+
+                                    <li class="divider"></li>
+
+                                    <li>
+                                        @{Html.RenderAction("SmalltodoList", "Reminder");}
+                                    </li>
+                                </ul>
+                            </li>
+                        }
+
+
+
+
+
+                        <!----------------------------------------------------------------------------------------------------------------------------------------->
+
+                        @if (Request.IsAuthenticated && (User.IsInRole("Admin")))
+                        {
+                            <li>
+                                <a class="header-btn " href=@Url.Action("Index", "Administration") title="Administration">
+                                    <i class="fa fa-dashboard"></i>
+
+                                </a>
+                            </li>
+                        }
+                        <li class="dropdown">
+                            <a class="dropdown-toggle count-info" data-toggle="dropdown" href="#">
+                                <i class="fa fa-user-circle"></i>
+                            </a>
+                            <ul class="dropdown-menu">
+                                @Html.Partial("_LoginPartial")
+                            </ul>
+                        </li>
+
+                    </ul>
+
+                </nav>
+            </div>
+            <div class="wrapper wrapper-content">
+                @RenderBody()
+
+
+            </div>
+
+
+
+            <div class="footer">
+                <div class="pull-right">
+
+                </div>
+                <div>
+                    <strong>Copyright</strong><a href="http://axiasolution.com/" target="_blank"> AXIA </a>  &copy; 2023
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mainly scripts -->
+    @*<script src="~/js/jquery-3.1.1.min.js"></script>*@
+    <script src="~/js/bootstrap.min.js"></script>
+    <script src="~/js/plugins/metisMenu/jquery.metisMenu.js"></script>
+    <script src="~/js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+
+    <!-- Custom and plugin javascript -->
+    <script src="~/js/inspinia.js"></script>
+    <script src="~/js/plugins/pace/pace.min.js"></script>
+    <!-- jQuery UI -->
+    <script src="~/js/plugins/jquery-ui/jquery-ui.min.js"></script>
+
+</body>
+</html>

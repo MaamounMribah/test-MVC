@@ -1,0 +1,139 @@
+﻿@model BeeProj.Models.IndexViewModel
+@using Microsoft.AspNet.Identity
+
+
+@if (Request.IsAuthenticated)
+{
+
+    <div class="row wrapper border-bottom white-bg page-heading">
+        <div class="col-lg-10">
+            <h2>Profile</h2>
+            <ol class="breadcrumb">
+                <li>
+                    <a href="index-2.html">Home</a>
+                </li>
+                <li>
+                    <a>Acceuil</a>
+                </li>
+                <li class="active">
+                    <strong>Profile</strong>
+                </li>
+            </ol>
+        </div>
+        <div class="col-lg-2">
+
+        </div>
+    </div>
+
+    <div class="wrapper wrapper-content animated fadeInRight center-block" style="width:1050px">
+        <div class="row m-b-lg m-t-lg center-block text-purplebee" style="width:1050px">
+            <div class="center-block" style="width:1050px">
+                <div id="vertical-timeline" class="vertical-container no-margins">
+                    <div class="vertical-timeline-content">
+                        <center>
+                            <img src="@Url.Action("Photo", "Account" , new {  UserId=User.Identity.GetUserId()  })" class="img-responsive img-circle circle-border m-b-md" alt="profile"
+                                 style="width:100px" />
+                            <h4>
+                                Agence :    @ViewBag.AG
+                                <br />
+                                Dépot Principale : @ViewBag.DepotPrinciple
+                            </h4>
+                            <br />
+
+
+@*@if (Request.IsAuthenticated && (User.IsInRole("Admin")))
+{*@
+    @*@if (ViewBag.typeagence == 3)
+    {
+                                <a href='@Url.Action("Index", "EspaceFreelancer")' class="btn btn-sm btn-purplebee circle" title="Espace revendeur">
+                                    <i class="fa fa-user-circle-o"></i>
+                                </a>
+
+
+    }
+    else
+    {
+                                <a href='@Url.Action("Index", "EspaceRevendeur")' class="btn btn-sm btn-purplebee circle" title="Espace revendeur">
+                                    <i class="fa fa-user-circle-o"></i>
+                                </a>
+    }*@
+
+
+                            @*<a href='@Url.Action("ListeFraisCommission", "GestionFactures")' class="btn btn-sm btn-greenbee circle" title="Liste factures">
+                                <i class="fa fa-money"></i>
+                            </a>*@
+                            <!--<button class="btn btn-sm btn-success circle" onclick="@Url.Action("EditProfile", "Manage")"><i class="fa fa-edit"></i>--> @*Modifier*@ <!--</button>-->
+@*}*@
+
+
+                        </center>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="body-content" style="width:1050px">
+            <div id="vertical-timeline" class="vertical-container light-timeline no-margins">
+                <div class="vertical-timeline-block">
+                    <div class="vertical-timeline-icon blue-bg">
+                        <i class="fa fa-pencil"></i>
+                    </div>
+                    <div class="vertical-timeline-content">
+                        <h2>Description</h2>
+                        @*<p>Lorem Ipsum is simply dummy text of the printing and typesetting industry.ver since.</p>*@
+                        <br />
+                        @using (Html.BeginForm("EditProfile", "Manage", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+                        {
+                            @*<center>*@
+                            <div class="col-lg-12 ">
+                                <h4>
+                                    <label class="text-purplebee">Prénom :</label>     @ViewBag.prenom
+                                    <br />
+                                    <br />
+                                    <label class="text-purplebee"> Nom :</label>    @ViewBag.nom
+                                    <br />
+                                    <br />
+                                    <label class="text-purplebee">Adresse :</label>   @ViewBag.Adresse
+                                    <br />
+                                    <br />
+                                    <label class="text-purplebee">  Téléphone : </label>   @ViewBag.Telephone
+                                    <br />
+                                    <br />
+                                    <label class="text-purplebee">   E-mail : </label>  @ViewBag.email
+
+                                </h4>
+                            </div>
+
+
+                                    <br />
+
+
+                                                <a class="btn btn-purplebee btn-outline btn-block" href=@Url.Action("Index", "Manage")>Modifier Mot de Passe</a>
+
+
+
+                        }
+
+
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="~/js/plugins/sparkline/jquery.sparkline.min.js"></script>
+    <script src="~/Scripts/jquery-1.10.2.min.js"></script>
+    <script src="~/js/plugins/dataTables/datatables.min.js"></script>
+    <script src="~/js/jquery-3.1.1.min.js"></script>
+    <script src="~/js/plugins/metisMenu/jquery.metisMenu.js"></script>
+    <script src="~/js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+    <script src="~/js/plugins/dataTables/datatables.min.js"></script>
+    <script src="~/js/accounting.js"></script>
+    <script src="~/js/accounting.min.js"></script>
+    <!-- Chosen -->
+    <script src="~/js/plugins/chosen/chosen.jquery.js"></script>
+    <!--Sweet alert -->
+    <script src="~/js/plugins/sweetalert/sweetalert.min.js"></script>
+
+}

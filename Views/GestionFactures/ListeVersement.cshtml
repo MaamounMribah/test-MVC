@@ -1,0 +1,359 @@
+﻿
+@{
+    ViewBag.Title = "Liste des versements ";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<link href="~/css/plugins/dataTables/datatables.min.css" rel="stylesheet">
+
+
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-lg-10">
+        <h2>Liste des versements</h2>
+        <ol class="breadcrumb">
+            <li>
+                <a href=@Url.Action("Index","Home")>Acceuil</a>
+            </li>
+            <li>
+                <a href=@Url.Action("ListeVersement", "GestionFactures")>Gestion des Factures</a>
+            </li>
+            <li class="active">
+                <strong>Liste des versements</strong>
+            </li>
+        </ol>
+    </div>
+    <div class="col-lg-2">
+    </div>
+</div>
+
+
+<div class="wrapper wrapper-content animated fadeInRight">
+
+    
+    <div class="row">
+        <h3>Versements de l'année #@ViewBag.Annee</h3>
+
+        <ul class="nav nav-tabs">
+            @foreach (var item in ViewBag.Exercices)
+            {
+
+                if (ViewBag.Annee == item)
+                {
+                    <li class="active">
+                        <a href="@Url.Action("ListeVersement", "GestionFactures", new { Annee = ViewBag.Annee })">
+                            <i>@ViewBag.Annee</i>
+                        </a>
+                    </li>
+                }
+                else
+                {
+                    <li class="">
+                        <a href="@Url.Action("ListeVersement", "GestionFactures", new { Annee = item })">
+                            <i>@item</i>
+                        </a>
+                    </li>
+                }
+
+            }
+        </ul>
+        <div class="col-lg-4">
+            <div class="widget style1 text-white bg-purplebee">
+                <div class="row">
+                    <div class="col-xs-4">
+                        <i class="fa fa-money fa-5x"></i>
+                    </div>
+                    <div class="col-xs-8 text-right">
+                        <span> Vos Bordereaux de versement </span>
+                        <h2 class="font-bold">@ViewBag.ListeBordVersements</h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="widget style1 text-white bg-greenbee">
+                <div class="row">
+                    <div class="col-xs-4">
+                        <i class="fa fa-check-circle-o fa-5x"></i>
+                    </div>
+                    <div class="col-xs-8 text-right">
+                        <span> Versements validés </span>
+                        <h2 class="font-bold">@ViewBag.ListeVersementsValides</h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <div class="widget style1 text-white bg-graybee">
+                <div class="row">
+                    <div class="col-xs-4">
+                        <i class="fa fa-remove fa-5x"></i>
+                    </div>
+                    <div class="col-xs-8 text-right">
+                        <span> Versement non validés  </span>
+                        <h2 class="font-bold">@ViewBag.ListeVersementsNonValides</h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="wrapper wrapper-content animated fadeInUp">
+
+                    <div class="ibox">
+                        <div class="ibox-title">
+                            <h5>  </h5>
+                            <div class="ibox-tools">
+                                <a href=@Url.Action("NouveauVersement", "GestionFactures") class="btn btn-primary btn-xs">Nouveau versement</a>
+                            </div>
+                        </div>
+                        <div class="ibox-content">
+
+
+
+                            <table class="table table-striped table-bordered table-hover dataTables-example" id="listeversement">
+                                <thead>
+                                    <tr>
+                                        <th>Statut</th>
+                                        <th>N° Bordereau</th>
+                                        <th>Date de création </th>
+                                        <th>Total Règlements </th>
+                                        <th>Commentaires</th>
+                                        <th>Details paiement</th>
+                                        <th>Créateur</th>
+                                        <th>Date dernière modification</th>
+                                        <th>Nombre de jours </th>
+                                        <th>Imprimer Bordereau</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+
+                                    @foreach (var item in ViewBag.ListeVersements)
+                                    {
+                                        <tr>
+                                            <td class="project-status">
+
+                                                @if (item.Statut == "Versé")
+                                                {
+                                                    <span class="label bg-purplebee">Versé</span>
+
+                                                }
+                                                else if (item.Statut == "En Instance")
+                                                {
+                                                    <span class="label bg-warning">En Instance</span>
+
+                                                }
+                                                else if (item.Statut == "Validé")
+                                                {
+                                                    <span class="label bg-greenbee">Validé</span>
+                                                }
+
+                                                else if (item.Statut == "Annulé")
+                                                {
+                                                    <span class="label bg-graybee">Annulé</span>
+                                                }
+                                                else if (item.Statut == "Validé & Facturé")
+                                                {
+                                                    <span class="label bg-graybee-light">Validé & Facturé</span>
+                                                }
+                                                else if (item.Statut == "En cours d’encaissement")
+                                                {
+                                                    <span class="label bg-purplebee-light">En cours d’encaissement</span>
+                                                }
+                                            </td>
+                                            <td class="project-title">
+                                                <a href="@Url.Action("DetailsVersement/" + @item.cbmarq, "GestionFactures")">@item.V_Piece</a>
+
+                                                <span class="label label-purplebee-light pull-right"> @item.V_TypeBordereau </span>
+
+
+                                            </td>
+                                            <td> @item.Datedecréation </td>
+                                            <td>
+                                                @if (item.V_Montant != null)
+                                                {
+                                                    @String.Format("{0:N3}", item.V_Montant)
+                                                }
+                                                else
+                                                {
+                                                    <span>0</span>
+                                                }
+                                            </td>
+                                            <td>
+                                                @item.V_Description @item.V_Commentaire
+                                                <br />
+                                                @if (item.V_Destinataire == 0)
+                                                {
+                                                    <span class="label pull-right">En banque:  @item.V_InfoDestinataire </span>
+                                                }
+                                                else if (item.V_Destinataire == 1)
+                                                {
+                                                    <span class="label pull-right">Responsable régional:  @item.V_InfoDestinataire </span>
+
+                                                }
+
+
+                                            </td>
+                                            <td class="project-title">
+                                                @if (item.Paiement != null)
+                                                {
+                                                    foreach (var item1 in item.Paiement)
+                                                    {
+                                                        @*<h6>Banque:</h6>
+                                                            <h6>N° Chéque:</h6>*@
+                                                        <p>
+                                                            @item1.V_BANQUECheque  @item1.V_NumCheque  @item1.V_NumCompte  @item1.V_TitulaireCheque  @item1.V_DateEchCont.ToString("dd/MM/yyyy")   @String.Format("{0:N3}", @item1.V_MontantCheque)
+                                                        </p>
+                                                        <hr />
+
+                                                    }
+                                                }
+                                                else
+                                                {
+                                                    <p style="text-align: center"> -- </p>
+                                                }
+
+
+                                            </td>
+                                            <td>@item.CbCreateur</td>
+                                            <td>@item.CbModification</td>
+
+                                            @if (@item.NbreJours == null || @item.NbreJours < 0)
+                                            {
+                                                <td>
+                                                </td>
+                                            }
+                                            else
+                                            {
+                                                <td> @item.NbreJours Jours  </td>
+                                            }
+
+
+                                            <td class="project-actions">
+
+
+                                                @if (item.V_Imprim == 0 && item.V_TypeBordereau != "AUTRE")
+                                                {
+                                                    <a onclick="InfoImprimerBord(@item.cbmarq)" class="btn btn-sm btn-outline btn-purplebee"><i class="fa fa-print"></i> Imprimer Bordereau </a>
+                                                }
+                                                else
+                                                {
+                                                    <a href=@Url.Action("ImprimerBordereauVersement/" + @item.cbmarq, "GestionFactures") class="btn btn-sm btn-outline btn-purplebee" target="_blank"><i class="fa fa-print"></i> Imprimer Bordereau </a>
+
+                                                }
+
+                                            </td>
+                                            <td class="project-actions">
+                                                <a href=@Url.Action("DetailsVersement/" + @item.cbmarq, "GestionFactures") class="btn btn-sm btn-outline btn-greenbee "><i class="fa fa-eye "></i> Détails </a>
+                                            </td>
+                                        </tr>
+
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+<div class="modal inmodal" id="DestinataireBordereau" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content animated fadeIn">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <i class="fa fa-bank modal-icon"></i>
+                <h4 class="modal-title">Bordereau de versement</h4>
+            </div>
+            <div class="modal-body">
+                @*@using (Html.BeginForm("DestinationBordereau", "GestionFactures", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+                    {
+                        @Html.HiddenFor(model => model.cbMarq)*@
+                <div class="alert alert-danger">
+                    Votre versement est en instance.
+                    Merci d'attacher le reçu bancaire de votre versement pour que l'administration puisse valider votre versement.
+                </div>
+                <p>
+                    Est ce-que vous voulez générer ce bordereau de versement par <strong> remise à la banque </strong> ou bien par
+                    <strong> remise à un responsable régional</strong>
+                </p>
+
+
+
+                <div class="row">
+                    <div class="form-group">
+                        <div class="col-sm-12">
+                            <select class="form-control choix_remiseBord" id="choix_remiseBord">
+                                <option> -- choisir -- </option>
+                                <option value=0> par remise à la banque</option>
+                                <option value=1> par remise au responsable régional</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group hidden" id="Banque">
+                        <label class="col-sm-4 control-label">Commentaire </label>
+                        <div class="col-sm-8">
+                            <textarea class="form-control" id="commentaireBanque"> </textarea>
+
+                        </div>
+                    </div>
+                    <div class="form-group hidden" id="RespReg">
+                        <label class="col-sm-4 control-label">Choisir le responsable régional  </label>
+                        <div class="col-sm-8">
+                            <select class="form-control" id="RegionalName">
+                                @foreach (var item in ViewBag.ListeResponsables)
+                                {
+                                    <option value="@item.UserName"> @item.FirstName @item.LastName</option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-white" data-dismiss="modal">Fermer</button>
+                    <button type="submit" class="btn btn-purplebee hidden" id="EnvoyerBordereau">Générer Bordereau de Versement </button>
+                </div>
+                @*}*@
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="~/js/jquery-3.1.1.min.js"></script>
+<script src="~/js/plugins/dataTables/datatables.min.js"></script>
+<script src="~/js/ChoiceBordereau.js"></script>
+<script>
+    $(document).ready(function () {
+        $('.dataTables-example').DataTable({
+            pageLength: 15,
+			ordering: false,
+          //  "order": [[6, "desc"]],
+            responsive: true,
+            dom: '<"html5buttons"B>lTfgitp',
+            buttons: [
+                { extend: 'copy' },
+                { extend: 'csv' },
+                { extend: 'excel', title: 'ExampleFile' },
+                { extend: 'pdf', title: 'ExampleFile' },
+                {
+                    extend: 'print',
+                    customize: function (win) {
+                        $(win.document.body).addClass('white-bg');
+                        $(win.document.body).css('font-size', '10px');
+
+                        $(win.document.body).find('table')
+                                .addClass('compact')
+                                .css('font-size', 'inherit');
+                    }
+                }
+            ]
+
+        });
+    });
+</script>

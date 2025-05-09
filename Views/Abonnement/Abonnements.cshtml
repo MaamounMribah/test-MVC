@@ -1,0 +1,219 @@
+﻿@{
+    ViewBag.Title = "Liste des abonnements";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<link href="~/css/plugins/dataTables/datatables.min.css" rel="stylesheet">
+<!-- Sweet Alert -->
+<link href="~/css/plugins/sweetalert/sweetalert.css" rel="stylesheet">
+
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-lg-10">
+        <h2>Liste des abonnements</h2>
+        <ol class="breadcrumb">
+            <li>
+                <a href="#">Acceuil</a>
+            </li>
+            <li>
+                <a href="@Url.Action("ListeAbonnement", "Abonnement")">Gestion des abonnements</a>
+            </li>
+            <li class="active">
+                <a href="@Url.Action("ListeAbonnement", "Abonnement")"><strong>Liste des abonnements</strong></a>
+            </li>
+        </ol>
+    </div>
+
+</div>
+
+
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <h5>Informations sur les abonnements</h5>
+                        <a class="btn btn-success text-white btn-purplebee pull-right" href=@Url.Action("ExportListeAbonnements", "Abonnement")><i class="fa fa-file-excel-o"> </i> Exporter la liste des Factures</a>
+
+                    </div>
+                    <div class="ibox-content">
+
+                        <table class="table table-striped table-bordered table-hover dataTables-example example" id="listeAbo">
+                            <thead>
+                                <tr>
+                                    <th>Statut</th>
+                                    <th>Etape</th>
+                                    <th>Réference TT </th>
+                                    <th>Client</th>
+                                    <th>Ville</th>
+                                    <th>Agence</th>
+                                    <th>Pourcentage</th>
+                                    <th>Date de création</th>
+                                    <th></th>
+                                    <th></th>
+
+                                </tr>
+                            </thead>
+                        </table>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal inmodal" id="ReaffectationModal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content animated flipInY">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Fermer</span></button>
+                    <i class="fa fa-cubes modal-icon"></i>
+                    <h4 class="modal-title">Réaffecter l'abonnement  </h4>
+                    <small class="font-bold">Confirmer la réaffectation de cet abonnement à une autre agence </small>
+                </div>
+                <div class="modal-body">
+                    <p>
+                        Choisissez l'agence
+                    </p>
+                    <div class="form-group">
+                        @if (ViewBag.ListeAgences != null)
+                        {
+                            <select class="form-control chosen-select" id="A_Code">
+                                @foreach (var item2 in ViewBag.ListeAgences)
+                                {
+                                    <option value="@item2.A_Code">@item2.A_Intitule</option>
+                                }
+                            </select>
+                        }
+                    </div>
+                    <div class="form-group">
+                        <textarea placeholder="Commentaires " class="form-control" id="CommentairesReaffectation"></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-white" data-dismiss="modal">Fermer</button>
+                    <button type="button" class="btn btn-purplebee ladda-button" id="ValiderReaffecter">Valider </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="~/js/jquery-3.1.1.min.js"></script>
+    <script src="~/js/plugins/metisMenu/jquery.metisMenu.js"></script>
+    <script src="~/js/plugins/pace/pace.min.js"></script>
+    <script src="~/js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+    <script src="~/js/plugins/chosen/chosen.jquery.js"></script>
+    <script src="~/js/plugins/dataTables/datatables.min.js"></script>
+    <!-- Sweet alert -->
+    <script src="~/js/plugins/sweetalert/sweetalert.min.js"></script>
+
+
+
+<script>
+    $(document).ready(function () {
+        $('#listeAbo').dataTable({
+            "processing": true,
+            "serverSide": true,
+            "info": true,
+            "stateSave": true,
+            "lengthMenu": [[10, 20, 50, -1], [10, 20, 50, "All"]],
+            "ajax":{
+                "url": "@string.Format("{0}://{1}{2}", Request.Url.Scheme, Request.Url.Authority, Url.Content("~"))/abonnement/AjaxGetJsonData",
+                "type": "GET"
+            },
+            "columns": [
+                { "data": "CT_Intitule", "orderable" : true },
+                { "data": "CT_Intitule", "orderable": true },
+                { "data": "CT_Intitule", "orderable": true },
+				{ "data": "CT_Intitule", "orderable": true },
+                { "data": "CT_Intitule", "orderable": true },
+                { "data": "CT_Intitule", "orderable": true },
+                                { "data": "CT_Intitule", "orderable": true },
+                { "data": "CT_Intitule", "orderable": true },
+
+				{
+				    data: "cbMarq", "orderable": false, render: function (data, type, row, meta) {
+											return type === 'display'  ?
+											'<a class="btn btn-white " title="voir abonnement " href="/Abonnement/Details/'+data+'" target="_blank" ><i class="fa fa-folder"></i> Abonnement </a>' :
+											data;
+            }},
+
+			{
+			    data: "cbMarq", "orderable": false, render: function (data, type, row, meta) {
+											return type === 'display'  ?
+											'<a class="btn btn-purplebee  btn-circle  btn-outline" title="voir la facture" href="/DocumentsVente/ImprimerBL/'+data+'" target="_blank" ><i title="Imprimer Facture " class="fa fa-print"></i></a>' :
+											data;
+            }}
+
+            ],
+            "order": [[0, "asc"]]
+        });
+    });
+
+
+    function Reaffecter(cbm) {
+
+
+        $("#ReaffectationModal").modal();
+
+        $("#ValiderReaffecter").click(function () {
+
+            $.ajax({
+                type: "get",
+                url: '/Abonnement/ReaffecterAbonnements?cbm=' + cbm + '&&agences=' + $('select#A_Code').find("option:selected").val() + '&&Notes=' + $('#CommentairesReaffectation').val(), // we are calling json method
+                dataType: 'json',
+                success: function (result) {
+                    if (result != -1) {
+                        swal("Succès!", result + "Abonnement réaffectés avec succès! ", "success");
+                        window.location = "/Abonnement/ListeAbonnement";
+                    }
+                    else {
+                        swal({
+                            title: "Aucune modification ",
+                            text: "Ok",
+                            type: "warning"
+                        });
+                        window.location = "/Abonnement/ListeAbonnement";
+
+                    }
+                }
+            });
+
+        });
+    }
+    function AnnulerAbo(data) {
+        swal({
+            title: "Annuler cet abonnement ?",
+            text: " ",
+            type: "warning",
+            showCancelButton: true,
+            cancelButtonText: 'Annuler',
+            confirmButtonColor: "#DD6B55",
+            confirmButtonText: "Oui.",
+            closeOnConfirm: false
+        }, function () {
+            $.ajax({
+                type: "get",
+                url: '/Abonnement/AnnulerAbonnement?id=' + data  , // we are calling json method
+                dataType: 'json',
+                success: function (result) {
+                    if (result == 0) {
+                        swal("Annulé!", "Abonnement Annulé avec succès! ", "success");
+
+                    }
+                    else {
+                        swal({
+                            title: "L'abonnement n'a pas été annulé.",
+                            text: "Ok",
+                            type: "warning"
+                        });
+
+                        window.location = "/Abonnement/ListeAbonnement";
+
+                    }
+                }
+            });
+        });
+
+
+    }
+
+    </script>
+}

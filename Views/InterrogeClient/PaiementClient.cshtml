@@ -1,0 +1,539 @@
+﻿@model BeeProj.Models.D_COMPTET
+@{
+    ViewBag.Title = "Paiement Client ";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<link href="~/css/plugins/iCheck/custom.css" rel="stylesheet">
+<link href="~/css/plugins/jasny/jasny-bootstrap.min.css" rel="stylesheet">
+<link href="~/css/plugins/footable/footable.core.css" rel="stylesheet"><!-- Sweet Alert -->
+<link href="~/css/plugins/sweetalert/sweetalert.css" rel="stylesheet">
+<!-- Toastr style -->
+<link href="~/css/plugins/toastr/toastr.min.css" rel="stylesheet">
+<style>
+
+
+</style>
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-lg-10">
+        <br />
+        <ol class="breadcrumb">
+            <li>
+                <a href="@Url.Action("index","Home")">Acceuil</a>
+            </li>
+            <li>
+                <a href="@Url.Action("Index","InterrogerClient")">Interrogation client </a>
+            </li>
+            <li class="active">
+                <strong>Détails</strong>
+            </li>
+        </ol>
+    </div>
+</div>
+<div class="row">
+
+    <div class="col-lg-9">
+        <div class="wrapper wrapper-content animated fadeInUp">
+            <div class="ibox">
+                <div class="ibox-content">
+                    <div class="panel blank-panel">
+                        <div class="panel-body">
+
+                            <div class="row">
+
+                                <div class="ibox float-e-margins">
+
+                                    <div class="ibox-content">
+                                        <div class="table-responsive">
+                                            <table class="table table-striped" id="Factures">
+                                                <thead>
+                                                    <tr>
+                                                <thead>
+                                                    <tr>
+                                                        <th class="hidden"></th>
+                                                        <th data-toggle="true">N° Facture</th>
+                                                        <th>Date Facture </th>
+                                                        <th>Periode Facture </th>
+                                                        <th>Code Abonnement </th>
+                                                        <th>T.T.C</th>
+                                                        <th>Details</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    @foreach (var item in ViewBag.ListeFactures)
+                                                    {
+                                                        <tr>
+                                                            <td class="hidden">@item.FactureId</td>
+                                                            <td>
+                                                                <a href="/GestionFactures/DetailsFacture/@item.FactureId" target="_blank"> @item.FacturePiece</a>
+                                                            </td>
+                                                            <td> @item.DateFacture.ToString("dd/MM/yyyy")</td>
+                                                            <td>du @item.DO_DebutPeriod.ToString("dd/MM/yyyy") au @item.DO_FinPeriod.ToString("dd/MM/yyyy")</td>
+                                                            <td><a href="/Abonnement/details/@item.IdAbonnement" target="_blank"> @item.CodeAbonnement</a></td>
+                                                            <td class="text-navy"> <i class="fa fa-money"></i> <strong>@String.Format("{0:N3}", item.FactureTotalTTC) TND  </strong></td>
+
+
+                                                            @if ((User.IsInRole("Admin") || User.IsInRole("PayerResilie")) && item.isAbonnementResilie)
+                                                            {
+                                                                <td>
+                                                                    <span>Résilié</span>
+                                                                    <input type="checkbox" class="i-checks" name="opt" value="@item.FactureTotalTTC">
+                                                                </td>
+                                                            }
+                                                            else if (item.isAbonnementResilie)
+                                                            {
+                                                                <td> <code>Cet abonnement est résilié </code></td>
+                                                            }
+                                                            else if (!item.isAbonnementCloture)
+                                                            {
+                                                                <td><code>Veuillez valider cet abonnement avant. <a href="/Abonnement/details/@item.IdAbonnement"> clic ici</a></code></td>
+                                                            }
+                                                            else
+                                                            {
+                                                                <td><input type="checkbox" class="i-checks" name="opt" value="@item.FactureTotalTTC"></td>
+                                                            }
+                                                        </tr>
+                                                    }
+                                                    @if (ViewBag.ListeAvoirs != null)
+                                                    {
+                                                        foreach (var avoirsss in ViewBag.ListeAvoirChecked)
+                                                        {
+                                                            <tr>
+                                                                <td class="hidden">@avoirsss.Value.FactureId</td>
+
+                                                                <td>
+                                                                    <a href="@Url.Action("VisualiserFactureAvoir","GestionFacture", new { id = avoirsss.Value.FactureId })" target="_blank"> @avoirsss.Value.FacturePiece</a>
+                                                                </td>
+
+                                                                <td>@avoirsss.Value.DateFacture.ToString("dd/MM/yyyy")</td>
+                                                                <td>du @avoirsss.Value.DO_DebutPeriod.ToString("dd/MM/yyyy") au @avoirsss.Value.DO_FinPeriod.ToString("dd/MM/yyyy")</td>
+                                                                <td><a href="/Abonnement/details/@avoirsss.Value.IdAbonnement" target="_blank"> @avoirsss.Value.CodeAbonnement</a></td>
+
+                                                                <td class="text-navy"> <i class="fa fa-money"></i> <strong>@String.Format("{0:N3}", avoirsss.Value.FactureTotalTTC) TND  </strong></td>
+
+
+
+                                                                @if ((User.IsInRole("Admin") || User.IsInRole("PayerResilie")) && avoirsss.Value.isAbonnementResilie)
+                                                                {
+                                                                    <td>
+                                                                        <span>Résilié</span>
+                                                                        @if (avoirsss.Key == true)
+                                                                        {
+                                                                            <input type="checkbox" class="i-checks" name="opt" value="@avoirsss.Value.FactureTotalTTC" checked disabled>
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <input type="checkbox" class="i-checks" name="opt" value="@avoirsss.Value.FactureTotalTTC">
+                                                                        }
+                                                                        @*<input type="checkbox" class="i-checks" name="opt" value="@avoirsss.Value.FactureTotalTTC">*@
+                                                                    </td>
+
+                                                                }
+                                                                else if (avoirsss.Value.isAbonnementResilie)
+                                                                {
+                                                                    <td> <code>Cet abonnement est résilié </code></td>
+                                                                }
+                                                                else if (avoirsss.Key == true)
+                                                                {
+                                                                    <td>
+                                                                        <input type="checkbox" class="i-checks" name="opt" value="@avoirsss.Value.FactureTotalTTC" checked disabled>
+                                                                    </td>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <td>
+                                                                        <input type="checkbox" class="i-checks" name="opt" value="@avoirsss.Value.FactureTotalTTC">
+                                                                    </td>
+                                                                }
+                                                            </tr>
+                                                        }
+                                                    }
+
+
+                                                    @if (ViewBag.ReglementsClient != null)
+                                                    {
+                                                        foreach (var regl in ViewBag.ReglementsClient)
+                                                        {
+                                                            <tr>
+                                                                <td>
+                                                                    @regl.DO_Piece
+                                                                </td>
+                                                                <td>
+                                                                    @regl.DO_Date.ToString("dd/MM/yyyy")
+                                                                </td>
+                                                                <td>
+                                                                    @String.Format("{0:N3}", regl.DO_MontantTTC) TND
+                                                                </td>
+                                                                <td>
+                                                                    <a class="btn btn-greenbee btn-circle btn-outline" title="voir le reçu de paiement "
+                                                                       href="@Url.Action("ImpressionRecu", "GestionFactures", new { id = regl.cbMarq })" target="_blank">
+                                                                        <i title="Imprimer Reçu " class="fa fa-print"></i>
+                                                                    </a>
+
+                                                                </td>
+
+                                                            </tr>
+                                                        }
+                                                    }
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <small>
+                                            <strong>Total Avances : </strong>@String.Format("{0:N3}", ViewBag.TotalReglementsAvances) TND
+                                        </small><br />
+                                        <small>
+                                            <strong>Total Avoir :</strong> @String.Format("{0:N3}", ViewBag.TotalAvoir) TND
+                                        </small>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            @if (ViewBag.ReglementsClientAvances != null)
+            {
+                <div class="ibox">
+                    <div class="ibox-title">
+                        Liste des Avances  <small> reste </small>
+                    </div>
+                    <div class="ibox-content">
+
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>N° Pièce</th>
+                                    <th>Date </th>
+                                    <th>Montant Règlement TTC</th>
+                                    <th>Reste </th>
+                                    <th>Voir </th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                @foreach (var item in ViewBag.ReglementsClientAvances)
+                                {
+
+                                    <tr>
+                                        <td>
+                                            @item.DO_Piece
+                                        </td>
+                                        <td>
+                                            @item.DO_Date.
+                                        </td>
+                                        <td>
+                                            @String.Format("{0:N3}", item.DO_MontantTTC) TND
+                                        </td>
+                                        <td>
+                                            @String.Format("{0:N3}", item.RG_Reste) TND
+                                        </td>
+                                        <td>
+                                            <a class="btn btn-greenbee btn-circle btn-outline" title="voir le reçu de paiement "
+                                               href="@Url.Action("ImpressionRecu", "GestionFactures", new { id = item.cbMarq })" target="_blank">
+                                                <i title="Imprimer Reçu " class="fa fa-print"></i>
+                                            </a>
+
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+
+                    </div>
+
+                </div>
+            }
+        </div>
+
+    </div>
+
+    <div class="col-lg-3">
+        <div class="wrapper wrapper-content project-manager">
+            <div class="payment-card">
+                <a href="@Url.Action("PaiementClient","InterrogeClient", new { id =  Model.cbMarq })">
+                    <i class="fa fa-user payment-icon-big text-success"></i>
+                </a>
+
+
+                <h3 class="pull-right">
+                    Solde: <strong>@String.Format("{0:N3}", ViewBag.SoldeClient)  </strong> TND
+
+                </h3>
+
+                <div class="row">
+                    <p class="small font-bold">
+                        <a href="@Url.Action("DetailsClient","InterrogeClient",new{Abo=@ViewBag.IdAbo})" id=" lnk"><i class="fa fa-circle text-danger"></i> Détails @Model.CT_Intitule </a>
+                    </p><br />
+                    <small>
+                        <strong>Client:</strong> @Model.CT_Intitule
+                    </small><br />
+                    <small>
+                        <strong>Identifiant:</strong> @Model.CT_Identifiant
+                    </small><br />
+                    <small>
+                        <strong>Code Client:</strong> @Model.CT_Num
+                    </small>
+                </div>
+
+                <h5 class="pull-right">
+                    Total facturé: <strong>@String.Format("{0:N3}", ViewBag.Totalfacturee)  </strong> TND
+                    <br />
+
+                </h5>
+                <hr />
+                <div class="row">
+                    @if (User.IsInRole("Paiement Client") || User.IsInRole("Admin"))
+                    {
+                        <button class="btn btn-primary  btn-block" type="button" id="PaiementClient"><i class="fa fa-dollar"></i> Payer </button>
+                    }
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+
+
+<div class="modal inmodal" id="PayerFactureModalite" tabindex="-1" role="dialog" aria-hidden="true" data-keyboard="false" data-backdrop="static">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content animated flipInX">
+            <div class="modal-header">
+                <h4 class="modal-title">Validation et paiement </h4>
+            </div>
+            <div class="modal-body">
+                @if (@TempData["MSG2"] != null)
+                {
+                    <div class="alert alert-info">
+                        <h4>Bonjour  </h4>
+                        <strong>    @TempData["MSG2"]  </strong>
+                    </div>
+                }
+
+                <fieldset id="SubmitForm" class="float-e-margins">
+                    <div class="row">
+                        <div class="form-group float-e-margins">
+                            <div class="spinner-border text-primary" role="status">
+                                <span class="sr-only">Loading...</span>
+                            </div>
+                            <input id="Valider" name="Valider" value="0" class="hidden" />
+                            <div class="row">
+                                <div class="ibox float-e-margins">
+                                    <div class="ibox-content">
+                                        <form class="form-horizontal">
+                                            <br /><strong>Net à payer : </strong>
+                                            <h3 class="label label-warning" id="netapayer">  </h3>
+
+                                            <div class="form-group">
+                                                <label class="col-lg-4 control-label">Choisir votre mode de paiement *</label>
+                                                <div class="col-lg-8">
+                                                    <select class="col-lg-8 form-control chosen-search " id="cbindice" name="cbindice">
+                                                        <option class="font-bold" value="2"> Choisir </option>
+
+                                                        @foreach (var item in ViewBag.ModeReglementAgence)
+                                                        {
+                                                            <option class="font-bold" value="@item.Value"> @item.Text </option>
+                                                        }
+                                                    </select>
+                                                </div>
+                                            </div>
+
+                                            <div id="ifospayement" style="display:none">
+                                                <div class="form-group">
+                                                    <label class="col-lg-4 control-label">Identifiant *</label>
+                                                    <div class="col-lg-8">
+                                                        <input type="text" class="form-control" name="identifiantpay" id="identifiantpay" placeholder="N° Chèque,Référence de paiement TPE , N° Compte du client," />
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="col-lg-4 control-label">Libellé</label>
+                                                    <div class="col-lg-8">
+                                                        <input type="text" class="form-control" name="libelle" id="libelle" placeholder="Nom de la banque,N° Ordre de virement" />
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="col-lg-4 control-label">Description</label>
+                                                    <div class="col-lg-8">
+                                                        <input type="text" class="form-control" name="description" id="description" placeholder="Titulaire du Chèque" maxlength="17" />
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="col-lg-4 control-label">Date Echéance </label>
+                                                    <div class="col-lg-8">
+                                                        <input type="text" pattern="\d{1,2}/\d{1,2}/\d{4}" class="form-control" name="dateecheance" id="dateecheance" placeholder="Date d'échéance du chèque (format : jj/mm/aaaa)" />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <hr />
+
+                                            <div class="form-group">
+                                                <label class="col-lg-4 control-label">Attachement</label>
+                                                <div class="col-lg-8">
+                                                    <div class="fileinput fileinput-new input-group" data-provides="fileinput">
+                                                        <div class="form-control" data-trigger="fileinput">
+                                                            <i class="glyphicon glyphicon-file fileinput-exists"></i>
+                                                            <span class="fileinput-filename"></span>
+                                                        </div>
+                                                        <span class="input-group-addon btn btn-default btn-file">
+                                                            <span class="fileinput-new">Selectionner</span>
+                                                            <span class="fileinput-exists">Changer</span>
+                                                            <input type="file" name="FileContact" id="FileContact" accept="image/png, image/jpeg" />
+                                                        </span>
+                                                        <a href="#" class="input-group-addon btn btn-default fileinput-exists" data-dismiss="fileinput">Supprimer</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <br />
+                                            <div class="m-5 p-5" style="text-align: center">
+                                                <div id="wait">
+
+                                                    <div class="spinner-border text-purplebee" role="status">
+                                                        <i class="fa fa-spinner fa-spin" style="font-size:50px"></i>
+                                                        <br />
+                                                        <h3>Merci de  patienter...</h3>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+
+                                        </form>
+
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-white  m-0" data-dismiss="modal" id="annulerCochage">Annuler</button>
+                                <button type="button" class="btn btn-purplebee ladda-button" id="PayerFacture" onclick="this.disabled=true"><i class="fa fa-money"></i>Payer </button>
+
+                            </div>
+
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="~/js/jquery-3.1.1.min.js"></script>
+
+<!-- iCheck -->
+<script src="~/js/plugins/iCheck/icheck.min.js"></script>
+<!-- Toastr script -->
+<script src="~/js/plugins/toastr/toastr.min.js"></script>
+<!-- Sweet alert -->
+<script src="~/js/plugins/sweetalert/sweetalert.min.js"></script>
+
+<script>
+
+
+        $(document).ready(function(){
+            $('.i-checks').iCheck({
+                checkboxClass: 'icheckbox_square-green',
+                radioClass: 'iradio_square-green',
+            });
+        });
+        $('#cbindice').change(function () {
+
+            if ($('#cbindice').val() != 2) {
+                // $('#ifospayement').style.display='block';
+                document.getElementById("ifospayement").style.display = "block";
+            }
+            else {
+                // $('#ifospayement').style.display='none';
+                document.getElementById("ifospayement").style.display = "none";
+            }
+        });
+
+        $("#PaiementClient").click(function () {
+            var Factures = [];
+            var RegMontants = 0;
+            $('#Factures').find('input[type="checkbox"]:checked').each(function () {
+                var newStr = ($(this).val()).replace(/,/g, '.');
+                RegMontants = RegMontants + parseFloat(newStr);
+                var tr = $(this).closest('tr');
+                var value = tr.find('td:eq(0)').html();
+                Factures.push(value);
+            });
+            $("#netapayer").text((RegMontants.toFixed(3) - parseFloat(@ViewBag.TotalReglementsAvances)) + " TND");
+
+            if (RegMontants < 0 || Factures.length == 0) {
+                toastr.error('Veuillez sélectionner des factures à payer !', 'Erreur');
+            } else {
+                $("#PayerFactureModalite").modal();
+            }
+            $("#annulerCochage").click(function () {
+                $('#PayerFacture').prop('disabled', true);
+
+                location.reload();
+
+            })
+
+            $("#PayerFacture").click(function () {
+
+                $('#PayerFactureAvoir').prop('disabled', true);
+                var Factures1 = [];
+                var RegMontants1 = 0;
+                $('#Factures').find('input[type="checkbox"]:checked').each(function () {
+                    var newStr1 = ($(this).val()).replace(/,/g, '.');
+                    RegMontants1 = RegMontants1 + parseFloat(newStr1);
+                    var tr = $(this).closest('tr');
+                    var value = tr.find('td:eq(0)').html();
+                    Factures1.push(value);
+                });
+              
+            $.ajax({
+                type: "get",
+                url: '/GestionFactures/payerFacturesSolde?cbmFacture=' + Factures1 +
+                    '&&isPremiereFacture=false&&username=""&&cbindice=' + $('#cbindice').val() + '&&identifiantpay=' + $('#identifiantpay').val() + '&&dateecheance=' + $('#dateecheance').val() + '&&libelle=' + $('#libelle').val() + '&&description=' + $('#description').val(), // we are calling json method
+                dataType: 'json',
+                success: function (msg) {
+                    if (msg.msg == 0) {
+                        //print reçu
+                        toastr.success('La facture a été payée avec succès ! ', 'Succes');
+                        swal({
+                            title: "Imprimer ",
+                            text: "impression du reçu ",
+                            type: "success",
+                            showCancelButton: true,
+                            confirmButtonColor: "#DD6B55",
+                            confirmButtonText: "Oui",
+                            closeOnConfirm: false,
+                            showCancelButton: false,
+                        }, function () {
+                            window.open('/GestionFactures/RecuPaiementFacture/' + msg.data, '_blank');
+                            swal("Facture réglée", "reçu téléchargé", "success");
+                            $('#PayerFactureModalite').modal('hide');
+                            location.reload();
+                        });
+                    }
+                    else {
+                        toastr.error(msg.result, 'Erreur');
+                    }
+                }
+
+            });
+
+ alert(msg);
+            });
+
+
+        });
+    $(document).ready(function () {
+        $(document).ajaxStart(function () {
+            $("#wait").css("display", "block");
+            $("#annulerCochage").css("display", "none");
+        });
+        $(document).ajaxComplete(function () {
+            $("#wait").css("display", "none");
+            $("#annulerCochage").css("display", "inline-block");
+        });
+        $("button").click(function () {
+            $("#txt").load("demo_ajax_load.asp");
+        });
+    });
+
+</script>

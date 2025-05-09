@@ -1,0 +1,84 @@
+﻿
+@{
+    ViewBag.Title = "TypeAbonnement";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-lg-8">
+        <h2>Liste des packs d'abonnement</h2>
+        <ol class="breadcrumb">
+            <li>
+                <a>Acceuil</a>
+            </li>
+            <li>
+                <a>Gestion des Abonnements</a>
+            </li>
+            <li>
+                <a>Type Abonnement</a>
+            </li>
+        </ol>
+    </div>
+    <div class="col-lg-2">
+
+    </div>
+</div>
+
+
+
+@if (User.Identity.Name.ToUpper() == "N.CHELBIA")
+{
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+
+        @foreach (var item in ViewBag.ListeArticles)
+        {
+
+            <div class="col-md-3">
+                <div class="ibox">
+                    <div class="ibox-content product-box">
+                        <div class="">
+                            <a href="@Url.Action("NouvelAbonnement", "Abonnement", new { id = @item.cbMarq })" class="">
+                                @*<img src="@item.AR_Photo" class="img-preview img-responsive" />*@
+
+                                <img src="@Url.Action("PhotoArticle", "Structure", new { id = item.cbMarq })" class="img-preview img-responsive" onError="this.onerror=null;this.src='/img/DefaultImage.png';" />
+
+                            </a>
+                        </div>
+                        <div class="product-desc">
+                            @if (item.P_Duree != -1)
+                            {
+                                <span class="product-price fa-3x  bg-warning">
+                                    EN PROMO
+                                </span>
+                            }
+
+
+                            <small class="text-muted">@item.AR_Ref</small>
+                            <a href="@Url.Action("NouvelAbonnement", "Abonnement", new { id = @item.cbMarq })" class="product-name"> @item.AR_Design </a>
+
+
+                            <div class="small m-t-xs">
+                                @item.AR_Description
+                            </div>
+                            <div class="m-t text-righ">
+
+                                <a href="@Url.Action("NouvelAbonnement", "Abonnement", new { id = @item.cbMarq })" class="btn btn-xs btn-outline btn-primary">Nouvel abonnement <i class="fa fa-long-arrow-right"></i> </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+        }
+
+
+
+
+
+    </div>
+</div>
+}
+<script src="~/js/jquery-3.1.1.min.js"></script>

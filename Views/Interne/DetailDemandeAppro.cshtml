@@ -1,0 +1,896 @@
+﻿@model BeeProj.Models.B_DEMANDEINTENTETE
+
+@{
+    ViewBag.Title = "details demande appro";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    .dataTables_filter, .dataTables_info, .dataTables_length, .dataTables_paginate {
+        display: none;
+    }
+</style>
+
+<style>
+    .sel {
+        -webkit-appearance: none;
+        -moz-appearance: none;
+    }
+</style>
+<link href="~/css/plugins/chosen/bootstrap-chosen.css" rel="stylesheet">
+ <!-- Ladda style -->
+<link href="css/plugins/ladda/ladda-themeless.min.css" rel="stylesheet">
+<link href="~/css/plugins/dataTables/datatables.min.css" rel="stylesheet">
+
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-sm-4">
+        <br />
+        <h3>Demande d'approvisionnement : Ref# @Model.DM_Piece</h3>
+        <ol class="breadcrumb">
+
+            <li>
+                <a href="@Url.Action("index","Home")">Acceuil </a>
+            </li>
+            <li>
+                <a href="@Url.Action("ListeDemandeAppro","Interne")">Liste des demandes d'Appro </a>
+            </li>
+
+            <li class="active">
+                <strong>Détails</strong>
+            </li>
+        </ol>
+    </div>
+</div>
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row ">
+        <div class="panel">
+            <div class="panel-body">
+                @*<div>
+                    <h3>Demande REF #@Model.DM_Piece</h3>
+                </div>*@
+                <div class="row">
+                    <div class="col-lg-3">
+                        <div class="widget style1 gray-bg" style="background-image: linear-gradient(0deg,#d7d7ea,#fff);">
+                            <div class="row">
+                                <div class="col-xs-4 text-center">
+                                </div>
+                                <div class="col-xs-8 text-right">
+                                    <span> Statut </span>
+                                    @if(Model.DM_Statut == 0) {
+                                    <h3 class="font-bold"><strong>En cours</strong> </h3>
+                                    }
+                                    else if (Model.DM_Statut == 1)
+                                    {
+                                        <h3 class="font-bold"><strong>Traitée</strong> </h3>
+
+                                    }
+                                    else if (Model.DM_Statut == 2)
+                                    {
+                                        <h3 class="font-bold"><strong>Validée</strong> </h3>
+
+                                    }
+                                    else if (Model.DM_Statut == 3)
+                                    {
+                                        <h3 class="font-bold"><strong>Confirmée</strong> </h3>
+
+                                    }
+                                    else if (Model.DM_Statut == 4)
+                                    {
+                                        <h3 class="font-bold"><strong>Annulée</strong> </h3>
+
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3">
+                        <div class="widget style1 gray-bg " style="background-image: linear-gradient(0deg,#d7d7ea,#fff);">
+                            <div class="row">
+                                <div class="col-xs-4">
+
+                                </div>
+                                <div class="col-xs-8 text-right">
+                                    <span> Date </span>
+                                    <h3 class="font-bold"><strong>@ViewBag.Datenotime</strong> </h3>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3">
+                        <div class="widget style1 gray-bg " style="background-image: linear-gradient(0deg,#d7d7ea,#fff);">
+                            <div class="row">
+                                <div class="col-xs-4">
+
+                                </div>
+                                <div class="col-xs-8 text-right">
+                                    <span> Récepteur </span>
+                                    <h3 class="font-bold" id="DepotR"><strong> @ViewBag.DepotR</strong></h3>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3">
+                        <div class="widget style1 gray-bg" style="background-image: linear-gradient(0deg,#d7d7ea,#fff);">
+                            <div class="row">
+                                <div class="col-xs-4">
+
+                                </div>
+                                <div class="col-xs-8 text-right">
+                                    <span> Emetteur </span>
+                                    <h3 class="font-bold" id="DepotE"><strong>@ViewBag.DepotE</strong></h3>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="panel">
+    <div class="panel-body">
+        <div class="row">
+            <div class="content-box border-top border-gray">
+                <div class="content-box-wrapper bg-white">
+                    <div class="ibox-content ">
+                       @if(Model.DM_Statut == 0 && ViewBag.Regional == true) {
+                            <table class="table  table-bordered  dataTables-example" id="TableListeLignesProduit">
+                                <thead>
+                                    <tr>
+                                        <th>Statut</th>
+                                        <th>Code Produit</th>
+                                        <th>Désignation</th>
+                                        <th>Quantité Demandée</th>
+                                        <th> Quantité Disponible</th>
+                                        <th>Dépot d'entrée</th>
+                                        <th>Dépot de sortie</th>
+                                        <th class="hidden"></th>
+                                    </tr>
+                                </thead>
+                            </table>
+                       }
+                       else
+                       {
+                        <table class="table  table-bordered  dataTables-example" id="TableListeLignesProduit1">
+
+                            <thead>
+                                <tr>
+                                    <th>Statut</th>
+                                    <th>Code Produit</th>
+                                    <th>Désignation</th>
+                                    <th>Quantité Demandée</th>
+                                    <th> Quantité Envoyée</th>
+                                    <th>Dépot d'entrée</th>
+                                    <th>Dépot de sortie</th>
+                                    <th class="hidden"></th>
+                                </tr>
+                            </thead>
+
+                        </table>
+                       }
+                    </div>
+                </div>
+            </div>
+        </div>
+        <br />
+        <div class="hr-line-dashed"></div>
+        <div class="form-group">
+            @if (Model.DM_Statut == 0 && ViewBag.Regional== true)
+            {
+                <button class="btn btn-purplebee  pull-right m-t-n-xs ladda-button" style="margin-left:10px;" type="button" id="TransfererAppro"><strong>Envoyer</strong></button>
+                <button type="reset" class="btn btn-white  pull-right m-t-n-xs"><a href="/Interne/ListeDemandeAppro"><strong>Annuler</strong></a></button>
+
+            }
+        </div>
+
+    </div>
+</div>
+<script src="~/js/jquery-3.1.1.min.js"></script>
+<script src="~/js/plugins/metisMenu/jquery.metisMenu.js"></script>
+<script src="~/js/plugins/pace/pace.min.js"></script>
+<script src="~/js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+<script src="~/js/plugins/chosen/chosen.jquery.js"></script>
+<script src="~/js/plugins/dataTables/datatables.min.js"></script>
+    <!-- Ladda -->
+<script src="~/js/plugins/ladda/spin.min.js"></script>
+<script src="~/js/plugins/ladda/ladda.min.js"></script>
+<script src="~/js/plugins/ladda/ladda.jquery.min.js"></script>
+
+<script>
+    $('document').ready(function () {
+        $(".chosen-select").chosen();
+        // Bind normal buttons
+        Ladda.bind('.ladda-button', { timeout: 2000 });
+        // Bind progress buttons and simulate loading progress
+        Ladda.bind('.progress-demo .ladda-button', {
+            callback: function (instance) {
+                var progress = 0;
+                var interval = setInterval(function () {
+                    progress = Math.min(progress + Math.random() * 0.1, 1);
+                    instance.setProgress(progress);
+
+                    if (progress === 1) {
+                        instance.stop();
+                        clearInterval(interval);
+                    }
+                }, 2000);
+            }
+        });
+        var selectedNumSerie = [] ;
+
+        var depot=0;
+        var change = false;
+
+       
+
+        $('#TableListeLignesProduit').DataTable({
+            "ajax": {
+
+                "url": "/Interne/getArticlesLine?appiece="+ @Model.cbMarq,
+                "type": 'get',
+                "bInfo": false,
+                "bFilter": false,
+                "paging": false,
+                "ordering": false,
+                "info": false,
+                "filter": false,
+                "datatype": "json"
+            },
+            "columns": [
+                {"data": "StatutLigne"},
+                {"data": "AR_Ref",
+                "className": 'aref'},
+                {"data": "AP_Design"},
+                {"data": "AP_QteD"},
+                {"data": "AP_QteE"},
+                 {"data": "DepotE"},
+                {"data": "cbMarq",
+                "className": 'selectDepot'},
+                {"data": "cbMarq"}
+            ],
+
+            "columnDefs": [
+                {
+                    targets: [0],
+                    render: function (data, type, row) {
+                        if (data == 0) {
+                            return '<i class="label bg-warning ">En cours</i>';
+                        }
+                        else if (data == 1) {
+                            return '<i class="label style1 blue-bg ">Traité</i>';
+                        }
+                        else if (data == 2 ){
+                            return '<i class="label  bg-primary">Validé</i>';
+                        }
+                        else if (data == 3) {
+                            return '<i class="label  bg-info">Confirmé</i>';
+                        }
+                        else if (data == 4) {
+                            return '<i class="label bg-danger">Annulé</i>';
+                        }
+                    }
+                },
+                 {
+                     targets: [4],
+                     render: function(data, type,row){
+                         return 0;
+                     }
+                 },
+               
+                {
+                    targets: [6],
+                    render: function(data, type,row){
+                        var cbm = data;
+                        var url= "/Interne/getlistedesDepot?id="+ @Model.cbMarq,
+                        getservice= function(url){
+                            var res= $.ajax({
+                                type: "get",
+                                url: url,
+                                dataType: "json",
+                                async: false,
+                                success: function(data){
+                                }
+                            }).responseText;
+                            return res;
+                        }
+                        var ListeSeries = getservice(url) ;
+                        var d = JSON.parse(ListeSeries);
+                        var mylist = '<select  class="chosen-select form-control mysel selectDepot" id="mysel" > name="selectDepot"';
+                        mylist = mylist + '<option value="'+ cbm +'">Aucun</option>'
+                        for (var i = 0; i < d.data.length; i++) {
+                            var counter = d.data[i];
+                            mylist = mylist + '<option value="'+ counter.DE_No +'">'+ counter.DE_Intitule + '</option>' ;
+                        }
+                        mylist = mylist +'</select>' ;
+                        $(".chosen-select").chosen();
+                        $('#mysel').click(function(e){
+                            $('#mysel option:selected').prop('selected', false);
+                        });
+                        if (d.count == 0)
+                        {
+                            return '<select class="form-control disabled" disabled><option value="'+ data +'">'+ d.data + '</option></select>';
+                        }
+                        else {
+                            return mylist;
+                        }
+                    }
+                },
+                  {
+                      targets: [7],
+                      render: function(data, type,row){
+                          return '<input  background: name="name" class="hidden form-control" style="background:white; "value="' +data+ '" >';
+                      }
+                  },
+            ],
+        });
+        $('#TableListeLignesProduit tbody').on('change', 'td.selectDepot', function () {
+            var tr = $(this).closest('tr');
+            var row = table.row(tr);
+            var aref = tr.find('td:eq(1)').text();
+            var dep = tr.find('td:eq(6)').find('select').val();
+            getservice2= function(url){
+                var res= $.ajax({
+                    type: "POST",
+                    url: "/Interne/LoadQT?dep=" + dep + "&&aref=" + aref,
+                    dataType: "json",
+                    async: false,
+                    success: function(data){
+                    }
+                }).responseText;
+                return res;
+            }
+            var QT = getservice2() ;
+            var d = JSON.parse(QT);
+            var reference = tr.find('td:eq(4)').html( d.data);
+        });
+
+        $('#TableListeLignesProduit1').DataTable({
+            "ajax": {
+
+                "url": "/Interne/getlisteDMTR?cbMarq="+ @Model.cbMarq,
+                "type": 'get',
+
+                "bInfo": false,
+                "bFilter": false,
+                "paging": false,
+                "ordering": false,
+                "info": false,
+                "filter": false,
+                "datatype": "json"
+            },
+            "columns": [
+               
+                
+                { "data": "statut" },
+                { "data": "AR_Ref" },
+                { "data": "Designation" },
+                { "data": "quantiteD" },
+                { "data": "quantiteE" },
+                
+                { "data": "IN" },
+                { "data": "OUT" }
+
+
+                 
+
+            ],
+
+            "columnDefs": [
+                {
+                    targets: [0],
+                    render: function (data, type, row) {
+
+                                       
+                        if (data == 0) {
+                            return '<i class="label bg-warning ">En cours</i>';
+                        }
+                        else if (data == 1) {
+                            return '<i class="label style1 blue-bg ">Traité</i>';
+
+                        }
+
+                        else if (data == 2 ){
+                            return '<i class="label  bg-info">Validé</i>';
+                        }
+                        else if (data == 3) {
+                            return '<i class="label bg-primary">Confirmé</i>';
+                        }
+                        else if (data == 4) {
+                            return '<i class="label bg-danger">Annulé</i>';
+                        }
+                           
+                                            
+
+
+                    }
+                },
+                 
+
+              
+
+                    
+
+            ],
+
+
+
+
+        });
+
+
+
+
+
+  
+        @*$('#TableListeLignesProduit1').DataTable({
+            "ajax": {
+
+                "url": "/Interne/getArticlesLine?appiece="+ @Model.cbMarq,
+                "type": 'get',
+
+                "bInfo": false,
+                "bFilter": false,
+                "paging": false,
+                "ordering": false,
+                "info": false,
+                "filter": false,
+                "datatype": "json"
+            },
+            "columns": [
+                {"data": "StatutLigne"},
+                {"data": "AR_Ref"},
+                {"data": "AP_Design"},
+                {"data": "AP_Qte"},
+                 {"data": "AP_Qte"},
+                {"data": "AP_Affectation"},
+                
+                {
+
+
+                    "className": 'changeDepot',
+                    "orderable": false,
+                    "data": "cbMarq2",
+                    "defaultContent": '<button class="btn btn-round btn-info btn-xs"><i class="glyph-icon icon-edit"></i></button>'
+                },
+                {"data": "cbMarq",
+                "defaultContent": '<input class="hidden">'
+                },
+
+
+       //          {"data": "cbMarq2"},
+
+
+            ],
+
+            "columnDefs": [
+
+
+                 {
+
+                     targets: [2],
+                     render: function(data, type,row){
+                         return '<input  background: name="name" class="form-control" style="background:white; "value="' +data+ '" /disabled>';
+
+                     }
+                 },
+
+                {
+
+                    targets: [3],
+                    render: function(data, type,row){
+                        return '<input  background: name="name" class="form-control" style="background:white; "value="" /disabled>';
+                        ;
+
+                    }
+                },
+
+                  {
+                      targets: [5],
+                      render: function(data, type,row){
+
+
+
+
+
+
+                              var cbm = data;
+
+                              var url= "/Interne/getlistedesDepot?id="+ @Model.cbMarq,
+                              getservice= function(url){
+                                  var res= $.ajax({
+                                      type: "get",
+                                      url: url,
+                                      dataType: "json",
+                                      async: false,
+                                      success: function(data){
+
+                                      }
+                                  }).responseText;
+
+                                  return res;
+                              }
+
+                              var ListeSeries = getservice(url) ;
+
+                              var d = JSON.parse(ListeSeries);
+                              //counter.LS_NoSerie
+
+
+
+
+                              var mylist = '<select  class="chosen-select form-control mysel selectDepot" id="mysel" > name="selectDepot"';
+                              mylist = mylist + '<option value="'+ cbm +'">Aucun</option>'
+                              for (var i = 0; i < d.data.length; i++) {
+                                  var counter = d.data[i];
+
+                                  mylist = mylist + '<option value="'+ counter.DE_No +'">'+ counter.DE_Intitule + '</option>' ;
+
+
+
+                              }
+                              mylist = mylist +'</select>' ;
+
+                              $(".chosen-select").chosen();
+
+                              $('#mysel').click(function(e){
+                                  $('#mysel option:selected').prop('selected', false);
+                              });
+
+                              if (d.count == 0)
+                              {
+                                  return '<select class="form-control disabled" disabled><option value="'+ data +'">'+ d.data + '</option></select>';
+                              }
+                              else {
+                                  return mylist;
+
+                              }
+
+
+
+                          }
+
+
+
+
+                  },
+
+                    {
+                        targets: [6],
+                        render: function(data, type,row){
+                            var cbm = data;
+                            var mylist22 = '<select class="chosen-select form-control mysel22" id="mysel22" >';
+                            mylist22 = mylist22 + '<option value="'+ cbm +'">Aucun</option>'
+                            mylist22 = mylist22 +'</select>' ;
+                            $(".chosen-select").chosen();
+                            return mylist22;
+                        }
+                    },
+            ]
+        });*@
+
+
+
+        $(".chosen-select").chosen();
+        $("#mysel").chosen();
+        $(".chosen-select").trigger("chosen:updated");
+
+
+
+        var table = $('#TableListeLignesProduit1').DataTable();
+        
+
+        $('#TableListeLignesProduit1 tbody').on('change', 'td.changeDepot', function () {
+            var tr = $(this).closest('tr');
+            var row = table.row(tr);
+            var cbmarq2 = tr.find('td:eq(5)').find('select').text();
+            var reference = tr.find('td:eq(6)').find('select').val();
+            var cbm = tr.find('td:eq(6)').find('select').val();
+
+            getservice2= function(url){
+                var res= $.ajax({
+                    type: "POST",
+                    url: "/Interne/LoadSerie2?Ref="+ reference + "&&dep=" +  cbmarq2,
+                    dataType: "json",
+                    async: false,
+                    success: function(data){
+
+                    }
+                }).responseText;
+
+                return res;
+            }
+
+            var ListeSeries = getservice2() ;
+
+            var d = JSON.parse(ListeSeries);
+
+
+
+           // var reference = tr.find('td:eq(4)').html('<p>OK</p>');
+            var mylist22 = '<select  class="chosen-select form-control myselSerieDepot" id="myselSerieDepot" >';
+            mylist22 = mylist22 + '<option value="'+ cbm +'">Aucun</option>'
+            mylist22 = mylist22 +'</select>' ;
+            var reference = tr.find('td:eq(6)').html(mylist22);
+
+
+
+
+            var mylistSerieDepot = '<select  class="chosen-select form-control myselSerieDepot" id="myselSerieDepot" >';
+            mylistSerieDepot = mylistSerieDepot + '<option value="'+ cbm +'">Aucun</option>'
+
+            for (var i = 0; i < d.data.length; i++) {
+                var counter = d.data[i];
+                mylistSerieDepot = mylistSerieDepot + '<option value="'+ cbm +'">'+ counter.LS_NoSerie + '</option>' ;
+
+            }
+            $(".chosen-select").chosen();
+
+            $('#myselSerieDepot').click(function(e){
+                $('#myselSerieDepot option:selected').prop('selected', false);
+            });
+
+            if (d.count == 0)
+            {
+                var reference = tr.find('td:eq(6)').html('<select class=" sel form-control disabled" disabled><option value="'+ cbm +'">'+ d.data + '</option></select>');
+                
+                var ref = tr.find('td:eq(3)').html('<input  background: name="name" class="form-control" style="background:white; "value="' + d.data2+ '" /disabled>');
+              
+            }
+            else {
+                var reference = tr.find('td:eq(6)').html(mylistSerieDepot);
+                var ref = tr.find('td:eq(3)').html('<input  background: name="name" class="form-control" style="background:white; "value="' + d.data2+ '" /disabled>');
+            }
+        });
+   
+
+
+    $("#testTransferer").click(function(){
+        $.ajax({
+            type: "get",
+            url: "/Interne/Transferer?id=" + @Model.cbMarq,
+            dataType: "json",
+            success: function (msg) {
+
+
+                    window.location = "/Interne/ListeDemandeAppro";
+
+                }
+
+
+
+
+
+        });
+
+
+    });
+
+
+
+        $("#TransfererAppro").click(function () {
+       
+        var depCbm = [] ;
+     
+        var depots = [] ;
+        var qtDisponible = [] ;
+       
+        
+        var test= false;
+        var cells = [];
+        var rows = $("#TableListeLignesProduit").dataTable().fnGetNodes();
+      
+        for(var i=0;i<rows.length;i++)
+        {
+           
+
+            var tr = $(rows[i]);
+           
+            var valuedp = tr.find('td:eq(6)').find('option:selected').text();
+         
+            var valuecbm = tr.find('td:eq(7)').find('input').val();
+            var qt = tr.find('td:eq(3)').text();
+        
+            
+            depCbm.push(valuecbm);
+            depots.push(valuedp);
+            qtDisponible.push(qt);
+          
+        }
+        
+      
+
+       
+    
+
+            
+            $.ajax({
+                type: "get",
+                url: "/Interne/TransfererAppro?id=" + @Model.cbMarq + "&&cbms=" + depCbm + "&&depots=" + depots + "&&qtD="+ qtDisponible ,
+
+                //dataType: "json",
+                success: function (data) {
+
+                        window.location = "/Interne/ListeDemandeAppro";
+
+                  
+
+
+                }
+
+            });
+
+
+
+
+
+                
+
+        });
+
+
+    $("#testEnvoyer2").click(function () {
+
+
+        $.ajax({
+            type: "get",
+            url: "/Interne/ValiderDemandeArticle?cbmarq=" + @Model.cbMarq,
+
+
+
+
+            dataType: "json",
+            success: function (msg) {
+
+                window.location = "/Interne/ListeDemandeAppro";
+
+
+            }
+
+        });
+    });
+
+ 
+    @*$('#TableListeLignesProduit2').DataTable({
+        "ajax": {
+
+            "url": "/Interne/getArticlesLine?appiece="+ @Model.cbMarq,
+            "type": 'get',
+
+            "bInfo": false,
+            "bFilter": false,
+            "paging": false,
+            "ordering": false,
+            "info": false,
+            "filter": false,
+            "datatype": "json"
+        },
+        "columns": [
+            {"data": "AR_Ref"},
+            {"data": "AP_Design"},
+            {"data": "AP_Qte"},
+             {"data": "AP_QteE"},
+            {"data": "AP_Affectation"},
+            {
+
+
+                "className": 'changeDepot',
+                "orderable": false,
+                "data": "cbMarq2",
+                "defaultContent": '<button class="btn btn-round btn-info btn-xs"><i class="glyph-icon icon-edit"></i></button>'
+            },
+            {"data": "cbMarq"},
+
+            
+
+
+   //          {"data": "cbMarq2"},
+
+
+        ],
+
+        "columnDefs": [
+
+
+             
+            {
+
+                targets: [3],
+                render: function(data, type,row){
+                    return data;
+
+                }
+            },
+
+              {
+                  targets: [5],
+                  render: function(data, type,row){
+
+
+
+                      var url= "/Interne/SetDept?id="+ data
+                      getservice= function(url){
+                          var res= $.ajax({
+                              type: "POST",
+                              url: url,
+                              dataType: "json",
+                              async: false,
+                              success: function(data){
+
+                              }
+                          }).responseText;
+                          return res;
+
+                      }
+
+                      var resultSerie = getservice(url) ;
+                      //if(resultSerie.length > 2 ){
+                      return getservice(url).split('"').join(' ');
+
+
+                     
+
+
+
+                  }
+
+
+
+
+              },
+
+                {
+                    targets: [6],
+                    render: function(data, type,row){
+                        
+                        var url= "/Interne/SetSerie?id="+ data
+                        getservice= function(url){
+                            var res= $.ajax({
+                                type: "POST",
+                                url: url,
+                                dataType: "json",
+                                async: false,
+                                success: function(data){
+
+                                }
+                            }).responseText;
+                            return res;
+
+                        }
+
+                        var resultSerie = getservice(url) ;
+                        //if(resultSerie.length > 2 ){
+                        return getservice(url).split('"').join(' ');
+                    }
+                },
+        ]
+    });*@ 
+    });
+</script>
+
+
+<script>
+    function SaveDemandeArticle(cbm) {
+
+        $.ajax({
+            type: "get",
+            url: "/Interne/SaveDemandeArticle?cbmarq=" + cbm ,
+
+
+
+
+            dataType: "json",
+            success: function (msg) {
+
+                window.location = "/Interne/ListeDemandeAppro";
+
+
+            }
+        });
+    }
+
+
+</script>
+

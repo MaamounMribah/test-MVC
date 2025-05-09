@@ -1,0 +1,502 @@
+﻿@model BeeProj.Models.B_RECLAMATION
+@{
+    ViewBag.Title = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    .dataTables_filter, .dataTables_info, .dataTables_length, .dataTables_paginate {
+        display: none;
+    }
+
+    .dataTableMargin .ui-datatable-tablewrapper {
+        overflow: hidden;
+    }
+
+    .table .table-bordered .table-striped {
+        overflow-x: hidden;
+        overflow-y: hidden;
+    }
+
+    .dataTables_scroll {
+        overflow: auto;
+    }
+
+
+    table {
+        table-layout: fixed;
+        width: 98% !important;
+    }
+</style>
+<title>Réclamation | Détails Réclamation </title>
+
+<link href="css/bootstrap.min.css" rel="stylesheet">
+<link href="font-awesome/css/font-awesome.css" rel="stylesheet">
+
+<link href="css/animate.css" rel="stylesheet">
+<link href="css/style.css" rel="stylesheet">
+
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-sm-4">
+        <h2> Détails Réclamation</h2>
+        <ol class="breadcrumb">
+            <li>
+                <a href=@Url.Action("Index","Home")>Acceuil</a>
+            </li>
+            <li>
+                <a href="@Url.Action("ListReclamation","Reclamation")">Gestion des Réclamations </a>
+            </li>
+            <li class="breadcrumb-item active">
+                <strong><a href="@Url.Action("Details","Reclamation")">Détails Réclamation</a></strong>
+            </li>
+        </ol>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-9"style="width: 76%; height: 70%;">
+        <div class="wrapper wrapper-content animated fadeInUp">
+            <div class="ibox">
+                <div class="ibox-content">
+                    <div class="row">
+                        <div class="col-lg-12">
+
+
+                            @if ((ViewBag.ReclamRecep == true && Model.RC_ETAT == 0) || (ViewBag.ReclamRep == true && Model.RC_ETAT == 1))
+                            {
+                            <div class="m-b-md">
+                                <a href=@Url.Action("ModifFiche/" + Model.cbMarq, "Reclamation") class="btn lazur-bg pull-right btn-rounded">Modifier la Réclamation</a>
+                                <h2>Description de la Réclamation @ViewBag.Reference</h2>
+                            </div>
+                             }
+                        </div>
+                    </div>
+
+
+
+                    @*----------------------------------------------------------------------------------------------------------*@
+                    <div class="row">
+
+                        <div class="col-lg-5">
+                            
+                               
+                                <dl class="dl-horizontal">
+                                    <br />
+                                    <dt>Ajouté par : </dt>
+                                    <dd>@Html.DisplayFor(model => model.cbCreateur)</dd>
+
+
+
+                                    <dt>Téléphone:</dt>
+                                    <dd>@ViewBag.tel</dd>
+                                    <dd></dd>
+
+
+                                    <dt>Email:</dt>
+                                    <dd>@ViewBag.mail </dd>
+
+
+                                    <dt>Agence </dt>
+                                    <dd> @ViewBag.Agence  </dd>
+
+
+
+                                </dl>
+
+                            
+                        </div>
+                        <div class="col-lg-6" id="cluster_info">
+                            <dl class="dl-horizontal">
+
+                                @if ((ViewBag.ReclamRecep == true || ViewBag.ReclamRep == true) && Model.RC_ETAT >= 1)
+                                {
+
+                                    <dt>Affecté à</dt>
+                                    if (Model.RC_Affecte != "null")
+                                    {
+                                        <dd>@Model.RC_Affecte</dd>
+
+                                    }
+                                    else
+                                    {
+                                        <dd>-</dd>
+
+                                    }
+                                   
+                                    <br />
+                                }
+                                <dt>Statut</dt>
+
+                                @if (Model.RC_ETAT == 0)
+                                {
+                                    <dd><span><i class="label style1 blue-bg">En attente</i> </span></dd>
+                                }
+                                else if (Model.RC_ETAT == 1)
+                                {
+                                    <dd><span><i class="label bg-warning ">En cours</i></span></dd>
+
+
+                                }
+
+                                else if (Model.RC_ETAT == 2)
+                                {
+                                    <dd><span><i class="label bg-info "> Validée </i> </span></dd>
+
+                                }
+                                else if (Model.RC_ETAT == 3)
+                                {
+                                    <dd><span><i class="label bg-danger"> Annuler </i></span></dd>
+                                }
+                                <br />
+                                <dt>Service </dt>
+                                @if (Model.RC_SERVICE == 0)
+                                {
+                                    <dd> <span><i class="label bg-warning"> Service Commercial </i></span> </dd>
+                                    <br />
+                                }
+                                else if (Model.RC_SERVICE == 1)
+                                {
+                                    <dd> <span><i class="label bg-success"> Service Technique </i></span> </dd>
+                                    <br />
+                                }
+                                <dt>Avancement: </dt>
+                                <dd>
+                                    <div class="progress m-b-1">
+                                        <div id="ionrange_1"></div>
+                                        <div style="width: @Model.RC_Avan%;" class="progress-bar progress-bar-striped progress-bar-animated"></div>
+                                    </div>
+
+                                </dd>
+
+                                @*<dt>Niveau</dt>*@
+
+
+
+
+                            </dl>
+
+                        </div>                      
+          
+
+                    <div class="row m-t-sm">
+                        <div class="col-lg-12">
+                            <div class="panel blank-panel">
+                                @*<div class="panel-heading">
+                                    <div class="panel-options">
+                                        <ul class="nav nav-tabs">
+                                            <li class="nav-link active"><a href="#tab-1" data-toggle="tab">Généralité</a></li>
+                                            <li class="nav-link"><a href="#tab-6" data-toggle="tab">Remarques</a></li>
+                                            <li class=""><a href="#tab-4" data-toggle="tab">Documents</a></li>
+                                            <li class=""><a href="#tab-5" data-toggle="tab">Facturation</a></li>
+
+
+                                        </ul>
+                                    </div>
+                                </div>*@
+                             
+
+                                <div class="panel-body">
+
+                                    <div class="tab-content">
+
+                                        <!-- Généralité-->
+
+                                        <div class="tab-pane active " id="tab-1">
+                                            <form method="get" class="form-horizontal">
+
+                                                <div class="ibox float-e-margins">
+
+                                                    @*<div class="ibox-title">
+                                            <h5> Gnénéralités Client</h5>
+                                               <div class="ibox-tools">
+                                                   <a class="collapse-link">
+                                                   <i class="fa fa-chevron-up text-navy"></i>
+                                                   </a>
+                                                 </div>
+                                              </div>*@
+
+                                                    <div class="form-group">
+                                                        <label class="col-sm-2 control-label">Intitulé Client</label>
+                                                        <div class="col-sm-10">
+                                                            <span class="help-block m-b-none">
+                                                                @Html.TextBoxFor(model => model.CT_Intitule, new { @class = "form-control", @Readonly = "Readonly" })
+                                                            </span>
+
+                                                        </div>
+                                                    </div>
+
+
+                                                    <div class="form-group">
+                                                        <label class="col-sm-2 control-label">Telephone</label>
+
+                                                        <div class="col-sm-10">
+                                                            <span class="help-block m-b-none">
+                                                                @Html.TextBoxFor(model => model.CT_Telephone, new { @class = "form-control", @Readonly = "Readonly" })
+                                                            </span>
+                                                        </div>
+                                                    </div>
+
+
+
+                                                    <div class="form-group">
+                                                        <label class="col-sm-2 control-label">Référence Abonnement</label>
+
+                                                        <div class="col-sm-10">
+                                                            <span class="help-block m-b-none">
+                                                                @Html.TextBoxFor(model => model.DO_RefTT, new { @class = "form-control", @Readonly = "Readonly" })
+                                                            </span>
+                                                        </div>
+                                                    </div>
+
+
+
+                                                    <div class="form-group">
+                                                        <label class="col-sm-2 control-label">Description Réclamation</label>
+                                                        <div class="col-sm-10">
+                                                            <span class="help-block m-b-none">
+                                                                @Html.TextAreaFor(model => model.RC_DESCRIPTION, new { @class = "form-control", @Readonly = "Readonly" })
+                                                            </span>
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+
+
+                                            </form>
+                                        </div>
+                                        <!-- FIN Généralité-->
+                                       
+
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                       
+                </div>
+
+</div>
+</div>
+            </div></div>
+
+
+    <!-- TimeLine-->
+
+    <div class="col-lg-3" id="target" style="overflow: scroll; width: 24%; height: 650px;">
+        <div id="vertical-timeline" class="vertical-containe">
+
+
+            @foreach (var item in ViewBag.ListAction)
+            {
+
+                <div class="vertical-timeline-block bg-muted">
+
+
+                    <div class="vertical-timeline-icon lazur-bg">
+                        <i class="fa fa-dot-circle-o"></i>
+                    </div>
+
+
+                    <div class="vertical-timeline-content ">
+                        <div class="stream-panel">
+                            <div class="stream-info">
+                                <a href="#">
+
+                                    <span>@item.cbCreateur</span>
+                                    <span class="date">@item.cbModification</span>
+                                </a>
+                            </div>
+
+                            @item.AC_Commentaire .
+                        </div>
+                    </div>
+                </div>
+
+
+            }
+
+
+
+
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- Mainly scripts -->
+<script src="~/js/jquery-3.1.1.min.js"></script>
+<script src="~/js/plugins/metisMenu/jquery.metisMenu.js"></script>
+<script src="~/js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+
+<script src="~/js/plugins/dataTables/datatables.min.js"></script>
+
+
+<script>
+
+
+    function format(table_id) {
+
+
+
+        return '<table id="table_id" cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;" class="table  table-hover">' +
+          '<thead>'+
+    '<th></th>'+
+    '<th></th>'+
+    '<th></th>'+
+    '<th></th>'+
+
+    '</thead>'+
+       '</table>';
+    }
+
+
+    function sub_DataTable(vtask_id,table_id) {
+
+        var subtable = $('#table_id').DataTable({
+            "ajax": {
+                "url": "/Reclamation/FactureLineJson?id="+vtask_id,
+                "type": "get",
+                "datatype": "json",
+                "scrollX": false,
+                "width": "98%"
+
+            },
+
+            "columns": [
+
+                 { "data": "AR_Ref" },
+                 { "data": "DL_Design" },
+                 { "data": "DL_Qte" },
+                { "data": "DL_totalTTC" }
+
+
+
+            ]
+        });
+    }
+
+
+
+    $(document).ready(function () {
+
+        var table = $("#facture").DataTable({
+            "ajax": {
+
+                "url": "/Reclamation/FactureJson?id=" + @Model.cbMarq,
+
+                "type": "get",
+                "datatype": "json",
+                "scrollX": true,
+                "scrollCollapse": false
+
+
+            },
+            "columns": [
+                 {
+                     "className": "details-control",
+                     "orderable":  false,
+                     "data":       "cbMarq",
+                     "defaultContent": ''
+                 },
+                 { "data": "DO_Statut" },
+                 { "data": "DO_Piece" },
+                 { "data": "DO_Date" },
+                { "data": "DL_totalTTC" }
+
+
+
+            ],
+            "columnDefs": [
+
+                  {
+                      targets: [0],
+                      render: function (data, type, row) {
+
+                          return '<i class="fa fa-plus-circle"></i>';
+
+
+
+
+                      }
+
+                  },
+
+                 {
+                     targets: [1],
+                     render: function (data, type, row) {
+                         if (data == 0) {
+                             return '<i class="label bg-info ">' + 'Payé' + '</i>';
+                         }
+                         else if (data == 1) {
+                             return '<i class="label bg-warning">' + 'Non Payé' + '</i>';
+                         }
+
+
+
+
+                     }
+                 }
+
+
+            ]
+
+
+
+        });
+
+
+        $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+            // var target = $(e.target).attr("href"); // activated tab
+            // alert (target);
+            $($.fn.dataTable.tables(true)).css('width', '100%');
+            $($.fn.dataTable.tables(true)).DataTable().columns.adjust().draw();
+        });
+
+
+
+
+      //   Add event listener for opening and closing details
+        $('#facture tbody').on('click', 'td.details-control', function () {
+            var tr = $(this).closest('tr');
+            var row = table.row(tr);
+
+            var data = table.row($(this)).data();
+
+            if (row.child.isShown()) {
+                // This row is already open - close it
+                row.child.hide();
+                tr.removeClass('shown');
+            }
+            else {
+                var virtual_task_id = data["cbMarq"];
+                var subtable_id = "subtable-"+virtual_task_id;
+                row.child(format(subtable_id)).show(); /* HERE I format the new table */
+                tr.addClass('shown');
+                sub_DataTable(virtual_task_id, subtable_id); /*HERE I was expecting to load data*/
+            }
+        });
+
+
+
+
+
+        //$('#facture').dataTable({
+        //    "fnDrawCallback": function(oSettings) {
+        //        if ($('#facture tr').length < 11) {
+        //            $('.dataTables_paginate').hide();
+        //        }
+        //    }
+        //});
+
+    });
+
+
+
+
+
+
+</script>

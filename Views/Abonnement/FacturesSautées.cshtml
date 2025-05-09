@@ -1,0 +1,198 @@
+﻿@model IEnumerable<BeeProj.ViewModels.List_des_factures_sautées>
+@{
+    ViewBag.Title = "FacturesSautées";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<link href="~/css/plugins/dataTables/datatables.min.css" rel="stylesheet">
+
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-lg-10">
+        <h2>Factures Sautées</h2>
+        <ol class="breadcrumb">
+            <li>
+                <a href="#">Acceuil</a>
+            </li>
+            <li>
+                <a href="@Url.Action("FacturesSautées", "Abonnement")">Recouvrement </a>
+            </li>
+            <li class="active">
+                <a href="@Url.Action("FacturesSautées", "Abonnement")">
+                    <strong>
+                        Factures Sautées
+                    </strong>
+                </a>
+            </li>
+        </ol>
+    </div>
+
+</div>
+</br>
+<div class="row">
+    <div class="col-lg-12">
+        <div class="ibox float-e-margins">
+            <div class="ibox-title">
+                @using (Html.BeginForm("FacturesSautées", "Abonnement", FormMethod.Post))
+                {
+                    <div class="row">
+                        <div class="col-md-5">
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">Statut Abonnement:</label>
+                                <div class="col-sm-9">
+                                    <select name="StatutAbo" id="StatutAbo" class="col-sm-4 form-control chosen-search " data-placeholder="Choisir...">
+                                        @*<option value="">--Choisir--</option>*@
+                                        @foreach (var item in ViewBag.ListeStatut)
+                                        {
+                                            if (item == ViewBag.StatutAbo)
+                                            {
+                                                <option value=@item selected>@item</option>
+                                            }
+                                            else
+                                            {
+                                                <option value=@item>@item</option>
+                                            }
+                                        }
+                                    
+                                    </select>
+
+                                    @*<select name="StatutAbo" id="StatutAbo" class="col-sm-4 form-control chosen-search ">
+            <option value="">--Choisir--</option>
+            <option value="En cours">En cours</option>
+            <option value="Suspendu">Suspendu</option>
+            <option value="Résilié">Résilié</option>
+
+        </select>*@
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-5">
+                            <div class="form-group">
+                                <label class="col-sm-6 control-label">Nombre Factures sautées:</label>
+                                <div class="col-sm-6">
+                                    <input name="NbFact" id="NbFact" class="col-sm-4 form-control chosen-search " value="@ViewBag.NbFact" required/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <span class="input-group-btn ">
+                                <button type="submit" class="btn btn-purplebee ladda-button ladda-button-demo">Rechercher  </button>
+                            </span>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="row">
+
+    <div class="col-lg-12">
+        <div class="ibox float-e-margins">
+            <div class="ibox-title">
+                <h5>Factures Sautées</h5>
+            </div>
+
+            <div class="ibox-content">
+                </br>
+
+                <div class="table-responsive">
+
+                    <table class="table table-responsive table-hover " id="listeAbo">
+                        <thead>
+                            <tr>
+                                <th> Code Abonnement </th>
+                                <th> Code Client </th>
+                                <th> Numero Fixe </th>
+                                <th> Intitule Client </th>
+                                <th> Débit </th>
+                                <th> Périodicité </th>
+                                <th> Contact Client </th>
+                                <th> Statut Abonnement </th>
+                                @*<th> Etat Connexion </th>*@
+                                <th> Solde Abonnement </th>
+                                <th> Nbre Factures Non Payées </th>
+                                <th> Motif Resiliation </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model != null)
+                            {
+                                foreach (var item in Model)
+                                {
+                                    <tr class="gradeX">
+                                        <td>
+
+                                            <a value="@item.Cbmarq"
+                                               title="Voir détails" href="/Abonnement/Details/@item.Cbmarq" target="_blank">
+                                                @item.Code_Abonnement
+                                            </a>
+                                        </td>
+                                        <td> @item.Code_Client </td>
+                                        <td> @item.Numfixe </td>
+                                        <td> @item.Intitule_Client </td>
+                                        <td> @item.Debit </td>
+                                        <td> @item.Periodicite </td>
+                                        <td> @item.Contact</td>
+                                        <td>@item.StatutAbo </td>
+                                        @*<td> @item.EtatConnexion </td>*@
+                                    <td>  <strong>@String.Format("{0:N3}", @item.SoldeAbo)  </strong> TND</td>
+                                        <td> @item.Nbr_Facture_NonPayee </td>
+                                        <td> @item.Motif_Annulation </td>
+                                    </tr>
+                                }
+                            }
+
+
+
+                        </tbody>
+                    </table>
+
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+<script src="~/js/jquery-3.1.1.min.js"></script>
+<script src="~/js/plugins/metisMenu/jquery.metisMenu.js"></script>
+<script src="~/js/plugins/pace/pace.min.js"></script>
+<script src="js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+<script src="~/js/plugins/dataTables/datatables.min.js"></script>
+
+
+<script>
+    $(document).ready(function () {
+
+        $('#listeAbo').DataTable({
+            pageLength: 25,
+            responsive: true,
+            dom: '<"html5buttons"B>lTfgitp',
+            buttons: [
+                { extend: 'copy' },
+                { extend: 'csv' },
+                { extend: 'excel', title: 'ExampleFile' },
+                { extend: 'pdf', title: 'ExampleFile' },
+                {
+                    extend: 'print',
+                    customize: function (win) {
+                        $(win.document.body).addClass('white-bg');
+                        $(win.document.body).css('font-size', '10px');
+
+                        $(win.document.body).find('table')
+                            .addClass('compact')
+                            .css('font-size', 'inherit');
+                    }
+                }
+            ]
+
+        });
+    });
+
+</script>
+
+
+
+

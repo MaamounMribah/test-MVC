@@ -1,0 +1,245 @@
+﻿@model BeeProj.Models.D_LIVRAISON 
+@{
+    ViewBag.Title = "ModifierAdresse";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-sm-4">
+        <h2> Modifier Client</h2>
+        <ol class="breadcrumb">
+            <li>
+                <a href="@Url.Action("index","Home")">Acceuil </a>
+            </li>
+            <li>
+                <a href=@Url.Action("ListeClients", "Structure")>Liste des Clients</a>
+            </li>
+            <li class="active">
+                <a href=@Url.Action("ModifierAdresse", "Structure")><strong>Modifier Adresse</strong></a>
+            </li>
+        </ol>
+    </div>
+</div>
+<br />
+<div class="ibox-content">
+    <div class="row m-t-sm">
+        <div class="col-lg-12">
+            <div class="panel blank-panel">
+@using (Html.BeginForm("ModifierAdresse", "Structure", FormMethod.Post, new { id = "popupForm" }))
+{
+    @Html.HiddenFor(model => Model.cbMarq)
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="form-group col-xs-6">
+                            <label class="col-sm-5 control-label">Adresse <sup>*</sup></label>
+                            <div class="col-sm-7">
+                                @Html.TextBoxFor(m => Model.LI_Adresse, new { @id = "LI_Adresse", @type = "text", @class = "form-control", @placeholder = "Adresse ..." })
+                                @Html.ValidationMessageFor(m => Model.LI_Adresse)                
+                             </div>
+                        </div>
+                        <div class="form-group col-xs-6">
+                            <label class="col-sm-5 control-label">Complement Adresse</label>
+                            <div class="col-sm-7">
+                                @Html.TextBoxFor(m => Model.LI_Complement, new { @id = "LI_Complement", @type = "text", @class = "form-control", @placeholder = "Complement ..." })
+                                @Html.ValidationMessageFor(m => Model.LI_Complement)                              
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-xs-6">
+                            <label class="col-sm-5 control-label">Pays</label>
+                            <div class="col-sm-7">
+                                <input type="text" class="form-control" name="LI_Pays" id="LI_Pays" value="@Model.LI_Pays">
+                            </div>
+                        </div>
+                        <div class="form-group col-xs-6">
+                            <label class="col-sm-5 control-label" required>Gouvernorat</label>
+                            <div class="col-sm-7">
+                                <select class="form-control" id="search" name="LI_Gouvernorat" required>
+                                    <option selected="selected">-- Choisir --</option>
+                                    @foreach (var item in ViewBag.Gouvernoratt)
+                                    {
+                                        if (item.Gouvernorat == Model.LI_Gouvernorat)
+                                        {
+                                        <option value="@item.Gouvernorat" selected>@item.Gouvernorat</option>
+                                        }
+                                        else
+                                        {
+                                            <option value="@item.Gouvernorat">@item.Gouvernorat</option>
+                                        }
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-xs-6">
+                            <label class="col-sm-5 control-label">Ville</label>
+                            <div class="col-sm-7">                            
+                                <select class="form-control" name="LI_Ville" id="LI_Ville" required>
+                                    @if (Model.LI_Ville != null)
+                                    {
+                                    <option selected value="@Model.LI_Ville" name="LI_Ville" id="LI_Ville"> @Model.LI_Ville</option>
+                                    }        
+                                                             
+                                </select>                                
+                              </div>
+                        </div>
+                        <div class="form-group col-xs-6">
+                            <label class="col-sm-5 control-label">Cité</label>
+                            <div class="col-sm-7">
+                                <select class="form-control" name="LI_Localite" id="Localite" >
+                                    @if (Model.LI_Localite != null)
+                                    {
+                                    <option class="form-control" name="CT_Localite" id="CT_Localite" selected value="@Model.LI_Localite">@Model.LI_Localite</option>
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-xs-6">
+                            <label class="col-sm-5 control-label">Code postal</label>
+                            <div class="col-sm-7">
+                                <input type="text" class="form-control" name="LI_CodePostal" id="LI_CodePostal" value="@Model.LI_CodePostal" required>
+                            </div>
+                        </div>
+                        <div class="form-group col-xs-6">
+                            <label class="col-sm-5 control-label">Région</label>
+                            <div class="col-sm-7">
+                                <select class="form-control" name="LI_CodeRegion" id="LI_CodeRegion" required>
+                                    @foreach (var item in ViewBag.CodesRegions)
+                                    {
+                                        if (item.R_CodeRegion == Model.LI_CodeRegion)
+                                        {
+                                            <option value="@item.R_CodeRegion" name="R_CodeRegion" selected> @item.R_Intitule</option>
+                                        }
+                                        else
+                                        {
+                                        <option value="@item.R_CodeRegion" name="R_CodeRegion"> @item.R_Intitule</option>
+                                        }
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+                    <div class="card-body">
+                        <center>
+                            <button type="submit" class="btn btn-purplebee ladda-button pull-right"  name="CbMarq" value="Model.CbMarq">
+                                <i class="fa fa-save"></i> Enregistrer les modifications
+                            </button>
+                        </center>
+                    </div>
+                   
+                </div>
+}
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!-- Toastr script -->
+<script src="~/js/plugins/toastr/toastr.min.js"></script>
+<script src="~/js/plugins/dataTables/datatables.min.js"></script>
+<script src="~/js/jquery-3.1.1.min.js"></script>
+<script src="~/js/plugins/metisMenu/jquery.metisMenu.js"></script>
+<script src="~/js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+<script src="~/js/plugins/dataTables/datatables.min.js"></script>
+<script src="~/js/accounting.js"></script>
+<script src="~/js/accounting.min.js"></script>
+<!-- Chosen -->
+<script src="~/js/plugins/chosen/chosen.jquery.js"></script>
+<!-- Sweet alert -->
+<script src="~/js/plugins/sweetalert/sweetalert.min.js"></script>
+<!-- Mainly scripts -->
+<!-- Nestable List -->
+<script src="~/js/plugins/nestable/jquery.nestable.js"></script>
+<script>
+    $('#search').change(function () {
+        //  $('#selectCP').addClass('chosen-select');
+        region = $('select#search').find("option:selected").val();
+        getRegion();
+        // alert(region);
+    });
+    function getRegion() {
+
+        $.ajax({
+            type: "get",
+            url: '@Url.Action("isRegionExists")', // we are calling json method
+            dataType: 'json',
+            data: { identifiant: $('select#search').find("option:selected").val() },
+            success: function (msg) {
+                if (msg.result == 0) {
+
+                    var len = msg.data.length;
+
+                    $("#LI_Ville").empty();
+                    $("#LI_Ville").append("<option>-- Choisir --</option>");
+
+                    for (var i = 0; i < len; i++) {
+
+                        $("#LI_Ville").append("<option value='" + msg.data[i].trim() + "'>" + msg.data[i].trim() + "</option>");
+
+                    }
+
+                }
+            }
+        });
+    }
+            @*---------------------------------------------------- 19/08/2019 manel ---------------------------------------------------------------*@
+    $('#LI_Ville').change(function () {
+        //  $('#selectCP').addClass('chosen-select');
+        ville = $('select#LI_Ville').val();
+        getCitee();
+        // alert(ville);
+
+    });
+    function getCitee() {
+
+        $.ajax({
+            type: "get",
+            url: '@Url.Action("isCiteeExists")', // we are calling json method
+            dataType: 'json',
+            data: { identifiant: $('select#LI_Ville').find("option:selected").val() },
+            success: function (msg) {
+                if (msg.result == 0) {
+
+                    var len = msg.data.length;
+                    $("#Localite").empty();
+                    $("#Localite").append("<option>-- Choisir --</option>");
+
+                    for (var i = 0; i < len; i++) {
+
+                        $("#Localite").append("<option value='" + msg.data[i].trim() + "'>" + msg.data[i].trim() + "</option>");
+
+                    }
+
+                }
+            }
+        });
+    }
+
+    $('#Localite').change(function () {
+        //  $('#selectCP').addClass('chosen-select');
+        citee = $('select#Localite').val();
+        getCodepostal();
+        // alert(ville);
+
+    });
+    function getCodepostal() {
+
+        $.ajax({
+            type: "get",
+            url: '@Url.Action("isCodePostalExists")', // we are calling json method
+            dataType: 'json',
+            data: { identifiant: $('select#Localite').find("option:selected").val() },
+            success: function (msg) {
+                if (msg.result == 0) {
+                    $("#LI_CodePostal").val(msg.data);
+                }
+            }
+        });
+    }
+
+</script>

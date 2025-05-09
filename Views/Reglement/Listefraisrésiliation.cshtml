@@ -1,0 +1,210 @@
+﻿
+@model BeeProj.Models.B_FCABONNEMENT
+@{
+    ViewBag.Title = "Listefraisrésiliation";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+
+<link href="~/css/plugins/dataTables/datatables.min.css" rel="stylesheet">
+
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-sm-4">
+        <h2>Liste d'avances</h2>
+        <ol class="breadcrumb">
+
+            <li class="active">
+                <strong>Liste frais résiliation </strong>
+            </li>
+        </ol>
+    </div>
+</div>
+<div class="row">
+    <div class="wrapper wrapper-content animated fadeInUp">
+        <div class="ibox float-e-margins">
+
+            @if (ViewBag.reglement != null)
+            {
+
+                <div class="wrapper wrapper-content animated fadeInRight">
+                    <div class="row">
+                        <div class="col-lg-12">
+
+                          
+                                <div class="ibox-content">
+
+                                    <table class="table table-striped table-bordered table-responsive table-hover dataTables-example " id="ListeFacturesVersee">
+
+                                        <thead>
+                                            <tr>
+                                                <th>Statut</th>
+                                                <th>Numéro Réglement</th>
+                                                <th>Bordereau de versement</th>
+                                                <th>Date Réglement</th>
+                                                <th>Intitule Client</th>
+                                                <th>Identifiant</th>
+                                                <th>Statut abonnement</th>
+                                                <th>Référence Abonnement</th>
+                                                <th>Numéro Fixe</th>
+                                                <th>Date Abonnement</th>
+                                                <th>Statut Abonnement</th>
+                                                <th>Intitulé Agence</th>
+                                                <th>Mode Réglement</th>
+                                                <th>Avance d'abonnement valide</th>
+                                                <th>Avance d'abonnement non valide </th>
+                                                <th>Avance d'abonnement annulé </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach (var item in ViewBag.reglement)
+                                            {
+                                                <tr>
+                                                    <td class="project-status">
+                                                        @if (item.Statut != 1)
+                                                        {
+                                                            <span class="label bg-greenbee">Versé</span>
+                                                        }
+                                                        else
+                                                        {
+                                                            <span class="label bg-warning">Non Versé</span>
+                                                        }
+                                                    </td>
+
+                                                    <td><a href="/GestionFactures/ImpressionRecu/@item.cbMarq" target="_blank">@item.Numéro_Réglement</a></td>
+                                                    <td>@item.BordereauVersement</td>
+                                                    <td>@item.Date.ToString("dd/MM/yyyy")</td>
+                                                    <td>@item.Intitule_Client</td>
+                                                    <td>@item.Identifiant</td>
+                                                    <td>
+                                                        <a href="/Abonnement/details/@item.CbmarqAbo" target="_blank">
+                                                            @item.Reference_Abonnement
+                                                        </a>
+                                                    </td>
+                                                    <td class="project-status">
+                                                        @if (item.Etape == 7)
+                                                        {
+                                                            <span class="label bg-purplebee">Validé</span>
+                                                        }
+                                                        else if (item.Etape == 8)
+                                                        {
+                                                            <span class="label bg-warning">Annulé</span>
+                                                        }
+                                                        else
+                                                        {
+                                                            <span class="label bg-graybee">Non valide</span>
+                                                        }
+                                                    </td>
+                                                    <td>@item.Numéro_fixe</td>
+                                                    <td>@item.Date_Abonnement.ToString("dd/MM/yyyy")</td>
+                                                    <td class="project-status">
+                                                        @if (item.Etape == 7)
+                                                        {
+                                                            <span>Validé</span>
+                                                        }
+                                                        else if (item.Etape == 8)
+                                                        {
+                                                            <span>Annulé</span>
+                                                        }
+                                                        else if (item.Statut_Abonnement == 1)
+                                                        {
+                                                            <span>Resilié</span>
+                                                        }
+                                                        else
+                                                        {
+                                                            <span>En cours</span>
+
+                                                        }
+                                                    </td>
+                                                    <td> @item.Intitulé_Agence</td>
+                                                    <td>
+                                                        @if (@item.Mode_Reglement == 2)
+                                                        {
+                                                            <i class="label bg-purplebee-light ">ESPECE</i>
+                                                        }
+                                                        else if (@item.Mode_Reglement == 1)
+                                                        {
+                                                            <i class="label bg-purplebee"> CHEQUE </i>
+                                                        }
+                                                        else if (@item.Mode_Reglement == 9)
+                                                        {
+                                                            <i class="label bg-purplebee"> CARTE BANCAIRE</i>
+                                                        }
+                                                        else if (@item.Mode_Reglement == 4)
+                                                        {
+                                                            <i class="label bg-greenbee">VIREMENT BANCAIRE</i>
+                                                        }
+                                                    </td>
+                                                    <td>
+                                                        @String.Format("{0:N3}", item.AvanceValide)
+                                                    </td>
+                                                    <td>
+                                                        @String.Format("{0:N3}", item.AvanceNonValide)
+
+                                                    </td>
+                                                    <td>
+                                                        @String.Format("{0:N3}", item.AvanceAnnule)
+                                                    </td>
+                                                </tr>
+                                            }
+
+                                        </tbody>
+                                    </table>
+                                    <h3>Total :  @ViewBag.Somme</h3>
+                                </div>
+
+                            
+
+                        </div>
+                    </div>
+                </div>
+
+            }
+            else
+            {
+                <div class="alert alert-danger alert-dismissable">
+                    <button type="button" class="close " data-dismiss="alert">×</button>
+                    Pas de Réglement.
+                </div>
+            }
+        </div>
+    </div>
+</div>
+<script src="~/js/jquery-3.1.1.min.js"></script>
+<script src="~/js/plugins/metisMenu/jquery.metisMenu.js"></script>
+<script src="~/js/plugins/pace/pace.min.js"></script>
+<script src="~/js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+<script src="~/js/plugins/chosen/chosen.jquery.js"></script>
+<script src="~/js/plugins/dataTables/datatables.min.js"></script>
+
+<script>
+    $(function () {
+        $('.dataTables-example').DataTable({
+            pageLength: 25,
+            //"order": [[1, "desc"]],
+            responsive: true,
+            dom: '<"html5buttons"B>lTfgitp',
+            buttons: [
+                { extend: 'copy' },
+                { extend: 'csv' },
+                { extend: 'excel', title: 'ExampleFile' },
+                { extend: 'pdf', title: 'ExampleFile' },
+
+                {
+                    extend: 'print',
+                    customize: function (win) {
+                        $(win.document.body).addClass('white-bg');
+                        $(win.document.body).css('font-size', '100px');
+
+                        $(win.document.body).find('table')
+                            .addClass('compact')
+                            .css('font-size', 'inherit');
+                    }
+                }
+            ]
+
+        });
+
+    });
+
+</script>

@@ -1,0 +1,318 @@
+﻿
+@{
+    ViewBag.Title = "DetailsProformat";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<link href="~/css/plugins/iCheck/custom.css" rel="stylesheet">
+<link href="~/css/plugins/jasny/jasny-bootstrap.min.css" rel="stylesheet">
+<link href="~/css/plugins/footable/footable.core.css" rel="stylesheet">
+<!-- Sweet Alert -->
+<link href="~/css/plugins/sweetalert/sweetalert.css" rel="stylesheet">
+<!-- Toastr style -->
+<link href="~/css/plugins/toastr/toastr.min.css" rel="stylesheet">
+<link href="~/css/InvoiceCSS.css" rel="stylesheet" />
+<div class="row wrapper border-bottom white-bg page-heading">
+
+    <div class="col-lg-10">
+        <br />
+        <ol class="breadcrumb">
+            <li>
+                <a href="@Url.Action("Index","Home")">Acceuil</a>
+            </li>
+            <li>
+                <a href="@Url.Action("Index","Home")">Espace Freelancer</a>
+            </li>
+            <li class="active">
+                <strong>Details Proformat </strong>
+            </li>
+        </ol>
+    </div>
+</div>
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <div class="pull-right">
+            <i class="fa fa-money text-purplebee"></i>
+        </div>
+        <h5 class="panel-title">
+            <a data-toggle="collapse" data-parent="#accordion" href="#collapseTwo">Détails Proformat </a>
+        </h5>
+    </div>
+    <div id="collapseTwo" class="panel-collapse collapse in">
+        <div class="panel-body" style="padding: 68px;">
+            <div class="row" id="invoice-box-id">
+                <div class="image-upload pull-right">
+                    <label for="file-input">
+                        <img src="/img/bee.png" alt="BEE" />
+                    </label>
+                </div>
+                <br />
+                <br />
+                <br />
+                <br />
+                <br />
+
+                <invoice>
+                    <h1 contenteditable style="background: #000;border-radius: 0.25em;color: #FFF; margin: 0 0 1em;padding: 0.5em 0; letter-spacing: 0.3em; text-align: center;text-transform: uppercase;">
+                        Facture #@ViewBag.entete_proformat.DO_Ref
+                    </h1>
+
+                    <address contenteditable class="pull-right">
+
+                        <p>BEE </p>
+                        <p>22 rue om elbenin -</p>
+                        <p> Mutuelville El menzah, 1082 - Tunisie</p>
+                        <p>(00216) 71 100 440</p>
+                    </address>
+                </invoice>
+
+                <article>
+                    <address contenteditable>
+                        <div class="image-upload">
+                            <label for="file-input">
+                                <img src="http://www.skidompha.org/wp-content/uploads/2018/05/Your-Logo.png" alt="votre Logo" id="blah" />
+                            </label>
+                            <input id="file-input" type="file" onchange="readURL(this);" accept=".png, .jpg, .jpeg" />
+                        </div>
+                        <p>
+                            @ViewBag.freelancer.CT_Intitule <br>
+                            @ViewBag.freelancer.CT_Adresse
+                        </p>
+                    </address>
+
+                    <table class="inventory">
+                        <thead>
+                            <tr>
+                                <th><span contenteditable>Article</span></th>
+                                <th><span contenteditable>Description</span></th>
+                                <th><span contenteditable>Quantité</span></th>
+                                <th><span contenteditable>Prix HT </span></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                            @foreach (var item in ViewBag.ligne_proformat)
+                            {
+                                <tr>
+                                    <td><a class="cut">-</a><span contenteditable>@item.AR_Ref</span></td>
+                                    <td><span contenteditable>@item.DL_Design</span></td>
+                                    <td><span>@item.DL_Qte</span></td>
+                                    <td><span data-prefix>@item.DL_MontantHT </span></td>
+
+                                </tr>
+                            }
+
+                        </tbody>
+                    </table>
+
+                    <table class="balance">
+                        <tr>
+                            <th><span contenteditable>Total</span></th>
+                            <td><span>@String.Format("{0:N3}", ViewBag.entete_proformat.DO_totalTTC /*+ (decimal)0.600*/)<small>TND</small></span></td>
+                        </tr>
+
+                    </table>
+                </article>
+                <aside>
+                    <h1><span contenteditable> </span></h1>
+                    <div contenteditable>
+                        <p> </p>
+                    </div>
+                </aside>
+            </div>
+        </div>
+    </div>
+
+
+
+
+</div>
+<script src="~/js/jquery-3.1.1.min.js"></script>
+<!-- iCheck -->
+<script src="~/js/plugins/iCheck/icheck.min.js"></script>
+<!-- Toastr script -->
+<script src="~/js/plugins/toastr/toastr.min.js"></script>
+<!-- Sweet alert -->
+<script src="~/js/plugins/sweetalert/sweetalert.min.js"></script>
+
+
+<script>
+    /* Shivving (IE8 is not supported, but at least it won't look as awful)
+    /* ========================================================================== */
+
+    function printDiv(elem) {
+        renderMe($('<div/>').append($(elem).clone()).html());
+    }
+    function renderMe(data) {
+        var mywindow = window.open('', 'invoice-box', 'height=1000,width=1000');
+        mywindow.document.write('<html><head><title>invoice-box</title>');
+        mywindow.document.write('<link rel="stylesheet" href="~/css/InvoiceCSS.css" type="text/css" />');
+        mywindow.document.write('</head><body >');
+        mywindow.document.write(data);
+        mywindow.document.write('</body></html>');
+
+
+        setTimeout(function () {
+            mywindow.print();
+            mywindow.close();
+        }, 1000)
+        return true;
+    }
+
+
+
+    function readURL(input) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+
+            reader.onload = function (e) {
+                $('#blah')
+                    .attr('src', e.target.result);
+            };
+
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+    (function (document) {
+        var
+        head = document.head = document.getElementsByTagName('head')[0] || document.documentElement,
+        elements = 'article aside audio bdi canvas data datalist details figcaption figure footer header hgroup mark meter nav output picture progress section summary time video x'.split(' '),
+        elementsLength = elements.length,
+        elementsIndex = 0,
+        element;
+
+        while (elementsIndex < elementsLength) {
+            element = document.createElement(elements[++elementsIndex]);
+        }
+
+        element.innerHTML = 'x<style>' +
+            'article,aside,details,figcaption,figure,footer,header,hgroup,nav,section{display:block}' +
+            'audio[controls],canvas,video{display:inline-block}' +
+            '[hidden],audio{display:none}' +
+            'mark{background:#FF0;color:#000}' +
+        '</style>';
+
+        return head.insertBefore(element.lastChild, head.firstChild);
+    })(document);
+
+    /* Prototyping
+    /* ========================================================================== */
+
+    (function (window, ElementPrototype, ArrayPrototype, polyfill) {
+        function NodeList() { [polyfill] }
+        NodeList.prototype.length = ArrayPrototype.length;
+
+        ElementPrototype.matchesSelector = ElementPrototype.matchesSelector ||
+        ElementPrototype.mozMatchesSelector ||
+        ElementPrototype.msMatchesSelector ||
+        ElementPrototype.oMatchesSelector ||
+        ElementPrototype.webkitMatchesSelector ||
+        function matchesSelector(selector) {
+            return ArrayPrototype.indexOf.call(this.parentNode.querySelectorAll(selector), this) > -1;
+        };
+
+        ElementPrototype.ancestorQuerySelectorAll = ElementPrototype.ancestorQuerySelectorAll ||
+        ElementPrototype.mozAncestorQuerySelectorAll ||
+        ElementPrototype.msAncestorQuerySelectorAll ||
+        ElementPrototype.oAncestorQuerySelectorAll ||
+        ElementPrototype.webkitAncestorQuerySelectorAll ||
+        function ancestorQuerySelectorAll(selector) {
+            for (var cite = this, newNodeList = new NodeList; cite = cite.parentElement;) {
+                if (cite.matchesSelector(selector)) ArrayPrototype.push.call(newNodeList, cite);
+            }
+
+            return newNodeList;
+        };
+
+        ElementPrototype.ancestorQuerySelector = ElementPrototype.ancestorQuerySelector ||
+        ElementPrototype.mozAncestorQuerySelector ||
+        ElementPrototype.msAncestorQuerySelector ||
+        ElementPrototype.oAncestorQuerySelector ||
+        ElementPrototype.webkitAncestorQuerySelector ||
+        function ancestorQuerySelector(selector) {
+            return this.ancestorQuerySelectorAll(selector)[0] || null;
+        };
+    })(this, Element.prototype, Array.prototype);
+
+    /* Helper Functions
+    /* ========================================================================== */
+
+
+    function parseFloatHTML(element) {
+        return parseFloat(element.innerHTML.replace(/[^\d\.\-]+/g, '')) || 0;
+    }
+
+    function parsePrice(number) {
+        return number.toFixed(2).replace(/(\d)(?=(\d\d\d)+([^\d]|$))/g, '$1,');
+    }
+
+    /* Update Number
+    /* ========================================================================== */
+
+    function updateNumber(e) {
+        var
+        activeElement = document.activeElement,
+        value = parseFloat(activeElement.innerHTML),
+        wasPrice = activeElement.innerHTML == parsePrice(parseFloatHTML(activeElement));
+
+        if (!isNaN(value) && (e.keyCode == 38 || e.keyCode == 40 || e.wheelDeltaY)) {
+            e.preventDefault();
+
+            value += e.keyCode == 38 ? 1 : e.keyCode == 40 ? -1 : Math.round(e.wheelDelta * 0.025);
+            value = Math.max(value, 0);
+
+            activeElement.innerHTML = wasPrice ? parsePrice(value) : value;
+        }
+
+        updateInvoice();
+    }
+
+    /* Update Invoice
+    /* ========================================================================== */
+
+    function updateInvoice() {
+        var total = 0;
+        var cells, price, total, a, i;
+
+        // update inventory cells
+        // ======================
+
+        for (var a = document.querySelectorAll('table.inventory tbody tr'), i = 0; a[i]; ++i) {
+            // get inventory row cells
+            cells = a[i].querySelectorAll('span:last-child');
+
+            // set price as cell[2] * cell[3]
+            price = parseFloatHTML(cells[2]) * parseFloatHTML(cells[3]);
+
+            // add price to total
+            total += price;
+
+            // set row total
+            cells[4].innerHTML = price;
+        }
+
+        // update balance cells
+        // ====================
+
+        // get balance cells
+        cells = document.querySelectorAll('table.balance td:last-child span:last-child');
+
+        // set total
+        cells[0].innerHTML = total;
+
+        // set balance and meta balance
+        cells[2].innerHTML = document.querySelector('table.meta tr:last-child td:last-child span:last-child').innerHTML = parsePrice(total - parseFloatHTML(cells[1]));
+
+        // update prefix formatting
+        // ========================
+
+        var prefix = document.querySelector('#prefix').innerHTML;
+        for (a = document.querySelectorAll('[data-prefix]'), i = 0; a[i]; ++i) a[i].innerHTML = prefix;
+
+        // update price formatting
+        // =======================
+
+        for (a = document.querySelectorAll('span[data-prefix] + span'), i = 0; a[i]; ++i) if (document.activeElement != a[i]) a[i].innerHTML = parsePrice(parseFloatHTML(a[i]));
+    }
+</script>

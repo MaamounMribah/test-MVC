@@ -1,0 +1,52 @@
+﻿@{
+    ViewBag.Title = "Liste des versements ";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<link href="~/css/plugins/dataTables/datatables.min.css" rel="stylesheet">
+
+<div style="margin:30px;">
+    <table id="example" class="display" cellspacing="0" width="100%">
+        <thead>
+            <tr style="text-align:left;">
+                <th>Name</th>
+                <th>Age</th>
+                <th>DoB</th>
+            </tr>
+        </thead>
+
+        <tfoot>
+            <tr style="text-align:left;">
+                <th>Name</th>
+                <th>Age</th>
+                <th>DoB</th>
+            </tr>
+        </tfoot>
+    </table>
+</div>
+
+<script src="~/js/jquery-3.1.1.min.js"></script>
+<script src="~/js/plugins/dataTables/datatables.min.js"></script>
+
+
+<script>
+    $(document).ready(function () {
+        $('#example').dataTable({
+            "processing": true,
+            "serverSide": true,
+            "info": true,
+            "stateSave": true,
+            "lengthMenu": [[10, 20, 50, -1], [10, 20, 50, "All"]],
+            "ajax":{
+                "url": "@string.Format("{0}://{1}{2}", Request.Url.Scheme, Request.Url.Authority, Url.Content("~"))/documentsvente/AjaxGetJsonData",
+                "type": "GET"
+            },
+            "columns": [
+                { "data": "DO_RefTT", "orderable": true },
+                { "data": "LS_NoSerie", "orderable": false },
+                { "data": "CT_Intitule", "orderable": true }
+            ],
+            "order": [[0, "asc"]]
+        });
+    });
+</script>

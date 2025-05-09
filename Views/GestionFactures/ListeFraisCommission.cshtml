@@ -1,0 +1,442 @@
+﻿@{
+    ViewBag.Title = "Liste Proformat";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<link href="~/css/plugins/toastr/toastr.min.css" rel="stylesheet">
+<link href="~/css/plugins/dataTables/datatables.min.css" rel="stylesheet">
+<link href="~/css/plugins/sweetalert/sweetalert.css" rel="stylesheet">
+<!-- Ladda style -->
+<link href="~/css/plugins/ladda/ladda-themeless.min.css" rel="stylesheet">
+<!-- Toastr style -->
+<link href="~/css/plugins/toastr/toastr.min.css" rel="stylesheet">
+
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-lg-10">
+        <h2>Liste des facturations des commissions</h2>
+        <ol class="breadcrumb">
+            <li>
+                <a href=@Url.Action("Index","Home")>Acceuil</a>
+            </li>
+            <li>
+                <a href=@Url.Action("ListeFraisCommission", "GestionFactures")>Liste Proformat</a>
+            </li>
+            <li class="active">
+                <strong>Liste Proformat & Factures </strong>
+            </li>
+        </ol>
+    </div>
+    <div class="col-lg-2">
+
+    </div>
+</div>
+
+
+@if (ViewBag.isPVIfournisseur)
+{
+
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-lg-4">
+            <div class="widget style1 text-white bg-purplebee">
+                <div class="row">
+                    <div class="col-xs-4">
+                        <i class="fa fa-money fa-5x"></i>
+                    </div>
+                    <div class="col-xs-8 text-right">
+                        <span> Facturations des commissions validées </span>
+                        <h2 class="font-bold">@ViewBag.CommissionValidees</h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <div class="widget style1 text-white bg-greenbee">
+                <div class="row">
+                    <div class="col-xs-4">
+                        <i class="fa fa-check-circle-o fa-5x"></i>
+                    </div>
+                    <div class="col-xs-8 text-right">
+                        <span> Facturation en cours de traitement</span>
+                        <h2 class="font-bold">@ViewBag.CommissionEnCours</h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <div class="widget style1 text-white bg-graybee">
+                <div class="row">
+                    <div class="col-xs-4">
+                        <i class="fa fa-close fa-5x"></i>
+                    </div>
+                    <div class="col-xs-8 text-right">
+                        <span> Facturation annulée</span>
+                        <h2 class="font-bold">@ViewBag.CommissionAnnuler</h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="wrapper wrapper-content animated fadeInUp">
+                    <div class="ibox">
+                        <div class="ibox-title">
+                            <h5>Proformats et factures  </h5>
+                          
+                        </div>
+                        <div class="ibox-content">
+                            <div class="project-list">
+
+                                @if (ViewBag.Proformat.Count == 0)
+                                {
+                                    <h3>Aucune facture de commission</h3>
+                                }
+                                else
+                                {
+                                <table class="table table-striped table-bordered table-hover dataProformat">
+                                <thead>
+                                    <tr>
+                                        <th>Statut </th>
+                                        <th>N° Piece </th>
+                                        <th>Mois de commission </th>
+                                        <th>Intitulé Agence </th>
+                                        <th>T.T.C</th>
+                                        <th>Action </th>
+                                        <th>Commentaire </th>
+                                    </tr>
+                                </thead>
+                                    <tbody>
+                                       
+
+                                        @foreach (var item in ViewBag.Proformat)
+                                        {
+                                            <tr>
+                                                <td class="project-status">
+                                                    @if (item.DO_Statut == 3)
+                                                    {
+                                                        <span class="label bg-purplebee">Non traitée</span>
+                                                    }
+                                                    else if (item.DO_Statut == 0)
+                                                    {
+                                                        <span class="label bg-purplebee">Validé</span>
+                                                    }
+                                                    else if (item.DO_Statut == 13)
+                                                    {
+                                                        <span class="label bg-greenbee">En Attente </span>
+                                                    }
+                                                    else if (item.DO_Statut == 1)
+                                                    {
+                                                        <span class="label bg-graybee">Annulé </span>
+                                                    }
+                                                    else if (item.DO_Statut == 2)
+                                                    {
+                                                        <span class="label bg-graybee">Validé </span>
+                                                    }
+                                                    else if (item.DO_Statut == 5)
+                                                    {
+                                                        <span class="label bg-graybee">Payé </span>
+                                                    }
+                                                </td>
+                                                <td class="project-title">
+                                                    <a>@item.DO_Piece</a>
+                                                    <br />
+                                                    <small>@item.DO_Date.ToString("dd/MM/yyyy")</small>
+                                                </td>
+                                                <td>
+                                                    @foreach (var item1 in item.ListMois)
+                                                    {
+                                                        @item1
+                                                    }
+                                                 </td>
+                                                <td>
+                                                    @item.IntituleAgence
+                                                </td>
+                                                <td>
+                                                    @String.Format("{0:N3}", item.MontantTTc /*+ (decimal)0.600*/) DT
+                                                </td>
+
+                                                <td>
+
+                                                    @if (Request.IsAuthenticated && (User.IsInRole("Admin") || User.IsInRole("FacturerCommission")))
+                                                    {
+                                                        if (item.DO_Statut == 13 || item.DO_Statut == 3)
+                                                        {
+                                                            <button type="button" onclick="ValiderFact(@item.cbMarq)" class="btn btn-sm btn-outline btn-purplebee ">
+                                                                <i class="fa fa-dollar "></i> Valider
+                                                            </button>
+                                                            <button type="button" id="PaiementCommission" onclick="annuler(@item.cbMarq)" class="btn btn-sm btn-outline btn-graybee" title="Annuler">
+                                                                <i class="fa fa-close"></i> Annuler
+                                                            </button>
+                                                        }
+                                                        else if (item.DO_Statut == 0)
+                                                        {
+                                                            <span class="label text-purplebee">@item.code_externe </span>
+                                                        }
+                                                        else if (item.DO_Statut == 2)
+                                                        {
+                                                            <button type="button" onclick="PayerFact(@item.cbMarq)" class="btn btn-sm btn-outline btn-purplebee ">
+                                                                <i class="fa fa-dollar "></i> Payer
+                                                            </button>
+                                                        }
+                                                        @*else
+                                                        {
+                                                            <strong>--</strong>
+                                                        }*@
+
+
+                                                    }
+                                                    <a class="btn btn-greenbee btn-xs btn-bitbucket" title=" "
+                                                       href="@Url.Action("DetailsProformat", "EspaceRevendeur", new { id = item.cbMarq })" target="_blank">
+                                                        <i title="Détails proformat" class="fa fa-eye"></i>
+                                                    </a>
+
+                                                </td>
+                                                <td>@item.Commentaire</td>
+                                            </tr>
+                                        }
+
+                                    </tbody>
+                                </table>
+
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="modal inmodal" id="PaiementCommissionModal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content animated bounceIn">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <i class="fa fa-money modal-icon"></i>
+                    <h4 class="modal-title">Annuler la demande</h4>
+                </div>
+                <div class="modal-body">
+                    <fieldset id="SubmitForm" class="float-e-margins">
+                        <div class="row">
+                            <div class="form-group float-e-margins">
+                                <input id="Valider" name="Valider" value="0" class="hidden" />
+                                <div class="row">
+                                    <div class="ibox float-e-margins">
+                                        <div class="ibox-content">
+                                            <form class="form-horizontal">
+
+                                                <div class="alert alert-danger alert-dismissable">
+                                                    <button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>
+                                                    Attention!
+                                                    Temporairement c'est à dire la commission peut étre facturer une autre fois
+                                                    <br />
+                                                    Définitivement c'est à dire la commission ne peut pas étre facturer qu'une seul fois
+                                                </div>
+
+
+                                                <br />
+                                                <div class="form-group">
+                                                    <label class="col-lg-4 control-label">Vous voulez annulez la commisssion facturé *</label>
+                                                    <div class="col-lg-8">
+                                                        <select class="col-lg-8 form-control chosen-search " id="cbindice" name="cbindice">
+                                                            <option class="font-bold" value="1"> Temporairement </option>
+                                                            <option class="font-bold" value="2"> Définitivement </option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="col-lg-4 control-label">Commentaire</label>
+                                                    <div class="col-lg-8">
+                                                        <input type="text" class="form-control" name="description" id="description" placeholder="Commentaire" maxlength="30" />
+                                                    </div>
+                                                </div>
+                                                <hr />
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </fieldset>
+                </div>
+                <div class="modal-footer">
+                    <button type="reset" class="btn btn-white" data-dismiss="modal">Annuler</button>
+                    <button type="button" class="btn btn-purplebee ladda-button" id="PayerFacture" @*onclick="this.disabled=true"*@><i class="fa fa-money"></i>Confirmer l'annulation</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>  
+
+
+
+<script src="~/js/jquery-3.1.1.min.js"></script>
+
+<script src="~/js/plugins/chosen/chosen.jquery.js"></script>
+<script src="~/js/plugins/dataTables/datatables.min.js"></script>
+<!-- Sweet alert -->
+<script src="~/js/plugins/sweetalert/sweetalert.min.js"></script>
+<!-- Ladda -->
+    <script src="~/js/plugins/ladda/spin.min.js"></script>
+    <script src="~/js/plugins/ladda/ladda.min.js"></script>
+    <script src="~/js/plugins/ladda/ladda.jquery.min.js"></script>
+    <!-- Toastr script -->
+    <script src="~/js/plugins/toastr/toastr.min.js"></script>
+<script>
+    
+    function PayerFact(data) {
+
+        swal({
+            title: "Payer cette facture?",
+            text: " ",
+            type: "warning",
+            showCancelButton: true,
+            cancelButtonText: 'Annuler',
+            confirmButtonColor: "#DD6B55",
+            confirmButtonText: "Oui.",
+            closeOnConfirm: false
+        }, function () {
+            $.ajax({
+                type: "get",
+                url: "/GestionFactures/PayerProformat?id=" + data, // valider facturation des commissions
+                dataType: 'json',
+                //data: { id: data },
+                success: function (msg) {
+                    if (msg.msg == 0) {
+                        swal("Payée", "Facture payée avec succès ! ", "success");
+
+                        location.reload();
+
+                    }
+                    else {
+                        swal({
+                            title: "Echec",
+                            text: "Un problème est survenu",
+                            type: "danger"
+                        });
+                    }
+                }
+            });
+        });
+    }
+    function ValiderFact(data) {
+
+        swal({
+            title: "Valider cette facture?",
+            text: " ",
+            type: "warning",
+            showCancelButton: true,
+            cancelButtonText: 'Annuler',
+            confirmButtonColor: "#DD6B55",
+            confirmButtonText: "Oui.",
+            closeOnConfirm: false
+        }, function () {
+            $.ajax({
+                type: "get",
+                url: "/GestionFactures/ValiderProformat?id=" + data, // valider facturation des commissions
+                dataType: 'json',
+                //data: { id: data },
+                success: function (msg) {
+                    if (msg.msg == 0) {
+                        swal("Validé", "Facture générée avec succès ! ", "success");
+
+                        location.reload();
+
+                    }
+                    else {
+                        swal({
+                            title: "Echec",
+                            text: "Un problème est survenu",
+                            type: "danger"
+                        });
+                    }
+                }
+            });
+        });
+    }
+    $(document).ready(function () {
+
+        $('.dataProformat').DataTable({
+            pageLength: 25,
+            responsive: true,
+            dom: '<"html5buttons"B>lTfgitp',
+            buttons: [
+                { extend: 'copy' },
+                { extend: 'csv' },
+                { extend: 'excel', title: 'Bordereau' },
+                { extend: 'pdf', title: 'Bordereau' },
+
+                {
+                    extend: 'print',
+                    customize: function (win) {
+                        $(win.document.body).addClass('white-bg');
+                        $(win.document.body).css('font-size', '10px');
+
+                        $(win.document.body).find('table')
+                                .addClass('compact')
+                                .css('font-size', 'inherit');
+                    }
+                }
+            ]
+
+        });
+
+    });
+
+
+    function annuler(data) {
+        $("#PaiementCommissionModal").modal();
+        //var row = $(button).closest("tr");
+        //var Piece = $("td", row).eq(1).html();
+        var AnnulationChoisi = 1;
+        $('#cbindice').change(function () {
+
+            AnnulationChoisi = $('select#cbindice').find("option:selected").val();
+
+        });
+        var commentaire = $('#description').val();
+        //alert(Piece + AnnulationChoisi + commentaire);
+        $("#PayerFacture").click(function () {
+            $.ajax({
+                type: "get",
+                url: '/InterrogationRevendeur/AnnulerProformatFreelancer?id=' + data + '&&AnnulationChoisi=' + AnnulationChoisi + '&&commentaire=' + commentaire,
+                dataType: 'json',
+                success: function (msg) {
+                    if (msg.result == "success") {
+                        toastr.success('l annulation ce fait avec succès ! ', 'success');
+                        location.reload();
+                    }
+                    else {
+                        toastr.error('Vous ne peut pas annuler la proformat sélectionner! ', 'error');
+                    }
+
+                }
+            });
+        });
+    };
+
+  
+</script>
+
+
+}
+else
+{
+
+
+
+
+
+    <script src="~/js/jquery-3.1.1.min.js"></script>
+
+
+    <div class="alert alert-danger alert-dismissable">
+        <button type="button" class="close " data-dismiss="alert">×</button>
+        <p>Vous ne bénéficiez pas de frais de commissions! contactez votre résponsable régional.</p>
+    </div>
+}
+

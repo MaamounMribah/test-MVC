@@ -1,0 +1,760 @@
+﻿@model BeeProj.ViewModels.ConventionsViewModel
+@{
+    ViewBag.Title = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@*<h2>Create</h2>*@
+<!-- Toastr style -->
+<link href="~/css/plugins/toastr/toastr.min.css" rel="stylesheet">
+<link href="~/css/plugins/datapicker/datepicker3.css" rel="stylesheet" />
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+<link href="~/css/plugins/chosen/bootstrap-chosen.css" rel="stylesheet">
+<link href="~/css/plugins/awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css" rel="stylesheet">
+<link href="~/css/plugins/iCheck/custom.css" rel="stylesheet">
+<!-- Sweet Alert -->
+<link href="~/css/plugins/sweetalert/sweetalert.css" rel="stylesheet">
+<!-- Ladda style -->
+<link href="~/css/plugins/ladda/ladda-themeless.min.css" rel="stylesheet">
+
+<link href="~/css/plugins/touchspin/jquery.bootstrap-touchspin.min.css" rel="stylesheet">
+<link href="~/css/plugins/jasny/jasny-bootstrap.min.css" rel="stylesheet">
+<meta name='viewport' content='width=device-width, initial-scale=1'>
+@*<script src='https://kit.fontawesome.com/a076d05399.js'></script>*@
+<style>
+    #ui-datepicker-div {
+        font-size: 12px;
+    }
+</style>
+
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-lg-8">
+        <h2 class="active">Nouvelle modèle de convention</h2>
+        <ol class="breadcrumb">
+            <li>
+                <a>Acceuil</a>
+            </li>
+            <li>
+                <a>Modèle de convention</a>
+            </li>
+
+        </ol>
+    </div>
+    <div class="col-lg-2">
+
+    </div>
+</div>
+<div class="row wrapper wrapper-content page-body">
+
+    <div class="col-lg-12">
+        <div class="ibox-content">
+            <div class="row">
+
+                @if ((ViewBag.AgenceUser != null) && (ViewBag.msg == null))
+                {
+                    if (ViewData.ModelState[""] != null && ViewData.ModelState[""].Errors.Count > 0)
+                    {
+                        <div class="alert alert-danger alert-dismissable">
+                            <button type="button" class="close " data-dismiss="alert"> × </button>
+                            @Html.ValidationSummary("", new { @class = "text-danger" })
+
+                        </div>
+
+                    }
+                    else
+                    {
+                        <div class="col-lg-12">
+                            <input type="text" id="Conv_Type" name="Conv_Type" value=0 class="hidden">
+
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <div class="ibox float-e-margins">
+                                        <div class="ibox-title">
+
+                                            <div class="pull-right">
+                                                <h5 class="text-purplebee">  Réf: #@ViewBag.ReferenceEngagement </h5>
+                                            </div>
+
+                                        </div>
+                                        <div class="ibox-content">
+                                            @using (Html.BeginForm("Create", "Convention", FormMethod.Post, new { @class = "form-horizontal", @name = "myForm", role = "form", enctype = "multipart/form-data" }))
+                                            {
+
+                                                <div class="row">
+
+                                                    <div class="row">
+                                                        <br />
+
+                                                        <div class="row form-group col-md-6">
+                                                            <div class="col-md-12">
+
+                                                                <label>Intitule convention<sup>*</sup></label>
+
+                                                                <div class="input-group">
+                                                                    <span class="input-group-addon"><i class="fa fa-file"></i></span>
+                                                                    <input class="form-control" type="text" id="IntituleConvention" name="IntituleConvention" required>
+                                                                </div>
+
+                                                            </div>
+                                                        </div>
+                                                        <div class="row form-group col-md-6">
+
+                                                            <div class="col-md-12">
+                                                                <label>Attachement </label>
+
+
+                                                                <div class="fileinput fileinput-new input-group" data-provides="fileinput">
+                                                                    <div class="form-control" data-trigger="fileinput">
+                                                                        <i class="glyphicon glyphicon-file fileinput-exists"></i>
+                                                                        <span class="fileinput-filename"></span>
+                                                                    </div>
+                                                                    <span class="input-group-addon btn btn-default btn-file">
+                                                                        <span class="fileinput-new">Selectionner</span>
+                                                                        <span class="fileinput-exists">Changer</span>
+                                                                        <input type="file" name="ModeleAtt" id="ModeleAtt" accept="image/png, image/jpeg" />
+                                                                    </span>
+                                                                    <a href="#" class="input-group-addon btn btn-default fileinput-exists" data-dismiss="fileinput">Supprimer</a>
+                                                                </div>
+
+
+
+                                                            </div>
+
+                                                        </div>
+                                                        <div class="row form-group col-md-6">
+                                                            <div class="col-md-12">
+
+                                                                <label>Date debut<sup>*</sup></label>
+
+                                                                <div class="input-group">
+                                                                    <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                                                                    <input class="form-control" pattern="\d{1,2}/\d{1,2}/\d{4}" type="text" id="DateDebut" name="DateDebut" placeholder="jj/mm/aaaa" required /> <br />
+
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row form-group col-md-6">
+                                                            <div class="col-md-12">
+
+                                                                <label>Date fin<sup>*</sup></label>
+
+                                                                <div class="input-group">
+                                                                    <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                                                                    <input class="form-control" pattern="\d{1,2}/\d{1,2}/\d{4}" type="text" id="DateFin" name="DateFin" placeholder="jj/mm/aaaa" required /> <br />
+
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        <br />
+
+
+                                                        <div class="row form-group col-md-6">
+                                                            <div class="col-md-12">
+
+                                                                <label>Etat convention<sup>*</sup></label>
+
+
+                                                                <div class="input-group">
+                                                                    <span class="input-group-addon"><i class="fa fa-cogs"></i></span>
+                                                                    <select class="form-control" id="EtatConvention" name="EtatConvention" required>
+
+                                                                        <option value=0>Active</option>
+                                                                        <option value=1>Non active</option>
+
+                                                                    </select>
+
+                                                                </div>
+                                                            </div>
+
+                                                        </div>
+
+                                                        <br />
+                                                        <br />
+                                                        <div class="form-group col-md-12 ">
+                                                            <div class="pull-right">
+                                                                <span class="btn-google" data-toggle="buttons">
+                                                                    <button title="Ajouter Produit" class="btn btn-purplebee btn-circle" id="ADDArticle" type="button">
+                                                                        <i class="fa fa-plus"></i>
+                                                                    </button>
+                                                                    <button class="btn btn-danger btn-circle" id="DeleteAllLines" title="Supprimer tout" type="button">
+                                                                        <i class="fa fa-trash"></i>
+                                                                    </button>
+                                                                </span>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="form-group col-lg-12">
+
+                                                            <table id="TableListeLignesProduit" class="table table-striped table-bordered table-hover TableListeLignesProduit">
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th>Article</th>
+                                                                        <th>Désignation</th>
+                                                                        <th>Ancien Prix Unitaire TTC</th>
+                                                                        <th>Ancien Prix unitaire HT</th>
+                                                                        <th>Prix Convention HT</th>
+                                                                        <th>Remise</th>
+                                                                        <th>Action</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody></tbody>
+
+                                                            </table>
+
+                                                        </div>
+
+                                                    </div>
+                                                    <br />
+                                                    <div class="modal-footer">
+
+                                                        <button type="submit" class="btn btn-purplebee ladda-button ladda-button-demo" name="cmd"><i class="fa fa-check"></i>&nbsp;Valider</button>
+                                                    </div>
+                                                </div>
+
+
+                                            }
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+
+
+                }
+                else if ((ViewBag.AgenceUser != null) || (ViewBag.msg != null))
+                {
+                    <div class="alert alert-danger alert-dismissable">
+                        <button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>
+                        @ViewBag.msg
+                    </div>
+                }
+                else
+                {
+                    <div class="alert alert-danger alert-dismissable">
+                        <button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>
+                        Erreur d cnx
+                    </div>
+                }
+
+            </div>
+        </div>
+
+    </div>
+
+
+</div>
+
+
+<!-- Modal liste article  -->
+<div class="modal inmodal" id="selectArticle" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title">Liste des articles </h4>
+                <small class="font-bold">Click sur "valider" pour affecter l'article de votre demande.</small>
+
+                <br />
+                <hr />
+
+
+
+                <div class="form-group col-lg-12">
+                    <label class="col-lg-2 control-label">Article sélectionné</label>
+                    <div class="col-lg-10">
+                        <select class="form-control chosen-select" id="Article">
+                            <option value="">Selectionner</option>
+                            @foreach (var item in ViewBag.Article)
+                            {
+                                <option value=@item.AR_Ref>@item.AR_Design</option>
+                            }
+                        </select>
+
+                    </div>
+                </div>
+                <br />
+                <div class="form-group col-lg-12 hidden" id="DIVRemise">
+                    <label class="col-lg-2 control-label">Remise</label>
+
+                    <div class="col-lg-10">
+                        <div class="input-group m-b">
+                            <span class="input-group-addon">
+                                <i class="fa fa-percent"></i>
+                            </span> <input type="number" class="form-control" id="Remise" name="Remise" min="0" max="100" pattern="\d*([,\/]?\d+)" required>
+                        </div>
+                    </div>
+
+                </div>
+                <br />
+                <div class="form-group col-lg-12 hidden" id="DIVPrixArticle">
+                    <label class="col-lg-2 control-label">Prix Convention HT</label>
+
+                    <div class="col-lg-10">
+                        <div class="input-group m-b">
+                            <span class="input-group-addon">
+                                <i class="fa fa-money"></i>
+                            </span> <input type="number" class="form-control" placeholder="PrixArticle" id="PrixArticle" name="PrixArticle" step="0.000001" pattern="\d*([,\/]?\d+)" required>
+                        </div>
+                    </div>
+
+                </div>
+
+
+            </div>
+
+
+
+            <div class="modal-body">
+
+
+                <div class="table-responsive">
+
+                    <table id="listeArticles" class="table table-striped table-bordered table-hover dataTables-example full-width" style="cursor:pointer;">
+                        <thead>
+                            <tr>
+                                <th>Référence Article</th>
+                                <th>Désignation</th>
+                                <th>Prix Unitaire HT </th>
+                                <th>Prix Unitaire TTC  </th>
+                            </tr>
+                        </thead>
+
+
+
+                    </table>
+
+                </div>
+
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-white" data-dismiss="modal">Fermer</button>
+                <button type="submit" class="btn btn-purplebee ladda-button ladda-button-demo" onclick="ValiderADDarticle()">Valider </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<script src="~/js/plugins/slick/slick.min.js"></script>
+<script src="~/js/jquery-3.1.1.min.js"></script>
+
+<script src="~/js/plugins/datapicker/bootstrap-datepicker.js"></script>
+<script src="~/js/plugins/chosen/chosen.jquery.js"></script>
+<!-- Jasny -->
+<script src="~/js/plugins/jasny/jasny-bootstrap.min.js"></script>
+<!-- DROPZONE -->
+<script src="~/js/plugins/dropzone/dropzone.js"></script>
+<!-- CodeMirror -->
+<script src="~/js/plugins/codemirror/codemirror.js"></script>
+<script src="~/js/plugins/codemirror/mode/xml/xml.js"></script>
+<script src="~/js/plugins/jasny/jasny-bootstrap.min.js"></script>
+<!-- iCheck -->
+<script src="~/js/plugins/iCheck/icheck.min.js"></script>
+
+
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
+
+<script src="~/js/plugins/dataTables/datatables.min.js"></script>
+<!-- Toastr script -->
+<script src="~/js/plugins/toastr/toastr.min.js"></script>
+
+
+<!-- Ladda -->
+<script src="~/js/plugins/ladda/spin.min.js"></script>
+<script src="~/js/plugins/ladda/ladda.min.js"></script>
+<script src="~/js/plugins/ladda/ladda.jquery.min.js"></script>
+
+
+
+
+
+<script>
+
+        $('.chosen-select').chosen({ width: "100%" });
+        var ListeDbDb = [];
+        $(document).ready(function () {
+            $('.i-checks').iCheck({
+                checkboxClass: 'icheckbox_square-green',
+                radioClass: 'iradio_square-green'
+            });
+        });
+
+
+
+        $('#DateDebut').datepicker({
+            changeMonth: true,
+            changeYear: true,
+            showButtonPanel: true,
+            dateFormat: "m/d/yy"
+        });
+
+        $('#DateFin').datepicker({
+            changeMonth: true,
+            changeYear: true,
+            showButtonPanel: true,
+            dateFormat: "m/d/yy"
+        });
+
+
+
+        $("#DateFin").change(function () {
+            var startDate = document.getElementById("DateDebut").value;
+            var endDate = document.getElementById("DateFin").value;
+            var partsstart = startDate.split('/');
+            var d1 = Number(partsstart[2] + partsstart[1] + partsstart[0]);
+            partsend = endDate.split('/');
+            var d2 = Number(partsend[2] + partsend[1] + partsend[0]);
+
+            if ((d1) >(d2)) {
+
+                //alert("End date should be greater than Start date");
+                toastr.error('La date de fin doit être supérieur ou égale à la date de début !', 'Erreur');
+                document.getElementById("DateFin").value = "";
+            }
+        });
+
+        function isValidDate(s) {
+            var bits = s.split('/');
+            var d = new Date(bits[2] + '/' + bits[1] + '/' + bits[0]);
+            return !!(d && (d.getMonth() + 1) == bits[1] && d.getDate() == Number(bits[0]));
+        }
+
+
+
+        $('#ADDArticle').click(function () {
+            $("#selectArticle").modal();
+        });
+
+
+
+            $("select#Article").on("change", function () {
+
+               var ref = $('select#Article').val();
+
+                            listedesArticlesTable(ref);
+                          $("#DIVRemise").removeClass("hidden");
+                          $("#DIVPrixArticle").removeClass("hidden");
+                          document.getElementById("Remise").value = "";
+                          document.getElementById("PrixArticle").value ="";
+
+            });
+
+            function find_duplicate_in_array(arra1) {
+                var object = {};
+                var result = [];
+
+                arra1.forEach(function (item) {
+                    if (!object[item])
+                        object[item] = 0;
+                    object[item] += 1;
+                })
+
+                for (var prop in object) {
+                    if (object[prop] >= 2) {
+                        result.push(prop);
+                    }
+                }
+
+                return result;
+                //if (result.length > 0) {
+
+                //    toastr.error('Des numéros de séries ne peuvent pas être duppliqués', 'Erreur');
+                //}
+            }
+
+
+
+            $('#Remise').keyup(function () {
+
+                var value = 0;
+                var AncienPrix = 0;
+                var rows = $("#listeArticles").dataTable().fnGetNodes();
+                for (var i = 0; i < rows.length; i++) {
+                    var tr = $(rows[i]);
+                    value = tr.find('td:eq(0)').text();
+                    PrixUnitaire = tr.find('td:eq(3)').text();
+                    AncienPrix = tr.find('td:eq(2)').text();
+
+
+                }
+                //$('#Remise').css("background-color", "pink");
+                var Remise = $('#Remise').val();
+                //var ref = $('select#Article').val();
+                if (Remise < 0 || Remise>100)
+                {
+                    toastr.error('Remise doit étre compris entre 0 et 100!', 'Erreur');
+                }
+                var cal = ((AncienPrix * Remise) / 100).toFixed(8);
+                //console.log("rem   "+cal);
+                document.getElementById("PrixArticle").value = ((AncienPrix) - (cal)).toFixed(8);
+            });
+
+
+            $('#PrixArticle').keyup(function () {
+
+                var value = 0;
+                var AncienPrix = 0;
+                var rows = $("#listeArticles").dataTable().fnGetNodes();
+                for (var i = 0; i < rows.length; i++) {
+                    var tr = $(rows[i]);
+                    value = tr.find('td:eq(0)').text();
+                    PrixUnitaire = tr.find('td:eq(3)').text();
+                    AncienPrix = tr.find('td:eq(2)').text();
+
+
+                }
+                //$('#Remise').css("background-color", "pink");
+                var PrixArt = $('#PrixArticle').val();
+                document.getElementById("Remise").value = ((AncienPrix * 100) - (PrixArt * 100)) / AncienPrix;
+                //var ref = $('select#Article').val();
+                if ((((AncienPrix*100)-(PrixArt * 100)) / AncienPrix) < 0 || (((AncienPrix*100)-(PrixArt * 100)) / AncienPrix)>100)
+                {
+                    toastr.error('Remise doit étre compris entre 0 et 100!', 'Erreur');
+                }
+
+            });
+
+            function listedesArticlesTable(arref) {
+
+                $("#listeArticles").dataTable().fnDestroy();
+
+                //console.log(arref);
+                var oTable = $('#listeArticles').DataTable({
+                    "ajax": {
+                        "url": "/Convention/GetStockDepotUser?Article=" + encodeURIComponent(arref),
+                        "type": "get",
+                        "datatype": "json",
+                        "autoWidth": false,
+                        "encode":false
+
+                    },
+                    "columns": [
+
+                            { "data": "AR_Ref" },
+                            { "data": "AR_Design" },
+                            { "data": "prixUniatire" },
+                            { "data": "prix" },
+
+
+                    ]
+
+                });
+
+                $(document).ready(function () {
+
+                    // Bind normal buttons
+                    Ladda.bind('.ladda-button', { timeout: 8000 });
+
+                    // Bind progress buttons and simulate loading progress
+                    Ladda.bind('.progress-demo .ladda-button', {
+                        callback: function (instance) {
+                            var progress = 0;
+                            var interval = setInterval(function () {
+                                progress = Math.min(progress + Math.random() * 0.1, 1);
+                                instance.setProgress(progress);
+
+                                if (progress === 1) {
+                                    instance.stop();
+                                    clearInterval(interval);
+                                }
+                            }, 8000);
+                        }
+                    });
+
+
+                    var l = Ladda.bind('.ladda-button-demo');
+
+                    l.click(function () {
+                        // Start loading
+                        l.ladda('start');
+
+                        // Timeout example
+                        // Do something in backend and then stop ladda
+                        setTimeout(function () {
+                            l.ladda('stop');
+                        }, 15000)
+
+
+                    });
+
+                });
+
+            };
+
+
+            function ValiderADDarticle() {
+
+
+                var nb = $("#TableListeLignesProduit tr").length;
+                var rows = $("#listeArticles").dataTable().fnGetNodes();
+                for (var i = 0; i < rows.length; i++) {
+                    var tr = $(rows[i]);
+                    var value = tr.find('td:eq(0)').text();
+                    var PrixUnitaire = tr.find('td:eq(2)').text();
+                    var AncienPrix = tr.find('td:eq(3)').text();
+
+                }
+
+                var Remisee = $('#Remise').val();
+                var PrixArticlee = $('#PrixArticle').val();
+
+
+                if ((Remisee < 0) || (Remisee > 100) || ((Remisee == "") && (PrixArticlee == "")))
+                {
+                    toastr.error('Veuillez verifier prix convention !', 'Erreur');
+                }
+                else
+                {
+                    ListeDbDb.push(String(value));
+
+                    for (var i = 1; i < nb; i++) {
+                        var arref = document.getElementById("TableListeLignesProduit").rows[i].cells[1].firstChild.value;
+
+                        ListeDbDb.push(String(arref));
+
+                    }
+                    var ress = find_duplicate_in_array(ListeDbDb);
+
+                    var n = ress.includes(value);
+
+                    if (n) {
+                        toastr.error('deja vous avez selectionner le meme article !', 'Erreur');
+                    } else {
+                        var totalRowCount = $("#TableListeLignesProduit tr").length;
+                        $('#selectArticle').modal('hide');
+
+
+                        addLine(value, AncienPrix, Remisee, PrixArticlee, totalRowCount);
+
+                    }
+
+
+                }
+
+
+
+};
+
+
+
+            function addLine(arref, AncienPrix, Re, PrixArt, totalRow) {
+                console.log("AncienPrix" + AncienPrix);
+                console.log("PrixArt" + PrixArt);
+
+                    $.ajax({
+                        type: "GET",
+                        url: "/Convention/getInfoArticle2?Arref=" + encodeURIComponent(arref),
+                        success: function (res) {
+                            var i = totalRow + 1;
+                            if (res.result != 1) {
+                                var AR_SuiviStock = res.infoArticle.AR_SuiviStock;
+
+                                var newRow = $("<tr>");
+
+                                var cols = '<td><input type="text" name="ArticleList" id="ArticleList' + i + '" value="' + res.infoArticle.AR_Ref + '"class="form-control ref-ids" readonly required/></td>';
+                                cols += '<td><input type="text"  name="ArticleDesign"  id="ArticleDesign' + i + '"value="' + res.infoArticle.AR_Design + '" class="form-control articles-ids" disabled/></td>';
+                                cols += '<td> <input type="text" class="form-control Prixancien-ids" value=' + AncienPrix + ' name="AncienPrixList" id="AncienPrixList' + i + '" readonly required></td>';
+                                cols += '<td><input type="text" name="PrixList"  id="PrixList' + i + '"  value="' + res.infoArticle.AR_PrixVen + '" class="form-control prix-ids" readonly required/></td>';
+                                cols += '<td> <input type="number" step="0.000001"  class="form-control NouvPrix-ids" value=' + PrixArt + ' name="NouvPrixList" id="NouvPrixList' + i + '" readonly></td>';
+                                cols += '<td>  <input type="number" class="form-control remise-ids" value=' + Re + ' name="RemiseList" id="RemiseList' + i + '"  readonly></td>';
+                                cols += '<td><a class="deleteRowGamme btn btn-xs btn-round btn-azure"> <div class="form-control"><i class="fa fa-trash"></i></div> </a></td>';
+
+                                newRow.append(cols);
+
+                                $(".TableListeLignesProduit").append(newRow);
+                                i = i + 1;
+                                //console.log(arref, qtt, i);
+
+                            } else {
+                                toastr.error('Veuillez selectionner au moins un article!', 'Erreur');
+                            }
+
+                        }
+                    });
+
+
+
+            };
+
+
+
+
+
+            $("table.TableListeLignesProduit").on("click", "a.deleteRowGamme", function (event) {
+                $(this).closest("tr").remove();
+                var value1;
+                var value2;
+                $(this).closest('tr').find('input[name="ArticleID1"]').each(function () {
+                    value1 = this.value;
+                });
+
+                $(this).closest('tr').find('input[name="depot1"]').each(function () {
+                    value2 = this.value;
+                });
+
+
+                var removeItem = value2 + value1;
+                Serie2 = Serie2.filter(function (item) {
+                    return item !== removeItem;
+                });
+
+            });
+
+            $("#DeleteAllLines").click(function () {
+
+                if (confirm("Supprimer tout ? ")) {
+                    $('#TableListeLignesProduit tr').find('td .ref-ids').each(function () {
+                        $(this).closest("tr").remove();
+
+                    })
+                }
+
+            });
+
+
+
+
+       // });
+            // Bind normal buttons
+            Ladda.bind('.ladda-button', { timeout: 8000 });
+
+            // Bind progress buttons and simulate loading progress
+            Ladda.bind('.progress-demo .ladda-button', {
+                callback: function (instance) {
+                    var progress = 0;
+                    var interval = setInterval(function () {
+                        progress = Math.min(progress + Math.random() * 0.1, 1);
+                        instance.setProgress(progress);
+
+                        if (progress === 1) {
+                            instance.stop();
+                            clearInterval(interval);
+                        }
+                    }, 8000);
+                }
+            });
+
+
+            var l = Ladda.bind('.ladda-button-demo');
+
+            l.click(function () {
+                // Start loading
+                l.ladda('start');
+
+                // Timeout example
+                // Do something in backend and then stop ladda
+                setTimeout(function () {
+                    l.ladda('stop');
+                }, 15000)
+
+
+            });
+
+</script>
+

@@ -1,0 +1,137 @@
+﻿@model IEnumerable<BeeProj.ViewModels.EtatVersementModel>
+
+@{
+    ViewBag.Title = "EtatVersement";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<link href="~/css/plugins/dataTables/datatables.min.css" rel="stylesheet">
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-lg-10">
+        <br />
+        <ol class="breadcrumb">
+            <li>
+                <a href="@Url.Action("index","Home")">Acceuil</a>
+            </li>
+            <li>
+                <a href="@Url.Action("EtatVersement","GestionFactures")">Etat Versement Agence </a>
+            </li>
+            <li class="active">
+                <strong>Etat Versement </strong>
+            </li>
+        </ol>
+    </div>
+</div>
+<!-- FooTable -->
+<div class="wrapper wrapper-content animated fadeInUp">
+    <div class="ibox">
+        <div class="ibox-content">
+            <div class="row m-t-sm">
+                <div class="panel blank-panel">
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="ibox float-e-margins">
+                                <div class="ibox-content">
+
+
+                                    <table class="table table-striped table-bordered table-hover dataTables-example2">
+                                        <thead>
+                                            <tr>
+                                                <th>Code Agence </th>
+                                                <th>Agence </th>
+                                                <th>Contact </th>
+                                                <th>Téléphone contact</th>
+                                                <th>Responsable régional </th>
+                                                <th>Total des factures à verser  </th>
+                                                <th>Avances à verser </th>
+                                                <th>Contre recu à verser </th>
+                                                <th>Réglements à verser </th>
+                                                <th>Bordereau En Instance</th>
+                                                <th>Avance sur commission à soustraire  </th>
+                                                <th></th>
+                                                <th>Total Versé </th>
+                                                <th></th>
+
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+
+                                            @foreach (var item in Model)
+                                            {
+                                            <tr>
+                                                <td>@item.A_Code</td>
+                                                <td>@item.Agence</td>
+                                                <td> @item.Contact_Agence </td>
+                                                <td><i class="fa fa-phone"></i> @item.TelephoneRevendeur</td>
+
+                                                <td>@item.RespRegional</td>
+
+                                                <td><strong>@String.Format("{0:N3}", item.Total_FacturesV) TND  </strong></td>
+                                                <td>@String.Format("{0:N3}", item.Avances) TND</td>
+                                                <td>@String.Format("{0:N3}", item.Contrerecu) TND</td>
+
+                                                <td>@String.Format("{0:N3}", item.Net_Verser) TND</td>
+
+                                                <td>
+
+                                                    @foreach (var item1 in item.BordereauEnInstance)
+                                                    {
+                                                        <p><strong>@item1.Text  </strong> : @String.Format("{0:N3}", @item1.Value) TND  </p>
+                                                    }
+                                                </td>
+                                                <td>@String.Format("{0:N3}", item.Avances_Commission) TND </td>
+
+
+
+
+                                                <td><a href=@Url.Action("ExporterListeNONVersees", "GestionFactures", new { a_code = @item.A_Code }) class="btn btn-info btn-circle" type="button"><i class="fa fa-file-excel-o"></i></a></td>
+                                                <td>@String.Format("{0:N3}", item.Total_Verse) TND </td>
+                                                <td><a href=@Url.Action("ExporterListeVersees", "GestionFactures", new { a_code = @item.A_Code }) class="btn btn-purplebee btn-circle" type="button"><i class="fa fa-file-excel-o"></i></a></td>
+
+                                            </tr>
+                                            }
+
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="~/js/plugins/dataTables/datatables.min.js"></script>
+<script src="~/js/jquery-3.1.1.min.js"></script>
+<script src="~/js/plugins/metisMenu/jquery.metisMenu.js"></script>
+<script src="~/js/plugins/pace/pace.min.js"></script>
+<script src="~/js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+<script src="~/js/plugins/chosen/chosen.jquery.js"></script>
+<script src="~/js/plugins/dataTables/datatables.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $('.dataTables-example2').DataTable({
+            responsive: true,
+            dom: '<"html5buttons"B>lTfgitp',
+            buttons: [
+                { extend: 'copy' },
+                { extend: 'csv' },
+                { extend: 'excel', title: 'ExampleFile' },
+                { extend: 'pdf', title: 'ExampleFile' },
+
+                {
+                    extend: 'print',
+                    customize: function (win) {
+                        $(win.document.body).addClass('white-bg');
+                        $(win.document.body).css('font-size', '10px');
+
+                        $(win.document.body).find('table')
+                            .addClass('compact')
+                            .css('font-size', 'inherit');
+                    }
+                }
+            ]
+
+        });
+    });
+</script>
